@@ -12,3 +12,5 @@ King Azit Native App
 
 ### (4) Native Navigation Tool
     npm i @react-navigation/native @react-navigation/native-stack react-native-screens react-native-safe-area-context
+### (5) 키보드 터치 기능 라이브러리
+    npm i react-native-keyboard-aware-scrollview  
