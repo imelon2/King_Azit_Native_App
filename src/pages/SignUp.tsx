@@ -37,7 +37,6 @@ function SignUp() {
       <Stack.Navigator>
         <Stack.Screen name="SignUpHome" component={SignUpHome}  options={{headerShown:false }} />
         <Stack.Screen name="SignUpLogin" component={SignUpLogin}   options={{headerShown:false}}/>
-        <Stack.Screen name="SignIn" component={SignIn}  options={{headerShown:false}} />
       </Stack.Navigator>
     )
 }
