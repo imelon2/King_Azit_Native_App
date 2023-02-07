@@ -9,6 +9,8 @@ import { RootState } from './src/store/reducer';
 export type RootStackParamList = {
   SignIn: undefined;
   SignUp: undefined;
+  SignUpLogin: undefined;
+  SignUpHome: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -19,15 +21,15 @@ function AppInner() {
   
   return (
    <Stack.Navigator >
-    <Stack.Screen
+    {/* <Stack.Screen
       name="SignIn"
       component={SignIn}
       options={{title:'Login',headerShown:false}}
-    />
+    />  */}
     <Stack.Screen
       name="SignUp"
       component={SignUp}
-      options={{title:'SignUp'}}
+      options={{title:'SignUp',headerShown:false}}
     />
    </Stack.Navigator>
   );

@@ -66,3 +66,11 @@ yarn.lock
 package-lock.json
 .gitignore
 .gitignore
+.vscode/settings.json
+package-lock.json
+hs_err_pid2148.log
+hs_err_pid864.log
+replay_pid864.log
+replay_pid2148.log
+android/hs_err_pid22916.log
+yarn.lock
