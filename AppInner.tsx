@@ -23,20 +23,23 @@ function AppInner() {
   console.log(isLoggedIn);
   
   return (
-   <Stack.Navigator >
-    {/* <Stack.Screen
+   <Stack.Navigator initialRouteName='SignIn' screenOptions={{
+    animation: 'slide_from_right',
+  }}>
+    <Stack.Screen
       name="SignIn"
       component={SignIn}
       options={{title:'Login',headerShown:false}}
-    />  */}
+      
+    /> 
     <Stack.Screen
       name="SignUp"
       component={SignUp}
       options={{title:'SignUp',headerShown:false}}
+      
     />
    </Stack.Navigator>
   );
 }
-const styles = StyleSheet.create({
-});
+
 export default AppInner;
