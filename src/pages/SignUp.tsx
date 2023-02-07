@@ -1,5 +1,6 @@
-import { Text, View, Button, StyleSheet, Dimensions } from "react-native";
+import { Text, View, Button, StyleSheet, Dimensions, TextInput } from "react-native";
 import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navigation/native-stack';
+import {useCallback, useRef, useState} from 'react';
 import Icon from 'react-native-vector-icons/AntDesign';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { RootStackParamList } from '../../AppInner';
@@ -8,6 +9,7 @@ const {width, height} = Dimensions.get('window');
 const heightScale = heightData;
 import SignIn from '../pages/SignIn';
 import DismissKeyboardView from '../components/DismissKeyboardView'
+import IconOcticons from 'react-native-vector-icons/Octicons';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUpHome'>;
@@ -45,6 +47,20 @@ function SignUpNickName({ navigation  } : SignInScreenProps4) {
         <Text style={styles.termstext} > 아지트에 사용할  </Text>
         <Text style={styles.termstext2} > 닉네임을 정해주세요.  </Text>
       </View>
+      <View style={styles.inputWrapper}>
+        <View style={styles.textInputWrapper}>
+                <TextInput
+                  style={styles.textInput}
+                  // ref={passwordRef}
+                  placeholder="닉네임 입력"
+                  // onChangeText={onChangePassword}
+                  // onSubmitEditing = {loginBtn} // Submit Key 클릭 시, 이벤트
+                  blurOnSubmit ={false} // Submit Key클릭 시, Keyboard 유지
+                  // secureTextEntry={!showPW ? true : false}
+                  // value={password}
+                />
+              </View>
+            </View>
       <Text style={styles.nextButton} onPress={() => navigation.navigate('SignUpCertification')} >
          다음
       </Text>
@@ -63,7 +79,53 @@ function SignUpPassWord({ navigation  } : SignInScreenProps3) {
         <Text style={styles.termstext} > 아지트에 사용할  </Text>
         <Text style={styles.termstext2} > 비밀번호를 입력해주세요.  </Text>
       </View>
-      <Text style={styles.nextButton} onPress={() => navigation.navigate('SignUpNickName')} >
+      <View style={styles.inputWrapper}>
+        <View style={styles.textInputWrapper}>
+                <TextInput
+                  style={styles.textInput}
+                  // ref={passwordRef}
+                  placeholder="비밀번호 입력"
+                  // onChangeText={onChangePassword}
+                  // onSubmitEditing = {loginBtn} // Submit Key 클릭 시, 이벤트
+                  blurOnSubmit ={false} // Submit Key클릭 시, Keyboard 유지
+                  // secureTextEntry={!showPW ? true : false}
+                  // value={password}
+                />
+                <IconOcticons
+                  // name={showPW ? 'eye' : 'eye-closed'}
+                  name={'eye'}
+                  size={heightScale * 25}
+                  color="black"
+                  // onPress={() => {
+                  //   setShowPW(!showPW);
+                  // }}
+                />
+              </View>
+
+              <View style={styles.textInputWrapper}>
+                <TextInput
+                  style={styles.textInput}
+                  // ref={passwordRef}
+                  placeholder="비밀번호 확인"
+                  // onChangeText={onChangePassword}
+                  // onSubmitEditing = {loginBtn} // Submit Key 클릭 시, 이벤트
+                  blurOnSubmit ={false} // Submit Key클릭 시, Keyboard 유지
+                  // secureTextEntry={!showPW ? true : false}
+                  // value={password}
+                />
+                <IconOcticons
+                  // name={showPW ? 'eye' : 'eye-closed'}
+                  name={'eye'}
+                  size={heightScale * 25}
+                  color="black"
+                  // onPress={() => {
+                  //   setShowPW(!showPW);
+                  // }}
+                />
+              </View>
+
+            </View>
+        <Text style={styles.nextButton} onPress={() => navigation.navigate('SignUpNickName')} >
          다음
       </Text>
     </DismissKeyboardView>
@@ -72,6 +134,7 @@ function SignUpPassWord({ navigation  } : SignInScreenProps3) {
 
 
 function SignUpLogin({ navigation  } : SignInScreenProps2) {
+  const emailRef = useRef<TextInput | null>(null);
     return (
       <DismissKeyboardView style={styles.container}>
         <Icon name="arrowleft" style={styles.leftIcon}    size={25} color="#000" onPress={() => navigation.navigate('SignUpHome')} />
@@ -81,6 +144,23 @@ function SignUpLogin({ navigation  } : SignInScreenProps2) {
         <View style={styles.terms}>
           <Text style={styles.termstext} > 로그인에 사용할  </Text>
           <Text style={styles.termstext2} > 아이디를 입력해주세요.  </Text>
+        </View>
+        <View style={styles.inputWrapper}>
+          <View style={styles.textInputWrapper}>
+              <TextInput
+                style={styles.textInput}
+                ref={emailRef}
+                placeholder="아이디 (이메일) 입력"
+                // onChangeText={onChangeEmail}
+                importantForAutofill="yes" // 자동완성 불러오기
+                autoComplete="email" // 자동완성 허용
+                keyboardType='email-address' // 키보드 타입 변경
+                returnKeyType="next" // next key로 변환
+                // onSubmitEditing = {() => passwordRef.current?.focus()} // Submit Key 클릭 시, 이벤트
+                blurOnSubmit ={false} // Submit Key클릭 시, Keyboard 유지
+                // value={email}
+              />
+          </View>
         </View>
         <Text style={styles.nextButton} onPress={() => navigation.navigate('SignUpPassWord')} >
            다음
@@ -98,17 +178,17 @@ function SignUpHome({ navigation  } : SignInScreenProps) {
             </View>
               <Text style={styles.terms} >서비스 이용약관에 동의해주세요.</Text>
             <View style={styles.termsBox} >
-              <Icon  style={styles.checkBox} name="checksquareo" size={25} color="#848484" />
+              <Icon  style={styles.checkBox} name="checksquareo" size={22} color="#848484" />
               <Text style={styles.agreeText} >모두 동의</Text>
             </View>
             <Text style={styles.bottomBar} ></Text>
             <View style={styles.termsBox} >
               <Icon  style={styles.check} name="check" size={15} color="#848484" />
-              <Text>[필수] 개인정보 </Text>
+              <Text style={{ color: "#000" }} >[필수] 개인정보 </Text>
             </View>
             <View style={styles.termsBox} >
               <Icon  style={styles.check} name="check" size={15} color="#848484" />
-              <Text>이용약관 </Text>
+              <Text style={{ color: "#000" }} >이용약관 </Text>
             </View>
             <Text style={styles.nextButton} onPress={() => navigation.navigate('SignUpLogin')} >
               다음
@@ -120,7 +200,7 @@ function SignUpHome({ navigation  } : SignInScreenProps) {
 
 function SignUp() {
     return(
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{ animation: 'slide_from_right'}}  >
         <Stack.Screen name="SignUpHome" component={SignUpHome}  options={{headerShown:false }} />
         <Stack.Screen name="SignUpLogin" component={SignUpLogin}   options={{headerShown:false}}/>
         <Stack.Screen name="SignUpPassWord" component={SignUpPassWord}  options={{headerShown:false}} />
@@ -219,7 +299,8 @@ const styles = StyleSheet.create({
   },
   agreeText: {
     marginTop:4,
-    marginLeft:10,
+    marginLeft:12,
+    color:"#000",
   },
   check: {
     marginRight: 15,
@@ -236,6 +317,24 @@ const styles = StyleSheet.create({
     lineHeight: heightScale*75,
     borderRadius:16,
     marginLeft:'4%',
+  },
+  textInput: {
+    fontSize: heightScale * 18,
+    width: '85%',
+    paddingHorizontal: 10,
+    paddingBottom: 5,
+  },
+  textInputWrapper: {
+    marginTop: heightScale*20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: 'gray',
+  },
+  inputWrapper: {
+    // paddingTop: heightScale * 0,
+    paddingHorizontal: heightScale * 29,
+    paddingBottom: heightScale * 57,
   }
 });
 
