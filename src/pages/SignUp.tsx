@@ -2,14 +2,14 @@ import { Text, View, Button, StyleSheet, Dimensions, TextInput } from "react-nat
 import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navigation/native-stack';
 import {useCallback, useRef, useState} from 'react';
 import Icon from 'react-native-vector-icons/AntDesign';
-import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { RootStackParamList } from '../../AppInner';
 import {widthData,heightData} from '../modules/globalStyles'
 const {width, height} = Dimensions.get('window');
 const heightScale = heightData;
-import SignIn from '../pages/SignIn';
+import SignIn from './SignIn/SignIn';
 import DismissKeyboardView from '../components/DismissKeyboardView'
 import IconOcticons from 'react-native-vector-icons/Octicons';
+import SignUpFinal from "./SignUpFinal";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUpHome'>;
@@ -206,7 +206,7 @@ function SignUp() {
         <Stack.Screen name="SignUpPassWord" component={SignUpPassWord}  options={{headerShown:false}} />
         <Stack.Screen name="SignUpNickName" component={SignUpNickName}  options={{headerShown:false}} />
         <Stack.Screen name="SignUpCertification" component={SignUpCertification}  options={{headerShown:false}} />
-        <Stack.Screen name="SignIn" component={SignIn}  options={{headerShown:false}} />
+        <Stack.Screen name="SignUpFinal" component={SignUpFinal}  options={{headerShown:false}} />
       </Stack.Navigator>
     )
 }
