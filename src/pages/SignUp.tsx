@@ -15,15 +15,15 @@ import {
 } from '@react-navigation/native-stack';
 import {useCallback, useRef, useState} from 'react';
 import Icon from 'react-native-vector-icons/AntDesign';
-import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {RootStackParamList} from '../../AppInner';
 import {widthData, heightData} from '../modules/globalStyles';
 const {width, height} = Dimensions.get('window');
 const heightScale = heightData;
-import SignIn from '../pages/SignIn';
-import DismissKeyboardView from '../components/DismissKeyboardView';
+// import SignIn from '../pages/SignIn/SignIn'
+// import DismissKeyboardView from '../components/DismissKeyboardView';
 import IconOcticons from 'react-native-vector-icons/Octicons';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import SignUpFinal from "./SignUpFinal";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 type SignInScreenProps = NativeStackScreenProps<
@@ -567,6 +567,7 @@ function SignUp() {
         component={SignUpCertification}
         options={{headerShown: false}}
       />
+       <Stack.Screen name="SignUpFinal" component={SignUpFinal}  options={{headerShown:false}} />
     </Stack.Navigator>
   );
 }

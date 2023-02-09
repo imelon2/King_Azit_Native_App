@@ -19,15 +19,24 @@ const DismissKeyboardView: React.FC<{
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <KeyboardAwareScrollView 
+      <KeyboardAwareScrollView
         {...props}
-        style={props.style}
-        contentContainerStyle={props.style}
-        scrollEnabled={true}
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps={'handled'}
-        automaticallyAdjustKeyboardInsets={true}
-        // enableOnAndroid
+          style={props.style}
+          // resetScrollToCoords={{x:0,y:0}}
+          // keyboardOpeningTime={0}
+          // scrollEnabled={false}
+          // showsVerticalScrollIndicator={false}
+          // keyboardShouldPersistTaps={'handled'}
+          // enableOnAndroid
+          // contentContainerStyle={props.style}
+
+          // scrollEnabled={true}
+          // showsVerticalScrollIndicator={false}
+          // keyboardShouldPersistTaps={'handled'}
+          // automaticallyAdjustKeyboardInsets={true}
+          // automaticallyAdjustContentInsets={true}
+          // contentInsetAdjustmentBehavior='never'
+          // enableOnAndroid
         >
         {children}
       </KeyboardAwareScrollView>

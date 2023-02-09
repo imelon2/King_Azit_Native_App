@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "853906757161",
+    "project_id": "king-azit",
+    "storage_bucket": "king-azit.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:853906757161:android:2448e6247fcdaeb42b6e38",
+        "android_client_info": {
+          "package_name": "com.kingazitapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "853906757161-6b4b7opsqodn2ve3qolcgk52injs5qch.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYF8_mhrNKx_tqpqqCvoZE4NwyGy72TLk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "853906757161-6b4b7opsqodn2ve3qolcgk52injs5qch.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
