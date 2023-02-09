@@ -286,7 +286,8 @@ function SignUpPassWord({navigation}: SignInScreenProps3) {
     <SafeAreaView style={styles.container}>
       <KeyboardAwareScrollView
         onKeyboardDidShow={() => setKeyboardOn(true)}
-        onKeyboardDidHide={() => setKeyboardOn(false)}>
+        onKeyboardDidHide={() => setKeyboardOn(false)}
+        keyboardShouldPersistTaps={'handled'}>
         <View>
           <Icon
             name="arrowleft"
@@ -412,7 +413,7 @@ function SignUpLogin({navigation}: SignInScreenProps2) {
               importantForAutofill="yes" // 자동완성 불러오기
               autoComplete="email" // 자동완성 허용
               keyboardType="email-address" // 키보드 타입 변경
-              returnKeyType="next" // next key로 변환
+              // returnKeyType="next" // next key로 변환
               blurOnSubmit={false} // Submit Key클릭 시, Keyboard 유지
               value={email}
             />
@@ -567,7 +568,6 @@ function SignUp() {
         component={SignUpCertification}
         options={{headerShown: false}}
       />
-       <Stack.Screen name="SignUpFinal" component={SignUpFinal}  options={{headerShown:false}} />
     </Stack.Navigator>
   );
 }

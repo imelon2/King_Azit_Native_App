@@ -27,9 +27,11 @@ type LoginScreenProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 function Login({navigation}:LoginScreenProps) {
   const [showPW, setShowPW] = useState(false);
   const [onKeyboard, setOnKeyboard] = useState(false);
+  const [checkLoginInfo,setCheckLoginInfo] = useState(true) // 가입정보가 맞으면 true, 가입정보가 틀리면 false
+  const [loading, setLoading] = useState(false);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
 
   const emailRef = useRef<TextInput | null>(null);
   const passwordRef = useRef<TextInput | null>(null);
@@ -64,7 +66,7 @@ function Login({navigation}:LoginScreenProps) {
   const isFillFrom = !!email && !!password;
   return (
     <SafeAreaView style={styles.container}>
-      <View style={[styles.headerStyle,{height: (height / 29) * 1.5}]}>
+      <View style={[styles.headerStyle,{height:60}]}>
         <IconSimpleAntDesign style={{width:heightScale * 32,height:heightScale * 32}} name="arrowleft"  size={heightScale * 32} color="#000" onPress={() => navigation.goBack()} />
       </View>
       <KeyboardAwareScrollView enableOnAndroid 
@@ -73,7 +75,7 @@ function Login({navigation}:LoginScreenProps) {
         scrollEnabled={false}
         >
         <View style={[styles.title, {height: (height / 29) * 3}]}>
-          <Text style={styles.titleText}>Log in</Text>
+          <Text style={styles.titleText}>아이디/비밀번호를 입력해주세요.</Text>
         </View>
         <View style={[styles.contentInput, {height: (height / 29) * 6}]}>
           <View style={styles.inputWrapper}>
@@ -135,21 +137,23 @@ function Login({navigation}:LoginScreenProps) {
               />
               </View>
             </View>
+            <View><Text style={checkLoginInfo ?{display:'none'} : {fontSize:heightScale * 14,padding:heightScale*5}}>아이디 또는 비밀번호를 다시 확인해주세요.</Text></View>
           </View>
         </View>
       <Pressable
-        style={[styles.buttonStyle, styles.loginButton]}
-        // onPress={() => navigation.navigate('Login')}
-        onPress={() => Alert.alert('Todo',"로그인 성공시 : HomePage or 신청완료 페이지")}
+        style={isFillFrom ? [styles.loginButton,styles.onLiginButton] : styles.loginButton}
+        onPress={() => navigation.navigate('SignUpFinal')}
+        // onPress={() => Alert.alert('Todo',"로그인 성공시 : HomePage or 신청완료 페이지")}
         >
-        <Text style={styles.textStyle}>로그인</Text>
+        <Text style={isFillFrom ? [styles.textStyle,styles.onTextStyle] : styles.textStyle}>로그인</Text>
       </Pressable>
-      <View style={onKeyboard ? {display:'none'} : styles.findIDPW}>
+      {/* <View style={onKeyboard ? {display:'none'} : styles.findIDPW}> */}
+      <View style={styles.findIDPW}>
         <Pressable onPressIn={() => Alert.alert("구현예정","아이디 찾기 미구현")} style={{flex:1}}>
         <Text style={{color:'black',textAlign: 'right'}}>아이디 찾기   |</Text>
         </Pressable>
         <Pressable onPress={() => Alert.alert("구현예정","비밀번호 찾기 미구현")} style={{flex:1}}>
-        <Text style={{color:'#000000'}}>   비밀번호 찾기</Text>
+        <Text style={{color:'#000000'}}>   비밀번호 찾기</Text> 
         </Pressable>
       </View>
       </KeyboardAwareScrollView>
@@ -170,15 +174,15 @@ const styles = StyleSheet.create({
   headerStyle: {
     // backgroundColor:'orange',
     justifyContent:'center',
-    paddingHorizontal:heightScale*15,
-    borderBottomWidth:0.5,
-    borderBottomColor:'black'
+    paddingHorizontal:15,
+    borderBottomWidth:2,
+    borderBottomColor:'#000'
   },
   titleText: {
-    fontSize: heightScale * 22,
-    fontWeight: '500',
-    paddingHorizontal: heightScale * 23,
-    color:'black'
+    fontSize: heightScale * 26,
+    fontWeight:'400',
+    paddingLeft: heightScale * 20,
+    color:'#404040'
   },
   inputWrapper: {
     paddingHorizontal: heightScale * 29,
@@ -198,22 +202,27 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
   },
   findIDPW: {flexDirection: 'row', padding: heightScale*20},
-  buttonStyle: {
+  loginButton: {
+    backgroundColor: '#D9D9D9',
     margin:heightScale*20,
     marginHorizontal: heightScale * 29,
-    backgroundColor: '#D9D9D9',
     height: heightScale * 64,
     borderRadius: heightScale * 5,
     alignItems: 'center',
     justifyContent: 'center',
+    
   },
-  loginButton: {
-    backgroundColor: '#D9D9D9',
+  onLiginButton: {
+    backgroundColor:'#6DC0F9'
   },
   textStyle: {
     color: 'black',
     fontSize: heightScale * 16,
     fontWeight: 'bold',
+  },
+  onTextStyle: {
+    color: 'white',
+    fontSize: heightScale * 18
   }
 });
 
