@@ -19,7 +19,6 @@ import {widthData, heightData} from '../../modules/globalStyles';
 import { RootStackParamList } from '../../../AppInner';
 const {width, height} = Dimensions.get('screen');
 const heightScale = heightData;
-
 // console.log(widthData); 0.84
 // console.log(heightData); 0.8
 
@@ -65,12 +64,13 @@ function Login({navigation}:LoginScreenProps) {
   const isFillFrom = !!email && !!password;
   return (
     <SafeAreaView style={styles.container}>
+      <View style={[styles.headerStyle,{height: (height / 29) * 1.5}]}>
+        <IconSimpleAntDesign style={{width:heightScale * 32,height:heightScale * 32}} name="arrowleft"  size={heightScale * 32} color="#000" onPress={() => navigation.goBack()} />
+      </View>
       <KeyboardAwareScrollView enableOnAndroid 
         keyboardShouldPersistTaps={'handled'}
         showsVerticalScrollIndicator={false}
         scrollEnabled={false}
-        onKeyboardDidShow={() => setOnKeyboard(true)}
-        onKeyboardDidHide={() => setOnKeyboard(false)}
         >
         <View style={[styles.title, {height: (height / 29) * 3}]}>
           <Text style={styles.titleText}>Log in</Text>
@@ -103,6 +103,7 @@ function Login({navigation}:LoginScreenProps) {
                   color="black"
                   style={email ? {} :{display:'none'}}
                   onPress={() => setEmail('')}
+                  suppressHighlighting={true}
                   />
               </View>
             </View>
@@ -130,11 +131,19 @@ function Login({navigation}:LoginScreenProps) {
                 onPress={() => {
                   setShowPW(!showPW);
                 }}
+                suppressHighlighting={true}
               />
               </View>
             </View>
           </View>
         </View>
+      <Pressable
+        style={[styles.buttonStyle, styles.loginButton]}
+        // onPress={() => navigation.navigate('Login')}
+        onPress={() => Alert.alert('Todo',"로그인 성공시 : HomePage or 신청완료 페이지")}
+        >
+        <Text style={styles.textStyle}>로그인</Text>
+      </Pressable>
       <View style={onKeyboard ? {display:'none'} : styles.findIDPW}>
         <Pressable onPressIn={() => Alert.alert("구현예정","아이디 찾기 미구현")} style={{flex:1}}>
         <Text style={{color:'black',textAlign: 'right'}}>아이디 찾기   |</Text>
@@ -144,13 +153,6 @@ function Login({navigation}:LoginScreenProps) {
         </Pressable>
       </View>
       </KeyboardAwareScrollView>
-      <Pressable
-        style={[styles.buttonStyle, styles.loginButton]}
-        // onPress={() => navigation.navigate('Login')}
-        onPress={() => Alert.alert('Todo',"로그인 성공시 : HomePage or 신청완료 페이지")}
-        >
-        <Text style={styles.textStyle}>로그인</Text>
-      </Pressable>
     </SafeAreaView>
   );
 }
@@ -162,13 +164,15 @@ const styles = StyleSheet.create({
   },
   title: {
     justifyContent: 'center',
-    // backgroundColor: 'orange',
   },
   contentInput: {
-    // backgroundColor: 'orange',
   },
   headerStyle: {
-    alignItems: 'center',
+    // backgroundColor:'orange',
+    justifyContent:'center',
+    paddingHorizontal:heightScale*15,
+    borderBottomWidth:0.5,
+    borderBottomColor:'black'
   },
   titleText: {
     fontSize: heightScale * 22,

@@ -9,7 +9,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 function SignIn() {
   return (
     <Stack.Navigator initialRouteName='Main' screenOptions={{
-      animation: 'none',
+      animation: 'slide_from_right',
     }}>
       <Stack.Screen
         name="Main"
@@ -19,8 +19,8 @@ function SignIn() {
       <Stack.Screen
         name="Login"
         component={Login}
-        // options={{title:'Login',headerTitle:'이메일 회원가입' ,headerTitleAlign:'center'}}
-        options={{title:'Login',headerTitle:'',headerShadowVisible:true}}
+        // options={{title:'Login',headerTitle:'아이디 로그인' ,headerTitleAlign:'center'}}
+        options={{title:'Login',headerTitle:'',headerShown:false}}
         
       />
      </Stack.Navigator>
