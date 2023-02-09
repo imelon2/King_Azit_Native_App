@@ -11,9 +11,9 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		6671D23ACD698CBB538E92AF /* libPods-KingAzitApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1017D8340EB91E7CC7D26EF /* libPods-KingAzitApp.a */; };
+		38405C5B709CAF0BD6E4FA97 /* libPods-KingAzitApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C9C220C81DA7CB6CBE89C12 /* libPods-KingAzitApp.a */; };
+		490DEB8B489331B1A8C06311 /* libPods-KingAzitApp-KingAzitAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 20935E035FE88829C5734393 /* libPods-KingAzitApp-KingAzitAppTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		D87766BF76A71FBCE0E78038 /* libPods-KingAzitApp-KingAzitAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BBF097910E7A1DF00DA8D980 /* libPods-KingAzitApp-KingAzitAppTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,19 +30,19 @@
 		00E356EE1AD99517003FC87E /* KingAzitAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KingAzitAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* KingAzitAppTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KingAzitAppTests.m; sourceTree = "<group>"; };
-		0A551C5057DEB3213A7DCEDD /* Pods-KingAzitApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KingAzitApp.release.xcconfig"; path = "Target Support Files/Pods-KingAzitApp/Pods-KingAzitApp.release.xcconfig"; sourceTree = "<group>"; };
+		0CECC06667BBA80A433CC05C /* Pods-KingAzitApp-KingAzitAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KingAzitApp-KingAzitAppTests.debug.xcconfig"; path = "Target Support Files/Pods-KingAzitApp-KingAzitAppTests/Pods-KingAzitApp-KingAzitAppTests.debug.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* KingAzitApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KingAzitApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = KingAzitApp/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = KingAzitApp/AppDelegate.mm; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = KingAzitApp/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = KingAzitApp/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = KingAzitApp/main.m; sourceTree = "<group>"; };
-		708E8A2BB44BA02A88A9DD04 /* Pods-KingAzitApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KingAzitApp.debug.xcconfig"; path = "Target Support Files/Pods-KingAzitApp/Pods-KingAzitApp.debug.xcconfig"; sourceTree = "<group>"; };
+		20935E035FE88829C5734393 /* libPods-KingAzitApp-KingAzitAppTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KingAzitApp-KingAzitAppTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C9C220C81DA7CB6CBE89C12 /* libPods-KingAzitApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KingAzitApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		43EAA991FD504D0D0C79F92D /* Pods-KingAzitApp-KingAzitAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KingAzitApp-KingAzitAppTests.release.xcconfig"; path = "Target Support Files/Pods-KingAzitApp-KingAzitAppTests/Pods-KingAzitApp-KingAzitAppTests.release.xcconfig"; sourceTree = "<group>"; };
+		5955000B229FE2B341DB030D /* Pods-KingAzitApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KingAzitApp.release.xcconfig"; path = "Target Support Files/Pods-KingAzitApp/Pods-KingAzitApp.release.xcconfig"; sourceTree = "<group>"; };
+		60D89BFEFDF1B5A8994547DE /* Pods-KingAzitApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KingAzitApp.debug.xcconfig"; path = "Target Support Files/Pods-KingAzitApp/Pods-KingAzitApp.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = KingAzitApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		ADA1E5BFF77FA6C9DC724A7A /* Pods-KingAzitApp-KingAzitAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KingAzitApp-KingAzitAppTests.release.xcconfig"; path = "Target Support Files/Pods-KingAzitApp-KingAzitAppTests/Pods-KingAzitApp-KingAzitAppTests.release.xcconfig"; sourceTree = "<group>"; };
-		BBF097910E7A1DF00DA8D980 /* libPods-KingAzitApp-KingAzitAppTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KingAzitApp-KingAzitAppTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		C1017D8340EB91E7CC7D26EF /* libPods-KingAzitApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KingAzitApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		C3CDA9C3F968E7D473F231A6 /* Pods-KingAzitApp-KingAzitAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KingAzitApp-KingAzitAppTests.debug.xcconfig"; path = "Target Support Files/Pods-KingAzitApp-KingAzitAppTests/Pods-KingAzitApp-KingAzitAppTests.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -51,7 +51,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D87766BF76A71FBCE0E78038 /* libPods-KingAzitApp-KingAzitAppTests.a in Frameworks */,
+				490DEB8B489331B1A8C06311 /* libPods-KingAzitApp-KingAzitAppTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,7 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6671D23ACD698CBB538E92AF /* libPods-KingAzitApp.a in Frameworks */,
+				38405C5B709CAF0BD6E4FA97 /* libPods-KingAzitApp.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -100,8 +100,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				C1017D8340EB91E7CC7D26EF /* libPods-KingAzitApp.a */,
-				BBF097910E7A1DF00DA8D980 /* libPods-KingAzitApp-KingAzitAppTests.a */,
+				2C9C220C81DA7CB6CBE89C12 /* libPods-KingAzitApp.a */,
+				20935E035FE88829C5734393 /* libPods-KingAzitApp-KingAzitAppTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -140,10 +140,10 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				708E8A2BB44BA02A88A9DD04 /* Pods-KingAzitApp.debug.xcconfig */,
-				0A551C5057DEB3213A7DCEDD /* Pods-KingAzitApp.release.xcconfig */,
-				C3CDA9C3F968E7D473F231A6 /* Pods-KingAzitApp-KingAzitAppTests.debug.xcconfig */,
-				ADA1E5BFF77FA6C9DC724A7A /* Pods-KingAzitApp-KingAzitAppTests.release.xcconfig */,
+				60D89BFEFDF1B5A8994547DE /* Pods-KingAzitApp.debug.xcconfig */,
+				5955000B229FE2B341DB030D /* Pods-KingAzitApp.release.xcconfig */,
+				0CECC06667BBA80A433CC05C /* Pods-KingAzitApp-KingAzitAppTests.debug.xcconfig */,
+				43EAA991FD504D0D0C79F92D /* Pods-KingAzitApp-KingAzitAppTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -155,12 +155,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "KingAzitAppTests" */;
 			buildPhases = (
-				C472C37B6BA543989D1B42C1 /* [CP] Check Pods Manifest.lock */,
+				32FB19F7AC52702EA97F627B /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				3B32D2DEDC1D61BB46D30EC0 /* [CP] Embed Pods Frameworks */,
-				EB1950AA08AD78CE58DF0CEC /* [CP] Copy Pods Resources */,
+				919788349344F1DE0A9A53D3 /* [CP] Embed Pods Frameworks */,
+				2179C99853B8B9DCD427F73A /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -176,14 +176,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "KingAzitApp" */;
 			buildPhases = (
-				44BE8443FECB4492F42FFCC3 /* [CP] Check Pods Manifest.lock */,
+				362693C9BC45A599F0464890 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				7E5940CEE732BD528476AD34 /* [CP] Embed Pods Frameworks */,
-				9FB0592C90146EFA2DDFEBAE /* [CP] Copy Pods Resources */,
+				05E6469BAF09121FB25402F9 /* [CP] Embed Pods Frameworks */,
+				AC089A614CD536F1CB10A2A3 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -266,46 +266,7 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		3B32D2DEDC1D61BB46D30EC0 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-KingAzitApp-KingAzitAppTests/Pods-KingAzitApp-KingAzitAppTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-KingAzitApp-KingAzitAppTests/Pods-KingAzitApp-KingAzitAppTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-KingAzitApp-KingAzitAppTests/Pods-KingAzitApp-KingAzitAppTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		44BE8443FECB4492F42FFCC3 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-KingAzitApp-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		7E5940CEE732BD528476AD34 /* [CP] Embed Pods Frameworks */ = {
+		05E6469BAF09121FB25402F9 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -322,24 +283,24 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-KingAzitApp/Pods-KingAzitApp-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		9FB0592C90146EFA2DDFEBAE /* [CP] Copy Pods Resources */ = {
+		2179C99853B8B9DCD427F73A /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-KingAzitApp/Pods-KingAzitApp-resources-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-KingAzitApp-KingAzitAppTests/Pods-KingAzitApp-KingAzitAppTests-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-KingAzitApp/Pods-KingAzitApp-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-KingAzitApp-KingAzitAppTests/Pods-KingAzitApp-KingAzitAppTests-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-KingAzitApp/Pods-KingAzitApp-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-KingAzitApp-KingAzitAppTests/Pods-KingAzitApp-KingAzitAppTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C472C37B6BA543989D1B42C1 /* [CP] Check Pods Manifest.lock */ = {
+		32FB19F7AC52702EA97F627B /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -361,21 +322,60 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		EB1950AA08AD78CE58DF0CEC /* [CP] Copy Pods Resources */ = {
+		362693C9BC45A599F0464890 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-KingAzitApp-KingAzitAppTests/Pods-KingAzitApp-KingAzitAppTests-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			name = "[CP] Copy Pods Resources";
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-KingAzitApp-KingAzitAppTests/Pods-KingAzitApp-KingAzitAppTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-KingAzitApp-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-KingAzitApp-KingAzitAppTests/Pods-KingAzitApp-KingAzitAppTests-resources.sh\"\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		919788349344F1DE0A9A53D3 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-KingAzitApp-KingAzitAppTests/Pods-KingAzitApp-KingAzitAppTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-KingAzitApp-KingAzitAppTests/Pods-KingAzitApp-KingAzitAppTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-KingAzitApp-KingAzitAppTests/Pods-KingAzitApp-KingAzitAppTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AC089A614CD536F1CB10A2A3 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-KingAzitApp/Pods-KingAzitApp-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-KingAzitApp/Pods-KingAzitApp-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-KingAzitApp/Pods-KingAzitApp-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -430,7 +430,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C3CDA9C3F968E7D473F231A6 /* Pods-KingAzitApp-KingAzitAppTests.debug.xcconfig */;
+			baseConfigurationReference = 0CECC06667BBA80A433CC05C /* Pods-KingAzitApp-KingAzitAppTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -457,7 +457,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = ADA1E5BFF77FA6C9DC724A7A /* Pods-KingAzitApp-KingAzitAppTests.release.xcconfig */;
+			baseConfigurationReference = 43EAA991FD504D0D0C79F92D /* Pods-KingAzitApp-KingAzitAppTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -481,7 +481,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 708E8A2BB44BA02A88A9DD04 /* Pods-KingAzitApp.debug.xcconfig */;
+			baseConfigurationReference = 60D89BFEFDF1B5A8994547DE /* Pods-KingAzitApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -508,7 +508,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0A551C5057DEB3213A7DCEDD /* Pods-KingAzitApp.release.xcconfig */;
+			baseConfigurationReference = 5955000B229FE2B341DB030D /* Pods-KingAzitApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
