@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   DeviceEventEmitter,
   SafeAreaView,
+  KeyboardAvoidingView 
 } from 'react-native';
 import {
   createNativeStackNavigator,
@@ -23,6 +24,7 @@ const heightScale = heightData;
 // import DismissKeyboardView from '../components/DismissKeyboardView';
 import IconOcticons from 'react-native-vector-icons/Octicons';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+
 import SignUpFinal from "./SignUpFinal";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -53,11 +55,13 @@ function SignUpCertification({navigation}: SignInScreenProps5) {
   const [phoneNum, setPhoneNum] = useState('');
   const [certNum, setCertNum] = useState('');
   const [certCheck, setCertCheck] = useState(false);
-
   const [keyboardOn, setKeyboardOn] = useState(false);
+  const birthDateRef = useRef<TextInput | null>(null);
+  const phoneNumRef = useRef<TextInput | null>(null);
+  
 
   const onClickSiginUp = () => {
-    navigation.navigate('SignUpNickName');
+    navigation.navigate('SignUpFinal');
   };
 
   const onClickCert = () => {
@@ -106,24 +110,25 @@ function SignUpCertification({navigation}: SignInScreenProps5) {
           <View style={styles.textInputWrapper}>
             <TextInput
               style={styles.textInput}
-              // ref={passwordRef}
               placeholder="이름 입력"
               onChangeText={onChangeName}
-              // onSubmitEditing = {loginBtn} // Submit Key 클릭 시, 이벤트
-              // blurOnSubmit={false} // Submit Key클릭 시, Keyboard 유지
-              value={birthDate}
+              value={name}
+              returnKeyType="next" // next key로 변환
+              onSubmitEditing = {() => birthDateRef.current?.focus()} // Submit Key 클릭 시, 이벤트
+              blurOnSubmit ={false} // Submit Key클릭 시, Keyboard 유지
             />
           </View>
 
           <View style={styles.textInputWrapper}>
             <TextInput
               style={styles.textInput}
-              // ref={passwordRef}
+              ref={birthDateRef}
               placeholder="생년월일"
               onChangeText={onChangeBirthDate}
-              // onSubmitEditing = {loginBtn} // Submit Key 클릭 시, 이벤트
-              // blurOnSubmit={false} // Submit Key클릭 시, Keyboard 유지
-              value={name}
+              returnKeyType="next" // next key로 변환
+              onSubmitEditing = {() => phoneNumRef.current?.focus()} // Submit Key 클릭 시, 이벤트
+              blurOnSubmit ={false} // Submit Key클릭 시, Keyboard 유지
+              value={birthDate}
             />
           </View>
 
@@ -131,11 +136,9 @@ function SignUpCertification({navigation}: SignInScreenProps5) {
             <View style={[styles.textInputWrapper, styles.textInputWrapper2]}>
               <TextInput
                 style={styles.textInput}
-                // ref={passwordRef}
+                ref={phoneNumRef}
                 placeholder="휴대폰번호 입력"
                 onChangeText={onChangePhoneNum}
-                // onSubmitEditing = {loginBtn} // Submit Key 클릭 시, 이벤트
-                // blurOnSubmit={false} // Submit Key클릭 시, Keyboard 유지
                 value={phoneNum}
               />
             </View>
@@ -148,11 +151,8 @@ function SignUpCertification({navigation}: SignInScreenProps5) {
           <View style={styles.textInputWrapper}>
             <TextInput
               style={styles.textInput}
-              // ref={passwordRef}
               placeholder="인정번호를 적어주세요."
               onChangeText={onChangeCertNum}
-              // onSubmitEditing = {loginBtn} // Submit Key 클릭 시, 이벤트
-              // blurOnSubmit={false} // Submit Key클릭 시, Keyboard 유지
               value={certNum}
             />
           </View>
@@ -285,9 +285,10 @@ function SignUpPassWord({navigation}: SignInScreenProps3) {
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAwareScrollView
-        onKeyboardDidShow={() => setKeyboardOn(true)}
-        onKeyboardDidHide={() => setKeyboardOn(false)}
-        keyboardShouldPersistTaps={'handled'}>
+        // onKeyboardDidShow={() => setKeyboardOn(true)}
+        // onKeyboardDidHide={() => setKeyboardOn(false)}
+        
+        >
         <View>
           <Icon
             name="arrowleft"
@@ -384,9 +385,10 @@ function SignUpLogin({navigation}: SignInScreenProps2) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAwareScrollView
-        onKeyboardDidShow={() => setKeyboardOn(true)}
-        onKeyboardDidHide={() => setKeyboardOn(false)}>
+      <KeyboardAvoidingView
+        // onKeyboardDidShow={() => setKeyboardOn(true)}
+        // onKeyboardDidHide={() => setKeyboardOn(false)}
+        >
         <View>
           <Icon
             name="arrowleft"
@@ -413,8 +415,6 @@ function SignUpLogin({navigation}: SignInScreenProps2) {
               importantForAutofill="yes" // 자동완성 불러오기
               autoComplete="email" // 자동완성 허용
               keyboardType="email-address" // 키보드 타입 변경
-              // returnKeyType="next" // next key로 변환
-              blurOnSubmit={false} // Submit Key클릭 시, Keyboard 유지
               value={email}
             />
           </View>
@@ -426,9 +426,9 @@ function SignUpLogin({navigation}: SignInScreenProps2) {
             )}
           </View>
         </View>
-      </KeyboardAwareScrollView>
+      </KeyboardAvoidingView>
 
-      <View>
+      <View style={{flex: 3}} >
         <Text
           style={
             email
@@ -667,6 +667,8 @@ const styles = StyleSheet.create({
   },
   nextButton3: {
     bottom: -135,
+    display:'none',
+    opacity:0,
   },
   textInput: {
     fontSize: heightScale * 18,
