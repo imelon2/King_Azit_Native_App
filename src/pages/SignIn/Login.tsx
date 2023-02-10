@@ -53,10 +53,11 @@ function Login({navigation}:LoginScreenProps) {
         return;
       }
       setLoading(true);
-      Alert.alert(
-        '로그인 기능 구현',
-        `email : ${email} \n password : ${password}`,
-      );
+      navigation.navigate('SignUpFinal')
+      // Alert.alert(
+      //   '로그인 기능 구현',
+      //   `email : ${email} \n password : ${password}`,
+      // );
     } catch (error) {
     } finally {
       setLoading(false);
@@ -119,9 +120,9 @@ function Login({navigation}:LoginScreenProps) {
                 style={styles.textInput}
                 ref={passwordRef}
                 placeholder="비밀번호"
-                onChangeText={onChangePassword}
+                onChangeText={onChangePassword} 
                 onSubmitEditing={loginBtn} // Submit Key 클릭 시, 이벤트
-                blurOnSubmit={true} // Submit Key클릭 시, Keyboard 유지
+                blurOnSubmit={false}
                 secureTextEntry={!showPW ? true : false}
                 value={password}
               />
@@ -142,7 +143,7 @@ function Login({navigation}:LoginScreenProps) {
         </View>
       <Pressable
         style={isFillFrom ? [styles.loginButton,styles.onLiginButton] : styles.loginButton}
-        onPress={() => navigation.navigate('SignUpFinal')}
+        onPress={() => loginBtn}
         // onPress={() => Alert.alert('Todo',"로그인 성공시 : HomePage or 신청완료 페이지")}
         >
         <Text style={isFillFrom ? [styles.textStyle,styles.onTextStyle] : styles.textStyle}>로그인</Text>
@@ -201,16 +202,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingBottom: 5,
   },
-  findIDPW: {flexDirection: 'row', padding: heightScale*20},
+  findIDPW: {flexDirection: 'row', padding: heightScale*20,marginTop:heightScale*15},
   loginButton: {
     backgroundColor: '#D9D9D9',
-    margin:heightScale*20,
     marginHorizontal: heightScale * 29,
     height: heightScale * 64,
     borderRadius: heightScale * 5,
     alignItems: 'center',
     justifyContent: 'center',
-    
   },
   onLiginButton: {
     backgroundColor:'#6DC0F9'
