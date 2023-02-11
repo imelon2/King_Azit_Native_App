@@ -1,5 +1,5 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   Alert,
   Dimensions,
@@ -10,6 +10,7 @@ import {
   TextInput,
   View,
   SafeAreaView,
+  Keyboard,
 } from 'react-native';
 import IconOcticons from 'react-native-vector-icons/Octicons';
 import IconSimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
@@ -36,6 +37,8 @@ function Login({navigation}:LoginScreenProps) {
   const emailRef = useRef<TextInput | null>(null);
   const passwordRef = useRef<TextInput | null>(null);
 
+  useEffect(() => {
+  },[])
   const onChangeEmail = useCallback((text: any) => {
     setEmail(text.trim());
   }, []);
@@ -91,13 +94,14 @@ function Login({navigation}:LoginScreenProps) {
                 ref={emailRef}
                 placeholder="아이디 (이메일)"
                 onChangeText={onChangeEmail}
-                importantForAutofill="yes" // 자동완성 불러오기
+                // importantForAutofill="yes" // 자동완성 불러오기
                 autoComplete="email" // 자동완성 허용
                 keyboardType="email-address" // 키보드 타입 변경
                 returnKeyType="next" // next key로 변환
                 onSubmitEditing={() => passwordRef.current?.focus()} // Submit Key 클릭 시, 이벤트
                 blurOnSubmit={false} // Submit Key클릭 시, Keyboard 유지
                 value={email}
+                // autoFocus={true}
               />
               <View style={{flex:1,alignItems:'flex-end'}}>
                 <IconSimpleAntDesign 

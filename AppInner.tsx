@@ -5,7 +5,6 @@ import { StyleSheet, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import SignIn from './src/pages/SignIn/SignIn';
 import SignUp from './src/pages/SignUp';
-import SignUpFinal from './src/pages/SignUpFinal';
 import { RootState } from './src/store/reducer';
 import MainPage from "./src/pages/MainPage/MainPage";
 
@@ -46,11 +45,6 @@ function AppInner() {
             name="SignUp"
             component={SignUp}
             options={{ title: 'SignUp', headerShown: false }}
-          />
-          <Stack.Screen
-            name="SignUpFinal"
-            component={SignUpFinal}
-            options={{ title: 'SignUpFinal', headerShown: false }}
           />
         </Stack.Navigator>
       // ) : (
