@@ -79,7 +79,7 @@ function Login({navigation}:LoginScreenProps) {
         scrollEnabled={false}
         >
         <View style={[styles.title, {height: (height / 29) * 3}]}>
-          <Text style={styles.titleText}>아이디/비밀번호를 입력해주세요.</Text>
+          <Text style={styles.titleText}>Log In</Text>
         </View>
         <View style={[styles.contentInput, {height: (height / 29) * 6}]}>
           <View style={styles.inputWrapper}>
@@ -94,14 +94,13 @@ function Login({navigation}:LoginScreenProps) {
                 ref={emailRef}
                 placeholder="아이디 (이메일)"
                 onChangeText={onChangeEmail}
-                // importantForAutofill="yes" // 자동완성 불러오기
+                importantForAutofill="yes" // 자동완성 불러오기
                 autoComplete="email" // 자동완성 허용
                 keyboardType="email-address" // 키보드 타입 변경
                 returnKeyType="next" // next key로 변환
                 onSubmitEditing={() => passwordRef.current?.focus()} // Submit Key 클릭 시, 이벤트
                 blurOnSubmit={false} // Submit Key클릭 시, Keyboard 유지
                 value={email}
-                // autoFocus={true}
               />
               <View style={{flex:1,alignItems:'flex-end'}}>
                 <IconSimpleAntDesign 

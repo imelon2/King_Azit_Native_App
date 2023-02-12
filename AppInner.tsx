@@ -7,6 +7,7 @@ import SignIn from './src/pages/SignIn/SignIn';
 import SignUp from './src/pages/SignUp';
 import { RootState } from './src/store/reducer';
 import MainPage from "./src/pages/MainPage/MainPage";
+import MyPage from './src/pages/MainPage/MyPage';
 
 
 export type RootStackParamList = {
@@ -27,12 +28,13 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator();
 
 function AppInner() {
-  const isLoggedIn = useSelector((state: RootState) => !!state.user.email);
+  // const isLoggedIn = useSelector((state: RootState) => !!state.user.email);
+  const isLoggedIn = true
   console.log(isLoggedIn);
 
   return (
-    // <View>
-      // {!isLoggedIn ? (
+    <>
+      {!isLoggedIn ? (
         <Stack.Navigator initialRouteName='SignIn' screenOptions={{
           animation: 'slide_from_right',
         }}>
@@ -47,12 +49,13 @@ function AppInner() {
             options={{ title: 'SignUp', headerShown: false }}
           />
         </Stack.Navigator>
-      // ) : (
-      //     <Tab.Navigator>
-      //       <Tab.Screen name="MainPage" component={MainPage} />
-      //     </Tab.Navigator>
-      // )}
-    // </View>
+      ) : (
+          <Tab.Navigator>
+            <Tab.Screen name="MainPage" component={MainPage} />
+            <Tab.Screen name="MyPage" component={MyPage} options={{headerShown:false}}/>
+          </Tab.Navigator>
+      )}
+    </>
   );
 }
 
