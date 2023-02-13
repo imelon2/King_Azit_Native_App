@@ -4,8 +4,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { StyleSheet, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import SignIn from './src/pages/SignIn/SignIn';
-import SignUp from './src/pages/SignUp';
-import SignUpFinal from './src/pages/SignUpFinal';
+import SignUp from './src/pages/SignUp/SignUp'
+import SignUpFinal from './src/pages/SignUp/SignUpFinal';
 import { RootState } from './src/store/reducer';
 import MainPage from "./src/pages/MainPage/MainPage";
 
@@ -29,11 +29,10 @@ const Tab = createBottomTabNavigator();
 
 function AppInner() {
   const isLoggedIn = useSelector((state: RootState) => !!state.user.email);
-  console.log(isLoggedIn);
 
   return (
-    // <View>
-      // {!isLoggedIn ? (
+    <View style={{ flex: 1 }} >
+      {isLoggedIn ? (
         <Stack.Navigator initialRouteName='SignIn' screenOptions={{
           animation: 'slide_from_right',
         }}>
@@ -53,12 +52,15 @@ function AppInner() {
             options={{ title: 'SignUpFinal', headerShown: false }}
           />
         </Stack.Navigator>
-      // ) : (
-      //     <Tab.Navigator>
-      //       <Tab.Screen name="MainPage" component={MainPage} />
-      //     </Tab.Navigator>
-      // )}
-    // </View>
+      ) : (
+        <Tab.Navigator>
+          <Tab.Screen 
+          name="MainPage" 
+          component={MainPage} 
+          options={{ title: 'MainPage', headerShown: false }} />
+        </Tab.Navigator>
+      )}
+    </View>
   );
 }
 
