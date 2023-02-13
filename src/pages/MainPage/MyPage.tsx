@@ -8,51 +8,62 @@ import {
   Text,
   View,
 } from 'react-native';
+import {HomeRootStackParamList} from '../../../AppInner'
 import IconSimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import ImagePicker from 'react-native-image-crop-picker';
 // import * as ImagePicker from 'expo-image-picker';
 import ImageResizer from 'react-native-image-resizer';
 import {heightData} from '../../modules/globalStyles';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+
 const heightScale = heightData;
 
 function MyPage() {
-  const [preview, setPreview] = useState<{uri: string|null}>();
-  const [image, setImage] = useState<{uri: string; name: string; type: string}>();
+    const navigation = useNavigation<NavigationProp<HomeRootStackParamList>>();
+    const [preview, setPreview] = useState<{uri: string|null}>();
   
-  const onResponse = useCallback(async (response:any) => {
-    console.log(response.width, response.height, response.exif);
-    setPreview({uri: `data:${response.mime};base64,${response.data}`});
-    // const orientation = (response.exif as any)?.Orientation; // exif Orientation
-    // console.log('orientation', orientation);
-    return ImageResizer.createResizedImage(
-      response.path,
-      600, // width
-      600, // height
-      response.mime.includes('jpeg') ? 'JPEG' : 'PNG', //format
-      100, // quality
-      0, // rotation
-    ).then(r => {
-      console.log(r.size); // r.uri, r.name,
+    const onResponse = useCallback(async (response:any) => {
+        // Expo 개발용
+        // if(response.base64 === undefined) {
+        //   return;
+        // }
+        // console.log(response.width, response.height, response.exif);
+        setPreview({uri: `data:${response.mime};base64,${response.data}`});
+        // setPreview({uri: `data:jpeg;base64,${response.base64}`}); // Expo
 
-      setImage({
-        uri: r.uri,
-        name: r.name,
-        type: response.mime,
-      });
+        // exif Orientation 걸릴 경우
+        // const orientation = (response.exif as any)?.Orientation; // exif Orientation
+        // console.log('orientation', orientation);
+        return ImageResizer.createResizedImage(
+        response.path,
+        600, // width
+        600, // height
+        response.mime.includes('jpeg') ? 'JPEG' : 'PNG', // format
+        // 'JPEG', // Expo format
+        100, // quality
+        0, // rotation
+        ).then(r => {
+        console.log(r.size); // r.uri, r.name,
 
-    const formData = new FormData();
-    formData.append('image', image);
+        const image= {
+            uri: r.uri,
+            name: r.name,
+            type: response.mime,
+        }
 
-    // try {
-    //   await axios.post(`${Config.API_URL}/complete`, formData, {
-    //     headers: {
-    //       authorization: `Bearer ${accessToken}`,
-    //     },
-    //   });
-
-    });
-  }, []);
+        const formData = new FormData();
+        formData.append('image', image);
+        
+        // ToDo : Server에 이미지 저장하기
+        // try {
+        //   await axios.post(`${Config.API_URL}/`, formData, {
+        //     headers: {
+        //       authorization: `Bearer ${accessToken}`,
+        //     },
+        //   });
+        });
+    }, []);
 
   const onChangeFile = useCallback(() => {
     return ImagePicker.openPicker({
@@ -70,6 +81,7 @@ function MyPage() {
   //     exif: true,
   //     base64: true,
   //     mediaTypes:ImagePicker.MediaTypeOptions.All,
+  //     allowsEditing:true
   //   })
   //     .then((data) => console.log(data)
   //     )
@@ -78,70 +90,61 @@ function MyPage() {
 
   return (
     <SafeAreaView>
-    <ScrollView style={styles.container}>
-      <View style={styles.headerStyle}>
-        <Text style={styles.fontStyle}>마이 페이지</Text>
-      </View>
-      <View style={styles.myInfoStyle} >
-        <Pressable onPress={onChangeFile}>
-        <Image
-          source={preview ? preview : require('../../assets/UserIcon.png')}
-          style={styles.userIcon}
-          />
-          </Pressable>
-        <View style={styles.userInfoWrapper}>
-          <Text style={styles.fontStyle}>한나피쉬</Text>
-          <IconSimpleLineIcons
-            name="pencil"
-            size={heightScale * 13}
-            style={styles.pencilIcon}
-            color="black"
-          />
+        <ScrollView style={styles.container}>
+        <View style={styles.headerStyle}>
+            <Text style={styles.fontStyle}>마이 페이지</Text>
         </View>
-      </View>
-      <View style={styles.contentStyle}>
-        <Text style={styles.contentTitleText}>마이티켓</Text>
-        <View
-          style={[styles.contentWrapper,{marginTop: heightScale * 13}]}>
-          <View style={{flex: 1}}>
-            <Text style={styles.contentText}>보유 티켓</Text>
-          </View>
-          <View>
-            <IconAntDesign name="right" size={heightScale * 28} color='#000000'/>
-          </View>
+        <View style={styles.myInfoStyle} >
+            <Pressable onPress={onChangeFile}>
+            <Image
+            source={preview ? preview : require('../../../assets/UserIcon.png')}
+            style={styles.userIcon}
+            />
+            </Pressable>
+            <Pressable style={styles.userInfoWrapper} onPress={() => navigation.navigate('SetNickNameScreen')}>
+                <Text style={styles.fontStyle}>한나피쉬</Text>
+                <IconSimpleLineIcons
+                    name="pencil"
+                    size={heightScale * 13}
+                    style={styles.pencilIcon}
+                    color="black"
+                />
+            </Pressable>
         </View>
-        <View style={styles.contentWrapper}>
-          <View style={{flex: 1}}>
-            <Text style={styles.contentText}>티켓 사용 내역</Text>
-          </View>
-          <View>
-            <IconAntDesign name="right" size={heightScale * 28} color='#000000'/>
-          </View>
-        </View>
+        <View style={styles.contentStyle}>
+            <View
+            style={[styles.contentWrapper,{marginTop: heightScale * 13}]}>
+            <View style={{flex: 1}}>
+                <Text style={styles.contentTitleText}>마이티켓</Text>
+            </View>
+            <View>
+                <IconAntDesign name="right" size={heightScale * 28} color='#000000'/>
+            </View>
+            </View>
 
-        <Text style={[styles.contentTitleText, {marginTop: 28}]}>마이게임</Text>
-        <View style={[styles.contentWrapper,{marginTop: heightScale * 13}]}>
-          <View style={{flex: 1}}>
-            <Text style={styles.contentText}>게임 참여 기록</Text>
-          </View>
-          <View>
-            <IconAntDesign name="right" size={heightScale * 28} color='#000000'/>
-          </View>
+            <Text style={[styles.contentTitleText, {marginTop: 28}]}>마이게임</Text>
+            <View style={[styles.contentWrapper,{marginTop: heightScale * 13}]}>
+            <View style={{flex: 1}}>
+                <Text style={styles.contentText}>게임 참여 기록</Text>
+            </View>
+            <View>
+                <IconAntDesign name="right" size={heightScale * 28} color='#000000'/>
+            </View>
+            </View>
+            <Text style={[styles.contentTitleText, {marginTop: 28}]}>랭킹</Text>
+            <View style={[styles.contentWrapper,{marginTop: heightScale * 13}]}>
+            <View style={{flex: 1}}>
+                <Text style={styles.contentText}>마이 랭킹</Text>
+            </View>
+            <View>
+                <IconAntDesign name="right" size={heightScale * 28} color='#000000'/>
+            </View>
+            </View>
+            <Text style={[styles.contentTitleText, {marginVertical: 28}]}>
+            로그아웃
+            </Text>
         </View>
-        <Text style={[styles.contentTitleText, {marginTop: 28}]}>랭킹</Text>
-        <View style={[styles.contentWrapper,{marginTop: heightScale * 13}]}>
-          <View style={{flex: 1}}>
-            <Text style={styles.contentText}>마이 랭킹</Text>
-          </View>
-          <View>
-            <IconAntDesign name="right" size={heightScale * 28} color='#000000'/>
-          </View>
-        </View>
-        <Text style={[styles.contentTitleText, {marginVertical: 28}]}>
-          로그아웃
-        </Text>
-      </View>
-    </ScrollView>
+        </ScrollView>
     </SafeAreaView>
   );
 }
@@ -170,6 +173,7 @@ const styles = StyleSheet.create({
   },
   pencilIcon: {bottom: heightScale * 9, padding: heightScale * 2},
   userIcon: {
+    backgroundColor:'white',
     height: heightScale * 108,
     width: heightScale * 108,
     marginTop: heightScale * 42,
