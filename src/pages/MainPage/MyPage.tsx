@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   Image,
   Pressable,
@@ -11,21 +11,70 @@ import {
 import IconSimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import ImagePicker from 'react-native-image-crop-picker';
+// import * as ImagePicker from 'expo-image-picker';
 import ImageResizer from 'react-native-image-resizer';
 import {heightData} from '../../modules/globalStyles';
 const heightScale = heightData;
 
 function MyPage() {
+  const [preview, setPreview] = useState<{uri: string|null}>();
+  const [image, setImage] = useState<{uri: string; name: string; type: string}>();
+  
+  const onResponse = useCallback(async (response:any) => {
+    console.log(response.width, response.height, response.exif);
+    setPreview({uri: `data:${response.mime};base64,${response.data}`});
+    // const orientation = (response.exif as any)?.Orientation; // exif Orientation
+    // console.log('orientation', orientation);
+    return ImageResizer.createResizedImage(
+      response.path,
+      600, // width
+      600, // height
+      response.mime.includes('jpeg') ? 'JPEG' : 'PNG', //format
+      100, // quality
+      0, // rotation
+    ).then(r => {
+      console.log(r.size); // r.uri, r.name,
+
+      setImage({
+        uri: r.uri,
+        name: r.name,
+        type: response.mime,
+      });
+
+    const formData = new FormData();
+    formData.append('image', image);
+
+    // try {
+    //   await axios.post(`${Config.API_URL}/complete`, formData, {
+    //     headers: {
+    //       authorization: `Bearer ${accessToken}`,
+    //     },
+    //   });
+
+    });
+  }, []);
+
   const onChangeFile = useCallback(() => {
     return ImagePicker.openPicker({
       includeExif: true,
       includeBase64: true,
       mediaType: 'photo',
-    })
-      .then((data) => console.log(data)
-      )
+      cropping:true
+    }).then(onResponse)
       .catch(console.log);
-  }, []);
+  }, [onResponse]);
+
+  // expo 개발용
+  // const onChangeFile = useCallback(() => {
+  //   return ImagePicker.launchImageLibraryAsync({
+  //     exif: true,
+  //     base64: true,
+  //     mediaTypes:ImagePicker.MediaTypeOptions.All,
+  //   })
+  //     .then((data) => console.log(data)
+  //     )
+  //     .catch(console.log);
+  // }, []);
 
   return (
     <SafeAreaView>
@@ -36,7 +85,7 @@ function MyPage() {
       <View style={styles.myInfoStyle} >
         <Pressable onPress={onChangeFile}>
         <Image
-          source={require('../../assets/UserIcon.png')}
+          source={preview ? preview : require('../../assets/UserIcon.png')}
           style={styles.userIcon}
           />
           </Pressable>
@@ -124,6 +173,8 @@ const styles = StyleSheet.create({
     height: heightScale * 108,
     width: heightScale * 108,
     marginTop: heightScale * 42,
+    borderRadius:100,
+    resizeMode:'center'
   },
   fontStyle: {fontSize: heightScale * 18, fontWeight: 'bold', color: 'black'},
   contentTitleText: {
