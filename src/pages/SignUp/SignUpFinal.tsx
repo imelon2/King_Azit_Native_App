@@ -1,4 +1,5 @@
 import {NavigationProp, useNavigation} from '@react-navigation/native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import {
   Alert,
   Dimensions,
@@ -14,8 +15,9 @@ import {RootStackParamList} from '../../../AppInner';
 import {widthData, heightData} from '../../modules/globalStyles';
 const heightScale = heightData;
 
-function SignUpFinal() {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+type SignUpFinalScreenProps = NativeStackScreenProps<RootStackParamList,'SignUpFinal' >;
+
+function SignUpFinal({navigation}:SignUpFinalScreenProps) {
   return (
     <>
       <SafeAreaView style={styles.container}>

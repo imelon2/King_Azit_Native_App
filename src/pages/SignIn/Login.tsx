@@ -1,5 +1,5 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   Alert,
   Dimensions,
@@ -10,6 +10,7 @@ import {
   TextInput,
   View,
   SafeAreaView,
+  Keyboard,
 } from 'react-native';
 import IconOcticons from 'react-native-vector-icons/Octicons';
 import IconSimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
@@ -36,6 +37,8 @@ function Login({navigation}:LoginScreenProps) {
   const emailRef = useRef<TextInput | null>(null);
   const passwordRef = useRef<TextInput | null>(null);
 
+  useEffect(() => {
+  },[])
   const onChangeEmail = useCallback((text: any) => {
     setEmail(text.trim());
   }, []);
@@ -76,7 +79,7 @@ function Login({navigation}:LoginScreenProps) {
         scrollEnabled={false}
         >
         <View style={[styles.title, {height: (height / 29) * 3}]}>
-          <Text style={styles.titleText}>아이디/비밀번호를 입력해주세요.</Text>
+          <Text style={styles.titleText}>Log In</Text>
         </View>
         <View style={[styles.contentInput, {height: (height / 29) * 6}]}>
           <View style={styles.inputWrapper}>

@@ -5,9 +5,9 @@ import { StyleSheet, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import SignIn from './src/pages/SignIn/SignIn';
 import SignUp from './src/pages/SignUp/SignUp'
-import SignUpFinal from './src/pages/SignUp/SignUpFinal';
-import { RootState } from './src/store/reducer';
 import MainPage from "./src/pages/MainPage/MainPage";
+import MyPage from './src/pages/MainPage/MyPage';
+import SetNickNameScreen from './src/pages/MainPage/SetNickNameScreen';
 
 
 export type RootStackParamList = {
@@ -23,16 +23,31 @@ export type RootStackParamList = {
   SignUpFinal: undefined;
   MainPage: undefined;
 };
+export type HomeRootStackParamList = {
+  Home:undefined; // Tab Navigator
+  SetNickNameScreen:undefined;
+};
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
+const HomeStack = createNativeStackNavigator<HomeRootStackParamList>();
 const Tab = createBottomTabNavigator();
 
+function TabNavigator() {
+  return(
+    <Tab.Navigator>
+      <Tab.Screen name="MainPage" component={MainPage}  options={{ title: 'MainPage', headerShown: false}} />
+      <Tab.Screen name="MyPage" component={MyPage} options={{headerShown:false}}/>
+    </Tab.Navigator>
+  )
+}
 function AppInner() {
-  const isLoggedIn = useSelector((state: RootState) => !!state.user.email);
+  // const isLoggedIn = useSelector((state: RootState) => !!state.user.email);
+  const isLoggedIn = true
+  console.log(isLoggedIn);
 
   return (
-    <View style={{ flex: 1 }} >
-      {isLoggedIn ? (
+    <>
+      {!isLoggedIn ? (
         <Stack.Navigator initialRouteName='SignIn' screenOptions={{
           animation: 'slide_from_right',
         }}>
@@ -46,21 +61,14 @@ function AppInner() {
             component={SignUp}
             options={{ title: 'SignUp', headerShown: false }}
           />
-          <Stack.Screen
-            name="SignUpFinal"
-            component={SignUpFinal}
-            options={{ title: 'SignUpFinal', headerShown: false }}
-          />
         </Stack.Navigator>
       ) : (
-        <Tab.Navigator>
-          <Tab.Screen 
-          name="MainPage" 
-          component={MainPage} 
-          options={{ title: 'MainPage', headerShown: false }} />
-        </Tab.Navigator>
+        <HomeStack.Navigator initialRouteName='Home' screenOptions={{headerShown:false}}>
+          <HomeStack.Screen name='Home' component={TabNavigator}/>
+          <HomeStack.Screen name='SetNickNameScreen' component={SetNickNameScreen} options={{animation:'none'}}/>
+        </HomeStack.Navigator>
       )}
-    </View>
+    </>
   );
 }
 
