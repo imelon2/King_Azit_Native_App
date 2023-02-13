@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   Image,
+  Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -9,20 +10,36 @@ import {
 } from 'react-native';
 import IconSimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
-import {widthData, heightData} from '../../modules/globalStyles';
+import ImagePicker from 'react-native-image-crop-picker';
+import ImageResizer from 'react-native-image-resizer';
+import {heightData} from '../../modules/globalStyles';
 const heightScale = heightData;
 
 function MyPage() {
+  const onChangeFile = useCallback(() => {
+    return ImagePicker.openPicker({
+      includeExif: true,
+      includeBase64: true,
+      mediaType: 'photo',
+    })
+      .then((data) => console.log(data)
+      )
+      .catch(console.log);
+  }, []);
+
   return (
+    <SafeAreaView>
     <ScrollView style={styles.container}>
       <View style={styles.headerStyle}>
         <Text style={styles.fontStyle}>마이 페이지</Text>
       </View>
-      <View style={styles.myInfoStyle}>
+      <View style={styles.myInfoStyle} >
+        <Pressable onPress={onChangeFile}>
         <Image
           source={require('../../assets/UserIcon.png')}
           style={styles.userIcon}
-        />
+          />
+          </Pressable>
         <View style={styles.userInfoWrapper}>
           <Text style={styles.fontStyle}>한나피쉬</Text>
           <IconSimpleLineIcons
@@ -76,6 +93,7 @@ function MyPage() {
         </Text>
       </View>
     </ScrollView>
+    </SafeAreaView>
   );
 }
 const styles = StyleSheet.create({
