@@ -10,6 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@empglabs/react-native-image-slider-box": "^1.0.13",
     "@react-native-community/push-notification-ios": "^1.10.1",
     "@react-native-firebase/analytics": "^17.0.0",
     "@react-native-firebase/app": "^17.0.0",

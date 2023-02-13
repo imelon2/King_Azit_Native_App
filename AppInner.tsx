@@ -4,8 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { StyleSheet, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import SignIn from './src/pages/SignIn/SignIn';
-import SignUp from './src/pages/SignUp';
-import { RootState } from './src/store/reducer';
+import SignUp from './src/pages/SignUp/SignUp'
 import MainPage from "./src/pages/MainPage/MainPage";
 import MyPage from './src/pages/MainPage/MyPage';
 import SetNickNameScreen from './src/pages/MainPage/SetNickNameScreen';
@@ -36,7 +35,7 @@ const Tab = createBottomTabNavigator();
 function TabNavigator() {
   return(
     <Tab.Navigator>
-      <Tab.Screen name="MainPage" component={MainPage} />
+      <Tab.Screen name="MainPage" component={MainPage}  options={{ title: 'MainPage', headerShown: false}} />
       <Tab.Screen name="MyPage" component={MyPage} options={{headerShown:false}}/>
     </Tab.Navigator>
   )

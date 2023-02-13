@@ -11,8 +11,8 @@ import {
   View,
   SafeAreaView,
 } from 'react-native';
-import {RootStackParamList} from '../../AppInner';
-import {widthData, heightData} from '../modules/globalStyles';
+import {RootStackParamList} from '../../../AppInner';
+import {widthData, heightData} from '../../modules/globalStyles';
 const heightScale = heightData;
 
 type SignUpFinalScreenProps = NativeStackScreenProps<RootStackParamList,'SignUpFinal' >;
@@ -24,7 +24,7 @@ function SignUpFinal({navigation}:SignUpFinalScreenProps) {
         <View style={{flex: 8}}></View>
         <View style={styles.headerStyle}>
           <Image
-            source={require('../assets/MainLogo.png')}
+            source={require('../../assets/MainLogo.png')}
             style={styles.mainLogo}
           />
         </View>
