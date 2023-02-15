@@ -30,16 +30,16 @@ function MainPage() {
           <View style={styles.tiketContainer} >
             <View style={[styles.tiketBox]} >
             {/* style={[styles.tiketBox ,styles.tiketBoxColor ]} */}
-              <Text style={styles.tiketText}>블랙티켓</Text>
+              <Text style={styles.tiketText}>블랙티켓   보유 8</Text>
             </View>
 
             <View style={[styles.tiketBox,styles.tiketBoxColor]} >
             {/* style={[styles.tiketBox ,styles.tiketBoxColor ]} */}
-              <Text style={styles.tiketText}>레드티켓</Text>
+              <Text style={styles.tiketText}>레드티켓   보유 8</Text>
             </View>
 
             <View style={[styles.tiketBox,styles.tiketBoxColor2]} >
-              <Text style={styles.tiketText}>블랙티켓</Text>
+              <Text style={styles.tiketText}>블랙티켓   보유 8</Text>
             </View>
 
           </View>
@@ -51,8 +51,10 @@ function MainPage() {
           </View>
 
           <View style={styles.gameBox} >
-            <ScrollView horizontal={true} >
-            
+            <ScrollView         
+            // pagingEnabled
+            horizontal
+             showsHorizontalScrollIndicator={false} >
             {gameBox.map((v) => ( 
               <View style={styles.gameContainer}>
                 <View style={{ flex: 1  ,  flexDirection: 'row' , alignItems:'flex-end' }} >
@@ -212,7 +214,8 @@ const styles = StyleSheet.create({
   joinButtonText: {
     textAlign:'center',
     lineHeight: heightScale*40,
-    fontWeight: '700',
+    fontWeight: '500',
+    color:'#000',
   },
   joinButton:{
     width: heightScale*200,
@@ -220,6 +223,14 @@ const styles = StyleSheet.create({
     backgroundColor:'#F5FF82',
     borderRadius:4,
     marginBottom: heightScale*16,
+    // backgroundColor: "#ffffff",
+    shadowColor: "#FFB800",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
 })
 

@@ -7,18 +7,22 @@ import { SignUpstyles } from '../../modules/SignUpstyles';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import IconOcticons from 'react-native-vector-icons/Octicons';
 import {heightData} from '../../modules/globalStyles';
+import userSlice from "../../slices/user";
+import { useAppDispatch } from "../../store"
+
 const heightScale = heightData;
 
 type SignInScreenProps = NativeStackScreenProps< RootStackParamList , 'SignUpPassWord' >;
 
 function SignUpPassWord({navigation}: SignInScreenProps) {
+    const dispatch = useAppDispatch();
     const [showPW, setShowPW] = useState(false);
     const [password, setPassword] = useState('');
     const [passwordCheck, setPasswordCheck] = useState('');
     const [error, setError] = useState(false);
     const [errorText , setErrorText] = useState('');
     const passwordRef = useRef<TextInput | null>(null);
-  
+
     const onChangePassword = useCallback((text: any) => {
       setPassword(text.trim());
     }, []);
@@ -45,13 +49,13 @@ function SignUpPassWord({navigation}: SignInScreenProps) {
         setError(true);
         return;
       }
-      // 리덕스 비밀번호 저장 
-      // 비밀번호 특수문자 
 
+      dispatch(userSlice.actions.setPassWord({password: password}),); 
       setError(false);
       navigation.navigate('SignUpNickName');
     };
-  
+
+
     return (
       <SafeAreaView style={SignUpstyles.container}>
         <KeyboardAwareScrollView>

@@ -5,16 +5,16 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import { RootStackParamList } from '../../../AppInner';
 import { SignUpstyles } from '../../modules/SignUpstyles';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-// import { useSelector, useDispatch } from 'react-redux';
-// import { setUser , selectUser }   from '../../slices/user';
-
+import userSlice from "../../slices/user";
+import { useAppDispatch } from "../../store"
+import axios from 'axios'
 
 type SignInScreenProps = NativeStackScreenProps< RootStackParamList , 'SignUpNickName' >;
 
 function SignUpNickName({navigation}: SignInScreenProps) {
+    const dispatch = useAppDispatch();
     const [nickName, setNickName] = useState('');
     const [error, setError] = useState(false);
-    // const dispatch = useDispatch();
   
     const onChangeNickName = useCallback((text: any) => {
       setNickName(text.trim());
@@ -23,11 +23,19 @@ function SignUpNickName({navigation}: SignInScreenProps) {
     const onClickNextButton = () => {
         if(!nickName) return;
         // if( 중복확인 )
-        // 리덕스에 데이터 저장 
-        // setUser({ nickname: nickName });
-        // const userData = useSelector(selectUser);
-        // console.log(userData);
-        navigation.navigate('SignUpCertification');
+        dispatch(userSlice.actions.setNickname({nickName: nickName}));
+        axios.get(`http://43.201.146.251:8080/nicknamecheck?nickname=${nickName}`)
+        .then(res => {
+            console.log(res);
+             if (res.status == 200) {
+                navigation.navigate('SignUpCertification');
+             }
+            }
+        ).catch(e => {
+            console.log(e)
+            setError(true)
+        });
+       
     };
   
     return (

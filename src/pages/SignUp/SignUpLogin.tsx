@@ -5,10 +5,15 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import { RootStackParamList } from '../../../AppInner';
 import { SignUpstyles } from '../../modules/SignUpstyles';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import axios from 'axios';
+
+import userSlice from "../../slices/user";
+import { useAppDispatch } from "../../store"
 
 type SignInScreenProps = NativeStackScreenProps< RootStackParamList , 'SignUpLogin' >;
 
 function SignUpLogin({ navigation }: SignInScreenProps) {
+    const dispatch = useAppDispatch();
     const [email, setEmail] = useState('');
     const [error, setError] = useState(false);
     const onChangeEmail = useCallback((text: any) => {
@@ -16,9 +21,18 @@ function SignUpLogin({ navigation }: SignInScreenProps) {
     }, []);
     const onClickNextButton = () => {
         if(!email) return;
-        // if( 중복확인 )
-        // 리덕스에 데이터 저장 
-        navigation.navigate('SignUpPassWord');
+        dispatch(userSlice.actions.setEmail({email: email}));
+        axios.get(`http://43.201.146.251:8080/idcheck?memberId=${email}`)
+        .then(res => {
+             if (res.status == 200) {
+                navigation.navigate('SignUpPassWord');
+             }
+            }
+        ).catch(e => {
+            console.log(e)
+            setError(true)
+        });
+       
     };
 
     return (

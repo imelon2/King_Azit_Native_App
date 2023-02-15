@@ -43,11 +43,11 @@ function TabNavigator() {
 function AppInner() {
   // const isLoggedIn = useSelector((state: RootState) => !!state.user.email);
   const isLoggedIn = true
-  console.log(isLoggedIn);
+  // console.log(isLoggedIn);
 
   return (
     <>
-      {!isLoggedIn ? (
+      {isLoggedIn ? (
         <Stack.Navigator initialRouteName='SignIn' screenOptions={{
           animation: 'slide_from_right',
         }}>

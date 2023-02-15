@@ -5,10 +5,16 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import { RootStackParamList } from '../../../AppInner';
 import { SignUpstyles } from '../../modules/SignUpstyles';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import axios from 'axios';
+import {  heightData } from '../../modules/globalStyles'
+const heightScale = heightData;
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/reducer";
 
 type SignInScreenProps = NativeStackScreenProps< RootStackParamList , 'SignUpCertification' >;
 
 function SignUpCertification({navigation}: SignInScreenProps) {
+    const [gender, setGender] = useState('');
     const [name, setName] = useState('');
     const [birthDate, setBirthDate] = useState('');
     const [phoneNum, setPhoneNum] = useState('');
@@ -17,16 +23,35 @@ function SignUpCertification({navigation}: SignInScreenProps) {
     const [keyboardOn, setKeyboardOn] = useState(false);
     const birthDateRef = useRef<TextInput | null>(null);
     const phoneNumRef = useRef<TextInput | null>(null);
-    
+
+    const user = useSelector((state: RootState) => state.user);
   
     const onClickSiginUp = () => {
-      // 서버에 데이터 보내기 
-      
-      navigation.navigate('SignUpFinal');
+      let data = {
+        memberId: user.email,
+        password: user.password,
+        name: name,
+        nickname: user.nickName,
+        phone: phoneNum,
+        birth: birthDate,
+        gender: gender,
+      }
+      axios.post('http://43.201.146.251:8080/join', data)
+      .then(function(res){
+        if(res.status == 201) {
+          navigation.navigate('SignUpFinal');
+        }
+      }).catch(function (error){
+        console.log(error);
+      });
     };
   
     const onClickCert = () => {
       setCertCheck(true);
+    }
+
+    const onClickGenderButton = (text : any) => {
+      setGender(text);
     }
   
     const onChangeName = useCallback((text: any) => {
@@ -68,6 +93,16 @@ function SignUpCertification({navigation}: SignInScreenProps) {
           </View>
   
           <View style={SignUpstyles.inputWrapper}>
+
+            <View style={styles.genderBox} >
+              <TouchableOpacity onPress={() => onClickGenderButton('male')} style={ [ styles.genderButton ,  gender == 'male' && styles.genderButtonOn ] }>
+                <Text style={[styles.genderButtonText  ,  gender == 'male' && styles.genderButtonText2 ]} >남자</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => onClickGenderButton('female')} style={[ styles.genderButton , styles.genderButton2 , gender == 'female' && styles.genderButtonOn ]}>
+                <Text style={[styles.genderButtonText ,  gender == 'female' && styles.genderButtonText2 ]} >여자</Text>
+              </TouchableOpacity>
+            </View>
+
             <View style={SignUpstyles.textInputWrapper}>
               <TextInput
                 style={SignUpstyles.textInput}
@@ -84,7 +119,7 @@ function SignUpCertification({navigation}: SignInScreenProps) {
               <TextInput
                 style={SignUpstyles.textInput}
                 ref={birthDateRef}
-                placeholder="생년월일"
+                placeholder="생년월일(YYMMDD)"
                 onChangeText={onChangeBirthDate}
                 returnKeyType="next" // next key로 변환
                 onSubmitEditing = {() => phoneNumRef.current?.focus()} // Submit Key 클릭 시, 이벤트
@@ -112,7 +147,7 @@ function SignUpCertification({navigation}: SignInScreenProps) {
             <View style={SignUpstyles.textInputWrapper}>
               <TextInput
                 style={SignUpstyles.textInput}
-                placeholder="인정번호를 적어주세요."
+                placeholder="인증번호를 적어주세요."
                 onChangeText={onChangeCertNum}
                 value={certNum}
               />
@@ -150,6 +185,32 @@ function SignUpCertification({navigation}: SignInScreenProps) {
         display:'none',
         opacity:0,
       },
+    genderBox: {
+      flexDirection: 'row',
+      flex:1,
+      borderWidth: 1,
+      borderColor:'#aaa',
+      borderRadius: 8,
+      height: 50 * heightScale,
+    },
+    genderButton: {
+      flex:1,
+    },
+    genderButton2: {
+      borderColor:'#aaa',
+      borderLeftWidth:1,
+    },
+    genderButtonText: {
+       lineHeight: 50 * heightScale,
+       textAlign: 'center',
+    },
+    genderButtonText2: {
+      color:'white',
+   },
+    genderButtonOn: {
+      backgroundColor: '#29a6fb',
+      // overflow:'hidden',
+    },
   });
 
   export default SignUpCertification;
