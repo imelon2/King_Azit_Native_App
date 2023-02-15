@@ -4,7 +4,7 @@ import {
 } from '@react-navigation/native-stack';
 import React, {useCallback, useRef, useState} from 'react';
 import {RootStackParamList} from '../../../AppInner';
-import SignUpFinal from '../SignUpFinal';
+import SignUpFinal from '../SignUp/SignUpFinal';
 import Login from './Login';
 import Main from './Main';
 

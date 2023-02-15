@@ -97,7 +97,7 @@ function MyPage() {
         <View style={styles.myInfoStyle} >
             <Pressable onPress={onChangeFile}>
             <Image
-            source={preview ? preview : require('../../../assets/UserIcon.png')}
+            source={preview ? preview : require('../../assets/UserIcon.png')}
             style={styles.userIcon}
             />
             </Pressable>
