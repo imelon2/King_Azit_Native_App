@@ -8,19 +8,19 @@ import {
   Text,
   View,
 } from 'react-native';
-import {HomeRootStackParamList} from '../../../AppInner'
+import {MyPageRootStackParamList} from '../../../AppInner'
 import IconSimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import ImagePicker from 'react-native-image-crop-picker';
 // import * as ImagePicker from 'expo-image-picker';
 import ImageResizer from 'react-native-image-resizer';
-import {heightData} from '../../modules/globalStyles';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
+import {heightData} from '../../modules/globalStyles';
 
 const heightScale = heightData;
 
 function MyPage() {
-    const navigation = useNavigation<NavigationProp<HomeRootStackParamList>>();
+    const navigation = useNavigation<NavigationProp<MyPageRootStackParamList>>();
     const [preview, setPreview] = useState<{uri: string|null}>();
   
     const onResponse = useCallback(async (response:any) => {
@@ -112,15 +112,17 @@ function MyPage() {
             </Pressable>
         </View>
         <View style={styles.contentStyle}>
-            <View
-            style={[styles.contentWrapper,{marginTop: heightScale * 13}]}>
+            <Pressable
+            style={[styles.contentWrapper,{marginTop: heightScale * 13}]}
+            onPress={() => navigation.navigate('MyTicket')}
+            >
             <View style={{flex: 1}}>
                 <Text style={styles.contentTitleText}>마이티켓</Text>
             </View>
             <View>
                 <IconAntDesign name="right" size={heightScale * 28} color='#000000'/>
             </View>
-            </View>
+            </Pressable>
 
             <Text style={[styles.contentTitleText, {marginTop: 28}]}>마이게임</Text>
             <View style={[styles.contentWrapper,{marginTop: heightScale * 13}]}>

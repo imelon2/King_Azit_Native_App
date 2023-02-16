@@ -6,7 +6,7 @@ const heightScale = heightData;
 
 
 function MainPage() {
-  const [ gameBox , setGameBox ] = useState([ 1, 2, 3, ,4]);
+  const [ gameBox , setGameBox ] = useState([ 1, 2, 3, 4]);
 
   return (
     <SafeAreaView style={styles.container} > 
@@ -51,12 +51,10 @@ function MainPage() {
           </View>
 
           <View style={styles.gameBox} >
-            <ScrollView         
-            // pagingEnabled
-            horizontal
-             showsHorizontalScrollIndicator={false} >
-            {gameBox.map((v) => ( 
-              <View style={styles.gameContainer}>
+            <ScrollView horizontal={true} >
+           
+            {gameBox.map((v,i) => ( 
+              <View key={i} style={styles.gameContainer}>
                 <View style={{ flex: 1  ,  flexDirection: 'row' , alignItems:'flex-end' }} >
                   <View style={{ flex: 5  }} >
                     <Text style={styles.tableNumText} >Table NO. 1</Text>

@@ -9,6 +9,7 @@ import MainPage from "./src/pages/MainPage/MainPage";
 import MyPage from './src/pages/MainPage/MyPage';
 import SetNickNameScreen from './src/pages/MainPage/SetNickNameScreen';
 import Admin from './src/pages/MainPage/Admin';
+import MyTicket from './src/pages/MainPage/MyTicket';
 
 
 export type RootStackParamList = {
@@ -24,16 +25,21 @@ export type RootStackParamList = {
   SignUpFinal: undefined;
   MainPage: undefined;
 };
+
 export type HomeRootStackParamList = {
   Home:undefined; // Tab Navigator
-  SetNickNameScreen:undefined;
   Admin:{
     id:number
   };
 };
 
+export type MyPageRootStackParamList = {
+  SetNickNameScreen:undefined;
+  MyTicket:undefined;
+}
+
 const Stack = createNativeStackNavigator<RootStackParamList>();
-const HomeStack = createNativeStackNavigator<HomeRootStackParamList>();
+const HomeStack = createNativeStackNavigator<HomeRootStackParamList & MyPageRootStackParamList>();
 const Tab = createBottomTabNavigator();
 
 function TabNavigator() {
@@ -70,6 +76,7 @@ function AppInner() {
         <HomeStack.Navigator initialRouteName='Home' screenOptions={{headerShown:false}}>
           <HomeStack.Screen name='Home' component={TabNavigator}/>
           <HomeStack.Screen name='SetNickNameScreen' component={SetNickNameScreen} options={{animation:'none'}}/>
+          <HomeStack.Screen name='MyTicket' component={MyTicket} options={{animation:'none'}}/>
           <HomeStack.Screen name='Admin' component={Admin} options={{animation:'none'}}/>
         </HomeStack.Navigator>
       )}
