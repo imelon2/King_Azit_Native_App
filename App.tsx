@@ -10,11 +10,11 @@ function App() {
   useEffect(() => {
     Linking.getInitialURL()			// 최초 실행 시에 Universal link 또는 URL scheme요청이 있었을 때 여기서 찾을 수 있음 
       .then((value:any) => {
-          Alert.alert('getInitialURL', value);
+          // Alert.alert('getInitialURL', value);
     })
      
       Linking.addEventListener('url', (e) => {		// 앱이 실행되어있는 상태에서 요청이 왔을 때 처리하는 이벤트 등록
-        Alert.alert(e.url);
+        // Alert.alert(e.url);
         
    });
 //    return () => {	
