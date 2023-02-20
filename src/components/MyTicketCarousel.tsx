@@ -84,7 +84,6 @@ const MyTicketCarousel = ({...props}) => {
               style={{
                 height: heightScale * props.height,
                 transform: [{scale}],
-                // zIndex:2
               }}>
               <Animated.Image source={item.image} style={styles.cardStyle} />
             </Animated.View>

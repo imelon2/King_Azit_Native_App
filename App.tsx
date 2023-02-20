@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react';
-import {NavigationContainer, NavigationProp, useNavigation} from '@react-navigation/native';
+import {NavigationContainer } from '@react-navigation/native';
 import {Provider} from 'react-redux';
-import AppInner, { HomeRootStackParamList } from './AppInner';
-import store from './src/store/index';
+import AppInner from './AppInner';
+import store, { useAppDispatch } from './src/store/index';
 import linking from './src/modules/Linking';
-import { Alert, Linking } from 'react-native';
+import { Linking } from 'react-native';
 
 function App() {
+
+
   useEffect(() => {
     Linking.getInitialURL()			// 최초 실행 시에 Universal link 또는 URL scheme요청이 있었을 때 여기서 찾을 수 있음 
       .then((value:any) => {
