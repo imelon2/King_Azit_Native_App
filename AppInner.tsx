@@ -9,6 +9,8 @@ import MainPage from "./src/pages/MainPage/MainPage";
 import MyPage from './src/pages/MainPage/MyPage';
 import SetNickNameScreen from './src/pages/MainPage/SetNickNameScreen';
 import Admin from './src/pages/MainPage/Admin';
+import MainPageHome from './src/pages/MainPage/MainPageHome'
+
 
 
 export type RootStackParamList = {
@@ -23,6 +25,7 @@ export type RootStackParamList = {
   SignUpCertification: undefined;
   SignUpFinal: undefined;
   MainPage: undefined;
+  GamePage: undefined;
 };
 export type HomeRootStackParamList = {
   Home:undefined; // Tab Navigator
@@ -39,7 +42,7 @@ const Tab = createBottomTabNavigator();
 function TabNavigator() {
   return(
     <Tab.Navigator>
-      <Tab.Screen name="MainPage" component={MainPage}  options={{ title: 'MainPage', headerShown: false}} />
+      <Tab.Screen name="MainPageHome" component={MainPageHome}  options={{ title: 'MainPage', headerShown: false}} />
       <Tab.Screen name="MyPage" component={MyPage} options={{headerShown:false}}/>
     </Tab.Navigator>
   )
@@ -51,7 +54,7 @@ function AppInner() {
 
   return (
     <>
-      {isLoggedIn ? (
+      {!isLoggedIn ? (
         <Stack.Navigator initialRouteName='SignIn' screenOptions={{
           animation: 'slide_from_right',
         }}>
