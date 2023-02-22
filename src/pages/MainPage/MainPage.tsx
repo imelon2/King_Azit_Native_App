@@ -140,7 +140,7 @@ function MainPage({navigation}: MainScreenProps) {
                   </View>
                 
 
-                <View style={[styles.cardBox]} >
+                <View style={[styles.cardBox]}    >
                   <View style={{ flexDirection: 'row' }} >
                     <Text style={styles.cardText} >Red Card</Text>
                     <Text style={styles.cardText2}>  | 보유 8 개</Text>
