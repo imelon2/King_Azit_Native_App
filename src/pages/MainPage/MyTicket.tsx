@@ -97,16 +97,17 @@ function MyTicket(): JSX.Element {
         size={heightScale * 28}
         color="white"
         style={{
-          position: 'absolute',
+          // position: 'absolute',
           marginTop: (heightScale * (61 - 28)) / 2,
           marginLeft: heightScale * 15,
         }}
-        onPress={() => navigation.goBack()
-        }
-      />
+        onPress={() => navigation.goBack()}
+        // onPress={() => console.log("??")}
+        />
       <View style={styles.headerStyle}>
         <Text style={styles.fontStyle}>마이 티켓</Text>
       </View>
+    
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
         <Image
           style={styles.cardButtonStyle}

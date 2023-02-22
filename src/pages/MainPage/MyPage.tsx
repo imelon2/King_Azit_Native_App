@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
     height: heightScale * 108,
     width: heightScale * 108,
     borderRadius: 100,
-    resizeMode: 'center',
+    // resizeMode: 'center',
   },
   fontStyle: {fontSize: heightScale * 18, fontWeight: 'bold', color: 'white',paddingVertical:heightScale*4.5},
   contentTitleText: {

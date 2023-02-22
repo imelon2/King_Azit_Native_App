@@ -2,22 +2,25 @@ import {  NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { Text, View, Image, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, Dimensions } from 'react-native';
 import {  heightData } from '../../modules/globalStyles';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import { Shadow } from 'react-native-shadow-2';
 import Modal from "react-native-modal";
 const { width } = Dimensions.get('window');
 import Icon from 'react-native-vector-icons/AntDesign';
 import ImageSlider from 'react-native-image-slider';
-import { RootStackParamList } from '../../../AppInner';
+import { HomeRootStackParamList } from '../../../AppInner';
 import MyTickets from '../../components/MyTickets';
 import MemberModal from './MemberModal';
 import LinearGradient from 'react-native-linear-gradient';
 
 const heightScale = heightData;
-type MainScreenProps = NativeStackScreenProps< RootStackParamList , 'MainPage' >;
 
 
 
-function MainPage({navigation}: MainScreenProps) {
+
+function MainPage() {
+  const navigation = useNavigation<NavigationProp<HomeRootStackParamList>>();
+
   const [check, setcheck] = useState(false);
   const [gameTap, setGameTap] = useState('main');
   const [gameBox, setGameBox] = useState([1, 2, 3, , 4]);
@@ -56,6 +59,7 @@ function MainPage({navigation}: MainScreenProps) {
         <View style={styles.imgSlideBoxContainer} >
           <View style={styles.imgSlideBox} >
             <ImageSlider
+            key={(_:any,i:any) => i}
               autoplay
               circleLoop
               resizeMethod={'resize'}

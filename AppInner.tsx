@@ -3,18 +3,6 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import {Alert, StyleSheet, Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
-import SignIn from './src/pages/SignIn/SignIn';
-import SignUp from './src/pages/SignUp/SignUp';
-import MainPage from './src/pages/MainPage/MainPage';
-import MyPage from './src/pages/MainPage/MyPage';
-import SetNickNameScreen from './src/pages/MainPage/SetNickNameScreen';
-import Admin from './src/pages/MainPage/Admin';
-<<<<<<< HEAD
-import MainPageHome from './src/pages/MainPage/MainPageHome'
-
-
-=======
-import MyTicket from './src/pages/MainPage/MyTicket';
 import {useEffect, useState} from 'react';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import Config from 'react-native-config';
@@ -24,7 +12,15 @@ import userSlice from './src/slices/user';
 import decodeJWT from './src/modules/decodeJWT';
 import messaging from '@react-native-firebase/messaging';
 import {RootState} from './src/store/reducer';
->>>>>>> 81b6928defde53d57425ed4c4712a742b9bb6d12
+
+import SignIn from './src/pages/SignIn/SignIn';
+import SignUp from './src/pages/SignUp/SignUp';
+import MainPage from './src/pages/MainPage/MainPage';
+import MyPage from './src/pages/MainPage/MyPage';
+import SetNickNameScreen from './src/pages/MainPage/SetNickNameScreen';
+import Admin from './src/pages/MainPage/Admin';
+import MyTicket from './src/pages/MainPage/MyTicket';
+import GamePage from './src/pages/MainPage/GamePage';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -36,13 +32,12 @@ export type RootStackParamList = {
   SignUpPassWord: undefined;
   SignUpNickName: undefined;
   SignUpCertification: undefined;
-  SignUpFinal: undefined;
-  MainPage: undefined;
-  GamePage: undefined;
+  SignUpFinal: undefined;  
 };
 
 export type HomeRootStackParamList = {
   Home: undefined; // Tab Navigator
+  GamePage: undefined;
   Admin: {
     id: number;
   };
@@ -66,10 +61,6 @@ const Tab = createBottomTabNavigator();
 function TabNavigator() {
   return (
     <Tab.Navigator>
-<<<<<<< HEAD
-      <Tab.Screen name="MainPageHome" component={MainPageHome}  options={{ title: 'MainPage', headerShown: false}} />
-      <Tab.Screen name="MyPage" component={MyPage} options={{headerShown:false}}/>
-=======
       <Tab.Screen
         name="MainPage"
         component={MainPage}
@@ -80,7 +71,6 @@ function TabNavigator() {
         component={MyPage}
         options={{headerShown: false}}
       />
->>>>>>> 81b6928defde53d57425ed4c4712a742b9bb6d12
     </Tab.Navigator>
   );
 }
@@ -92,20 +82,20 @@ function AppInner() {
   // const isLoggedIn = false
 
   // 디바이스 토큰 설정 및 redex 저장
-  useEffect(() => {
-    async function getToken() {
-      try {
-        if (!messaging().isDeviceRegisteredForRemoteMessages) {
-          await messaging().registerDeviceForRemoteMessages();
-        }
-        const token = await messaging().getToken();
-        dispatch(userSlice.actions.setphoneToken({phoneToken: token}));
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    getToken();
-  }, []);
+  // useEffect(() => {
+  //   async function getToken() {
+  //     try {
+  //       if (!messaging().isDeviceRegisteredForRemoteMessages) {
+  //         await messaging().registerDeviceForRemoteMessages();
+  //       }
+  //       const token = await messaging().getToken();
+  //       dispatch(userSlice.actions.setphoneToken({phoneToken: token}));
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   }
+  //   getToken();
+  // }, []);
 
   // Refresh Access & Refresh Token
   useEffect(() => {
@@ -147,12 +137,6 @@ function AppInner() {
 
   return (
     <>
-<<<<<<< HEAD
-      {!isLoggedIn ? (
-        <Stack.Navigator initialRouteName='SignIn' screenOptions={{
-          animation: 'slide_from_right',
-        }}>
-=======
       {isLoggedIn ? (
         <HomeStack.Navigator
           initialRouteName="Home"
@@ -173,6 +157,11 @@ function AppInner() {
             component={Admin}
             options={{animation: 'none'}}
           />
+          <HomeStack.Screen
+            name="GamePage"
+            component={GamePage}
+            options={{animation: 'none'}}
+          />
         </HomeStack.Navigator>
       ) : (
         <Stack.Navigator
@@ -180,7 +169,6 @@ function AppInner() {
           screenOptions={{
             animation: 'slide_from_right',
           }}>
->>>>>>> 81b6928defde53d57425ed4c4712a742b9bb6d12
           <Stack.Screen
             name="SignIn"
             component={SignIn}
