@@ -12,9 +12,12 @@ const initialState = {
     name:'',
     nickName:'',
     phone:'',
+    phoneToken:'',
     birth:'',
     gender:'',
     password:'',
+    roles:'',
+    access_token:''
 }
 
 const userSlice = createSlice({
@@ -30,14 +33,19 @@ const userSlice = createSlice({
         setNickname(state,action) {
             state.nickName = action.payload.nickName; 
         },
+        setphoneToken(state,action) {
+            state.phoneToken = action.payload.phoneToken; 
+        },
         setUser(state,action) {
             state.name = action.payload.name;
+            state.roles = action.payload.roles;
             state.email = action.payload.email;
             state.nickName = action.payload.nickName;
             state.phone = action.payload.phone;
             state.birth = action.payload.birth;
             state.gender = action.payload.gender;
             state.password = action.payload.password;
+            state.access_token = action.payload.access_token;
         }
     },
     extraReducers : builder => {

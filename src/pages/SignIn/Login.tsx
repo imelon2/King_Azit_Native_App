@@ -11,7 +11,9 @@ import {
   View,
   SafeAreaView,
   Keyboard,
+  ActivityIndicator,
 } from 'react-native';
+import EncryptedStorage from 'react-native-encrypted-storage';
 import IconOcticons from 'react-native-vector-icons/Octicons';
 import IconSimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import IconSimpleAntDesign from 'react-native-vector-icons/AntDesign';
@@ -20,14 +22,20 @@ import {widthData, heightData} from '../../modules/globalStyles';
 import { RootStackParamList } from '../../../AppInner';
 const {width, height} = Dimensions.get('screen');
 const heightScale = heightData;
-// console.log(widthData); 0.84
-// console.log(heightData); 0.8
+
+import Config from 'react-native-config';
+import axios, { AxiosError } from 'axios';
+import { useAppDispatch } from '../../store';
+import userSlice from '../../slices/user';
+import decodeJWT from '../../modules/decodeJWT';
+
 
 type LoginScreenProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 function Login({navigation}:LoginScreenProps) {
+  const dispatch = useAppDispatch();
+  
   const [showPW, setShowPW] = useState(false);
-  const [onKeyboard, setOnKeyboard] = useState(false);
   const [checkLoginInfo,setCheckLoginInfo] = useState(true) // 가입정보가 맞으면 true, 가입정보가 틀리면 false
   const [loading, setLoading] = useState(false);
 
@@ -47,7 +55,7 @@ function Login({navigation}:LoginScreenProps) {
     setPassword(text.trim());
   }, []);
 
-  const loginBtn = useCallback(() => {
+  const loginBtn = useCallback(async() => {
     try {
       if (!email) {
         return;
@@ -56,16 +64,42 @@ function Login({navigation}:LoginScreenProps) {
         return;
       }
       setLoading(true);
-      navigation.navigate('SignUpFinal')
-      // Alert.alert(
-      //   '로그인 기능 구현',
-      //   `email : ${email} \n password : ${password}`,
-      // );
+      const loginResult = await axios.post(`${Config.API_URL}/login`,{
+        "memberId":email,
+        "password":password
+      })
+      const {access_token,refresh_token} = loginResult.data;
+      
+      const {sub,roles} = decodeJWT(access_token);
+      
+      // 아직 승인되지 않은 유저
+      const isPermitted = roles.find((e:string) => e == 'ROLE_PERMITTED')
+      if(!isPermitted) {
+        return navigation.navigate('SignUpFinal');
+      }
+
+      dispatch(
+        userSlice.actions.setUser({
+          name: sub,
+          roles:roles,
+          access_token: access_token,
+        }),
+      );
+      await EncryptedStorage.setItem(
+        'refreshToken',
+        refresh_token
+      );
     } catch (error) {
+      if((error as AxiosError).response?.status === 401) {
+        // console.error((error as AxiosError).response?.status);
+        setCheckLoginInfo(false)
+      } else {
+        Alert.alert("Error","죄송합니다. 잠시후에 다시 시도해주세요.")
+      }
     } finally {
       setLoading(false);
     }
-  }, [email, password]);
+  }, [email, password,loading]);
 
   const isFillFrom = !!email && !!password;
   return (
@@ -146,12 +180,11 @@ function Login({navigation}:LoginScreenProps) {
         </View>
       <Pressable
         style={isFillFrom ? [styles.loginButton,styles.onLiginButton] : styles.loginButton}
-        onPress={() => loginBtn}
-        // onPress={() => Alert.alert('Todo',"로그인 성공시 : HomePage or 신청완료 페이지")}
+        onPress={loginBtn}
+        disabled={!isFillFrom || loading}
         >
-        <Text style={isFillFrom ? [styles.textStyle,styles.onTextStyle] : styles.textStyle}>로그인</Text>
+        {loading ? (<ActivityIndicator />) : (<Text style={isFillFrom ? [styles.textStyle,styles.onTextStyle] : styles.textStyle} >로그인</Text>)}
       </Pressable>
-      {/* <View style={onKeyboard ? {display:'none'} : styles.findIDPW}> */}
       <View style={styles.findIDPW}>
         <Pressable onPressIn={() => Alert.alert("구현예정","아이디 찾기 미구현")} style={{flex:1}}>
         <Text style={{color:'black',textAlign: 'right'}}>아이디 찾기   |</Text>
