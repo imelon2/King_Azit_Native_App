@@ -1,12 +1,9 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
-  Alert,
-  Dimensions,
   Image,
   Pressable,
   StyleSheet,
   Text,
-  TextInput,
   View,
   SafeAreaView,
 } from 'react-native';
