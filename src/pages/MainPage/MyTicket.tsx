@@ -14,8 +14,10 @@ import {
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import MyTicketCarousel from '../../components/MyTicketCarousel';
 import TicketHistoryView from '../../components/TicketHistoryView';
-const {width, height} = Dimensions.get('screen');
+import {Shadow} from 'react-native-shadow-2';
 import {heightData} from '../../modules/globalStyles';
+import { HomeRootStackParamList, MyPageRootStackParamList } from '../../../AppInner';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 const heightScale = heightData;
 
 // 더미 데이터
@@ -83,7 +85,8 @@ const LISTS = [...Array(ContentsList.length).keys()].map((_, i) => {
   };
 });
 
-function MyTicket() {
+function MyTicket(): JSX.Element {
+  const navigation = useNavigation<NavigationProp<MyPageRootStackParamList&HomeRootStackParamList>>();
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [list, setList] = useState([]);
@@ -98,6 +101,8 @@ function MyTicket() {
           marginTop: (heightScale * (61 - 28)) / 2,
           marginLeft: heightScale * 15,
         }}
+        onPress={() => navigation.goBack()
+        }
       />
       <View style={styles.headerStyle}>
         <Text style={styles.fontStyle}>마이 티켓</Text>
@@ -124,11 +129,13 @@ function MyTicket() {
       </View>
       {/* 선물하기 버튼 */}
       <View style={styles.giftWrapperStyle}>
-        <Pressable
-          style={styles.giftButtonStyle}
-          onPress={() => Alert.alert('Todo', '선물하기 팝업 띄우기')}>
-          <Text style={styles.giftFontStyle}>선물하기</Text>
-        </Pressable>
+        <Shadow distance={5} startColor={'#FCFF72'}>
+          <Pressable
+            style={styles.giftButtonStyle}
+            onPress={() => Alert.alert('Todo', '선물하기 팝업 띄우기')}>
+            <Text style={styles.giftFontStyle}>선물하기</Text>
+          </Pressable>
+        </Shadow>
       </View>
       {/* 구매/결제 내역 contents */}
       <View style={{paddingHorizontal: heightScale * 24, flex: 1}}>
@@ -200,10 +207,13 @@ const styles = StyleSheet.create({
   giftButtonStyle: {
     alignItems: 'center',
     justifyContent: 'center',
-    height: heightScale * 46,
-    width: heightScale * 200,
+    height: heightScale * 46-5,
+    width: heightScale * 200-5,
     backgroundColor: '#F5FF82',
     borderRadius: 30,
+    // flex:1,
+    // resizeMode: 'center',
+    // aspectRatio: 100
   },
   giftFontStyle: {
     fontSize: heightScale * 17,
