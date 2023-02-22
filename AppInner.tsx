@@ -9,6 +9,11 @@ import MainPage from './src/pages/MainPage/MainPage';
 import MyPage from './src/pages/MainPage/MyPage';
 import SetNickNameScreen from './src/pages/MainPage/SetNickNameScreen';
 import Admin from './src/pages/MainPage/Admin';
+<<<<<<< HEAD
+import MainPageHome from './src/pages/MainPage/MainPageHome'
+
+
+=======
 import MyTicket from './src/pages/MainPage/MyTicket';
 import {useEffect, useState} from 'react';
 import EncryptedStorage from 'react-native-encrypted-storage';
@@ -19,6 +24,7 @@ import userSlice from './src/slices/user';
 import decodeJWT from './src/modules/decodeJWT';
 import messaging from '@react-native-firebase/messaging';
 import {RootState} from './src/store/reducer';
+>>>>>>> 81b6928defde53d57425ed4c4712a742b9bb6d12
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -32,6 +38,7 @@ export type RootStackParamList = {
   SignUpCertification: undefined;
   SignUpFinal: undefined;
   MainPage: undefined;
+  GamePage: undefined;
 };
 
 export type HomeRootStackParamList = {
@@ -59,6 +66,10 @@ const Tab = createBottomTabNavigator();
 function TabNavigator() {
   return (
     <Tab.Navigator>
+<<<<<<< HEAD
+      <Tab.Screen name="MainPageHome" component={MainPageHome}  options={{ title: 'MainPage', headerShown: false}} />
+      <Tab.Screen name="MyPage" component={MyPage} options={{headerShown:false}}/>
+=======
       <Tab.Screen
         name="MainPage"
         component={MainPage}
@@ -69,6 +80,7 @@ function TabNavigator() {
         component={MyPage}
         options={{headerShown: false}}
       />
+>>>>>>> 81b6928defde53d57425ed4c4712a742b9bb6d12
     </Tab.Navigator>
   );
 }
@@ -135,6 +147,12 @@ function AppInner() {
 
   return (
     <>
+<<<<<<< HEAD
+      {!isLoggedIn ? (
+        <Stack.Navigator initialRouteName='SignIn' screenOptions={{
+          animation: 'slide_from_right',
+        }}>
+=======
       {isLoggedIn ? (
         <HomeStack.Navigator
           initialRouteName="Home"
@@ -162,6 +180,7 @@ function AppInner() {
           screenOptions={{
             animation: 'slide_from_right',
           }}>
+>>>>>>> 81b6928defde53d57425ed4c4712a742b9bb6d12
           <Stack.Screen
             name="SignIn"
             component={SignIn}
