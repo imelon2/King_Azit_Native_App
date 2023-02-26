@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
-  Animated,
+  TextInput,
   SafeAreaView,
   Dimensions,
   FlatList,
@@ -12,12 +12,18 @@ import {
   Alert,
 } from 'react-native';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
+import IconEvilIcons from 'react-native-vector-icons/EvilIcons';
+import IconIonicons from 'react-native-vector-icons/Ionicons';
 import MyTicketCarousel from '../../components/MyTicketCarousel';
 import TicketHistoryView from '../../components/TicketHistoryView';
 import {Shadow} from 'react-native-shadow-2';
 import {heightData} from '../../modules/globalStyles';
-import { HomeRootStackParamList, MyPageRootStackParamList } from '../../../AppInner';
+import {
+  HomeRootStackParamList,
+  MyPageRootStackParamList,
+} from '../../../AppInner';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
+import GiftModal from '../../components/GiftModal';
 const heightScale = heightData;
 
 // 더미 데이터
@@ -86,28 +92,30 @@ const LISTS = [...Array(ContentsList.length).keys()].map((_, i) => {
 });
 
 function MyTicket(): JSX.Element {
-  const navigation = useNavigation<NavigationProp<MyPageRootStackParamList&HomeRootStackParamList>>();
+  const navigation =
+    useNavigation<
+      NavigationProp<MyPageRootStackParamList & HomeRootStackParamList>
+    >();
   const [loading, setLoading] = useState(false);
+  const [giftModalState, setGiftModalState] = useState(true); 
   const [page, setPage] = useState(0);
   const [list, setList] = useState([]);
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.headerStyle}>
+        <Text style={styles.fontStyle}>마이 티켓</Text>
+      </View>
       <IconAntDesign
         name="left"
         size={heightScale * 28}
         color="white"
         style={{
-          // position: 'absolute',
+          position: 'absolute',
           marginTop: (heightScale * (61 - 28)) / 2,
           marginLeft: heightScale * 15,
         }}
         onPress={() => navigation.goBack()}
-        // onPress={() => console.log("??")}
-        />
-      <View style={styles.headerStyle}>
-        <Text style={styles.fontStyle}>마이 티켓</Text>
-      </View>
-    
+      />
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
         <Image
           style={styles.cardButtonStyle}
@@ -142,15 +150,10 @@ function MyTicket(): JSX.Element {
       <View style={{paddingHorizontal: heightScale * 24, flex: 1}}>
         {/* 구매/결제 내역 헤더 */}
         <View style={{flexDirection: 'row'}}>
-          <Text style={[styles.fontStyle, styles.contentsStyle]}>
-            결제 내역
-          </Text>
-          <Text style={[styles.fontStyle, styles.contentsStyle]}>
-            구매 내역
-          </Text>
+          <Text style={[styles.fontStyle, styles.contentsStyle]}>사용내역</Text>
           <View style={{alignItems: 'flex-end', flex: 1}}>
             <Pressable style={styles.allViewWrapper}>
-              <Text style={styles.allViewTextStyle}>전체 보기 </Text>
+              <Text style={styles.allViewTextStyle}>더보기 </Text>
               <IconAntDesign
                 name="right"
                 size={heightScale * 14}
@@ -168,6 +171,8 @@ function MyTicket(): JSX.Element {
         />
       </View>
       <View style={{height: heightScale * 41}}></View>
+      {/* 선물하기 팝업창 */}
+      {giftModalState ? <GiftModal setGiftModalState={setGiftModalState}/> : <></>}
     </SafeAreaView>
   );
 }
@@ -208,13 +213,10 @@ const styles = StyleSheet.create({
   giftButtonStyle: {
     alignItems: 'center',
     justifyContent: 'center',
-    height: heightScale * 46-5,
-    width: heightScale * 200-5,
+    height: heightScale * 46 - 5,
+    width: heightScale * 200 - 5,
     backgroundColor: '#F5FF82',
     borderRadius: 30,
-    // flex:1,
-    // resizeMode: 'center',
-    // aspectRatio: 100
   },
   giftFontStyle: {
     fontSize: heightScale * 17,
@@ -234,6 +236,6 @@ const styles = StyleSheet.create({
     fontSize: heightScale * 14,
     fontWeight: 'normal',
     color: 'white',
-  },
+  }
 });
 export default MyTicket;

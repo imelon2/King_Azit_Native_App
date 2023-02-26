@@ -16,11 +16,14 @@ import {RootState} from './src/store/reducer';
 import SignIn from './src/pages/SignIn/SignIn';
 import SignUp from './src/pages/SignUp/SignUp';
 import MainPage from './src/pages/MainPage/MainPage';
-import MyPage from './src/pages/MainPage/MyPage';
-import SetNickNameScreen from './src/pages/MainPage/SetNickNameScreen';
+import MyPage from './src/pages/MyPage/MyPage';
+import SetNickNameScreen from './src/pages/MyPage/SetNickNameScreen';
 import Admin from './src/pages/MainPage/Admin';
-import MyTicket from './src/pages/MainPage/MyTicket';
+import MyTicket from './src/pages/MyPage/MyTicket';
 import GamePage from './src/pages/MainPage/GamePage';
+import TabBar from './src/components/TabBar';
+import Ranking from './src/pages/Ranking/Ranking';
+import Game from './src/pages/Game/Game';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -60,11 +63,21 @@ const Tab = createBottomTabNavigator();
 
 function TabNavigator() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator tabBar={(props) => <TabBar {...props}/>}>
       <Tab.Screen
         name="MainPage"
         component={MainPage}
         options={{title: 'MainPage', headerShown: false}}
+      />
+      <Tab.Screen
+        name="Ranking"
+        component={Ranking}
+        options={{title: 'Ranking'}}
+      />
+      <Tab.Screen
+        name="Game"
+        component={Game}
+        options={{title: 'Game'}}
       />
       <Tab.Screen
         name="MyPage"
@@ -74,6 +87,7 @@ function TabNavigator() {
     </Tab.Navigator>
   );
 }
+
 function AppInner() {
   const dispatch = useAppDispatch();
   const isLoggedIn = useSelector(
@@ -110,14 +124,20 @@ function AppInner() {
             authorization: `Bearer ${token}`,
           },
         });
-        const {access_token} = refreshResult.data;
-        const {sub, roles} = decodeJWT(access_token);
+        const {access_token,refresh_token} = refreshResult.data;
+        const {sub, roles,nickname} = decodeJWT(access_token);
+        
         dispatch(
           userSlice.actions.setUser({
             name: sub,
             roles: roles,
             access_token: access_token,
+            nickName:nickname
           }),
+        );
+        await EncryptedStorage.setItem(
+          'refreshToken',
+          refresh_token
         );
       } catch (error) {
         // refresh token 기간만료됬을 경우

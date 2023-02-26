@@ -19,13 +19,18 @@ import {heightData} from '../../modules/globalStyles';
 import {useAppDispatch} from '../../store';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import userSlice from '../../slices/user';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/reducer';
 
 const heightScale = heightData;
-
+ 
 function MyPage() {
   const dispatch = useAppDispatch();
   const navigation = useNavigation<NavigationProp<MyPageRootStackParamList>>();
   const [preview, setPreview] = useState<{uri: string | null}>();
+  const nickname = useSelector((state: RootState) => state.user.nickName);
+  const name = useSelector((state: RootState) => state.user.name);
+
 
   const onResponse = useCallback(async (response: any) => {
     // Expo 개발용
@@ -116,7 +121,7 @@ function MyPage() {
             <Pressable
               style={styles.userInfoWrapper}
               onPress={() => navigation.navigate('SetNickNameScreen')}>
-              <Text style={styles.fontStyle}>한나피쉬</Text>
+              <Text style={styles.fontStyle}>{name}</Text>
               <IconSimpleLineIcons
                 name="pencil"
                 size={heightScale * 13}
@@ -124,7 +129,7 @@ function MyPage() {
                 color="white"
                 />
             </Pressable>
-            <Text style={[styles.fontStyle,{fontWeight:'normal',fontSize:heightScale*16}]}>imelon2</Text>
+            <Text style={[styles.fontStyle,{fontWeight:'normal',fontSize:heightScale*16}]}>{nickname}</Text>
           </View>
         </View>
 
@@ -233,6 +238,6 @@ const styles = StyleSheet.create({
     paddingVertical: heightScale * 13,
     alignItems: 'center',
     flexDirection: 'row',
-  },
+  },  
 });
 export default MyPage;
