@@ -20,15 +20,16 @@ function SignUpNickName({navigation}: SignInScreenProps) {
       setNickName(text.trim());
     }, []);
 
+
+
     const onClickNextButton = () => {
         if(!nickName) return;
         // if( 중복확인 )
         dispatch(userSlice.actions.setNickname({nickName: nickName}));
         axios.get(`http://43.201.146.251:8080/nicknamecheck?nickname=${nickName}`)
         .then(res => {
-            console.log(res);
              if (res.status == 200) {
-                navigation.navigate('SignUpCertification');
+                navigation.navigate('SignUpName');
              }
             }
         ).catch(e => {
@@ -46,7 +47,7 @@ function SignUpNickName({navigation}: SignInScreenProps) {
               name="arrowleft"
               style={SignUpstyles.leftIcon}
               size={25}
-              color="#000"
+              color="#fff"
               onPress={() => navigation.navigate('SignUpPassWord')}
             />
             <View style={SignUpstyles.topbar}>
@@ -64,6 +65,7 @@ function SignUpNickName({navigation}: SignInScreenProps) {
                   placeholder="닉네임 입력"
                   onChangeText={onChangeNickName}
                   value={nickName}
+                  placeholderTextColor = "#6F6F6F"
                 />
               </View>
               <View>

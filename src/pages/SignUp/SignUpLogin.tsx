@@ -43,7 +43,7 @@ function SignUpLogin({ navigation }: SignInScreenProps) {
                         name="arrowleft"
                         style={SignUpstyles.leftIcon}
                         size={25}
-                        color="#000"
+                        color="#fff"
                         onPress={() => navigation.navigate('SignUpHome')}
                     />
                     <View style={SignUpstyles.topbar}>
@@ -64,6 +64,7 @@ function SignUpLogin({ navigation }: SignInScreenProps) {
                             importantForAutofill="yes" // 자동완성 불러오기
                             autoComplete="email" // 자동완성 허용
                             keyboardType="email-address" // 키보드 타입 변경
+                            placeholderTextColor = "#6F6F6F"
                             value={email}
                         />
                     </View>

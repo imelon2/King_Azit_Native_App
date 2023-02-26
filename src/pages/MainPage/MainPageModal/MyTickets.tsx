@@ -1,5 +1,5 @@
 import { Text, View, Image, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
-import {  heightData } from '../modules/globalStyles';
+import {  heightData } from '../../../modules/globalStyles';
 import Video from "react-native-video";
 import Icon from 'react-native-vector-icons/AntDesign';
 import { Shadow } from 'react-native-shadow-2';
@@ -46,7 +46,7 @@ function MyTickets(props:propsType) {
                         <View style={{ flexDirection:'row' , alignItems: 'center' }} >
                             <Text style={styles.plusText} >QR 크게보기</Text>
                             <Image
-                                source={ require('../assets/MagnifyingGlassPlus.png')}
+                                source={ require('../../../assets/MagnifyingGlassPlus.png')}
                                 style={styles.plusIcon}
                                 />
                         </View>    

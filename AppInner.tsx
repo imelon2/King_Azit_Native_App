@@ -34,6 +34,9 @@ export type RootStackParamList = {
   SignUpHome: undefined;
   SignUpPassWord: undefined;
   SignUpNickName: undefined;
+  SignUpGender:undefined;
+  SignUpName:undefined;
+  SignUpBirth:undefined;
   SignUpCertification: undefined;
   SignUpFinal: undefined;  
 };
@@ -157,7 +160,7 @@ function AppInner() {
 
   return (
     <>
-      {isLoggedIn ? (
+      {!isLoggedIn ? (
         <HomeStack.Navigator
           initialRouteName="Home"
           screenOptions={{headerShown: false}}>

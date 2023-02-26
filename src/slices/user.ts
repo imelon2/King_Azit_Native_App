@@ -36,6 +36,15 @@ const userSlice = createSlice({
         setphoneToken(state,action) {
             state.phoneToken = action.payload.phoneToken; 
         },
+        setGender(state,action) {
+            state.gender = action.payload.gender; 
+        },
+        setBirth(state,action) {
+            state.birth = action.payload.birth; 
+        },
+        setName(state,action) {
+            state.name = action.payload.name; 
+        },
         setUser(state,action) {
             state.name = action.payload.name;
             state.roles = action.payload.roles;
@@ -53,7 +62,7 @@ const userSlice = createSlice({
     }
 })
 
-export const { setEmail , setPassWord , setNickname  } = userSlice.actions;
+export const { setEmail , setPassWord , setNickname , setGender  , setName , setBirth  } = userSlice.actions;
 // export const selectUser = state => state.user;
 
 export default userSlice
