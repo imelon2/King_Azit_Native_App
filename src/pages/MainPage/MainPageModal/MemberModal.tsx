@@ -1,5 +1,5 @@
 import { Text, View, Image, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
-import { heightData } from '../../modules/globalStyles';
+import { heightData } from '../../../modules/globalStyles';
 import { useState } from 'react';
 import Icon from 'react-native-vector-icons/AntDesign';
 const { width, height } = Dimensions.get('window');
@@ -27,7 +27,7 @@ function MemberModal(props: propsType) {
                 <View style={  styles.playerBox } >
                     {playMember.map((v, key) => (
                         <View>
-                            <Image  style={styles.player} source={ require('../../assets/UserIcon2.png')} />
+                            <Image  style={styles.player} source={ require('../../../assets/UserIcon2.png')} />
                             <Text style={styles.playerText}> 플레이어 </Text>
                         </View>
                     ))}
@@ -40,7 +40,7 @@ function MemberModal(props: propsType) {
             <View style={  styles.playerBox } >
                     {outMember.map((v, key) => (
                         <View>
-                            <Image  style={styles.player} source={ require('../../assets/UserIcon2.png')} />
+                            <Image  style={styles.player} source={ require('../../../assets/UserIcon2.png')} />
                             <Text style={styles.playerText}> 플레이어 </Text>
                         </View>
                     ))}

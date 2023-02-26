@@ -45,7 +45,7 @@ function SignUpHome({ navigation }: SignInScreenProps) {
                     name="arrowleft"
                     style={SignUpstyles.leftIcon}
                     size={25}
-                    color="#000"
+                    color="#fff"
                     onPress={() => navigation.navigate('SignIn')}
                 />
                 <View style={SignUpstyles.topbar}>
@@ -63,7 +63,7 @@ function SignUpHome({ navigation }: SignInScreenProps) {
                         style={styles.checkBox}
                         name="checksquareo"
                         size={22}
-                        color={checkAll ? '#000' : '#848484'}
+                        color={checkAll ? '#F5FF82' : '#848484'}
                     />
                     <Text style={styles.agreeText}>모두 동의</Text>
                 </TouchableOpacity>
@@ -76,9 +76,9 @@ function SignUpHome({ navigation }: SignInScreenProps) {
                         style={styles.check}
                         name="check"
                         size={15}
-                        color={checkPrivacy ? '#000' : '#848484'}
+                        color={checkPrivacy ? '#F5FF82' : '#BCBCBC'}
                     />
-                    <Text style={{ color: '#000' }}>[필수] 개인정보 </Text>
+                    <Text style={{ color: '#fff' }}>[필수] 개인정보 </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     activeOpacity={1}
@@ -88,9 +88,9 @@ function SignUpHome({ navigation }: SignInScreenProps) {
                         style={styles.check}
                         name="check"
                         size={15}
-                        color={checkTerms ? '#000' : '#848484'}
+                        color={checkTerms ? '#F5FF82' : '#BCBCBC'}
                     />
-                    <Text style={{ color: '#000' }}>이용약관 </Text>
+                    <Text style={{ color: '#fff' }}>이용약관 </Text>
                 </TouchableOpacity>
             </View>
 
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     agreeText: {
       marginTop: 2,
       marginLeft: 12,
-      color: '#000',
+      color: '#fff',
     },
     check: {
       marginRight: 15,
