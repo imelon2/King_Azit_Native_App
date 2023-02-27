@@ -12,8 +12,6 @@ import {
   Alert,
 } from 'react-native';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
-import IconEvilIcons from 'react-native-vector-icons/EvilIcons';
-import IconIonicons from 'react-native-vector-icons/Ionicons';
 import MyTicketCarousel from './MyPageCompoents/MyTicketCarousel';
 import TicketHistoryView from './MyPageCompoents/TicketHistoryView';
 import {Shadow} from 'react-native-shadow-2';

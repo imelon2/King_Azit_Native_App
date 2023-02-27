@@ -36,6 +36,7 @@ function MainPage() {
     }
   }
 
+
   return (
     <SafeAreaView style={MainStyles.container} >
       <View style={{ flex: 1 }} >

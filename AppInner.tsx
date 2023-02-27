@@ -1,9 +1,8 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {NavigationContainer} from '@react-navigation/native';
-import {Alert, StyleSheet, Text, View} from 'react-native';
+import {Alert} from 'react-native';
 import {useSelector} from 'react-redux';
-import {useEffect, useState} from 'react';
+import {useEffect} from 'react';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import Config from 'react-native-config';
 import axios, {AxiosError} from 'axios';
@@ -25,6 +24,7 @@ import TabBar from './src/components/TabBar';
 import Ranking from './src/pages/Ranking/Ranking';
 import Game from './src/pages/Game/Game';
 import GameHostory from './src/pages/MyPage/GameHostory';
+import interceptors from './src/hooks/interceptors';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -159,6 +159,9 @@ function AppInner() {
     };
     getToken();
   }, [dispatch]);
+
+  // axios interceptors 중앙 경로
+  interceptors();
 
   return (
     <>
