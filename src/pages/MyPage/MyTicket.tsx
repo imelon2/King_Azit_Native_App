@@ -14,8 +14,8 @@ import {
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import IconEvilIcons from 'react-native-vector-icons/EvilIcons';
 import IconIonicons from 'react-native-vector-icons/Ionicons';
-import MyTicketCarousel from '../../components/MyTicketCarousel';
-import TicketHistoryView from '../../components/TicketHistoryView';
+import MyTicketCarousel from './MyPageCompoents/MyTicketCarousel';
+import TicketHistoryView from './MyPageCompoents/TicketHistoryView';
 import {Shadow} from 'react-native-shadow-2';
 import {heightData} from '../../modules/globalStyles';
 import {
@@ -23,15 +23,11 @@ import {
   MyPageRootStackParamList,
 } from '../../../AppInner';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import GiftModal from '../../components/GiftModal';
+import GiftModal from './MyPageCompoents/GiftModal';
+import ticketsList,{ticketsListType} from '../../modules/ticketsList';
 const heightScale = heightData;
 
-// 더미 데이터
-const Cards = [
-  require('../../assets/RedCard.png'),
-  require('../../assets/KingsDaoCard.png'),
-  require('../../assets/BlackCard.png'),
-];
+
 const ContentsList = [
   {
     type: 'black',
@@ -77,13 +73,6 @@ const ContentsList = [
   },
 ];
 
-const CARDS = [...Array(Cards.length).keys()].map((_, i) => {
-  return {
-    key: i,
-    image: Cards[i],
-  };
-});
-
 const LISTS = [...Array(ContentsList.length).keys()].map((_, i) => {
   return {
     key: i,
@@ -97,9 +86,14 @@ function MyTicket(): JSX.Element {
       NavigationProp<MyPageRootStackParamList & HomeRootStackParamList>
     >();
   const [loading, setLoading] = useState(false);
-  const [giftModalState, setGiftModalState] = useState(true); 
-  const [page, setPage] = useState(0);
-  const [list, setList] = useState([]);
+  const [giftModalState, setGiftModalState] = useState(false); 
+  const [selectCard, setSelectCard] = useState<ticketsListType>({
+    key:0,
+    type:"",
+    image:"",
+    count:0
+  });
+  const CARDS = ticketsList();
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerStyle}>
@@ -125,7 +119,7 @@ function MyTicket(): JSX.Element {
       {/* 티켓 Carousel */}
       <View style={{marginTop: heightScale * 16}}>
         <MyTicketCarousel
-          setPage={setPage}
+          setSelectCard={setSelectCard}
           data={CARDS}
           width={200}
           height={296}
@@ -134,14 +128,14 @@ function MyTicket(): JSX.Element {
       </View>
       {/* 티켓 보유 개수 */}
       <View style={{alignItems: 'center'}}>
-        <Text style={styles.ticketInfoStyle}>보유 개수: 8장</Text>
+        <Text style={styles.ticketInfoStyle}>보유 개수: {selectCard.count}장</Text>
       </View>
       {/* 선물하기 버튼 */}
       <View style={styles.giftWrapperStyle}>
         <Shadow distance={5} startColor={'#FCFF72'}>
           <Pressable
             style={styles.giftButtonStyle}
-            onPress={() => Alert.alert('Todo', '선물하기 팝업 띄우기')}>
+            onPress={() => setGiftModalState(true)}>
             <Text style={styles.giftFontStyle}>선물하기</Text>
           </Pressable>
         </Shadow>
@@ -172,7 +166,7 @@ function MyTicket(): JSX.Element {
       </View>
       <View style={{height: heightScale * 41}}></View>
       {/* 선물하기 팝업창 */}
-      {giftModalState ? <GiftModal setGiftModalState={setGiftModalState}/> : <></>}
+      {giftModalState ? <GiftModal selectCard={selectCard} setGiftModalState={setGiftModalState}/> : <></>}
     </SafeAreaView>
   );
 }

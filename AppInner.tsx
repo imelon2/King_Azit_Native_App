@@ -24,6 +24,7 @@ import GamePage from './src/pages/MainPage/GamePage';
 import TabBar from './src/components/TabBar';
 import Ranking from './src/pages/Ranking/Ranking';
 import Game from './src/pages/Game/Game';
+import GameHostory from './src/pages/MyPage/GameHostory';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -52,6 +53,7 @@ export type HomeRootStackParamList = {
 export type MyPageRootStackParamList = {
   SetNickNameScreen: undefined;
   MyTicket: undefined;
+  GameHostory:undefined
 };
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
@@ -160,7 +162,7 @@ function AppInner() {
 
   return (
     <>
-      {!isLoggedIn ? (
+      {isLoggedIn ? (
         <HomeStack.Navigator
           initialRouteName="Home"
           screenOptions={{headerShown: false}}>
@@ -173,6 +175,11 @@ function AppInner() {
           <HomeStack.Screen
             name="MyTicket"
             component={MyTicket}
+            options={{animation: 'none'}}
+          />
+          <HomeStack.Screen
+            name="GameHostory"
+            component={GameHostory}
             options={{animation: 'none'}}
           />
           <HomeStack.Screen

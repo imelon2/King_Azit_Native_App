@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, View} from 'react-native';
-import {heightData} from '../modules/globalStyles';
+import {heightData} from '../../../modules/globalStyles'
 const heightScale = heightData;
 
 const TicketHistoryView = ({...props}) => {
