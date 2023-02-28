@@ -9,7 +9,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     black: 0,
-    red: 0,
+    red: 5,
     gold: 0
 }
 

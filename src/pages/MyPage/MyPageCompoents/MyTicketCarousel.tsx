@@ -1,9 +1,7 @@
 import React, { memo, useCallback, useRef } from 'react';
-import { useState } from 'react';
 import {Animated, Dimensions, StyleSheet, View} from 'react-native';
-import { Shadow } from 'react-native-shadow-2';
 const {width} = Dimensions.get('screen');
-import {heightData} from '../modules/globalStyles';
+import {heightData} from '../../../modules/globalStyles';
 const heightScale = heightData;
 
 const MyTicketCarousel = ({...props}) => {
@@ -26,7 +24,8 @@ const MyTicketCarousel = ({...props}) => {
   // Flatlist Focus된 page index 리턴
   const onViewableItemsChanged = ({ viewableItems }:any) => {
     // 현재 Focus된 page index 전달
-    props.setPage(viewableItems[0].index)
+    props.setSelectCard(DATA[viewableItems[0].index])
+
   }
   const viewabilityConfig={
         itemVisiblePercentThreshold: 50 // View에 80% 이상 노출될 경우 실행

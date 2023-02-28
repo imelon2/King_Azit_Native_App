@@ -152,9 +152,11 @@ function MyPage() {
           </Pressable>
 
           <Text style={[styles.contentTitleText, {marginTop: 28}]}>
-            마이게임
+            게임
           </Text>
-          <View style={[styles.contentWrapper, {marginTop: heightScale * 13}]}>
+          <Pressable style={[styles.contentWrapper, {marginTop: heightScale * 13}]}
+          onPress={() => navigation.navigate('GameHostory')}
+          >
             <View style={{flex: 1}}>
               <Text style={styles.contentText}>게임 참여 기록</Text>
             </View>
@@ -165,7 +167,7 @@ function MyPage() {
                 color="white"
               />
             </View>
-          </View>
+          </Pressable>
           <Text style={[styles.contentTitleText, {marginTop: 28}]}>랭킹</Text>
           <View style={[styles.contentWrapper, {marginTop: heightScale * 13}]}>
             <View style={{flex: 1}}>

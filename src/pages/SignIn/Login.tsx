@@ -68,6 +68,7 @@ function Login({navigation}:LoginScreenProps) {
         "memberId":email,
         "password":password
       })
+
       const {access_token,refresh_token} = loginResult.data;
       
       const {sub,roles,nickname} = decodeJWT(access_token);

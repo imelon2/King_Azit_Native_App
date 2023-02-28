@@ -39,6 +39,7 @@ function MainPage() {
     }
   }
 
+<<<<<<< HEAD
   // useEffect(() => {
     
   //   const getTiket = async () => {
@@ -58,6 +59,8 @@ function MainPage() {
   //   }
   //   getTiket();
   // })
+=======
+>>>>>>> 776d4676f1813d07430e6459d63497e0acf57e30
 
   return (
     <SafeAreaView style={MainStyles.container} >

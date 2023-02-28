@@ -3,7 +3,6 @@ import {Pressable, Text, View} from 'react-native';
 import {BottomTabBarProps} from '@react-navigation/bottom-tabs';
 import IconOcticons from 'react-native-vector-icons/Octicons';
 import IconIonicons from 'react-native-vector-icons/Ionicons';
-import {Icon, IconProps} from 'react-native-vector-icons/Icon';
 import {StyleSheet} from 'react-native';
 import {heightData} from '../modules/globalStyles';
 const heightScale = heightData;
@@ -72,9 +71,12 @@ function TabBar({state, descriptors, navigation}: BottomTabBarProps) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    height:heightScale*55,
+    height:heightScale*72,
     backgroundColor:'black',
-    paddingVertical:5
+    paddingVertical:5,
+    borderTopColor:'#A4A4A4',
+    borderTopWidth:StyleSheet.hairlineWidth,
+    // paddingTop:10
   },
   tabBarStyle: {
     flex: 1,
