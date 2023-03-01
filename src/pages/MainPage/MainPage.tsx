@@ -39,28 +39,25 @@ function MainPage() {
     }
   }
 
-<<<<<<< HEAD
-  // useEffect(() => {
+  useEffect(() => {
     
-  //   const getTiket = async () => {
-  //     try {
-  //       const token = await EncryptedStorage.getItem('refreshToken');
-  //       axios.get(`${Config.API_URL}/member/tickets`,{
-  //         headers: {
-  //           authorization: `Bearer ${token}`,
-  //         },
-  //       })
-  //         .then(res => {
-  //           console.log(res);
-  //         })
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }
-  //   getTiket();
-  // })
-=======
->>>>>>> 776d4676f1813d07430e6459d63497e0acf57e30
+    const getTiket = async () => {
+      try {
+        const token = await EncryptedStorage.getItem('refreshToken');
+        axios.get(`${Config.API_URL}/member/tickets`,{
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        })
+          .then(res => {
+            console.log(res);
+          })
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getTiket();
+  })
 
   return (
     <SafeAreaView style={MainStyles.container} >
