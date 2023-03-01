@@ -1,21 +1,22 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, View, Image, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, Dimensions } from 'react-native';
 import { heightData } from '../../modules/globalStyles';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { HomeRootStackParamList } from '../../../AppInner';
 import { Shadow } from 'react-native-shadow-2';
 import Modal from "react-native-modal";
-const { width } = Dimensions.get('window');
 import Icon from 'react-native-vector-icons/AntDesign';
+import Config from 'react-native-config';
 import ImageSlider from 'react-native-image-slider';
 import MyTickets from './MainPageModal/MyTickets';
 import MemberModal from './MainPageModal/MemberModal';
 import GuestJoin from './MainPageModal/GuestJoin';
 import LinearGradient from 'react-native-linear-gradient';
 import { MainStyles } from '../../modules/MainStyles';
+import EncryptedStorage from 'react-native-encrypted-storage';
+import axios from 'axios';
 
-const heightScale = heightData;
 
 
 function MainPage() {
@@ -25,6 +26,8 @@ function MainPage() {
   const [modalStatus, setModalStatus] = useState(false);
   const [tiketModalStatus, setTiketModalStatus] = useState(false);
   const [playMemberStatus, setPlayMemberStatus] = useState(false);
+
+  // axios.get(`http://43.201.146.251:8080/idcheck?memberId=${email}`)
 
   const onClickMember = () => {
     setPlayMemberStatus(true);;
@@ -36,6 +39,25 @@ function MainPage() {
     }
   }
 
+  useEffect(() => {
+    
+    const getTiket = async () => {
+      try {
+        const token = await EncryptedStorage.getItem('refreshToken');
+        axios.get(`${Config.API_URL}/member/tickets`,{
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        })
+          .then(res => {
+            console.log(res);
+          })
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getTiket();
+  })
 
   return (
     <SafeAreaView style={MainStyles.container} >
@@ -127,37 +149,37 @@ function MainPage() {
             {gameBox.map((v, key) => (
               <View style={MainStyles.gameContainer} key={key}>
                 <Image source={require('../../assets/game_bg.png')} style={MainStyles.gameContainer2} />
-                  <View style={{ flex: 1, flexDirection: 'row', alignItems: 'flex-end' }} >
-                    <View style={{ flex: 5 }} >
-                      <Text style={MainStyles.tableNumText} >Table NO. 1</Text>
-                      <Text style={MainStyles.mainGameText} >Main Game</Text>
-                    </View>
-
-                    <View style={{ flex: 2 }}  >
-                      <View style={MainStyles.gameStatusBox} ><Text style={MainStyles.gameStatus} >진행중</Text></View>
-                      <View><Text style={MainStyles.entryText}>Entry: 16/26</Text></View>
-                    </View>
+                <View style={{ flex: 1, flexDirection: 'row', alignItems: 'flex-end' }} >
+                  <View style={{ flex: 5 }} >
+                    <Text style={MainStyles.tableNumText} >Table NO. 1</Text>
+                    <Text style={MainStyles.mainGameText} >Main Game</Text>
                   </View>
 
-                  <View style={{ flex: 1 }}>
-                    <Text style={MainStyles.tiketBuy} >1 Black Ticket</Text>
-                    <Text style={MainStyles.Blind}>Blind 100/200 Ante: 0</Text>
+                  <View style={{ flex: 2 }}  >
+                    <View style={MainStyles.gameStatusBox} ><Text style={MainStyles.gameStatus} >진행중</Text></View>
+                    <View><Text style={MainStyles.entryText}>Entry: 16/26</Text></View>
                   </View>
+                </View>
 
-                  <TouchableOpacity style={{ flex: 1, flexDirection: 'row', alignItems: 'flex-end' }} onPress={() => setPlayMemberStatus(true)} activeOpacity={1} >
-                    <Image
-                      source={require('../../assets/Group_img.png')}
-                      style={MainStyles.group_icon}
-                    />
-                  </TouchableOpacity >
+                <View style={{ flex: 1 }}>
+                  <Text style={MainStyles.tiketBuy} >1 Black Ticket</Text>
+                  <Text style={MainStyles.Blind}>Blind 100/200 Ante: 0</Text>
+                </View>
 
-                  <View style={{ flex: 2, flexDirection: 'row', alignItems: 'flex-end' }}>
-                    <Shadow distance={5} offset={[0, 1]} startColor={'#FCFF72'} >
-                      <TouchableOpacity onPress={onClickJoinButton} activeOpacity={1} style={MainStyles.joinButton} >
-                        <Text style={MainStyles.joinButtonText}>참가하기</Text>
-                      </TouchableOpacity>
-                    </Shadow>
-                  </View>
+                <TouchableOpacity style={{ flex: 1, flexDirection: 'row', alignItems: 'flex-end' }} onPress={() => setPlayMemberStatus(true)} activeOpacity={1} >
+                  <Image
+                    source={require('../../assets/Group_img.png')}
+                    style={MainStyles.group_icon}
+                  />
+                </TouchableOpacity >
+
+                <View style={{ flex: 2, flexDirection: 'row', alignItems: 'flex-end' }}>
+                  <Shadow distance={5} offset={[0, 1]} startColor={'#FCFF72'} >
+                    <TouchableOpacity onPress={onClickJoinButton} activeOpacity={1} style={MainStyles.joinButton} >
+                      <Text style={MainStyles.joinButtonText}>참가하기</Text>
+                    </TouchableOpacity>
+                  </Shadow>
+                </View>
               </View>
             ))}
           </ScrollView>

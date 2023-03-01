@@ -26,7 +26,7 @@ function MemberModal(props: propsType) {
                 />
                 <View style={  styles.playerBox } >
                     {playMember.map((v, key) => (
-                        <View>
+                        <View key={key} >
                             <Image  style={styles.player} source={ require('../../../assets/UserIcon2.png')} />
                             <Text style={styles.playerText}> 플레이어 </Text>
                         </View>
@@ -39,7 +39,7 @@ function MemberModal(props: propsType) {
 
             <View style={  styles.playerBox } >
                     {outMember.map((v, key) => (
-                        <View>
+                        <View key={key}>
                             <Image  style={styles.player} source={ require('../../../assets/UserIcon2.png')} />
                             <Text style={styles.playerText}> 플레이어 </Text>
                         </View>
