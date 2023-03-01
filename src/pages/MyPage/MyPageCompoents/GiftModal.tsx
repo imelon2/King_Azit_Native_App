@@ -1,128 +1,238 @@
-import React, {useCallback, useState} from 'react';
-import {FlatList, Pressable, StyleSheet} from 'react-native';
-import {View, Text, Alert, TextInput} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {FlatList, Image, Pressable, StyleSheet} from 'react-native';
+import {View, Text, Alert, TextInput, Keyboard} from 'react-native';
 import IconEvilIcons from 'react-native-vector-icons/EvilIcons';
 import IconIonicons from 'react-native-vector-icons/Ionicons';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import {Shadow} from 'react-native-shadow-2';
 
-
 import {heightData} from '../../../modules/globalStyles';
 const heightScale = heightData;
 
-// const LIST =
+const LIST = [
+  {id: '1', nickname: 'Alpha'},
+  {id: '2', nickname: 'Beta'},
+  {id: '3', nickname: 'Gamma'},
+  {id: '4', nickname: 'View'},
+  {id: '5', nickname: 'Blue'},
+  {id: '6', nickname: 'Red'},
+  {id: '7', nickname: 'Green'},
+  {id: '8', nickname: 'White'},
+  {id: '9', nickname: 'Gold'},
+];
+
 const GiftModal = ({...props}) => {
   const [counts, setCount] = useState(0);
-  const [recipient, setRecipient] = useState('');
-  const [selectedItem, setSelectedItem] = useState();
+  const [onKeyboard, setOnKeyboard] = useState(false);
+  const [keyword, setKeyword] = useState<string>('');
+  const [keyItems, setKeyItems] = useState([]);
   const canAdd = counts === 0 ? true : false;
   const canMius = counts === props.selectCard.count ? true : false;
+  const canGift = counts !== 0 &&  keyword ? true : false
 
-  const onChangeNicknane = useCallback((text: any) => {
-    setRecipient(text);
+  useEffect(() => {
+    const didShow = Keyboard.addListener('keyboardDidShow', () => {
+      setOnKeyboard(true)
+    });
+    const didHide = Keyboard.addListener('keyboardDidHide', () => {
+      setOnKeyboard(false)
+    });
+    return () => {
+      didShow.remove();
+      didHide.remove();
+    };
+  },[])
+
+
+  const onChangeNicknane = useCallback((text: string) => {
+    setKeyword(text);
   }, []);
+
 
   // Todo : 선물하기 API 연동
   const transferTicket = useCallback(() => {
     Alert.alert('Todo:', '선물하기 기능 구현');
   }, []);
+
+  // todo : 회원 닉네임 & 프로필사진 요청 API
+  const callData = () => {
+    try {
+    } catch (error) {}
+  };
+
+
+  // 자동 검색 데이터 생성
+  const updateData = async () => {
+    // const res = await callData();
+    const res = LIST;
+    let searchResult: any = res.filter(
+      list => list.nickname.includes(keyword) === true,
+    ).slice(0, 10); // 10개만 보여지기
+    // console.log(b);
+
+    setKeyItems(searchResult);
+  };
+
+  //키워드가 변경되면 api를 호출
+  useEffect(() => {
+    const debounce = setTimeout(() => {
+      if (keyword) updateData();
+    }, 200);
+    return () => {
+      clearTimeout(debounce);
+    };
+  }, [keyword]);
+
+
   return (
     <View style={styles.giftModalContainer}>
       <View style={styles.giftModalComponent}>
-        <Text style={styles.figtModalFontStyle}>선물하기</Text>
-        <IconEvilIcons
-          style={{position: 'absolute', right: 0, padding: heightScale * 24}}
-          name="close"
-          color={'white'}
-          size={heightScale * 35}
-          suppressHighlighting={true}
-          onPress={() => props.setGiftModalState(false)}
-        />
-        {/* 검색창 */}
-        <View style={styles.giftModalTextInput}>
-          <IconIonicons
-            name="search"
-            color={'#929292'}
-            size={heightScale * 24}
+        {/* Header */}
+        <>
+          <Text style={styles.figtModalFontStyle}>선물하기</Text>
+          <IconEvilIcons
+            style={{position: 'absolute', right: 0, padding: heightScale * 24}}
+            name="close"
+            color={'white'}
+            size={heightScale * 35}
+            suppressHighlighting={true}
+            onPress={() => props.setGiftModalState(false)}
           />
-          <TextInput placeholderTextColor={'#929292'} style={styles.textInput} placeholder="닉네임 검색"/>
-        </View>
-        {/* <View style={{width: heightScale * 324, zIndex: 10}}>
-          <AutocompleteDropdown
-            clearOnFocus={false}
-            closeOnBlur={false}
-            closeOnSubmit={false}
-            showChevron={false} // 드랍다운 활성 버튼
-            inputContainerStyle={{backgroundColor: '#414141'}}
-            // initialValue={{id: '0'}} // or just '2'
-            // onSelectItem={setSelectedItem}
-            dataSet={[
-              {id: '1', title: 'Alpha'},
-              {id: '2', title: 'Beta'},
-              {id: '3', title: 'Gamma'},
-              {id: '4', title: 'View'},
-              {id: '5', title: 'Blue'},
-              {id: '6', title: 'Red'},
-              {id: '7', title: 'Green'},
-              {id: '8', title: 'White'},
-              {id: '9', title: 'Gold'},
-            ]}
-          />
-        </View> */}
-        {/* 숫자 추가 빼기 */}
+        </>
+        {/* Center */}
         <View
           style={{
-            marginTop: heightScale * 32,
-            height: heightScale * 48,
-            width: heightScale * 324,
-            flexDirection: 'row',
-            borderWidth: 1,
-            borderColor: '#787878',
-            borderRadius: 4,
+            alignItems: 'center',
+            position: 'absolute',
+            zIndex: 1,
+            top: heightScale * 123,
           }}>
-          <Pressable
-            style={[
-              styles.countButtonStyle,
-              {borderRightWidth: 1, borderRightColor: '#787878'},
-            ]}
-            onPress={() => setCount(counts - 1)}
-            disabled={canAdd}>
-            <IconAntDesign
-              size={heightScale * 32}
-              name="minus"
-              color={canAdd ? '#787878' : '#FFFFFF'}
+          {/* 검색창 */}
+          <View style={styles.giftModalTextInput}>
+            <IconIonicons
+              name="search"
+              color={'#929292'}
+              size={heightScale * 24}
             />
-          </Pressable>
+            <TextInput
+              autoCapitalize="none"
+              autoCorrect={false}
+              clearButtonMode="always"
+              onChangeText={onChangeNicknane}
+              placeholderTextColor={'#929292'}
+              style={styles.textInput}
+              placeholder="닉네임 검색"
+              value={keyword}
+            />
+          </View>
+          {/* 검색 리스트 */}
+          <FlatList
+            style={{
+              marginTop: 5,
+              width: heightScale * 324,
+              flexGrow: 0,
+              backgroundColor: '#414141',
+              paddingHorizontal: 24,
+              maxHeight: heightScale * 142,
+              borderRadius: 4,
+              display:
+                keyItems.length > 0 && keyword && onKeyboard? 'flex' : 'none',
+            }}
+            keyExtractor={item => item.id}
+            data={keyItems}
+            disableScrollViewPanResponder={true} //onPress 클릭 시, 선택 안되는 이슈 해결
+            renderItem={({item, index}: {item: any; index: any}) => {
+              return (
+                <Pressable
+                  style={{
+                    flexDirection: 'row',
+                    paddingVertical: heightScale * 10,
+                    alignItems: 'center',
+                    paddingHorizontal: 5,
+                    borderBottomColor: '#5A5A5A',
+                    borderBottomWidth: 1,
+                  }}
+                  onPress={() => {
+                    setKeyword(item.nickname);
+                    Keyboard.dismiss()
+                  }}>
+                  <Image
+                    source={require('../../../assets/UserIcon.png')}
+                    style={styles.userIcon}
+                  />
+                  <Text style={{fontSize: 16, color: '#fff', paddingLeft: 10}}>
+                    {item.nickname}
+                  </Text>
+                </Pressable>
+              );
+            }}
+          />
+        </View>
+        {/* Footer */}
+        <View
+          style={{
+            position: 'absolute',
+            alignItems: 'center',
+            bottom: heightScale * 28,
+          }}>
+          {/* 숫자 추가 빼기 */}
           <View
             style={{
-              flex: 19,
-              alignItems: 'center',
-              justifyContent: 'center',
+              height: heightScale * 48,
+              width: heightScale * 324,
+              flexDirection: 'row',
+              borderWidth: 1,
+              borderColor: '#787878',
+              borderRadius: 4,
+              marginBottom: heightScale * 105,
             }}>
-            <Text style={{fontSize: heightScale * 18, color: '#ffffff'}}>
-              {counts}
-            </Text>
-          </View>
-          <Pressable
-            style={[
-              styles.countButtonStyle,
-              {borderLeftWidth: 1, borderLeftColor: '#787878'},
-            ]}
-            onPress={() => setCount(counts + 1)}
-            disabled={canMius}>
-            <IconAntDesign
-              size={heightScale * 32}
-              name="plus"
-              color={canMius ? '#787878' : '#FFFFFF'}
-            />
-          </Pressable>
-        </View>
-        {/* 선물하기 버튼 */}
-        <View style={styles.giftWrapperStyle}>
-          <Shadow distance={7} startColor={'#FCFF72'}>
+            {/* minus */}
             <Pressable
-              style={styles.giftButtonStyle}
-              onPress={() => transferTicket()}>
+              style={[
+                styles.countButtonStyle,
+                {borderRightWidth: 1, borderRightColor: '#787878'},
+              ]}
+              onPress={() => setCount(counts - 1)}
+              disabled={canAdd}>
+              <IconAntDesign
+                size={heightScale * 32}
+                name="minus"
+                color={canAdd ? '#787878' : '#FFFFFF'}
+              />
+            </Pressable>
+            {/* count */}
+            <View
+              style={{
+                flex: 19,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Text style={{fontSize: heightScale * 18, color: '#ffffff'}}>
+                {counts}
+              </Text>
+            </View>
+            {/* plus */}
+            <Pressable
+              style={[
+                styles.countButtonStyle,
+                {borderLeftWidth: 1, borderLeftColor: '#787878'},
+              ]}
+              onPress={() => setCount(counts + 1)}
+              disabled={canMius}>
+              <IconAntDesign
+                size={heightScale * 32}
+                name="plus"
+                color={canMius ? '#787878' : '#FFFFFF'}
+              />
+            </Pressable>
+          </View>
+          {/* 선물하기 버튼 */}
+          <Shadow distance={7} startColor={canGift ? '#FCFF72' : "#414141"}>
+            <Pressable
+              style={[styles.giftButtonStyle,{backgroundColor: canGift ? '#F5FF82' : "#414141"}]}
+              onPress={() => transferTicket()}
+              disabled={canGift?  false: true}
+              >
               <Text style={styles.giftFontStyle}>선물하기</Text>
             </Pressable>
           </Shadow>
@@ -143,8 +253,8 @@ const styles = StyleSheet.create({
     height: heightScale * 430,
     backgroundColor: '#353535',
     top: heightScale * 120,
-    alignItems: 'center',
     borderRadius: 20,
+    alignItems: 'center',
   },
   figtModalFontStyle: {
     fontSize: heightScale * 18,
@@ -155,17 +265,16 @@ const styles = StyleSheet.create({
   giftModalTextInput: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: heightScale * 54,
     width: heightScale * 324,
     height: heightScale * 50,
     paddingHorizontal: 24,
     backgroundColor: '#414141',
     borderRadius: 5,
-    zIndex:1
   },
   textInput: {
     color: '#ffffff',
     fontSize: heightScale * 18,
+    width: heightScale * 250,
     backgroundColor: '#414141',
     paddingHorizontal: 5,
   },
@@ -174,23 +283,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  giftWrapperStyle: {
-    position: 'absolute',
-    bottom: heightScale * 28,
-    alignItems: 'center',
-  },
   giftButtonStyle: {
     alignItems: 'center',
     justifyContent: 'center',
     height: heightScale * 46 - 5,
     width: heightScale * 200 - 5,
-    backgroundColor: '#F5FF82',
     borderRadius: 30,
   },
   giftFontStyle: {
     fontSize: heightScale * 17,
     fontWeight: 'bold',
     color: 'black',
+  },
+  userIcon: {
+    height: heightScale * 24,
+    width: heightScale * 24,
+    borderRadius: 100,
   },
 });
 
