@@ -146,8 +146,8 @@ function GameHostory() {
 
         <View style={{ alignItems: 'center' }} >
           {gameHistory.map((v: any, key) => ( v.type.indexOf(viewType) > -1)  && (
-            <View>
-              <LinearGradient key={key} style={styles.historyBox} locations={[0, 1]} colors={["rgba(57, 57, 57, 1)", 'rgba(57, 57, 57, 0)',]}>
+            <View key={key}>
+              <LinearGradient  style={styles.historyBox} locations={[0, 1]} colors={["rgba(57, 57, 57, 1)", 'rgba(57, 57, 57, 0)',]}>
                 <View style={{ flex: 1, flexDirection: 'row' }}  >
                   <View style={{ flex: 1 }} >
                     <Text style={styles.gameText} >{v.type} Game</Text>

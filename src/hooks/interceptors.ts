@@ -35,7 +35,7 @@ function interceptors() {
             });
             const {access_token, refresh_token} = refreshResult.data;
             // 새로운 토큰 저장
-            dispatch(userSlice.actions.setAccessToken(access_token));
+            dispatch(userSlice.actions.setAccessToken({access_token:access_token}));
             await EncryptedStorage.setItem('refreshToken', refresh_token);
             originalRequest.headers.Authorization = `Bearer ${access_token}`;
             // 401 '토큰 만료'로 요청 실패했던 요청 새로운 토큰으로 재요청

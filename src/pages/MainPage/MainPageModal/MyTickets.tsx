@@ -3,7 +3,8 @@ import {  heightData } from '../../../modules/globalStyles';
 import Video from "react-native-video";
 import Icon from 'react-native-vector-icons/AntDesign';
 import { Shadow } from 'react-native-shadow-2';
-const { width, height } = Dimensions.get('window');
+import { SafeAreaView } from 'react-native-safe-area-context';
+const { width, height } = Dimensions.get('screen');
 const heightScale = heightData;
 
 interface propsType {
@@ -13,10 +14,9 @@ interface propsType {
 function MyTickets(props:propsType) {
 
     return (
-        <View style={styles.container} >
+        <SafeAreaView style={styles.container} >
             <View style={styles.header} >
                 <View style={{ flex: 1, alignItems: 'center' }} >
-                    <Text style={styles.headerText}>My Tickets</Text>
                     <Icon
                         name="close"
                         style={styles.closeIcon}
@@ -24,11 +24,11 @@ function MyTickets(props:propsType) {
                         color="#fff"
                         onPress={() => props.setTiketModalStatus(false)}
                     />
+                    <Text style={styles.headerText}>My Tickets</Text>
                 </View>
             </View>
             <View style={{ alignItems: 'center', flex: 12 }} >
                 <View>
-
                     <Video
                         source={{ uri: "https://uploads-ssl.webflow.com/624b2c0795c4aab84ebe3296/624c5f468ac8f85e6acd1a08_kings%20NFT%203-transcode.mp4" }}
                         style={styles.tiket}
@@ -38,7 +38,6 @@ function MyTickets(props:propsType) {
                         repeat={true} // video가 끝나면 다시 재생할 지 여부
                     // onAnimatedValueUpdate={() => {}}
                     />
-
                     <View style={styles.qrbox} >
                     </View>
 
@@ -69,7 +68,7 @@ function MyTickets(props:propsType) {
                     </View>
                 </View>
             </View>
-        </View>
+        </SafeAreaView>
     )
 }
 
@@ -77,7 +76,9 @@ const styles = StyleSheet.create({
     container: {
         width: width,
         height: height,
-        position: 'absolute',
+        ...StyleSheet.absoluteFillObject,
+        // flex:1,
+        // position: 'absolute',
         left: -20,
         backgroundColor: '#000',
     },

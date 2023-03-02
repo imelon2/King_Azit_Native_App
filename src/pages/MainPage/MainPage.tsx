@@ -16,6 +16,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { MainStyles } from '../../modules/MainStyles';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import axios from 'axios';
+import getProfileImage from '../../hooks/getProfileImage';
 
 
 
@@ -38,9 +39,8 @@ function MainPage() {
       setModalStatus(true);
     }
   }
-
+  // 유저 티켓 가져오기
   useEffect(() => {
-    
     const getTiket = async () => {
       try {
         const token = await EncryptedStorage.getItem('refreshToken');
@@ -56,9 +56,12 @@ function MainPage() {
         console.log(error);
       }
     }
-    getTiket();
-  })
+    // getTiket();
+  },[])
 
+  // 유저 프로필 사진 가져오기
+  getProfileImage()
+  
   return (
     <SafeAreaView style={MainStyles.container} >
       <View style={{ flex: 1 }} >

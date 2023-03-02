@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {ReactElement, useCallback, useEffect, useState} from 'react';
 import {FlatList, Image, Pressable, StyleSheet} from 'react-native';
 import {View, Text, Alert, TextInput, Keyboard} from 'react-native';
 import IconEvilIcons from 'react-native-vector-icons/EvilIcons';
@@ -10,15 +10,16 @@ import {heightData} from '../../../modules/globalStyles';
 const heightScale = heightData;
 
 const LIST = [
-  {id: '1', nickname: 'Alpha'},
-  {id: '2', nickname: 'Beta'},
-  {id: '3', nickname: 'Gamma'},
-  {id: '4', nickname: 'View'},
-  {id: '5', nickname: 'Blue'},
-  {id: '6', nickname: 'Red'},
-  {id: '7', nickname: 'Green'},
-  {id: '8', nickname: 'White'},
-  {id: '9', nickname: 'Gold'},
+  {id: '1', nickname: '최원혁'},
+  {id: '2', nickname: '안징깅'},
+  {id: '3', nickname: '차원'},
+  {id: '4', nickname: '윤지'},
+  {id: '5', nickname: '김태우'},
+  {id: '6', nickname: 'choiwonhyeok'},
+  {id: '7', nickname: 'anjingi'},
+  {id: '8', nickname: 'chawon'},
+  {id: '9', nickname: 'yun'},
+  {id: '9', nickname: 'kim'},
 ];
 
 const GiftModal = ({...props}) => {
@@ -34,12 +35,8 @@ const GiftModal = ({...props}) => {
     const didShow = Keyboard.addListener('keyboardDidShow', () => {
       setOnKeyboard(true)
     });
-    const didHide = Keyboard.addListener('keyboardDidHide', () => {
-      setOnKeyboard(false)
-    });
     return () => {
       didShow.remove();
-      didHide.remove();
     };
   },[])
 
@@ -68,7 +65,6 @@ const GiftModal = ({...props}) => {
     let searchResult: any = res.filter(
       list => list.nickname.includes(keyword) === true,
     ).slice(0, 10); // 10개만 보여지기
-    // console.log(b);
 
     setKeyItems(searchResult);
   };
@@ -76,14 +72,36 @@ const GiftModal = ({...props}) => {
   //키워드가 변경되면 api를 호출
   useEffect(() => {
     const debounce = setTimeout(() => {
-      if (keyword) updateData();
+      if (keyword) {updateData()}
+      else {setKeyItems([])}
     }, 200);
     return () => {
       clearTimeout(debounce);
     };
   }, [keyword]);
 
+  const replaceStringWithJSX = (str:string, find:string, replace:ReactElement) => {
+    const parts = str.split(find);
+    const result = [];
+    for (let i = 0; i < parts.length; i++) {
+      result.push(parts[i]);
+      if (i < parts.length - 1) result.push(replace);
+    }
+    return result;
+  }
 
+  const renderText = (nickname: string) => {
+    return (
+      <Text style={{ fontSize: 16,fontWeight:'300', color: '#fff', paddingLeft: 10 }}>
+        {replaceStringWithJSX(
+          nickname,
+          keyword,
+          <Text style={{ color: '#F5FF82',fontSize: 16,fontWeight:'500', paddingLeft: 10 }}>{keyword}</Text>
+        )}
+      </Text>
+    );
+  };
+  
   return (
     <View style={styles.giftModalContainer}>
       <View style={styles.giftModalComponent}>
@@ -141,7 +159,7 @@ const GiftModal = ({...props}) => {
             keyExtractor={item => item.id}
             data={keyItems}
             disableScrollViewPanResponder={true} //onPress 클릭 시, 선택 안되는 이슈 해결
-            renderItem={({item, index}: {item: any; index: any}) => {
+            renderItem={({item}: {item: any}) => {
               return (
                 <Pressable
                   style={{
@@ -154,15 +172,16 @@ const GiftModal = ({...props}) => {
                   }}
                   onPress={() => {
                     setKeyword(item.nickname);
-                    Keyboard.dismiss()
-                  }}>
+                    Keyboard.dismiss();
+                    setOnKeyboard(false)
+                  }}
+                  key={item.id}
+                  >
                   <Image
                     source={require('../../../assets/UserIcon.png')}
                     style={styles.userIcon}
                   />
-                  <Text style={{fontSize: 16, color: '#fff', paddingLeft: 10}}>
-                    {item.nickname}
-                  </Text>
+                    {renderText(item.nickname)}
                 </Pressable>
               );
             }}
