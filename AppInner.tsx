@@ -26,6 +26,7 @@ import Game from './src/pages/Game/Game';
 import GameHostory from './src/pages/MyPage/GameHostory';
 import interceptors from './src/hooks/interceptors';
 import BinaryToBase64 from './src/modules/BinaryToBase64';
+import TicketsHistorys from './src/pages/MyPage/TicketsHistorys';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -54,6 +55,7 @@ export type HomeRootStackParamList = {
 export type MyPageRootStackParamList = {
   SetNickNameScreen: undefined;
   MyTicket: undefined;
+  TicketsHistorys: undefined;
   GameHostory: undefined;
 };
 
@@ -92,7 +94,7 @@ function TabNavigator() {
 
 function AppInner() {
   const dispatch = useAppDispatch();
-  const isLoggedIn = useSelector((state: RootState) => state.user.access_token);
+  const isLoggedIn = useSelector((state: RootState) => !!state.user.access_token);
   // const isLoggedIn = false
 
   // 디바이스 토큰 설정 및 redex 저장
@@ -174,6 +176,11 @@ function AppInner() {
           <HomeStack.Screen
             name="MyTicket"
             component={MyTicket}
+            options={{animation: 'none'}}
+          />
+          <HomeStack.Screen
+            name="TicketsHistorys"
+            component={TicketsHistorys}
             options={{animation: 'none'}}
           />
           <HomeStack.Screen

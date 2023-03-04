@@ -8,7 +8,7 @@ import { createSlice } from "@reduxjs/toolkit";
 // reducer : action이 실행되면 state를 바꾸는 로직
 
 const initialState = {
-    black: 0,
+    black: 5,
     red: 0,
     gold: 0
 }
@@ -17,7 +17,7 @@ const ticketSlice = createSlice({
     name:'ticket',
     initialState,
     reducers: {
-        setUser(state,action) {
+        setTickets(state,action) {
             state.black = action.payload.black;
             state.red = action.payload.red;
             state.gold = action.payload.gold;

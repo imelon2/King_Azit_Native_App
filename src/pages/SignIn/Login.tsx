@@ -20,6 +20,7 @@ import IconSimpleAntDesign from 'react-native-vector-icons/AntDesign';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {widthData, heightData} from '../../modules/globalStyles';
 import { RootStackParamList } from '../../../AppInner';
+import {Shadow} from 'react-native-shadow-2';
 const {width, height} = Dimensions.get('screen');
 const heightScale = heightData;
 
@@ -107,7 +108,7 @@ function Login({navigation}:LoginScreenProps) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={[styles.headerStyle,{height:60}]}>
-        <IconSimpleAntDesign style={{width:heightScale * 32,height:heightScale * 32}} name="arrowleft"  size={heightScale * 32} color="#000" onPress={() => navigation.goBack()} />
+        <IconSimpleAntDesign style={{width:heightScale * 32,height:heightScale * 32}} name="arrowleft"  size={heightScale * 32} color="#fff" onPress={() => navigation.goBack()} />
       </View>
       <KeyboardAwareScrollView enableOnAndroid 
         keyboardShouldPersistTaps={'handled'}
@@ -123,12 +124,13 @@ function Login({navigation}:LoginScreenProps) {
               <IconOcticons
                 name="person"
                 size={heightScale * 25}
-                color="black"
+                color="#fff"
               />
               <TextInput
                 style={styles.textInput}
                 ref={emailRef}
                 placeholder="아이디 (이메일)"
+                placeholderTextColor={'#6F6F6F'}
                 onChangeText={onChangeEmail}
                 importantForAutofill="yes" // 자동완성 불러오기
                 autoComplete="email" // 자동완성 허용
@@ -142,7 +144,7 @@ function Login({navigation}:LoginScreenProps) {
                 <IconSimpleAntDesign 
                   name='closecircleo'
                   size={heightScale * 20}
-                  color="black"
+                  color="#fff"
                   style={email ? {} :{display:'none'}}
                   onPress={() => setEmail('')}
                   suppressHighlighting={true}
@@ -153,12 +155,13 @@ function Login({navigation}:LoginScreenProps) {
               <IconSimpleLineIcons
                 name="lock"
                 size={heightScale * 25}
-                color="black"
+                color="#fff"
               />
               <TextInput
                 style={styles.textInput}
                 ref={passwordRef}
                 placeholder="비밀번호"
+                placeholderTextColor={'#6F6F6F'}
                 onChangeText={onChangePassword} 
                 onSubmitEditing={loginBtn} // Submit Key 클릭 시, 이벤트
                 blurOnSubmit={false}
@@ -169,7 +172,7 @@ function Login({navigation}:LoginScreenProps) {
               <IconOcticons
                 name={showPW ? 'eye' : 'eye-closed'}
                 size={heightScale * 25}
-                color="black"
+                color="#fff"
                 onPress={() => {
                   setShowPW(!showPW);
                 }}
@@ -177,9 +180,11 @@ function Login({navigation}:LoginScreenProps) {
               />
               </View>
             </View>
-            <View><Text style={checkLoginInfo ?{display:'none'} : {fontSize:heightScale * 14,padding:heightScale*5}}>아이디 또는 비밀번호를 다시 확인해주세요.</Text></View>
+            <View><Text style={checkLoginInfo ?{display:'none'} : {fontSize:heightScale * 14,padding:heightScale*5,color:'red'}}>아이디 또는 비밀번호를 다시 확인해주세요.</Text></View>
           </View>
         </View>
+          <View style={{alignItems: 'center'}}>
+        <Shadow distance={isFillFrom ? 8 : 0} startColor={'#FCFF72'}>
       <Pressable
         style={isFillFrom ? [styles.loginButton,styles.onLiginButton] : styles.loginButton}
         onPress={loginBtn}
@@ -187,12 +192,14 @@ function Login({navigation}:LoginScreenProps) {
         >
         {loading ? (<ActivityIndicator />) : (<Text style={isFillFrom ? [styles.textStyle,styles.onTextStyle] : styles.textStyle} >로그인</Text>)}
       </Pressable>
+      </Shadow>
+      </View>
       <View style={styles.findIDPW}>
         <Pressable onPressIn={() => Alert.alert("구현예정","아이디 찾기 미구현")} style={{flex:1}}>
-        <Text style={{color:'black',textAlign: 'right'}}>아이디 찾기   |</Text>
+        <Text style={{color:'#fff',textAlign: 'right'}}>아이디 찾기   |</Text>
         </Pressable>
         <Pressable onPress={() => Alert.alert("구현예정","비밀번호 찾기 미구현")} style={{flex:1}}>
-        <Text style={{color:'#000000'}}>   비밀번호 찾기</Text> 
+        <Text style={{color:'#fff'}}>   비밀번호 찾기</Text> 
         </Pressable>
       </View>
       </KeyboardAwareScrollView>
@@ -202,7 +209,8 @@ function Login({navigation}:LoginScreenProps) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
+    backgroundColor: '#000',
+    // backgroundColor: '#fff',
     flex: 1,
   },
   title: {
@@ -215,13 +223,13 @@ const styles = StyleSheet.create({
     justifyContent:'center',
     paddingHorizontal:15,
     borderBottomWidth:2,
-    borderBottomColor:'#000'
+    borderBottomColor:'#484848'
   },
   titleText: {
     fontSize: heightScale * 26,
     fontWeight:'400',
     paddingLeft: heightScale * 20,
-    color:'#404040'
+    color:'#B9B9B9'
   },
   inputWrapper: {
     paddingHorizontal: heightScale * 29,
@@ -239,26 +247,27 @@ const styles = StyleSheet.create({
     width: '85%',
     paddingHorizontal: 10,
     paddingBottom: 5,
+    color:'#fff'
   },
   findIDPW: {flexDirection: 'row', padding: heightScale*20,marginTop:heightScale*15},
   loginButton: {
     backgroundColor: '#D9D9D9',
-    marginHorizontal: heightScale * 29,
     height: heightScale * 64,
+    width: heightScale * 380,
     borderRadius: heightScale * 5,
     alignItems: 'center',
     justifyContent: 'center',
   },
   onLiginButton: {
-    backgroundColor:'#6DC0F9'
+    backgroundColor:'#F5FF82'
   },
   textStyle: {
     color: 'black',
-    fontSize: heightScale * 16,
+    fontSize: heightScale * 18,
     fontWeight: 'bold',
   },
   onTextStyle: {
-    color: 'white',
+    color: '#000',
     fontSize: heightScale * 18
   }
 });

@@ -24,16 +24,18 @@ function getProfileImage() {
           },
         );
         const base64ImageString = BinaryToBase64(profileImageResult.data);
-        console.log(profileImageResult.data);
+        // console.log(profileImageResult.data);
 
         dispatch(
-          userSlice.actions.setUser({
+          userSlice.actions.setProfileImage({
             profileImage: `data:image/png;base64,${base64ImageString}`,
           }),
         );
       } catch (error) {
         if ((error as AxiosError).response?.status === 400) {
           console.log('error from hooks/getProfileImage.ts','프로필사진 없음');
+        } else {
+          console.log((error as AxiosError).response?.status,'error from hooks/getProfileImage.ts');
         }
       }
     };

@@ -4,7 +4,18 @@ import {heightData} from '../../../modules/globalStyles'
 const heightScale = heightData;
 
 const TicketHistoryView = ({...props}) => {
-    // const a = props.data
+  const {type, count, content, date} = props.data;
+
+  const typeColor = () => {
+    if(type === 'red') {
+        return "#DA3C3C"
+    } else if (type === 'black') {
+        return "#6B6B6B"
+    } else if (type === 'gold') {
+        return "#F5FF82"
+    }
+  }
+
   return (
     <View
       style={{
@@ -20,13 +31,13 @@ const TicketHistoryView = ({...props}) => {
           justifyContent: 'center',
           paddingHorizontal: heightScale * 14,
           borderLeftWidth: 6,
-          borderLeftColor: '#6B6B6B',
+          borderLeftColor: typeColor(),
         }}>
         <Text style={{color: 'white', fontSize: heightScale * 16}}>
-          Main Game
+          {content}
         </Text>
         <Text style={{color: 'white', fontSize: heightScale * 12}}>
-          2022.02.15
+          {date}
         </Text>
       </View>
       <View
@@ -36,7 +47,7 @@ const TicketHistoryView = ({...props}) => {
           alignItems: 'flex-end',
           marginRight: heightScale * 10,
         }}>
-        <Text style={{color: 'white'}}>3개</Text>
+        <Text style={{color: 'white'}}>{count}개</Text>
       </View>
     </View>
   );
