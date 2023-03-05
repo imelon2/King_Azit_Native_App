@@ -1,5 +1,5 @@
 import { Text, View, Image, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
-import {  heightData } from '../../../modules/globalStyles';
+import { heightData } from '../../../modules/globalStyles';
 import Video from "react-native-video";
 import Icon from 'react-native-vector-icons/AntDesign';
 import { Shadow } from 'react-native-shadow-2';
@@ -7,10 +7,11 @@ const { width, height } = Dimensions.get('window');
 const heightScale = heightData;
 
 interface propsType {
-    setTiketModalStatus(id: boolean) : void 
+    setTiketModalStatus(id: boolean): void
+    card: String
 }
 
-function MyTickets(props:propsType) {
+function MyTickets(props: propsType) {
 
     return (
         <View style={styles.container} >
@@ -29,7 +30,7 @@ function MyTickets(props:propsType) {
             <View style={{ alignItems: 'center', flex: 12 }} >
                 <View>
 
-                    <Video
+                    {/* <Video
                         source={{ uri: "https://uploads-ssl.webflow.com/624b2c0795c4aab84ebe3296/624c5f468ac8f85e6acd1a08_kings%20NFT%203-transcode.mp4" }}
                         style={styles.tiket}
                         paused={false} // 재생/중지 여부
@@ -37,35 +38,45 @@ function MyTickets(props:propsType) {
                         // onLoad={e => console.log(e)} // 미디어가 로드되고 재생할 준비가 되면 호출되는 콜백 함수입니다.
                         repeat={true} // video가 끝나면 다시 재생할 지 여부
                     // onAnimatedValueUpdate={() => {}}
-                    />
+                    /> */}
 
-                    <View style={styles.qrbox} >
-                    </View>
-
-                    <View style={styles.plusTextBox} >
-                        <View style={{ flexDirection:'row' , alignItems: 'center' }} >
-                            <Text style={styles.plusText} >QR 크게보기</Text>
-                            <Image
-                                source={ require('../../../assets/MagnifyingGlassPlus.png')}
-                                style={styles.plusIcon}
-                                />
-                        </View>    
-                    </View>
-
-                    <View style={ styles.buttonContaner } >
-                        <View style={styles.buttonBox} >
-                            <Shadow distance={6} startColor={'#FCFF72'} >
-                                <TouchableOpacity activeOpacity={1} style={styles.giftButton} >
-                                    <View style={styles.textCenter} >
-                                        <Icon
-                                            name="gift"
-                                            size={16} 
-                                            style={styles.iconStyle} />
-                                        <Text style={styles.giftButtonText}>선물하기</Text>
-                                    </View>
-                                </TouchableOpacity>
-                            </Shadow>
+                    <View style={styles.tiketBox} >
+                        <View style={{ position: 'absolute', top: 22 * heightScale, left: 16 * heightScale, zIndex: 2 }} >
+                            <Text style={{ color: 'white', fontWeight: '600', fontSize: 18 * heightScale }} >{props.card} Card</Text>
+                            <Text style={{ color: 'white', fontSize: 16 * heightScale, marginTop: 5 }}> 보유 8장</Text>
                         </View>
+                            {props.card == 'Black' && <Image style={styles.tiketImg} source={require(`../../../assets/BlackTiket.png`)} />}
+                            {props.card == 'Red' && <Image style={styles.tiketImg} source={require(`../../../assets/RedTiket.png`)} />}
+                            {props.card == 'Gold' && <Image style={styles.tiketImg} source={require(`../../../assets/GoldTiket.png`)} />}
+                        <View style={styles.qrbox} >
+                        </View>
+                    </View>
+
+                </View>
+
+                <View style={styles.plusTextBox} >
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }} >
+                        <Text style={styles.plusText} >QR 크게보기</Text>
+                        <Image
+                            source={require('../../../assets/MagnifyingGlassPlus.png')}
+                            style={styles.plusIcon}
+                        />
+                    </View>
+                </View>
+
+                <View style={styles.buttonContaner} >
+                    <View style={styles.buttonBox} >
+                        <Shadow distance={6} startColor={'#FCFF72'} >
+                            <TouchableOpacity activeOpacity={1} style={styles.giftButton} >
+                                <View style={styles.textCenter} >
+                                    <Icon
+                                        name="gift"
+                                        size={16}
+                                        style={styles.iconStyle} />
+                                    <Text style={styles.giftButtonText}>선물하기</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </Shadow>
                     </View>
                 </View>
             </View>
@@ -112,10 +123,9 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
     },
     qrbox: {
-        backgroundColor: '#000',
-        width: 264 * heightScale,
-        height: 70 * heightScale,
-        marginTop: 20,
+        backgroundColor: '#fff',
+        width: 327 * heightScale,
+        height: 120 * heightScale,
     },
     giftButton: {
         width: 350 * heightScale,
@@ -143,17 +153,31 @@ const styles = StyleSheet.create({
         marginRight: 5 * heightScale,
     },
     buttonContaner: {
-        marginTop: 60 * heightScale ,
+        marginTop: 60 * heightScale,
         alignItems: 'center',
-        backgroundColor: 'white',
-        flexDirection: 'row' 
+        // backgroundColor: 'white',
+        flexDirection: 'row'
     },
     plusIcon: {
         height: heightScale * 20,
         width: heightScale * 20,
         marginTop: heightScale * 10,
         marginLeft: heightScale * 5,
-      },
+    },
+    tiketBox: {
+        width: 327 * heightScale,
+        height: 518 * heightScale,
+        borderColor: '#fff',
+        borderWidth: 1,
+        overflow: 'hidden',
+        marginTop: 50 * heightScale,
+        borderRadius: 14,
+    },
+    tiketImg: {
+        width: 327 * heightScale,
+        height: 404 * heightScale,
+    },
+
 
 });
 

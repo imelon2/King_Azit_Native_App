@@ -21,50 +21,51 @@ import axios from 'axios';
 
 function MainPage() {
   const navigation = useNavigation<NavigationProp<HomeRootStackParamList>>();
-  const [gameTap, setGameTap] = useState('main');
   const [gameBox, setGameBox] = useState([1, 2, 3, 4]);
   const [modalStatus, setModalStatus] = useState(false);
   const [tiketModalStatus, setTiketModalStatus] = useState(false);
   const [playMemberStatus, setPlayMemberStatus] = useState(false);
-
-  // axios.get(`http://43.201.146.251:8080/idcheck?memberId=${email}`)
+  const [myCard, setMyCard] = useState('');
 
   const onClickMember = () => {
     setPlayMemberStatus(true);;
   }
 
   const onClickJoinButton = () => {
-    if (gameTap == 'guest') {
       setModalStatus(true);
-    }
   }
 
-  useEffect(() => {
+  const onOpenMyTikets = (text:any) => {
+    setTiketModalStatus(true);
+    setMyCard(text);
+  }
+
+  // useEffect(() => {
     
-    const getTiket = async () => {
-      try {
-        const token = await EncryptedStorage.getItem('refreshToken');
-        axios.get(`${Config.API_URL}/member/tickets`,{
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
-        })
-          .then(res => {
-            console.log(res);
-          })
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    getTiket();
-  })
+  //   const getTiket = async () => {
+  //     try {
+  //       const token = await EncryptedStorage.getItem('accessToken');
+  //       axios.get(`${Config.API_URL}/member/tickets`,{
+  //         headers: {
+  //           authorization: `Bearer ${token}`,
+  //         },
+  //       })
+  //         .then(res => {
+  //           console.log(res);
+  //         })
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   }
+  //   getTiket();
+  // })
 
   return (
     <SafeAreaView style={MainStyles.container} >
       <View style={{ flex: 1 }} >
-        <View style={MainStyles.mainTextBox}>
+        {/* <View style={MainStyles.mainTextBox}>
           <Text style={MainStyles.mainText}>Kings Azit</Text>
-        </View>
+        </View> */}
 
         <View style={MainStyles.imgSlideBox2} >
           <View style={MainStyles.imgSlideBox}  >
@@ -89,7 +90,7 @@ function MainPage() {
         <View style={MainStyles.tiketContainer} >
 
           <LinearGradient style={MainStyles.groupPosition} locations={[0, 0.38, 0.45, 1]} colors={["#404040", "rgba(10, 10, 10, 0.16)", "rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 0.74)",]} >
-            <TouchableOpacity activeOpacity={1} onPress={() => setTiketModalStatus(true)}  >
+            <TouchableOpacity activeOpacity={1} onPress={() => onOpenMyTikets('Black')}  >
               <Text style={MainStyles.tiketText}>Black Tiket            보유 8</Text>
             </TouchableOpacity>
           </LinearGradient>
@@ -100,7 +101,7 @@ function MainPage() {
               "rgba(67, 19, 19, 0)",
               "rgba(0, 0, 0, 0.33)",
             ]} >
-            <TouchableOpacity activeOpacity={1} onPress={() => setTiketModalStatus(true)}  >
+            <TouchableOpacity activeOpacity={1} onPress={() => onOpenMyTikets('Red')}  >
               <Text style={MainStyles.tiketText}>Red Tiket               보유 8</Text>
             </TouchableOpacity>
           </LinearGradient>
@@ -112,7 +113,7 @@ function MainPage() {
               "rgba(55, 37, 0, 0)",
               "rgba(0, 0, 0, 0.2)",
             ]} >
-            <TouchableOpacity activeOpacity={1} onPress={() => setTiketModalStatus(true)}  >
+            <TouchableOpacity activeOpacity={1} onPress={() => onOpenMyTikets('Gold')}  >
               <Text style={MainStyles.tiketText}>Gold Tiket              보유 8</Text>
             </TouchableOpacity>
           </LinearGradient>
@@ -121,7 +122,7 @@ function MainPage() {
       </View>
 
       <Modal isVisible={tiketModalStatus} >
-        <MyTickets setTiketModalStatus={setTiketModalStatus} />
+        <MyTickets setTiketModalStatus={setTiketModalStatus} card={myCard} />
       </Modal>
 
       <Modal isVisible={playMemberStatus} >
@@ -130,11 +131,8 @@ function MainPage() {
 
       <View style={{ flex: 1.6 }}>
         <View style={MainStyles.mainTextBox2}>
-          <TouchableOpacity activeOpacity={1} onPress={() => setGameTap('main')} >
-            <Text style={gameTap == 'main' ? MainStyles.mainText2 : [MainStyles.mainText, MainStyles.mainText3]}>Game</Text>
-          </TouchableOpacity>
-          <TouchableOpacity activeOpacity={1} onPress={() => setGameTap('guest')} >
-            <Text style={gameTap == 'guest' ? MainStyles.mainText2 : [MainStyles.mainText, MainStyles.mainText3]}>Guest</Text>
+          <TouchableOpacity activeOpacity={1} >
+            <Text style={MainStyles.mainText}>Game</Text>
           </TouchableOpacity>
         </View>
 

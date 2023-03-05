@@ -29,16 +29,6 @@ export const MainStyles = StyleSheet.create({
         marginRight: 20,
         color: 'white',
       },
-      mainText2: {
-        fontWeight: 'bold',
-        fontSize: heightScale * 15,
-        marginRight: 20,
-        color: 'white',
-        textDecorationLine: 'underline'
-      },
-      mainText3: {
-        color: '#aaa',
-      },
       textBorder: {
         position: 'absolute',
         bottom: 0,
@@ -47,13 +37,15 @@ export const MainStyles = StyleSheet.create({
       },
       imgSlideBox: {
         width: '100%',
-        height: heightScale * 120,
+        height: heightScale * 160,
         borderWidth:1,
-        borderColor: '#353535',
+        // borderColor: '#353535',
+        // marginTop: heightScale * 30,
       },
       imgSlideBox2: {
         flex: 4,
-        paddingHorizontal: heightScale * 18,
+        // backgroundColor: 'red'
+        // paddingHorizontal: heightScale * 18,
       },
       tiketContainer: {
         flex: 10,

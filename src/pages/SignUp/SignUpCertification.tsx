@@ -10,6 +10,7 @@ import { heightData } from '../../modules/globalStyles'
 const heightScale = heightData;
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/reducer";
+import Config from 'react-native-config';
 
 type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUpCertification'>;
 
@@ -31,7 +32,7 @@ function SignUpCertification({ navigation }: SignInScreenProps) {
       birth: user.birth,
       gender: user.gender,
     }
-    axios.post('http://43.201.146.251:8080/join', data)
+    axios.post(`${Config.API_URL}/join`, data)
       .then(function (res) {
         if (res.status == 201) {
           navigation.navigate('SignUpFinal');

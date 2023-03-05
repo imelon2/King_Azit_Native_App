@@ -1,5 +1,7 @@
 import { Text, View, Image, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, Dimensions , TextInput } from 'react-native';
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { HomeRootStackParamList } from '../../../AppInner';
 import React, { useEffect , useState } from "react";
 import { RootStackParamList } from "../../../AppInner";
 import Modal from "react-native-modal";
@@ -7,9 +9,9 @@ import { widthData, heightData } from '../../modules/globalStyles';
 
 const { width, height } = Dimensions.get('window');
 
-type MainScreenProps = NativeStackScreenProps<RootStackParamList, 'GamePage'>
 
-function GamePage({navigation}: MainScreenProps) {
+function GamePage() {
+    const navigation = useNavigation<NavigationProp<HomeRootStackParamList>>();
     const [modalStatus, setModalStatus] = useState(true);
 
     return (
