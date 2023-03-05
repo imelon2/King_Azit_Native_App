@@ -8,6 +8,7 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import userSlice from "../../slices/user";
 import { useAppDispatch } from "../../store"
 import axios from 'axios'
+import Config from 'react-native-config';
 
 type SignInScreenProps = NativeStackScreenProps< RootStackParamList , 'SignUpNickName' >;
 
@@ -26,7 +27,7 @@ function SignUpNickName({navigation}: SignInScreenProps) {
         if(!nickName) return;
         // if( 중복확인 )
         dispatch(userSlice.actions.setNickname({nickName: nickName}));
-        axios.get(`http://43.201.146.251:8080/nicknamecheck?nickname=${nickName}`)
+        axios.get(`${Config.API_URL}/nicknamecheck?nickname=${nickName}`)
         .then(res => {
              if (res.status == 200) {
                 navigation.navigate('SignUpName');

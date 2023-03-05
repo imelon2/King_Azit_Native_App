@@ -195,7 +195,7 @@ function MyPage() {
             </View>
           </Pressable>
           <Text style={[styles.contentTitleText, {marginTop: 28}]}>랭킹</Text>
-          <View style={[styles.contentWrapper, {marginTop: heightScale * 13}]}>
+          <Pressable onPress={() => navigation.navigate('MyRanking')} style={[styles.contentWrapper, {marginTop: heightScale * 13}]}>
             <View style={{flex: 1}}>
               <Text style={styles.contentText}>마이 랭킹</Text>
             </View>
@@ -206,7 +206,7 @@ function MyPage() {
                 color="white"
               />
             </View>
-          </View>
+          </Pressable>
           <Pressable onPress={logout}>
             <Text style={[styles.contentTitleText, {marginVertical: 28}]}>
               로그아웃

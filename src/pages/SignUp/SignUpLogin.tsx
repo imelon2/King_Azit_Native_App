@@ -6,6 +6,7 @@ import { RootStackParamList } from '../../../AppInner';
 import { SignUpstyles } from '../../modules/SignUpstyles';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import axios from 'axios';
+import Config from 'react-native-config';
 
 import userSlice from "../../slices/user";
 import { useAppDispatch } from "../../store"
@@ -22,7 +23,7 @@ function SignUpLogin({ navigation }: SignInScreenProps) {
     const onClickNextButton = () => {
         if(!email) return;
         dispatch(userSlice.actions.setEmail({email: email}));
-        axios.get(`http://43.201.146.251:8080/idcheck?memberId=${email}`)
+        axios.get(`${Config.API_URL}/idcheck?memberId=${email}`)
         .then(res => {
              if (res.status == 200) {
                 navigation.navigate('SignUpPassWord');
