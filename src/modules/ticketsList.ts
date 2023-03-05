@@ -7,22 +7,26 @@ export type ticketsListType = {
     image:any,
     count:number
 }
+export const RedCardImg = require('../assets/RedCard.png')
+export const BlackCardImg = require('../assets/BlackCard.png')
+export const GoldCardImg = require('../assets/KingsDaoCard.png')
+
 const ticketsList = () => {
   const {red, black, gold} = useSelector((state: RootState) => state.ticket);
   const Cards = [
     {
       type: 'red',
-      image: require('../assets/RedCard.png'),
+      image: RedCardImg,
       count: red,
     },
     {
       type: 'black',
-      image: require('../assets/BlackCard.png'),
+      image: BlackCardImg,
       count: black,
     },
     {
       type: 'gold',
-      image: require('../assets/KingsDaoCard.png'),
+      image: GoldCardImg,
       count: gold,
     },
   ];

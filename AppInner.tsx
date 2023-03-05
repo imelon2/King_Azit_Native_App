@@ -27,6 +27,8 @@ import GameHostory from './src/pages/MyPage/GameHostory';
 import MyRanking from './src/pages/MyPage/MyRanking';
 import MyRankingScore from './src/pages/MyPage/MyPageCompoents/MyRankingScore'
 import interceptors from './src/hooks/interceptors';
+import BinaryToBase64 from './src/modules/BinaryToBase64';
+import TicketsHistorys from './src/pages/MyPage/TicketsHistorys';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -58,6 +60,7 @@ export type MyPageRootStackParamList = {
   GameHostory: undefined;
   MyRanking: undefined;
   MyRankingScore: undefined;
+  TicketsHistorys: undefined;
 };
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
@@ -72,7 +75,7 @@ const Tab = createBottomTabNavigator();
 
 function TabNavigator() {
   return (
-    <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
+    <Tab.Navigator tabBar={props => <TabBar {...props} />}>
       <Tab.Screen
         name="MainPage"
         component={MainPage}
@@ -99,9 +102,7 @@ function TabNavigator() {
 
 function AppInner() {
   const dispatch = useAppDispatch();
-  const isLoggedIn = useSelector(
-    (state: RootState) => !!state.user.access_token,
-  );
+  const isLoggedIn = useSelector((state: RootState) => !!state.user.access_token);
   // const isLoggedIn = false
 
   // 디바이스 토큰 설정 및 redex 저장
@@ -128,26 +129,24 @@ function AppInner() {
         if (!token) {
           return;
         }
+
         const refreshResult = await axios.get(`${Config.API_URL}/refresh`, {
           headers: {
             authorization: `Bearer ${token}`,
           },
         });
-        const { access_token, refresh_token } = refreshResult.data;
-        const { sub, roles, nickname } = decodeJWT(access_token);
+        const {access_token, refresh_token} = refreshResult.data;
+        const {sub, roles, nickname} = decodeJWT(access_token);
 
         dispatch(
           userSlice.actions.setUser({
             name: sub,
             roles: roles,
             access_token: access_token,
-            nickName: nickname
+            nickName: nickname,
           }),
         );
-        await EncryptedStorage.setItem(
-          'refreshToken',
-          refresh_token
-        );
+        await EncryptedStorage.setItem('refreshToken', refresh_token);
       } catch (error) {
         // refresh token 기간만료됬을 경우
         console.log((error as AxiosError).response?.status);
@@ -155,7 +154,10 @@ function AppInner() {
           (error as AxiosError).response?.status === 400 ||
           (error as AxiosError).response?.status === 401
         ) {
-          Alert.alert('알림', '자동로그인 기간이 만료되었습니다. 다시 로그인 해주세요.');
+          Alert.alert(
+            '알림',
+            '자동로그인 기간이 만료되었습니다. 다시 로그인 해주세요.',
+          );
         } else {
           Alert.alert('Error', '죄송합니다. 잠시후에 다시 시도해주세요.');
         }
@@ -183,6 +185,11 @@ function AppInner() {
             name="MyTicket"
             component={MyTicket}
             options={{ animation: 'none' }}
+          />
+          <HomeStack.Screen
+            name="TicketsHistorys"
+            component={TicketsHistorys}
+            options={{animation: 'none'}}
           />
           <HomeStack.Screen
             name="GameHostory"

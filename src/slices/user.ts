@@ -17,6 +17,7 @@ const initialState = {
     gender:'',
     password:'',
     roles:'',
+    profileImage:'',
     access_token:''
 }
 
@@ -45,8 +46,11 @@ const userSlice = createSlice({
         setName(state,action) {
             state.name = action.payload.name; 
         },
+        setProfileImage(state,action) {
+            state.profileImage = action.payload.profileImage; 
+        },
         setAccessToken(state,action) {
-            state.name = action.payload.access_token; 
+            state.access_token = action.payload.access_token; 
         },
         setUser(state,action) {
             state.name = action.payload.name;
@@ -57,6 +61,7 @@ const userSlice = createSlice({
             state.birth = action.payload.birth;
             state.gender = action.payload.gender;
             state.password = action.payload.password;
+            state.profileImage = action.payload.profileImage; 
             state.access_token = action.payload.access_token;
         }
     },

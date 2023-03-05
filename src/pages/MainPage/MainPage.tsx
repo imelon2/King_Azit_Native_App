@@ -16,6 +16,10 @@ import LinearGradient from 'react-native-linear-gradient';
 import { MainStyles } from '../../modules/MainStyles';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import axios from 'axios';
+import getProfileImage from '../../hooks/getProfileImage';
+import getTickets from '../../hooks/getTickets';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/reducer';
 
 
 
@@ -26,6 +30,7 @@ function MainPage() {
   const [tiketModalStatus, setTiketModalStatus] = useState(false);
   const [playMemberStatus, setPlayMemberStatus] = useState(false);
   const [myCard, setMyCard] = useState('');
+  const {black,red,gold} = useSelector((state: RootState) => state.ticket);
 
   const onClickMember = () => {
     setPlayMemberStatus(true);;
@@ -34,32 +39,16 @@ function MainPage() {
   const onClickJoinButton = () => {
       setModalStatus(true);
   }
+  // 현재 유저 보유 티켓 가져오기
+  getTickets()
 
   const onOpenMyTikets = (text:any) => {
     setTiketModalStatus(true);
     setMyCard(text);
   }
 
-  // useEffect(() => {
-    
-  //   const getTiket = async () => {
-  //     try {
-  //       const token = await EncryptedStorage.getItem('accessToken');
-  //       axios.get(`${Config.API_URL}/member/tickets`,{
-  //         headers: {
-  //           authorization: `Bearer ${token}`,
-  //         },
-  //       })
-  //         .then(res => {
-  //           console.log(res);
-  //         })
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }
-  //   getTiket();
-  // })
-
+  getProfileImage()
+  
   return (
     <SafeAreaView style={MainStyles.container} >
       <View style={{ flex: 1 }} >
@@ -91,7 +80,7 @@ function MainPage() {
 
           <LinearGradient style={MainStyles.groupPosition} locations={[0, 0.38, 0.45, 1]} colors={["#404040", "rgba(10, 10, 10, 0.16)", "rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 0.74)",]} >
             <TouchableOpacity activeOpacity={1} onPress={() => onOpenMyTikets('Black')}  >
-              <Text style={MainStyles.tiketText}>Black Tiket            보유 8</Text>
+              <Text style={MainStyles.tiketText}>Black Tiket            보유 {black}</Text>
             </TouchableOpacity>
           </LinearGradient>
 
@@ -102,7 +91,7 @@ function MainPage() {
               "rgba(0, 0, 0, 0.33)",
             ]} >
             <TouchableOpacity activeOpacity={1} onPress={() => onOpenMyTikets('Red')}  >
-              <Text style={MainStyles.tiketText}>Red Tiket               보유 8</Text>
+              <Text style={MainStyles.tiketText}>Red Tiket               보유 {red}</Text>
             </TouchableOpacity>
           </LinearGradient>
 
@@ -114,7 +103,7 @@ function MainPage() {
               "rgba(0, 0, 0, 0.2)",
             ]} >
             <TouchableOpacity activeOpacity={1} onPress={() => onOpenMyTikets('Gold')}  >
-              <Text style={MainStyles.tiketText}>Gold Tiket              보유 8</Text>
+              <Text style={MainStyles.tiketText}>Gold Tiket              보유 {gold}</Text>
             </TouchableOpacity>
           </LinearGradient>
 
@@ -122,7 +111,7 @@ function MainPage() {
       </View>
 
       <Modal isVisible={tiketModalStatus} >
-        <MyTickets setTiketModalStatus={setTiketModalStatus} card={myCard} />
+        <MyTickets setTiketModalStatus={setTiketModalStatus} card={myCard} black={black} red={red} gold={gold} />
       </Modal>
 
       <Modal isVisible={playMemberStatus} >

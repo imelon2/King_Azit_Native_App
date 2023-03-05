@@ -46,7 +46,6 @@ function SignUpPassWord({ navigation }: SignInScreenProps) {
     let passwordCheck_ = text.trim();
     setPasswordCheck(passwordCheck_);
 
-    console.log('password:' , password);
     if ( password == passwordCheck_ && passWordOn) {
       setPassWordCheckOn(true);
     } else {

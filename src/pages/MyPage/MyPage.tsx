@@ -12,96 +12,115 @@ import {MyPageRootStackParamList} from '../../../AppInner';
 import IconSimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import ImagePicker from 'react-native-image-crop-picker';
-// import * as ImagePicker from 'expo-image-picker';
 import ImageResizer from 'react-native-image-resizer';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {heightData} from '../../modules/globalStyles';
 import {useAppDispatch} from '../../store';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import userSlice from '../../slices/user';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store/reducer';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../store/reducer';
+import Config from 'react-native-config';
+import axios, {AxiosError} from 'axios';
+import BinaryToBase64 from '../../modules/BinaryToBase64';
 
 const heightScale = heightData;
- 
+
 function MyPage() {
   const dispatch = useAppDispatch();
   const navigation = useNavigation<NavigationProp<MyPageRootStackParamList>>();
-  const [preview, setPreview] = useState<{uri: string | null}>();
   const nickname = useSelector((state: RootState) => state.user.nickName);
   const name = useSelector((state: RootState) => state.user.name);
+  const profileImage = useSelector(
+    (state: RootState) => state.user.profileImage,
+  );
+  const access_token = useSelector(
+    (state: RootState) => state.user.access_token,
+  );
 
-
-  const onResponse = useCallback(async (response: any) => {
-    // Expo 개발용
-    // if(response.base64 === undefined) {
-    //   return;
-    // }
-    // console.log(response.width, response.height, response.exif);
-    setPreview({uri: `data:${response.mime};base64,${response.data}`});
-    // setPreview({uri: `data:jpeg;base64,${response.base64}`}); // Expo
-
-    // exif Orientation 걸릴 경우
-    // const orientation = (response.exif as any)?.Orientation; // exif Orientation
-    // console.log('orientation', orientation);
-    return ImageResizer.createResizedImage(
-      response.path,
-      600, // width
-      600, // height
-      response.mime.includes('jpeg') ? 'JPEG' : 'PNG', // format
-      // 'JPEG', // Expo format
-      100, // quality
-      0, // rotation
-    ).then(r => {
-      console.log(r.size); // r.uri, r.name,
-
+  const onChangeFile = useCallback(async () => {
+    try {
+      const response = await ImagePicker.openPicker({
+        includeExif: true,
+        includeBase64: true,
+        mediaType: 'photo',
+        cropping: true,
+      });
+      // console.log(response.width, response.height, response.exif);
+      // setPreview({uri: `data:${response.mime};base64,${response.data}`});
+  
+      // exif Orientation 걸릴 경우
+      // const orientation = (response.exif as any)?.Orientation; // exif Orientation
+      // console.log('orientation', orientation);
+      const r = await ImageResizer.createResizedImage(
+        response.path,
+        600, // width
+        600, // height
+        response.mime.includes('jpeg') ? 'JPEG' : 'PNG', // format
+        100, // quality
+        0, // rotation
+      );
+  
       const image = {
         uri: r.uri,
         name: r.name,
         type: response.mime,
       };
-
+  
       const formData = new FormData();
-      formData.append('image', image);
+      formData.append('file', image);
+  
+      await setProfileImageHttps(formData);
+      const urlBase64: any = await getProfileImageHttps();
+      setProfileImage(urlBase64);
+    } catch (error) {
+      // [Error MSG : User cancelled image selection] :  ImagePicker.openPicker ERROR
+      console.log((error as AxiosError));
+    }
+  }, [dispatch]);
 
-      // ToDo : Server에 이미지 저장하기
-      // try {
-      //   await axios.post(`${Config.API_URL}/`, formData, {
-      //     headers: {
-      //       authorization: `Bearer ${accessToken}`,
-      //     },
-      //   });
-    });
-  }, []);
+  const setProfileImageHttps = async (formData: FormData) => {
+    try {
+      await axios.post(`${Config.API_URL}/member/image`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          authorization: `Bearer ${access_token}`,
+        },
+      });
+      return true;
+    } catch (error) {
+      if ((error as AxiosError).response?.status === 400) {
+        console.log('전송된 이미지 없음');
+      } else {
+        console.log((error as AxiosError).response?.data);
+      }
+    }
+  };
 
-  const onChangeFile = useCallback(() => {
-    return ImagePicker.openPicker({
-      includeExif: true,
-      includeBase64: true,
-      mediaType: 'photo',
-      cropping: true,
-    })
-      .then(onResponse)
-      .catch(console.log);
-  }, [onResponse]);
+  const getProfileImageHttps = async () => {
+    try {
+      const refreshResult = await axios.get(`${Config.API_URL}/member/image`, {
+        responseType: 'arraybuffer',
+        headers: {
+          authorization: `Bearer ${access_token}`,
+        },
+      });
+      const base64ImageString = BinaryToBase64(refreshResult.data)
+      return `data:image/png;base64,${base64ImageString}`;
+    } catch (error) {
+      // todo :
+    }
+  };
 
-  // expo 개발용
-  // const onChangeFile = useCallback(() => {
-  //   return ImagePicker.launchImageLibraryAsync({
-  //     exif: true,
-  //     base64: true,
-  //     mediaTypes:ImagePicker.MediaTypeOptions.All,
-  //     allowsEditing:true
-  //   })
-  //     .then((data) => console.log(data)
-  //     )
-  //     .catch(console.log);
-  // }, []);
+  const setProfileImage = (image: string) => {
+    dispatch(userSlice.actions.setProfileImage({profileImage: image}));
+  };
 
   const logout = async () => {
     await EncryptedStorage.removeItem('refreshToken');
     dispatch(userSlice.actions.setUser({access_token: ''}));
   };
+
   return (
     <SafeAreaView>
       <ScrollView style={styles.container}>
@@ -112,7 +131,11 @@ function MyPage() {
           {/* icon */}
           <Pressable onPress={onChangeFile}>
             <Image
-              source={preview ? preview : require('../../assets/UserIcon.png')}
+              source={
+                profileImage
+                  ? {uri: profileImage}
+                  : require('../../assets/UserIcon.png')
+              }
               style={styles.userIcon}
             />
           </Pressable>
@@ -121,24 +144,29 @@ function MyPage() {
             <Pressable
               style={styles.userInfoWrapper}
               onPress={() => navigation.navigate('SetNickNameScreen')}>
-              <Text style={styles.fontStyle}>{name}</Text>
+              <Text style={styles.fontStyle}>{nickname}</Text>
               <IconSimpleLineIcons
                 name="pencil"
                 size={heightScale * 13}
                 style={styles.pencilIcon}
                 color="white"
-                />
+              />
             </Pressable>
-            <Text style={[styles.fontStyle,{fontWeight:'normal',fontSize:heightScale*16}]}>{nickname}</Text>
+            <Text
+              style={[
+                styles.fontStyle,
+                {fontWeight: 'normal', fontSize: heightScale * 16},
+              ]}>
+              {name}
+            </Text>
           </View>
         </View>
 
         <View style={styles.contentStyle}>
-          <Text style={[styles.contentTitleText, {}]}>
-            티켓
-          </Text>
-          <Pressable style={[styles.contentWrapper, {marginTop: heightScale * 13}]}
-          onPress={() => navigation.navigate('MyTicket')}>
+          <Text style={[styles.contentTitleText, {}]}>티켓</Text>
+          <Pressable
+            style={[styles.contentWrapper, {marginTop: heightScale * 13}]}
+            onPress={() => navigation.navigate('MyTicket')}>
             <View style={{flex: 1}}>
               <Text style={styles.contentText}>마이티켓</Text>
             </View>
@@ -151,12 +179,10 @@ function MyPage() {
             </View>
           </Pressable>
 
-          <Text style={[styles.contentTitleText, {marginTop: 28}]}>
-            게임
-          </Text>
-          <Pressable style={[styles.contentWrapper, {marginTop: heightScale * 13}]}
-          onPress={() => navigation.navigate('GameHostory')}
-          >
+          <Text style={[styles.contentTitleText, {marginTop: 28}]}>게임</Text>
+          <Pressable
+            style={[styles.contentWrapper, {marginTop: heightScale * 13}]}
+            onPress={() => navigation.navigate('GameHostory')}>
             <View style={{flex: 1}}>
               <Text style={styles.contentText}>게임 참여 기록</Text>
             </View>
@@ -205,28 +231,32 @@ const styles = StyleSheet.create({
   },
   contentStyle: {paddingHorizontal: 24},
   myInfoStyle: {
-    // backgroundColor: '#D5E3F2',
     flexDirection: 'row',
-    paddingHorizontal:heightScale*25,
-    marginVertical:heightScale*42
+    paddingHorizontal: heightScale * 25,
+    marginVertical: heightScale * 42,
   },
   infoWrapper: {
-    justifyContent:'center', 
-    paddingHorizontal:heightScale*29
+    justifyContent: 'center',
+    paddingHorizontal: heightScale * 29,
   },
   userInfoWrapper: {
     flexDirection: 'row',
   },
   pencilIcon: {bottom: heightScale * 5, padding: heightScale * 4},
   userIcon: {
-    height: heightScale * 108,
-    width: heightScale * 108,
+    height: heightScale * 115,
+    width: heightScale * 115,
     borderRadius: 100,
-    // resizeMode: 'center',
+    // resizeMode:'center',
+    // aspectRatio: 1.5
   },
-  fontStyle: {fontSize: heightScale * 18, fontWeight: 'bold', color: 'white',paddingVertical:heightScale*4.5},
+  fontStyle: {
+    fontSize: heightScale * 18,
+    fontWeight: 'bold',
+    color: 'white',
+    paddingVertical: heightScale * 4.5,
+  },
   contentTitleText: {
-    // backgroundColor:'orange',
     fontSize: heightScale * 20,
     color: 'white',
   },
@@ -240,6 +270,6 @@ const styles = StyleSheet.create({
     paddingVertical: heightScale * 13,
     alignItems: 'center',
     flexDirection: 'row',
-  },  
+  },
 });
 export default MyPage;

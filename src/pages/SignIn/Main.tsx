@@ -1,4 +1,5 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import React from 'react';
 import {
   Image,
   Pressable,
@@ -7,6 +8,7 @@ import {
   View,
   SafeAreaView,
 } from 'react-native';
+import {Shadow} from 'react-native-shadow-2';
 import {RootStackParamList} from '../../../AppInner';
 import {widthData, heightData} from '../../modules/globalStyles';
 const heightScale = heightData;
@@ -25,17 +27,19 @@ function Main({navigation}: MainScreenProps) {
       </View>
       <View style={{flex: 9}}></View>
       <View style={styles.bottonStyle}>
-        <View>
-          <Pressable
-            style={[styles.buttonStyle, styles.loginButton]}
-            onPress={() => navigation.navigate('Login')}>
-            <Text style={styles.textStyle}>로그인</Text>
-          </Pressable>
+        <View style={{alignItems: 'center'}}>
+          <Shadow distance={8} startColor={'#FCFF72'}>
+            <Pressable
+              onPress={() => navigation.navigate('Login')}
+              style={styles.loginButtonStyle}>
+              <Text style={styles.textStyle}>로그인</Text>
+            </Pressable>
+          </Shadow>
         </View>
         <Pressable
           style={[styles.buttonStyle, styles.signUpButton]}
           onPress={() => navigation.navigate('SignUp')}>
-          <Text style={styles.textStyle}> 회원가입</Text>
+          <Text style={[styles.textStyle, {color: '#fff'}]}> 회원가입</Text>
         </Pressable>
       </View>
     </SafeAreaView>
@@ -44,7 +48,7 @@ function Main({navigation}: MainScreenProps) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
+    backgroundColor: '#000',
     flex: 1,
   },
   headerStyle: {
@@ -55,21 +59,27 @@ const styles = StyleSheet.create({
   bottonStyle: {
     flex: 14,
   },
+  loginButtonStyle: {
+    backgroundColor: '#F5FF82',
+    width: heightScale * 380,
+    height: heightData * 55,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: heightScale * 5,
+  },
   buttonStyle: {
-    marginHorizontal: heightScale * 29,
     height: heightScale * 60,
+    width: heightScale * 390,
+    marginHorizontal: heightScale * 29,
     borderRadius: heightScale * 5,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  loginButton: {
-    backgroundColor: '#D9D9D9',
-  },
   signUpButton: {
-    backgroundColor: 'white',
+    backgroundColor: '#000',
+    borderColor: '#F5FF82',
     marginTop: heightData * 26,
-    borderWidth: 1,
-    borderBottomColor: 'black',
+    borderWidth: 2,
   },
   textStyle: {
     color: '#000000',

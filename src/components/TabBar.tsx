@@ -18,7 +18,7 @@ function TabBar({state, descriptors, navigation}: BottomTabBarProps) {
         const icon = () => {
           if (route.name === 'MainPage') {
             title='Home'
-            return <IconOcticons name="home" color={isFocused ? '#F5FF82' : 'white'} size={heightScale*29} />;
+            return <IconOcticons name="home" color={isFocused ? '#F5FF82' : 'white'} size={heightScale*32} />;
           } else if (route.name === 'Game') {
             title='Game'
             return <IconIonicons color={isFocused ? '#F5FF82' : 'white'} name="game-controller-outline" size={heightScale*32} />;
@@ -71,16 +71,16 @@ function TabBar({state, descriptors, navigation}: BottomTabBarProps) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    height:heightScale*72,
+    height:heightScale*80,
     backgroundColor:'black',
-    paddingVertical:5,
+    // paddingVertical:5,
     borderTopColor:'#A4A4A4',
     borderTopWidth:StyleSheet.hairlineWidth,
     // paddingTop:10
   },
   tabBarStyle: {
     flex: 1,
-    justifyContent: 'center',
+    marginTop:heightScale*10,
     alignItems: 'center',
   },
   onButtonStyle: {

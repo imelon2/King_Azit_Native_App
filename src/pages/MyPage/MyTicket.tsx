@@ -22,9 +22,8 @@ import {
 } from '../../../AppInner';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import GiftModal from './MyPageCompoents/GiftModal';
-import ticketsList,{ticketsListType} from '../../modules/ticketsList';
+import ticketsList, {ticketsListType} from '../../modules/ticketsList';
 const heightScale = heightData;
-
 
 const ContentsList = [
   {
@@ -69,6 +68,42 @@ const ContentsList = [
     content: 'Main Game',
     date: '2022.02.15',
   },
+  {
+    type: 'black',
+    count: '3',
+    content: 'Main Game',
+    date: '2022.02.15',
+  },
+  {
+    type: 'red',
+    count: '3',
+    content: 'Main Game',
+    date: '2022.02.15',
+  },
+  {
+    type: 'gold',
+    count: '3',
+    content: 'Main Game',
+    date: '2022.02.15',
+  },
+  {
+    type: 'black',
+    count: '3',
+    content: 'Main Game',
+    date: '2022.02.15',
+  },
+  {
+    type: 'red',
+    count: '3',
+    content: 'Main Game',
+    date: '2022.02.15',
+  },
+  {
+    type: 'gold',
+    count: '3',
+    content: 'Main Game',
+    date: '2022.02.15',
+  },
 ];
 
 const LISTS = [...Array(ContentsList.length).keys()].map((_, i) => {
@@ -83,31 +118,32 @@ function MyTicket(): JSX.Element {
     useNavigation<
       NavigationProp<MyPageRootStackParamList & HomeRootStackParamList>
     >();
-  const [loading, setLoading] = useState(false);
-  const [giftModalState, setGiftModalState] = useState(false); 
+  const [giftModalState, setGiftModalState] = useState(false);
   const [selectCard, setSelectCard] = useState<ticketsListType>({
-    key:0,
-    type:"",
-    image:"",
-    count:0
+    key: 0,
+    type: '',
+    image: '',
+    count: 0,
   });
   const CARDS = ticketsList();
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.headerStyle}>
-        <Text style={styles.fontStyle}>마이 티켓</Text>
+      <View>
+        <View style={styles.headerStyle}>
+          <Text style={styles.fontStyle}>마이 티켓</Text>
+        </View>
+        <IconAntDesign
+          name="left"
+          size={heightScale * 28}
+          color="white"
+          style={{
+            position: 'absolute',
+            marginTop: (heightScale * (61 - 28)) / 2,
+            marginLeft: heightScale * 15,
+          }}
+          onPress={() => navigation.goBack()}
+        />
       </View>
-      <IconAntDesign
-        name="left"
-        size={heightScale * 28}
-        color="white"
-        style={{
-          position: 'absolute',
-          marginTop: (heightScale * (61 - 28)) / 2,
-          marginLeft: heightScale * 15,
-        }}
-        onPress={() => navigation.goBack()}
-      />
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
         <Image
           style={styles.cardButtonStyle}
@@ -126,14 +162,24 @@ function MyTicket(): JSX.Element {
       </View>
       {/* 티켓 보유 개수 */}
       <View style={{alignItems: 'center'}}>
-        <Text style={styles.ticketInfoStyle}>보유 개수: {selectCard.count}장</Text>
+        <Text style={styles.ticketInfoStyle}>
+          보유 개수: {selectCard.count}장
+        </Text>
       </View>
       {/* 선물하기 버튼 */}
       <View style={styles.giftWrapperStyle}>
-        <Shadow distance={5} startColor={'#FCFF72'}>
+        <Shadow
+          distance={5}
+          startColor={selectCard.count === 0 ? '#828282' : '#FCFF72'}>
           <Pressable
-            style={styles.giftButtonStyle}
-            onPress={() => setGiftModalState(true)}>
+            style={
+              selectCard.count === 0
+                ? [styles.giftButtonStyle, {backgroundColor: '#828282'}]
+                : styles.giftButtonStyle
+            }
+            onPress={() => {
+              if (selectCard.count !== 0) setGiftModalState(true);
+            }}>
             <Text style={styles.giftFontStyle}>선물하기</Text>
           </Pressable>
         </Shadow>
@@ -144,7 +190,9 @@ function MyTicket(): JSX.Element {
         <View style={{flexDirection: 'row'}}>
           <Text style={[styles.fontStyle, styles.contentsStyle]}>사용내역</Text>
           <View style={{alignItems: 'flex-end', flex: 1}}>
-            <Pressable style={styles.allViewWrapper}>
+            <Pressable
+              style={styles.allViewWrapper}
+              onPress={() => navigation.navigate('TicketsHistorys')}>
               <Text style={styles.allViewTextStyle}>더보기 </Text>
               <IconAntDesign
                 name="right"
@@ -155,16 +203,29 @@ function MyTicket(): JSX.Element {
           </View>
         </View>
         {/* 구매/결제 내역 리스트 */}
-        <FlatList
-          data={LISTS}
-          keyExtractor={item => String(item.key)}
-          bounces={false}
-          renderItem={({item}) => <TicketHistoryView data={item.data} />}
-        />
+        {LISTS.length === 0 ? (
+          <View style={{justifyContent:'center',alignItems:'center',marginTop:30}}>
+            <Text style={{fontSize:16,color:'#929292',fontWeight:'100'}}>티켓 사용 내역이 없습니다.</Text>
+          </View>
+        ) : (
+          <FlatList
+            data={LISTS}
+            keyExtractor={item => String(item.key)}
+            bounces={false}
+            renderItem={({item}) => <TicketHistoryView data={item.data} />}
+          />
+        )}
       </View>
-      <View style={{height: heightScale * 41}}></View>
+      <View style={{height: heightScale * 15}}></View>
       {/* 선물하기 팝업창 */}
-      {giftModalState ? <GiftModal selectCard={selectCard} setGiftModalState={setGiftModalState}/> : <></>}
+      {giftModalState ? (
+        <GiftModal
+          selectCard={selectCard}
+          setGiftModalState={setGiftModalState}
+        />
+      ) : (
+        <></>
+      )}
     </SafeAreaView>
   );
 }
@@ -228,6 +289,6 @@ const styles = StyleSheet.create({
     fontSize: heightScale * 14,
     fontWeight: 'normal',
     color: 'white',
-  }
+  },
 });
 export default MyTicket;

@@ -3,21 +3,24 @@ import { heightData } from '../../../modules/globalStyles';
 import Video from "react-native-video";
 import Icon from 'react-native-vector-icons/AntDesign';
 import { Shadow } from 'react-native-shadow-2';
-const { width, height } = Dimensions.get('window');
+import { SafeAreaView } from 'react-native-safe-area-context';
+const { width, height } = Dimensions.get('screen');
 const heightScale = heightData;
 
 interface propsType {
     setTiketModalStatus(id: boolean): void
-    card: String
+    card: String,
+    black: number,
+    red: number,
+    gold:  number,
 }
 
 function MyTickets(props: propsType) {
 
     return (
-        <View style={styles.container} >
+        <SafeAreaView style={styles.container} >
             <View style={styles.header} >
                 <View style={{ flex: 1, alignItems: 'center' }} >
-                    <Text style={styles.headerText}>My Tickets</Text>
                     <Icon
                         name="close"
                         style={styles.closeIcon}
@@ -25,6 +28,7 @@ function MyTickets(props: propsType) {
                         color="#fff"
                         onPress={() => props.setTiketModalStatus(false)}
                     />
+                    <Text style={styles.headerText}>My Tickets</Text>
                 </View>
             </View>
             <View style={{ alignItems: 'center', flex: 12 }} >
@@ -43,7 +47,7 @@ function MyTickets(props: propsType) {
                     <View style={styles.tiketBox} >
                         <View style={{ position: 'absolute', top: 22 * heightScale, left: 16 * heightScale, zIndex: 2 }} >
                             <Text style={{ color: 'white', fontWeight: '600', fontSize: 18 * heightScale }} >{props.card} Card</Text>
-                            <Text style={{ color: 'white', fontSize: 16 * heightScale, marginTop: 5 }}> 보유 8장</Text>
+                            <Text style={{ color: 'white', fontSize: 16 * heightScale, marginTop: 5 }}> 보유 { (props.card == 'Black'  && props.black)} {(props.card == 'Red'  && props.red)} {(props.card == 'Gold'  && props.gold) }장</Text>
                         </View>
                             {props.card == 'Black' && <Image style={styles.tiketImg} source={require(`../../../assets/BlackTiket.png`)} />}
                             {props.card == 'Red' && <Image style={styles.tiketImg} source={require(`../../../assets/RedTiket.png`)} />}
@@ -80,7 +84,7 @@ function MyTickets(props: propsType) {
                     </View>
                 </View>
             </View>
-        </View>
+        </SafeAreaView>
     )
 }
 
@@ -88,7 +92,9 @@ const styles = StyleSheet.create({
     container: {
         width: width,
         height: height,
-        position: 'absolute',
+        ...StyleSheet.absoluteFillObject,
+        // flex:1,
+        // position: 'absolute',
         left: -20,
         backgroundColor: '#000',
     },
