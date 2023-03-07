@@ -84,7 +84,7 @@ function TabNavigator() {
       <Tab.Screen
         name="Ranking"
         component={Ranking}
-        options={{ title: 'Ranking' }}
+        options={{ title: 'Ranking', headerShown: false  }}
       />
       <Tab.Screen
         name="Game"

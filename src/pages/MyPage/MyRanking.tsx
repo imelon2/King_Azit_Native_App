@@ -19,6 +19,7 @@ function MyRanking() {
     const navigation = useNavigation<NavigationProp<MyPageRootStackParamList>>();
     const [status, setStatus] = useState('month');
     const [modalStatus, setModalStatus] = useState(false);
+    const [ myNum , setMyNum ] = useState(3);
     const [rankingData, setRankingData] = useState([{ ranking: 1, name: '한나피쉬', point: 25, status: 'up' }, { ranking: 2, name: '한나피쉬', point: 24, status: '' }
         , { ranking: 3, name: '한나피쉬', point: 23, status: 'up' }, { ranking: 4, name: '한나피쉬', point: 22, status: 'down' }
         , { ranking: 5, name: '한나피쉬', point: 21, status: '' }, { ranking: 6, name: '한나피쉬', point: 20, status: 'down' }
@@ -30,17 +31,18 @@ function MyRanking() {
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.headerStyle}>
-                <Text style={styles.fontStyle}>마이 랭킹</Text>
+            <View>
+                <View style={styles.headerStyle}>
+                    <Text style={styles.fontStyle}>마이 랭킹</Text>
+                </View>
+                <IconAntDesign
+                    name="left"
+                    size={heightScale * 28}
+                    color="white"
+                    style={styles.beforeIcon}
+                    onPress={() => navigation.goBack()}
+                />
             </View>
-            <IconAntDesign
-                name="left"
-                size={heightScale * 28}
-                color="white"
-                style={styles.beforeIcon}
-                onPress={() => navigation.goBack()}
-            />
-
 
             <View style={{ flex: 1, alignItems: 'center' }} >
                 <Image style={styles.bannerBoxPostion} source={require('../../assets/bannerImg.png')} />
@@ -70,7 +72,7 @@ function MyRanking() {
                         size={heightScale * 30}
                         color="white"
                         style={styles.scoreIcon}
-                        onPress= {() => navigation.navigate('MyRankingScore')}
+                        onPress={() => navigation.navigate('MyRankingScore')}
                     />
                 </LinearGradient>
             </View>
@@ -107,15 +109,15 @@ function MyRanking() {
                             </View>
 
                             {rankingData.map((v: any, key) => (
-                                <View style={styles.rankingLineOne} key={key} >
+                                <View style={[styles.rankingLineOne , myNum == key  && styles.rankingLineOne2 ]} key={key} >
                                     <View style={styles.lineRankingImg} ></View>
-                                    <View style={styles.RankingTextBox}  ><Text style={styles.lineText} >{v.ranking}</Text></View>
+                                    <View style={styles.RankingTextBox}  ><Text style={[styles.lineText ,myNum == key  && styles.lineText2 ]} >{v.ranking}</Text></View>
                                     <View style={styles.imgBox} >
                                         <Image style={styles.userIcon} source={require('../../assets/UserIcon.png')} />
                                     </View>
-                                    <View style={{ marginLeft: 20 * heightScale }} ><Text style={styles.lineText} >{v.name}</Text></View>
+                                    <View style={{ marginLeft: 20 * heightScale }} ><Text style={[styles.lineText,myNum == key  && styles.lineText2 ]} >{v.name}</Text></View>
                                     <View style={{ flex: 1, alignItems: 'flex-end' }} >
-                                        <Text style={[styles.menuText, styles.marginRight, styles.lineText]}>{v.point}</Text>
+                                        <Text style={[styles.menuText, styles.marginRight, styles.lineText,myNum == key  && styles.lineText2 ]}>{v.point}</Text>
                                     </View>
 
                                 </View>
@@ -240,12 +242,23 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         flexDirection: 'row',
     },
+    rankingLineOne2: {
+        width: '100%',
+        height: 50 * heightScale,
+        borderColor: '#3D3D3D',
+        borderBottomWidth: 1,
+        flexDirection: 'row',
+        backgroundColor: '#F5FF82'
+    },
     lineText: {
         color: 'white',
         fontSize: 18 * heightScale,
         lineHeight: 50 * heightScale,
         marginLeft: 3 * heightScale,
         textAlign: 'center',
+    },
+    lineText2: {
+        color: 'black'
     },
     lineRankingImg: {
         width: 20 * heightScale,
@@ -274,5 +287,6 @@ const styles = StyleSheet.create({
         paddingTop: 15 * heightScale,
         paddingBottom: 10 * heightScale,
     },
+    
 });
 export default MyRanking;
