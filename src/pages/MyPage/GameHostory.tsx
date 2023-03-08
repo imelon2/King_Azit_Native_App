@@ -106,7 +106,7 @@ function GameHostory() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
+        <View>
         <View style={styles.headerStyle}>
           <Text style={styles.fontStyle}>게임 참여 기록</Text>
         </View>
@@ -123,7 +123,8 @@ function GameHostory() {
             style={styles.Faders}
           />
         </TouchableOpacity>
-
+        </View>
+        <ScrollView>
         <View style={styles.monthSelectBox} >
           <View style={styles.monthSelect} >
             <IconAntDesign

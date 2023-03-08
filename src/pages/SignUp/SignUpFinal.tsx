@@ -44,7 +44,7 @@ function SignUpFinal({navigation}:SignUpFinalScreenProps) {
 }
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
+    backgroundColor: '#000',
     flex: 1,
   }, 
   headerStyle: {
@@ -58,15 +58,15 @@ const styles = StyleSheet.create({
   titleTextStyle: {
     fontSize: heightData * 22,
     paddingVertical: heightData * 10,
-    color: 'black',
+    color: '#fff',
     fontWeight: 'bold',
   },
   contentsTextStyle: {
     fontSize: heightData * 14,
-    color: 'black',
+    color: '#fff',
   },
   homeButton: {
-    backgroundColor: '#D9D9D9',
+    backgroundColor: '#F5FF82',
     margin:heightScale*20,
     marginHorizontal: heightScale * 29,
     height: heightScale * 64,

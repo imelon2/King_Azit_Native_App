@@ -553,6 +553,8 @@ PODS:
     - React-perflogger (= 0.71.2)
   - RNCPushNotificationIOS (1.10.1):
     - React-Core
+  - RNDateTimePicker (6.7.5):
+    - React-Core
   - RNFBAnalytics (17.0.0):
     - Firebase/Analytics (= 10.4.0)
     - React-Core
@@ -661,6 +663,7 @@ DEPENDENCIES:
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCPushNotificationIOS (from `../node_modules/@react-native-community/push-notification-ios`)"
+  - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - "RNFBAnalytics (from `../node_modules/@react-native-firebase/analytics`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
@@ -787,6 +790,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNCPushNotificationIOS:
     :path: "../node_modules/@react-native-community/push-notification-ios"
+  RNDateTimePicker:
+    :path: "../node_modules/@react-native-community/datetimepicker"
   RNFBAnalytics:
     :path: "../node_modules/@react-native-firebase/analytics"
   RNFBApp:
@@ -874,6 +879,7 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 4bf9a9086d27f74065fce1dddac274aa95216952
   ReactCommon: f697c0ac52e999aa818e43e2b6f277787c735e2d
   RNCPushNotificationIOS: 87b8d16d3ede4532745e05b03c42cff33a36cc45
+  RNDateTimePicker: 65e1d202799460b286ff5e741d8baf54695e8abd
   RNFBAnalytics: 5ed12bdd61762124e66e9f4a8469f3f725c847bf
   RNFBApp: 339ca238581a4c97d391fa077902e0e0117dddda
   RNFBMessaging: aff7baf1b0c7c70a0fd60d5dbfbe6d1e59f3985c

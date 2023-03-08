@@ -36,11 +36,13 @@ function Main({navigation}: MainScreenProps) {
             </Pressable>
           </Shadow>
         </View>
+        <View style={{alignItems: 'center'}}>
         <Pressable
           style={[styles.buttonStyle, styles.signUpButton]}
           onPress={() => navigation.navigate('SignUp')}>
           <Text style={[styles.textStyle, {color: '#fff'}]}> 회원가입</Text>
         </Pressable>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -70,7 +72,7 @@ const styles = StyleSheet.create({
   buttonStyle: {
     height: heightScale * 60,
     width: heightScale * 390,
-    marginHorizontal: heightScale * 29,
+    // marginHorizontal: heightScale * 29,
     borderRadius: heightScale * 5,
     alignItems: 'center',
     justifyContent: 'center',

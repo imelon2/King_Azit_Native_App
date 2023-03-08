@@ -246,7 +246,8 @@ const GiftModal = ({...props}) => {
             </Pressable>
           </View>
           {/* 선물하기 버튼 */}
-          <Shadow distance={7} startColor={canGift ? '#FCFF72' : "#414141"}>
+          <View style={{alignItems: 'center',}}>
+          <Shadow distance={5} startColor={canGift ? '#FCFF72' : "#414141"}>
             <Pressable
               style={[styles.giftButtonStyle,{backgroundColor: canGift ? '#F5FF82' : "#414141"}]}
               onPress={() => transferTicket()}
@@ -255,6 +256,7 @@ const GiftModal = ({...props}) => {
               <Text style={styles.giftFontStyle}>선물하기</Text>
             </Pressable>
           </Shadow>
+          </View>
         </View>
       </View>
     </View>
@@ -271,7 +273,7 @@ const styles = StyleSheet.create({
     width: heightScale * 380,
     height: heightScale * 430,
     backgroundColor: '#353535',
-    top: heightScale * 120,
+    top: heightScale * 128,
     borderRadius: 20,
     alignItems: 'center',
   },

@@ -13,6 +13,7 @@ import {
   import Icon from 'react-native-vector-icons/AntDesign';
   import {RootStackParamList} from '../../../AppInner';
 import { SignUpstyles } from '../../modules/SignUpstyles';
+import { heightData } from '../../modules/globalStyles'
 const Stack = createNativeStackNavigator<RootStackParamList>();
 type SignInScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -54,7 +55,7 @@ function SignUpHome({ navigation }: SignInScreenProps) {
                 <Text style={SignUpstyles.terms}>서비스 이용약관에 동의해주세요.</Text>
             </View>
 
-            <View  >
+            <View  style={{marginBottom:heightData*25}}>
                 <TouchableOpacity
                     activeOpacity={1}
                     style={SignUpstyles.termsBox}
@@ -93,8 +94,7 @@ function SignUpHome({ navigation }: SignInScreenProps) {
                     <Text style={{ color: '#fff' }}>이용약관 </Text>
                 </TouchableOpacity>
             </View>
-
-            <View style={{ flex: 3  }} >
+            <View style={{ alignItems:'center' }} >
                 <Text
                     style={
                         checkPrivacy && checkTerms
