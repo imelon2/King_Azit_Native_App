@@ -62,7 +62,7 @@ function SignUpCertification({ navigation }: SignInScreenProps) {
             name="arrowleft"
             style={SignUpstyles.leftIcon}
             size={25}
-            color="#000"
+            color="#fff"
             onPress={() => navigation.navigate('SignUpGender')}
           />
           <View style={SignUpstyles.topbar}>
@@ -104,9 +104,7 @@ function SignUpCertification({ navigation }: SignInScreenProps) {
           )}
 
         </View>
-      </KeyboardAwareScrollView>
-
-      <View>
+      <View style={{alignItems:'center'}}>
         <Text
           style={
             certNum
@@ -120,6 +118,8 @@ function SignUpCertification({ navigation }: SignInScreenProps) {
           가입신청
         </Text>
       </View>
+      </KeyboardAwareScrollView>
+
 
 
     </SafeAreaView>

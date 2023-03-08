@@ -42,7 +42,11 @@ function SignUpNickName({navigation}: SignInScreenProps) {
   
     return (
       <SafeAreaView style={SignUpstyles.container}>
-        <KeyboardAwareScrollView>
+        <KeyboardAwareScrollView enableOnAndroid 
+        keyboardShouldPersistTaps={'handled'}
+        showsVerticalScrollIndicator={false}
+        scrollEnabled={false}
+        >
           <View>
             <Icon
               name="arrowleft"
@@ -78,15 +82,15 @@ function SignUpNickName({navigation}: SignInScreenProps) {
               </View>
             </View>
           </View>
-        </KeyboardAwareScrollView>
-  
-        <View>
+        <View style={{alignItems:'center'}}>
           <Text
             style={ nickName ? [SignUpstyles.nextButton,SignUpstyles.nextButton2]: [SignUpstyles.nextButton] }
             onPress={onClickNextButton}>
             다음
           </Text>
         </View>
+        </KeyboardAwareScrollView>
+  
       </SafeAreaView>
     );
   }

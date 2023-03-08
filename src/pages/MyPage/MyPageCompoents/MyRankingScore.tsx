@@ -1,15 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Image, Dimensions } from 'react-native';
+import React from 'react';
+import { StyleSheet, Text, View,Image, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
-import IconAntDesign2 from 'react-native-vector-icons/Entypo';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { HomeRootStackParamList, MyPageRootStackParamList } from '../../../../AppInner';
+import { MyPageRootStackParamList } from '../../../../AppInner';
 import { heightData } from '../../../modules/globalStyles';
-const { width, height } = Dimensions.get('window');
-import LinearGradient from 'react-native-linear-gradient';
-import Modal from "react-native-modal";
-import { Icon } from 'react-native-vector-icons/Icon';
 const heightScale = heightData;
 
 const MyRankingScore = ({ ...props }) => {
@@ -25,6 +20,8 @@ const MyRankingScore = ({ ...props }) => {
 
     return (
         <SafeAreaView style={styles.container}>
+            <View>
+
             <View style={styles.headerStyle}>
                 <Text style={styles.fontStyle}>총 누적 승점</Text>
             </View>
@@ -34,7 +31,8 @@ const MyRankingScore = ({ ...props }) => {
                 color="white"
                 style={styles.beforeIcon}
                 onPress={() => navigation.goBack()}
-            />
+                />
+                </View>
 
             <View style={styles.mainContainer} >
                 <Text style={styles.mainText} >{year}년 {month}월</Text>

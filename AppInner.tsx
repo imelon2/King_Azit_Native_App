@@ -173,7 +173,7 @@ function AppInner() {
 
   return (
     <>
-      {!isLoggedIn ? (
+      {isLoggedIn ? (
         <HomeStack.Navigator
           initialRouteName="Home"
           screenOptions={{ headerShown: false }}>

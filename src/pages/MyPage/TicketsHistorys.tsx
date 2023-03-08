@@ -107,8 +107,10 @@ function TicketsHistorys() {
     >();
   return (
     <SafeAreaView style={styles.container}>
+      <View>
+        
       <View style={styles.headerStyle}>
-        <Text style={styles.fontStyle}>게임 참여 기록</Text>
+        <Text style={styles.fontStyle}>전체 사용 내역</Text>
       </View>
       <IconAntDesign
         name="left"
@@ -116,16 +118,17 @@ function TicketsHistorys() {
         color="white"
         style={styles.beforeIcon}
         onPress={() => navigation.goBack()}
-      />
+        />
       <Pressable
         style={styles.FadersBox}
         // onPress={() => setModalStatus(true)}
-      >
+        >
         <Image
           source={require('../../assets/FadersHorizontal.png')}
           style={styles.Faders}
-        />
+          />
       </Pressable>
+        </View>
       {/* 리스트 */}
       <View>
         {LISTS.length === 0 ? (

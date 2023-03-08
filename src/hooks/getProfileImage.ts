@@ -11,11 +11,12 @@ import { RootState } from '../store/reducer';
 function getProfileImage() {
     const dispatch = useAppDispatch();
     const access_token = useSelector((state: RootState) => state.user.access_token);
+    const id = useSelector((state: RootState) => state.user.name);
   useEffect(() => {
     const getProfileImage = async () => {
       try {
         const profileImageResult = await axios.get(
-          `${Config.API_URL}/member/image`,
+          `${Config.API_URL}/member/image?member=${id}`,
           {
             responseType: 'arraybuffer',
             headers: {
@@ -32,7 +33,7 @@ function getProfileImage() {
           }),
         );
       } catch (error) {
-        if ((error as AxiosError).response?.status === 400) {
+        if ((error as AxiosError).response?.status === 404) {
           console.log('error from hooks/getProfileImage.ts','프로필사진 없음');
         } else {
           console.log((error as AxiosError).response?.status,'error from hooks/getProfileImage.ts');

@@ -80,7 +80,11 @@ function SignUpPassWord({ navigation }: SignInScreenProps) {
 
   return (
     <SafeAreaView style={SignUpstyles.container}>
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView enableOnAndroid 
+        keyboardShouldPersistTaps={'handled'}
+        showsVerticalScrollIndicator={false}
+        scrollEnabled={false}
+        >
         <View >
           <Icon
             name="arrowleft"
@@ -160,8 +164,6 @@ function SignUpPassWord({ navigation }: SignInScreenProps) {
             )}
           </View>
         </View>
-      </KeyboardAwareScrollView>
-
       <View >
         <Text
           style={password && passwordCheck ? [SignUpstyles.nextButton, SignUpstyles.nextButton2]
@@ -170,6 +172,7 @@ function SignUpPassWord({ navigation }: SignInScreenProps) {
           다음
         </Text>
       </View>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 }

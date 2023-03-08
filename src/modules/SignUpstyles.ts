@@ -60,8 +60,8 @@ export const SignUpstyles = StyleSheet.create({
     lineHeight: 30,
   },
   nextButton: {
-    position: 'absolute',
-    bottom: 30,
+    // position: 'absolute',
+    // bottom: 30,
     width: '92%',
     textAlign: 'center',
     color: '#000',
@@ -69,7 +69,7 @@ export const SignUpstyles = StyleSheet.create({
     height: heightScale * 64,
     lineHeight: heightScale * 64,
     borderRadius: 6,
-    marginLeft: '4%',
+    // marginLeft: '4%',
     fontSize: heightScale * 20,
   },
   nextButton2: {

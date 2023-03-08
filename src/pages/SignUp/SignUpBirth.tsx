@@ -26,7 +26,10 @@ function SignUpBirth({ navigation }: SignInScreenProps) {
 
     return (
         <SafeAreaView style={SignUpstyles.container}>
-            <KeyboardAwareScrollView>
+            <KeyboardAwareScrollView enableOnAndroid 
+        keyboardShouldPersistTaps={'handled'}
+        showsVerticalScrollIndicator={false}
+        scrollEnabled={false}>
                 <View  >
                     <Icon
                         name="arrowleft"
@@ -58,15 +61,15 @@ function SignUpBirth({ navigation }: SignInScreenProps) {
                         />
                     </View>
                 </View>
-            </KeyboardAwareScrollView>
-
-            <View style={{ flex: 3 }} >
+            <View style={{alignItems:'center'}} >
                 <Text
                     style={birthDate ? [SignUpstyles.nextButton, SignUpstyles.nextButton2] : SignUpstyles.nextButton}
                     onPress={onClickNextButton}>
                     다음
                 </Text>
             </View>
+            </KeyboardAwareScrollView>
+
         </SafeAreaView>
     );
 }

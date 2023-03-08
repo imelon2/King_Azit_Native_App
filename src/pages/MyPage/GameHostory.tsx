@@ -106,7 +106,6 @@ function GameHostory() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
         <View>
           <View style={styles.headerStyle}>
             <Text style={styles.fontStyle}>게임 참여 기록</Text>
@@ -118,14 +117,14 @@ function GameHostory() {
             style={styles.beforeIcon}
             onPress={() => navigation.goBack()}
           />
-        </View>
+        <View>
         <TouchableOpacity style={styles.FadersBox} activeOpacity={1} onPress={() => setModalStatus(true)}>
           <Image
             source={require('../../assets/FadersHorizontal.png')}
             style={styles.Faders}
           />
         </TouchableOpacity>
-
+        </View>
         <View style={styles.monthSelectBox} >
           <View style={styles.monthSelect} >
             <IconAntDesign
