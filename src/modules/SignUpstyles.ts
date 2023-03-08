@@ -51,7 +51,7 @@ export const SignUpstyles = StyleSheet.create({
     marginLeft: 20,
     marginTop: 20,
     color: '#fff',
-    marginBottom: heightScale * 74,
+    marginBottom: heightScale * 54,
   },
   termsBox: {
     flexDirection: 'row',
@@ -88,7 +88,7 @@ export const SignUpstyles = StyleSheet.create({
   termstext2: {
     fontSize: heightScale * 26,
     color: '#fff',
-    marginTop: 7,
+    marginTop: 4,
   },
   textInput: {
     fontSize: heightScale * 18,
@@ -101,7 +101,7 @@ export const SignUpstyles = StyleSheet.create({
     flexDirection: 'row',
   },
   textInputWrapper: {
-    marginTop: heightScale * 20,
+    // marginTop: heightScale * 20,
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomWidth: StyleSheet.hairlineWidth,
@@ -130,7 +130,7 @@ export const SignUpstyles = StyleSheet.create({
   },
   inputWrapper: {
     paddingHorizontal: heightScale * 29,
-    paddingBottom: heightScale * 57,
+    paddingBottom: heightScale * 37,
   },
   marginLeft: {
     marginLeft: heightScale * 12,

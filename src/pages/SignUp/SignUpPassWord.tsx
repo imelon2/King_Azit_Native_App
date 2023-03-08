@@ -164,7 +164,7 @@ function SignUpPassWord({ navigation }: SignInScreenProps) {
             )}
           </View>
         </View>
-      <View >
+      <View style={{alignItems:'center'}}>
         <Text
           style={password && passwordCheck ? [SignUpstyles.nextButton, SignUpstyles.nextButton2]
             : [SignUpstyles.nextButton]}
