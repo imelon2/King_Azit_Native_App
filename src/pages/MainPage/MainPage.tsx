@@ -30,25 +30,25 @@ function MainPage() {
   const [tiketModalStatus, setTiketModalStatus] = useState(false);
   const [playMemberStatus, setPlayMemberStatus] = useState(false);
   const [myCard, setMyCard] = useState('');
-  const {black,red,gold} = useSelector((state: RootState) => state.ticket);
+  const { black, red, gold } = useSelector((state: RootState) => state.ticket);
 
   const onClickMember = () => {
     setPlayMemberStatus(true);;
   }
 
   const onClickJoinButton = () => {
-      setModalStatus(true);
+    setModalStatus(true);
   }
   // 현재 유저 보유 티켓 가져오기
   getTickets()
 
-  const onOpenMyTikets = (text:any) => {
+  const onOpenMyTikets = (text: any) => {
     setTiketModalStatus(true);
     setMyCard(text);
   }
 
   getProfileImage()
-  
+
   return (
     <SafeAreaView style={MainStyles.container} >
       <View style={{ flex: 1 }} >
@@ -124,6 +124,9 @@ function MainPage() {
             <Text style={MainStyles.mainText}>Game</Text>
           </TouchableOpacity>
         </View>
+        <TouchableOpacity activeOpacity={1} style={MainStyles.roomMakeBox}  onPress={() => navigation.navigate('RoomMake')}  >
+          <Text style={MainStyles.roomMakeText} >+ 방 만들기</Text>
+        </TouchableOpacity>
 
         <Modal isVisible={modalStatus} style={{ flex: 1 }} >
           <GuestJoin setModalStatus={setModalStatus} />

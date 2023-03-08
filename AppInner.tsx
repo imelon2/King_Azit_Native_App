@@ -29,6 +29,7 @@ import MyRankingScore from './src/pages/MyPage/MyPageCompoents/MyRankingScore'
 import interceptors from './src/hooks/interceptors';
 import BinaryToBase64 from './src/modules/BinaryToBase64';
 import TicketsHistorys from './src/pages/MyPage/TicketsHistorys';
+import RoomMake  from './src/pages/MainPage/RoomMake'
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -49,6 +50,7 @@ export type RootStackParamList = {
 export type HomeRootStackParamList = {
   Home: undefined; // Tab Navigator
   GamePage: undefined;
+  RoomMake: undefined;
   Admin: {
     id: number;
   };
@@ -84,7 +86,7 @@ function TabNavigator() {
       <Tab.Screen
         name="Ranking"
         component={Ranking}
-        options={{ title: 'Ranking', headerShown: false  }}
+        options={{ title: 'Ranking', headerShown: false }}
       />
       <Tab.Screen
         name="Game"
@@ -135,8 +137,8 @@ function AppInner() {
             authorization: `Bearer ${token}`,
           },
         });
-        const {access_token, refresh_token} = refreshResult.data;
-        const {sub, roles, nickname} = decodeJWT(access_token);
+        const { access_token, refresh_token } = refreshResult.data;
+        const { sub, roles, nickname } = decodeJWT(access_token);
 
         dispatch(
           userSlice.actions.setUser({
@@ -189,7 +191,7 @@ function AppInner() {
           <HomeStack.Screen
             name="TicketsHistorys"
             component={TicketsHistorys}
-            options={{animation: 'none'}}
+            options={{ animation: 'none' }}
           />
           <HomeStack.Screen
             name="GameHostory"
@@ -214,6 +216,11 @@ function AppInner() {
           <HomeStack.Screen
             name="GamePage"
             component={GamePage}
+            options={{ animation: 'none' }}
+          />
+          <HomeStack.Screen
+            name="RoomMake"
+            component={RoomMake}
             options={{ animation: 'none' }}
           />
         </HomeStack.Navigator>
