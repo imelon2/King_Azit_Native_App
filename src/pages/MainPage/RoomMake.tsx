@@ -7,6 +7,7 @@ import { RootStackParamList } from "../../../AppInner";
 import Modal from "react-native-modal";
 import { widthData, heightData } from '../../modules/globalStyles';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 const heightScale = heightData;
 
 const { width, height } = Dimensions.get('window');
@@ -42,7 +43,10 @@ function RoomMake() {
 
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView>
+            <KeyboardAwareScrollView
+            keyboardShouldPersistTaps={'handled'}
+            showsVerticalScrollIndicator={false}
+            >
                 <View>
                     <View style={styles.headerStyle}>
                         <Text style={styles.fontStyle}>방만들기</Text>
@@ -111,9 +115,9 @@ function RoomMake() {
                                     placeholder="Enter"
                                     onChangeText={onChangeBuyin}
                                     value={buyin}
+                                    keyboardType={'decimal-pad'}
                                     // returnKeyType="next" // next key로 변환
                                     // onSubmitEditing={() => birthDateRef.current?.focus()} // Submit Key 클릭 시, 이벤트
-                                    blurOnSubmit={false} // Submit Key클릭 시, Keyboard 유지
                                     placeholderTextColor="#6F6F6F"
                                 />
                             </View>
@@ -149,9 +153,9 @@ function RoomMake() {
                                 placeholder="Enter"
                                 onChangeText={onChangeEntry}
                                 value={entey}
+                                keyboardType={'number-pad'}
                                 // returnKeyType="next" // next key로 변환
                                 // onSubmitEditing={() => birthDateRef.current?.focus()} // Submit Key 클릭 시, 이벤트
-                                blurOnSubmit={false} // Submit Key클릭 시, Keyboard 유지
                                 placeholderTextColor="#6F6F6F"
                             />
                         </View>
@@ -175,13 +179,13 @@ function RoomMake() {
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <View style={{ flex: 1 }} >
+                    <View style={{ justifyContent:'center',alignItems:'center' }} >
                         <TouchableOpacity style={styles.buttonStyle} >
                             <Text style={styles.buttonTextStyle} > 방만들기 </Text>
                         </TouchableOpacity>
                     </View>
                 </View>
-            </ScrollView>
+            </KeyboardAwareScrollView>
         </SafeAreaView>
     )
 }
