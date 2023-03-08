@@ -25,21 +25,17 @@ import MyRankingModal from './MyPageCompoents/MyRankingModal';
 const heightScale = heightData;
 
 function MyRanking() {
-  const navigation = useNavigation<NavigationProp<MyPageRootStackParamList>>();
-  const [status, setStatus] = useState('month');
-  const [modalStatus, setModalStatus] = useState(false);
-  const [rankingData, setRankingData] = useState([
-    {ranking: 1, name: '한나피쉬', point: 25, status: 'up'},
-    {ranking: 2, name: '한나피쉬', point: 24, status: ''},
-    {ranking: 3, name: '한나피쉬', point: 23, status: 'up'},
-    {ranking: 4, name: '한나피쉬', point: 22, status: 'down'},
-    {ranking: 5, name: '한나피쉬', point: 21, status: ''},
-    {ranking: 6, name: '한나피쉬', point: 20, status: 'down'},
-    {ranking: 7, name: '한나피쉬', point: 19, status: 'up'},
-    {ranking: 8, name: '한나피쉬', point: 18, status: 'down'},
-    {ranking: 9, name: '한나피쉬', point: 17, status: 'down'},
-    {ranking: 10, name: '한나피쉬', point: 16, status: ''},
-  ]);
+    const navigation = useNavigation<NavigationProp<MyPageRootStackParamList>>();
+    const [status, setStatus] = useState('month');
+    const [modalStatus, setModalStatus] = useState(false);
+    const [ myNum , setMyNum ] = useState(3);
+    const [rankingData, setRankingData] = useState([{ ranking: 1, name: '한나피쉬', point: 25, status: 'up' }, { ranking: 2, name: '한나피쉬', point: 24, status: '' }
+        , { ranking: 3, name: '한나피쉬', point: 23, status: 'up' }, { ranking: 4, name: '한나피쉬', point: 22, status: 'down' }
+        , { ranking: 5, name: '한나피쉬', point: 21, status: '' }, { ranking: 6, name: '한나피쉬', point: 20, status: 'down' }
+        , { ranking: 7, name: '한나피쉬', point: 19, status: 'up' }, { ranking: 8, name: '한나피쉬', point: 18, status: 'down' }
+        , { ranking: 9, name: '한나피쉬', point: 17, status: 'down' }, { ranking: 10, name: '한나피쉬', point: 16, status: '' }]
+    );
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -62,6 +58,20 @@ function MyRanking() {
           source={require('../../assets/bannerImg.png')}
         />
 
+    return (
+        <SafeAreaView style={styles.container}>
+            <View>
+                <View style={styles.headerStyle}>
+                    <Text style={styles.fontStyle}>마이 랭킹</Text>
+                </View>
+                <IconAntDesign
+                    name="left"
+                    size={heightScale * 28}
+                    color="white"
+                    style={styles.beforeIcon}
+                    onPress={() => navigation.goBack()}
+                />
+            </View>
         <View style={{flex: 1, flexDirection: 'row'}}>
           <View style={{flex: 1}}></View>
           <View
@@ -139,7 +149,75 @@ function MyRanking() {
                   <Text style={[styles.menuText, styles.marginRight]}>Pts</Text>
                 </View>
               </View>
+            </View>
+            <View style={{ flex: 1, alignItems: 'center' }} >
+                <LinearGradient
+                    style={styles.scoreBox} locations={[0, 1]} colors={["rgba(49, 49, 49, 1)", 'rgba(49, 49, 49, 0)']} >
 
+                    <View style={{ flex: 1 }}>
+                        <Text style={styles.scoreText} > 총 누적 승점: </Text>
+                    </View>
+                    <View style={{ flex: 1, alignItems: 'center', flexDirection: 'row' }}>
+                        <Text style={styles.scoreText2} > 24점</Text>
+                    </View>
+
+                    <IconAntDesign
+                        name="right"
+                        size={heightScale * 30}
+                        color="white"
+                        style={styles.scoreIcon}
+                        onPress={() => navigation.navigate('MyRankingScore')}
+                    />
+                </LinearGradient>
+            </View>
+            <View style={{ flex: 3, alignItems: 'center' }} >
+                <View style={styles.rankingBox} >
+                    <View style={{ flex: 1, flexDirection: 'row' }} >
+                        <TouchableOpacity activeOpacity={1} onPress={() => setStatus('month')} >
+                            <Text style={status == 'month' ? styles.monthText : styles.monthText2} >월간</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity activeOpacity={1} onPress={() => setStatus('week')} >
+                            <Text style={status == 'week' ? styles.weekText : styles.weekText2}>주간</Text>
+                        </TouchableOpacity>
+
+                        <IconAntDesign2
+                            name="calendar"
+                            size={heightScale * 26}
+                            color="white"
+                            style={styles.calendarStyle}
+                            onPress={() => setModalStatus(true)}
+                        />
+                    </View>
+                    <View style={{ flex: 10 }} >
+                        <ScrollView
+                            // horizontal
+                            showsHorizontalScrollIndicator={false}>
+                            <View style={styles.RankingTop} >
+                                <View style={{ flex: 1, flexDirection: 'row' }} >
+                                    <Text style={styles.menuText} >순위</Text>
+                                    <Text style={styles.menuText}>유저</Text>
+                                </View>
+                                <View style={{ flex: 5, alignItems: 'flex-end' }} >
+                                    <Text style={[styles.menuText, styles.marginRight]}>Pts</Text>
+                                </View>
+                            </View>
+
+                            {rankingData.map((v: any, key) => (
+                                <View style={[styles.rankingLineOne , myNum == key  && styles.rankingLineOne2 ]} key={key} >
+                                    <View style={styles.lineRankingImg} ></View>
+                                    <View style={styles.RankingTextBox}  ><Text style={[styles.lineText ,myNum == key  && styles.lineText2 ]} >{v.ranking}</Text></View>
+                                    <View style={styles.imgBox} >
+                                        <Image style={styles.userIcon} source={require('../../assets/UserIcon.png')} />
+                                    </View>
+                                    <View style={{ marginLeft: 20 * heightScale }} ><Text style={[styles.lineText,myNum == key  && styles.lineText2 ]} >{v.name}</Text></View>
+                                    <View style={{ flex: 1, alignItems: 'flex-end' }} >
+                                        <Text style={[styles.menuText, styles.marginRight, styles.lineText,myNum == key  && styles.lineText2 ]}>{v.point}</Text>
+                                    </View>
+
+                                </View>
+                            ))}
+                        </ScrollView>
+                    </View>
               {rankingData.map((v: any, key) => (
                 <View style={styles.rankingLineOne} key={key}>
                   <View style={styles.lineRankingImg}></View>

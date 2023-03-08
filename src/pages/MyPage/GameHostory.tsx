@@ -92,11 +92,11 @@ function GameHostory() {
       result.push(value);
     }
     setHistoryDataStatus(result);
-    
+
   }
 
   const onClickGameType = (text: any) => {
-    if (viewType == text) 
+    if (viewType == text)
       return;
 
     setViewType(text);
@@ -107,16 +107,17 @@ function GameHostory() {
   return (
     <SafeAreaView style={styles.container}>
         <View>
-        <View style={styles.headerStyle}>
-          <Text style={styles.fontStyle}>게임 참여 기록</Text>
-        </View>
-        <IconAntDesign
-          name="left"
-          size={heightScale * 28}
-          color="white"
-          style={styles.beforeIcon}
-          onPress={() => navigation.goBack()}
-        />
+          <View style={styles.headerStyle}>
+            <Text style={styles.fontStyle}>게임 참여 기록</Text>
+          </View>
+          <IconAntDesign
+            name="left"
+            size={heightScale * 28}
+            color="white"
+            style={styles.beforeIcon}
+            onPress={() => navigation.goBack()}
+          />
+        <View>
         <TouchableOpacity style={styles.FadersBox} activeOpacity={1} onPress={() => setModalStatus(true)}>
           <Image
             source={require('../../assets/FadersHorizontal.png')}
@@ -124,7 +125,6 @@ function GameHostory() {
           />
         </TouchableOpacity>
         </View>
-        <ScrollView>
         <View style={styles.monthSelectBox} >
           <View style={styles.monthSelect} >
             <IconAntDesign
@@ -146,9 +146,9 @@ function GameHostory() {
         </View>
 
         <View style={{ alignItems: 'center' }} >
-          {gameHistory.map((v: any, key) => ( v.type.indexOf(viewType) > -1)  && (
+          {gameHistory.map((v: any, key) => (v.type.indexOf(viewType) > -1) && (
             <View key={key}>
-              <LinearGradient  style={styles.historyBox} locations={[0, 1]} colors={["rgba(57, 57, 57, 1)", 'rgba(57, 57, 57, 0)',]}>
+              <LinearGradient style={styles.historyBox} locations={[0, 1]} colors={["rgba(57, 57, 57, 1)", 'rgba(57, 57, 57, 0)',]}>
                 <View style={{ flex: 1, flexDirection: 'row' }}  >
                   <View style={{ flex: 1 }} >
                     <Text style={styles.gameText} >{v.type} Game</Text>
@@ -215,32 +215,32 @@ function GameHostory() {
             <Text style={styles.joinText} >참여한 게임</Text>
           </View>
           <View style={{ flex: 4, marginTop: 20 }}>
-            <TouchableOpacity onPress={() => onClickGameType('')}  activeOpacity={1} style={{ flexDirection: 'column', alignItems: 'center' }} >
+            <TouchableOpacity onPress={() => onClickGameType('')} activeOpacity={1} style={{ flexDirection: 'column', alignItems: 'center' }} >
               <Text style={styles.typeText} >최근순</Text>
-              { viewType == '' && (
-              <LinearGradient start={{ x: 0, y: 0 }}  end={{ x: 1, y: 0 }}
-               style={styles.textSelectBorder} locations={[0, 0.5, 1]} colors={["rgba(250, 255, 178, 0)", 'rgba(244, 255, 117, 0.85)', 'rgba(254, 255, 241, 0)']} />
+              {viewType == '' && (
+                <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+                  style={styles.textSelectBorder} locations={[0, 0.5, 1]} colors={["rgba(250, 255, 178, 0)", 'rgba(244, 255, 117, 0.85)', 'rgba(254, 255, 241, 0)']} />
               )}
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => onClickGameType('Main')}  activeOpacity={1} style={{ flexDirection: 'column', alignItems: 'center' }} >
+            <TouchableOpacity onPress={() => onClickGameType('Main')} activeOpacity={1} style={{ flexDirection: 'column', alignItems: 'center' }} >
               <Text style={styles.typeText} >Main</Text>
-              { viewType == 'Main' && (
-              <LinearGradient start={{ x: 0, y: 0 }}  end={{ x: 1, y: 0 }}
-               style={styles.textSelectBorder} locations={[0, 0.5, 1]} colors={["rgba(250, 255, 178, 0)", 'rgba(244, 255, 117, 0.85)', 'rgba(254, 255, 241, 0)']} />
+              {viewType == 'Main' && (
+                <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+                  style={styles.textSelectBorder} locations={[0, 0.5, 1]} colors={["rgba(250, 255, 178, 0)", 'rgba(244, 255, 117, 0.85)', 'rgba(254, 255, 241, 0)']} />
               )}
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => onClickGameType('Side')}  activeOpacity={1} style={{ flexDirection: 'column', alignItems: 'center' }} >
+            <TouchableOpacity onPress={() => onClickGameType('Side')} activeOpacity={1} style={{ flexDirection: 'column', alignItems: 'center' }} >
               <Text style={styles.typeText} >Side</Text>
-              { viewType == 'Side' && (
-              <LinearGradient start={{ x: 0, y: 0 }}  end={{ x: 1, y: 0 }}
-               style={styles.textSelectBorder} locations={[0, 0.5, 1]} colors={["rgba(250, 255, 178, 0)", 'rgba(244, 255, 117, 0.85)', 'rgba(254, 255, 241, 0)']} />
+              {viewType == 'Side' && (
+                <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+                  style={styles.textSelectBorder} locations={[0, 0.5, 1]} colors={["rgba(250, 255, 178, 0)", 'rgba(244, 255, 117, 0.85)', 'rgba(254, 255, 241, 0)']} />
               )}
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => onClickGameType('NFT')}  activeOpacity={1} style={{ flexDirection: 'column', alignItems: 'center' }} >
+            <TouchableOpacity onPress={() => onClickGameType('NFT')} activeOpacity={1} style={{ flexDirection: 'column', alignItems: 'center' }} >
               <Text style={styles.typeText} >NFT</Text>
-              { viewType == 'NFT' && (
-              <LinearGradient start={{ x: 0, y: 0 }}  end={{ x: 1, y: 0 }}
-               style={styles.textSelectBorder} locations={[0, 0.5, 1]} colors={["rgba(250, 255, 178, 0)", 'rgba(244, 255, 117, 0.85)', 'rgba(254, 255, 241, 0)']} />
+              {viewType == 'NFT' && (
+                <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+                  style={styles.textSelectBorder} locations={[0, 0.5, 1]} colors={["rgba(250, 255, 178, 0)", 'rgba(244, 255, 117, 0.85)', 'rgba(254, 255, 241, 0)']} />
               )}
             </TouchableOpacity>
           </View>
@@ -414,8 +414,8 @@ const styles = StyleSheet.create({
   textSelectBorder: {
     width: heightScale * 120,
     height: heightScale * 3,
-    position:'absolute',
-    bottom:0,
+    position: 'absolute',
+    bottom: 0,
     // borderRadius: 10,
   }
 
