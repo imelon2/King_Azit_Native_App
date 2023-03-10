@@ -21,8 +21,8 @@ function RoomMake() {
     const [table, setTable] = useState('No.1');
     const [gameType, setGameType] = useState('main');
     const [buyin, setBuyin] = useState('');
-    const [entey, setEntry] = useState('');
     const [tiket, setTiket] = useState('Ticket');
+    const [entey, setEntry] = useState('');
     const [status, setStatus] = useState('progress');
 
 
@@ -39,13 +39,18 @@ function RoomMake() {
         setEntry(text.trim());
     }, []);
 
+    const onChnageGameType = useCallback((text: any) => {
+        setGameType(text.trim());
+        setTiketSelectDrop(false);
+    }, []);
+
 
 
     return (
         <SafeAreaView style={styles.container}>
             <KeyboardAwareScrollView
-            keyboardShouldPersistTaps={'handled'}
-            showsVerticalScrollIndicator={false}
+                keyboardShouldPersistTaps={'handled'}
+                showsVerticalScrollIndicator={false}
             >
                 <View>
                     <View style={styles.headerStyle}>
@@ -95,13 +100,13 @@ function RoomMake() {
                     <View style={{ flex: 1 }} >
                         <Text style={styles.mainText} >Game Type</Text>
                         <View style={{ flexDirection: 'row' }} >
-                            <TouchableOpacity onPress={() => setGameType('main')} style={[styles.touchBox, gameType == 'main' && styles.touchBox2]} >
+                            <TouchableOpacity onPress={() => onChnageGameType('main')} style={[styles.touchBox, gameType == 'main' && styles.touchBox2]} >
                                 <Text style={[styles.tableSelectText2, gameType == 'main' && styles.tableSelectText3]} >Main Game</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => setGameType('nft')} style={[styles.touchBox, styles.marginLeft, gameType == 'nft' && styles.touchBox2]} >
+                            <TouchableOpacity onPress={() => onChnageGameType('nft')} style={[styles.touchBox, styles.marginLeft, gameType == 'nft' && styles.touchBox2]} >
                                 <Text style={[styles.tableSelectText2, gameType == 'nft' && styles.tableSelectText3]} >NFT Game</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => setGameType('custom')} style={[styles.touchBox, styles.marginLeft, gameType == 'custom' && styles.touchBox2]} >
+                            <TouchableOpacity onPress={() => onChnageGameType('custom')} style={[styles.touchBox, styles.marginLeft, gameType == 'custom' && styles.touchBox2]} >
                                 <Text style={[styles.tableSelectText2, gameType == 'custom' && styles.tableSelectText3]} >Custom</Text>
                             </TouchableOpacity>
                         </View>
@@ -109,27 +114,35 @@ function RoomMake() {
                     <View style={{ flex: 1 }} >
                         <Text style={styles.mainText} >Buy-in</Text>
                         <View style={{ flexDirection: 'row' }} >
-                            <View>
-                                <TextInput
-                                    style={styles.TextInput}
-                                    placeholder="Enter"
-                                    onChangeText={onChangeBuyin}
-                                    value={buyin}
-                                    keyboardType={'decimal-pad'}
-                                    // returnKeyType="next" // next key로 변환
-                                    // onSubmitEditing={() => birthDateRef.current?.focus()} // Submit Key 클릭 시, 이벤트
-                                    placeholderTextColor="#6F6F6F"
-                                />
+                        {gameType == 'main' ? (
+                            <View style={[styles.touchBox3]} >
+                                <Text style={[styles.tableSelectText2, styles.tableSelectText3]} >1 Black Ticket</Text>
                             </View>
-                            <TouchableOpacity onPress={() => setTiketSelectDrop(!selectDrop)} activeOpacity={1} style={styles.tableSelect2} >
-                                <Text style={styles.tableSelectText}>{tiket}</Text>
-                                <IconAntDesign
-                                    name="down"
-                                    size={heightScale * 25}
-                                    color="#F5FF82"
-                                    style={styles.downIcon}
-                                />
-                            </TouchableOpacity>
+                        ) : (
+                                <>
+                                    <View>
+                                        <TextInput
+                                            style={styles.TextInput}
+                                            placeholder="Enter"
+                                            onChangeText={onChangeBuyin}
+                                            value={buyin}
+                                            keyboardType={'decimal-pad'}
+                                            // returnKeyType="next" // next key로 변환
+                                            // onSubmitEditing={() => birthDateRef.current?.focus()} // Submit Key 클릭 시, 이벤트
+                                            placeholderTextColor="#6F6F6F"
+                                        />
+                                    </View>
+                                    <TouchableOpacity onPress={() => setTiketSelectDrop(!selectDrop)} activeOpacity={1} style={styles.tableSelect2} >
+                                        <Text style={styles.tableSelectText}>{tiket}</Text>
+                                        <IconAntDesign
+                                            name="down"
+                                            size={heightScale * 25}
+                                            color="#F5FF82"
+                                            style={styles.downIcon}
+                                        />
+                                    </TouchableOpacity>
+                                </>
+                            )}
                         </View>
                     </View>
                     {tiketSelectDrop && (
@@ -145,6 +158,7 @@ function RoomMake() {
                             </TouchableOpacity>
                         </View>
                     )}
+
                     <View style={{ flex: 1 }} >
                         <Text style={styles.mainText} >Entry</Text>
                         <View>
@@ -164,10 +178,11 @@ function RoomMake() {
                         <Text style={styles.mainText} >Blind Duration</Text>
                         <View>
                             <TouchableOpacity style={[styles.touchBox, styles.touchBox2]} >
-                                <Text style={[styles.tableSelectText2, styles.tableSelectText3]} >8 Mins</Text>
+                                <Text style={[styles.tableSelectText2, styles.tableSelectText3]} >8 mins</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
+
                     <View style={{ flex: 1 }} >
                         <Text style={styles.mainText} >Status</Text>
                         <View style={{ flexDirection: 'row' }} >
@@ -179,7 +194,7 @@ function RoomMake() {
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <View style={{ justifyContent:'center',alignItems:'center' }} >
+                    <View style={{ justifyContent: 'center', alignItems: 'center' }} >
                         <TouchableOpacity style={styles.buttonStyle} >
                             <Text style={styles.buttonTextStyle} > 방만들기 </Text>
                         </TouchableOpacity>
@@ -223,12 +238,13 @@ const styles = StyleSheet.create({
         lineHeight: 42 * heightScale,
         color: 'white',
         paddingLeft: 14 * heightScale,
+        // fontWeight:'600',
     },
     tableSelectText2: {
         lineHeight: 42 * heightScale,
         color: 'white',
         textAlign: 'center',
-        // fontWeight:'500'
+        // fontWeight:'600',
     },
     tableSelectText3: {
         color: 'black',
@@ -262,6 +278,15 @@ const styles = StyleSheet.create({
     touchBox2: {
         backgroundColor: '#F5FF82'
     },
+    touchBox3: {
+        width: 128 * heightScale,
+        height: 44 * heightScale,
+        borderColor: '#F5FF82',
+        borderWidth: 1,
+        borderRadius: 4,
+        marginTop: 20 * heightScale,
+        backgroundColor: '#F5FF82'
+    },
     marginLeft: {
         marginLeft: 20 * heightScale,
     },
@@ -274,7 +299,7 @@ const styles = StyleSheet.create({
         paddingLeft: 10 * heightScale,
         marginTop: 20 * heightScale,
         backgroundColor: '#222',
-        color:'white'
+        color: 'white'
     },
     tableSelect2: {
         backgroundColor: '#222',
@@ -288,7 +313,7 @@ const styles = StyleSheet.create({
     },
     selectBox2: {
         position: 'absolute',
-        top: 338 * heightScale,
+        top: 341 * heightScale,
         left: 167 * heightScale,
         width: 154 * heightScale,
         height: 133 * heightScale,
@@ -307,7 +332,7 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         marginTop: 23 * heightScale,
     },
-    buttonTextStyle:{
+    buttonTextStyle: {
         lineHeight: 64 * heightScale,
         fontSize: 20 * heightScale,
         fontWeight: '600',
