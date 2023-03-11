@@ -122,8 +122,8 @@ function MyPage() {
   };
 
   return (
-    <SafeAreaView>
-      <ScrollView style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <ScrollView>
         <View style={styles.headerStyle}>
           <Text style={styles.fontStyle}>마이 페이지</Text>
         </View>

@@ -1,40 +1,81 @@
-import { Text, View, Image, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
-import { heightData } from '../../../modules/globalStyles';
-import Video from "react-native-video";
+import {
+  Text,
+  View,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+  Pressable,
+} from 'react-native';
+import {heightData} from '../../../modules/globalStyles';
+import Video from 'react-native-video';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { Shadow } from 'react-native-shadow-2';
-import { SafeAreaView } from 'react-native-safe-area-context';
-const { width, height } = Dimensions.get('screen');
+import {Shadow} from 'react-native-shadow-2';
+import QrCode from '../../../components/QrCode';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {useState} from 'react';
+import IconEvilIcons from 'react-native-vector-icons/EvilIcons';
+import { HomeRootStackParamList,MyPageRootStackParamList } from '../../../../AppInner';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../store/reducer';
 const heightScale = heightData;
 
-interface propsType {
-    setTiketModalStatus(id: boolean): void
-    card: String,
-    black: number,
-    red: number,
-    gold:  number,
-}
+// interface propsType {
+//   setTiketModalStatus(id: boolean): void;
+//   card: String;
+//   black: number;
+//   red: number;
+//   gold: number;
+// }
 
-function MyTickets(props: propsType) {
+type MyTicketsScreenProps = NativeStackScreenProps<HomeRootStackParamList,'MyTickets'>
 
-    return (
-        <SafeAreaView style={styles.container} >
-            <View style={styles.header} >
-                <View style={{ flex: 1, alignItems: 'center' }} >
-                    <Icon
-                        name="close"
-                        style={styles.closeIcon}
-                        size={20}
-                        color="#fff"
-                        onPress={() => props.setTiketModalStatus(false)}
-                    />
-                    <Text style={styles.headerText}>My Tickets</Text>
-                </View>
-            </View>
-            <View style={{ alignItems: 'center', flex: 12 }} >
-                <View>
-
-                    {/* <Video
+function MyTickets({route,navigation}:MyTicketsScreenProps) {
+  const {card,count} = route.params
+  const memberId = useSelector((state: RootState) => state.user.name);
+  const [qrViewState, setQrViewState] = useState(false);
+  const ticketType = () => {
+    if (card == 'Black') {
+      return (
+        <Image
+          style={styles.tiketImg}
+          source={require(`../../../assets/BlackTiket.png`)}
+        />
+      );
+    } else if (card == 'Red') {
+      return (
+        <Image
+          style={styles.tiketImg}
+          source={require(`../../../assets/RedTiket.png`)}
+        />
+      );
+    } else if (card == 'Gold') {
+      return (
+        <Image
+          style={styles.tiketImg}
+          source={require(`../../../assets/GoldTiket.png`)}
+        />
+      );
+    }
+  };
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <View style={{flex: 1, alignItems: 'center'}}>
+          <Icon
+            name="close"
+            style={styles.closeIcon}
+            size={20}
+            color="#fff"
+            onPress={() => navigation.goBack()}
+          />
+          <Text style={styles.headerText}>My Tickets</Text>
+        </View>
+      </View>
+      <View style={{alignItems: 'center', flex: 12}}>
+        <View>
+          {/* <Video
                         source={{ uri: "https://uploads-ssl.webflow.com/624b2c0795c4aab84ebe3296/624c5f468ac8f85e6acd1a08_kings%20NFT%203-transcode.mp4" }}
                         style={styles.tiket}
                         paused={false} // 재생/중지 여부
@@ -44,148 +85,186 @@ function MyTickets(props: propsType) {
                     // onAnimatedValueUpdate={() => {}}
                     /> */}
 
-                    <View style={styles.tiketBox} >
-                        <View style={{ position: 'absolute', top: 22 * heightScale, left: 16 * heightScale, zIndex: 2 }} >
-                            <Text style={{ color: 'white', fontWeight: '600', fontSize: 18 * heightScale }} >{props.card} Card</Text>
-                            <Text style={{ color: 'white', fontSize: 16 * heightScale, marginTop: 5 }}> 보유 { (props.card == 'Black'  && props.black)} {(props.card == 'Red'  && props.red)} {(props.card == 'Gold'  && props.gold) }장</Text>
-                        </View>
-                            {props.card == 'Black' && <Image style={styles.tiketImg} source={require(`../../../assets/BlackTiket.png`)} />}
-                            {props.card == 'Red' && <Image style={styles.tiketImg} source={require(`../../../assets/RedTiket.png`)} />}
-                            {props.card == 'Gold' && <Image style={styles.tiketImg} source={require(`../../../assets/GoldTiket.png`)} />}
-                        <View style={styles.qrbox} >
-                        </View>
-                    </View>
-
-                </View>
-
-                <View style={styles.plusTextBox} >
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }} >
-                        <Text style={styles.plusText} >QR 크게보기</Text>
-                        <Image
-                            source={require('../../../assets/MagnifyingGlassPlus.png')}
-                            style={styles.plusIcon}
-                        />
-                    </View>
-                </View>
-
-                <View style={styles.buttonContaner} >
-                    <View style={styles.buttonBox} >
-                        <Shadow distance={6} startColor={'#FCFF72'} >
-                            <TouchableOpacity activeOpacity={1} style={styles.giftButton} >
-                                <View style={styles.textCenter} >
-                                    <Icon
-                                        name="gift"
-                                        size={16}
-                                        style={styles.iconStyle} />
-                                    <Text style={styles.giftButtonText}>선물하기</Text>
-                                </View>
-                            </TouchableOpacity>
-                        </Shadow>
-                    </View>
-                </View>
+          <View style={styles.tiketBox}>
+            <View
+              style={{
+                position: 'absolute',
+                top: 22 * heightScale,
+                left: 16 * heightScale,
+                zIndex: 2,
+              }}>
+              <Text
+                style={{
+                  color: 'white',
+                  fontWeight: '600',
+                  fontSize: 18 * heightScale,
+                }}>
+                {card} Card
+              </Text>
+              <Text
+                style={{
+                  color: 'white',
+                  fontSize: 16 * heightScale,
+                  marginTop: 5,
+                }}>
+                보유 {count} 장
+              </Text>
             </View>
-        </SafeAreaView>
-    )
+            {ticketType()}
+            <View style={styles.qrbox}>
+              <View style={styles.qrStyle}>
+                <QrCode value={'kingazit://admin/10'} size={heightScale * 66} />
+              </View>
+            </View>
+          </View>
+        </View>
+
+        <Pressable style={styles.plusTextBox} onPress={() => setQrViewState(true)}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Text style={styles.plusText}>QR 크게보기</Text>
+            <Image
+              source={require('../../../assets/MagnifyingGlassPlus.png')}
+              style={styles.plusIcon}
+            />
+          </View>
+        </Pressable>
+
+        <View style={styles.buttonContaner}>
+          <View style={styles.buttonBox}>
+            <Shadow distance={6} startColor={'#FCFF72'}>
+              <TouchableOpacity activeOpacity={1} style={styles.giftButton}>
+                <View style={styles.textCenter}>
+                  <Icon name="gift" size={16} style={styles.iconStyle} />
+                  <Text style={styles.giftButtonText}>선물하기</Text>
+                </View>
+              </TouchableOpacity>
+            </Shadow>
+          </View>
+        </View>
+      </View>
+      {/* QR확대 팝업창 */}
+      {qrViewState ? (
+        <View style={styles.qrViewContainer}>
+                      <IconEvilIcons
+            style={{position: 'absolute', right: 0, padding: heightScale * 24}}
+            name="close"
+            color={'white'}
+            size={heightScale * 50}
+            suppressHighlighting={true}
+            onPress={() => setQrViewState(false)}
+          />
+          <View style={styles.qrView}>
+            <QrCode value={'kingazit://admin/5'} size={heightScale * 320} />
+          </View>
+        </View>
+      ) : (
+        <></>
+      )}
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        width: width,
-        height: height,
-        ...StyleSheet.absoluteFillObject,
-        // flex:1,
-        // position: 'absolute',
-        left: -20,
-        backgroundColor: '#000',
-    },
-    header: {
-        flex: 1,
-        borderBottomColor: '#5A5A5A',
-        borderBottomWidth: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    headerText: {
-        fontSize: 19 * heightScale,
-        color: '#fff',
-        fontWeight: '500',
-    },
-    closeIcon: {
-        position: 'absolute',
-        right: 10,
-    },
-    tiket: {
-        marginTop: 50 * heightScale,
-        width: 264 * heightScale,
-        height: 419 * heightScale,
-    },
-    plusText: {
-        color: 'white',
-        marginTop: 10,
-        fontSize: 14 * heightScale,
-    },
-    plusTextBox: {
-        alignItems: 'center',
-        flexDirection: 'column',
-    },
-    qrbox: {
-        backgroundColor: '#fff',
-        width: 327 * heightScale,
-        height: 120 * heightScale,
-    },
-    giftButton: {
-        width: 350 * heightScale,
-        height: 55 * heightScale,
-        backgroundColor: '#F5FF82',
-        flexDirection: 'column',
-        alignItems: 'center',
-    },
-    giftButtonText: {
-        color: '#000',
-        fontWeight: '500',
-        lineHeight: 55 * heightScale,
-        fontSize: 17 * heightScale,
-    },
-    buttonBox: {
-        flex: 1,
-        alignItems: 'center',
-    },
-    textCenter: {
-        width: 86 * heightScale,
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    iconStyle: {
-        marginRight: 5 * heightScale,
-    },
-    buttonContaner: {
-        marginTop: 60 * heightScale,
-        alignItems: 'center',
-        // backgroundColor: 'white',
-        flexDirection: 'row'
-    },
-    plusIcon: {
-        height: heightScale * 20,
-        width: heightScale * 20,
-        marginTop: heightScale * 10,
-        marginLeft: heightScale * 5,
-    },
-    tiketBox: {
-        width: 327 * heightScale,
-        height: 518 * heightScale,
-        borderColor: '#fff',
-        borderWidth: 1,
-        overflow: 'hidden',
-        marginTop: 50 * heightScale,
-        borderRadius: 14,
-    },
-    tiketImg: {
-        width: 327 * heightScale,
-        height: 404 * heightScale,
-    },
-
-
+  container: {
+    flex:1,
+    backgroundColor: '#000',
+  },
+  header: {
+    flex: 1,
+    borderBottomColor: '#5A5A5A',
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerText: {
+    fontSize: 19 * heightScale,
+    color: '#fff',
+    fontWeight: '500',
+  },
+  closeIcon: {
+    position: 'absolute',
+    right: 10,
+  },
+  tiket: {
+    marginTop: 50 * heightScale,
+    width: 264 * heightScale,
+    height: 419 * heightScale,
+  },
+  plusText: {
+    color: 'white',
+    marginTop: 10,
+    fontSize: 14 * heightScale,
+  },
+  plusTextBox: {
+    alignItems: 'center',
+    flexDirection: 'column',
+  },
+  qrbox: {
+    backgroundColor: '#fff',
+    alignItems: 'flex-end',
+    width: 327 * heightScale,
+    height: 120 * heightScale,
+  },
+  qrStyle: {marginTop: heightScale * 20, marginRight: heightScale * 24},
+  giftButton: {
+    width: 350 * heightScale,
+    height: 55 * heightScale,
+    backgroundColor: '#F5FF82',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  giftButtonText: {
+    color: '#000',
+    fontWeight: '500',
+    lineHeight: 55 * heightScale,
+    fontSize: 17 * heightScale,
+  },
+  buttonBox: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  textCenter: {
+    width: 86 * heightScale,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  iconStyle: {
+    marginRight: 5 * heightScale,
+  },
+  buttonContaner: {
+    marginTop: 60 * heightScale,
+    alignItems: 'center',
+    // backgroundColor: 'white',
+    flexDirection: 'row',
+  },
+  plusIcon: {
+    height: heightScale * 20,
+    width: heightScale * 20,
+    marginTop: heightScale * 10,
+    marginLeft: heightScale * 5,
+  },
+  tiketBox: {
+    width: 327 * heightScale,
+    height: 518 * heightScale,
+    borderColor: '#fff',
+    borderWidth: 1,
+    overflow: 'hidden',
+    marginTop: 50 * heightScale,
+    borderRadius: 14,
+  },
+  tiketImg: {
+    width: 327 * heightScale,
+    height: 404 * heightScale,
+  },
+  qrViewContainer: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(12, 12, 12, 0.8)',
+    alignItems: 'center',
+  },
+  qrView: {
+    alignItems: 'center',
+    top: heightScale * 150,
+  },
 });
 
-
-export default MyTickets
+export default MyTickets;

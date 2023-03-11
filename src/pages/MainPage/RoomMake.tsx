@@ -43,10 +43,6 @@ function RoomMake() {
 
     return (
         <SafeAreaView style={styles.container}>
-            <KeyboardAwareScrollView
-            keyboardShouldPersistTaps={'handled'}
-            showsVerticalScrollIndicator={false}
-            >
                 <View>
                     <View style={styles.headerStyle}>
                         <Text style={styles.fontStyle}>방만들기</Text>
@@ -63,6 +59,10 @@ function RoomMake() {
                         onPress={() => navigation.goBack()}
                     />
                 </View>
+            <KeyboardAwareScrollView
+            keyboardShouldPersistTaps={'handled'}
+            showsVerticalScrollIndicator={false}
+            >
                 {selectDrop && (
                     <View style={styles.selectBox} >
                         <TouchableOpacity onPress={() => setSelectDrop(false)} activeOpacity={1} style={{ flex: 1, zIndex: 2 }}>
@@ -300,7 +300,7 @@ const styles = StyleSheet.create({
     },
     buttonStyle: {
         backgroundColor: '#F5FF82',
-        width: 390 * heightScale,
+        width: 370 * heightScale,
         height: 64 * heightScale,
         borderColor: '#F5FF82',
         borderWidth: 1,

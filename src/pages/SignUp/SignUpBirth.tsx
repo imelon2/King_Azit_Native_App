@@ -51,6 +51,7 @@ function SignUpBirth({ navigation }: SignInScreenProps) {
                         <TextInput
                             style={SignUpstyles.textInput}
                             // ref={birthDateRef}
+                            keyboardType={'number-pad'}
                             placeholder="생년월일(YYMMDD)"
                             onChangeText={onChangeBirthDate}
                             returnKeyType="next" // next key로 변환
