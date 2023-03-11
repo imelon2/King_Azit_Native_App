@@ -46,8 +46,7 @@ function Login({navigation}:LoginScreenProps) {
   const emailRef = useRef<TextInput | null>(null);
   const passwordRef = useRef<TextInput | null>(null);
 
-  useEffect(() => {
-  },[])
+
   const onChangeEmail = useCallback((text: any) => {
     setEmail(text.trim());
   }, []);

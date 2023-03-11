@@ -117,13 +117,13 @@ function GameHostory() {
             style={styles.beforeIcon}
             onPress={() => navigation.goBack()}
           />
-        </View>
         <TouchableOpacity style={styles.FadersBox} activeOpacity={1} onPress={() => setModalStatus(true)}>
           <Image
             source={require('../../assets/FadersHorizontal.png')}
             style={styles.Faders}
           />
         </TouchableOpacity>
+        </View>
 
         <View style={styles.monthSelectBox} >
           <View style={styles.monthSelect} >

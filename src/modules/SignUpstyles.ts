@@ -101,7 +101,7 @@ export const SignUpstyles = StyleSheet.create({
     flexDirection: 'row',
   },
   textInputWrapper: {
-    // marginTop: heightScale * 20,
+    marginTop: heightScale * 20,
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomWidth: StyleSheet.hairlineWidth,
