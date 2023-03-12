@@ -1,21 +1,15 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState, useEffect } from 'react';
 import { Text, View, Image, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, Dimensions } from 'react-native';
-import { heightData } from '../../modules/globalStyles';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { HomeRootStackParamList } from '../../../AppInner';
+import { HomeRootStackParamList,MyPageRootStackParamList } from '../../../AppInner';
 import { Shadow } from 'react-native-shadow-2';
 import Modal from "react-native-modal";
-import Icon from 'react-native-vector-icons/AntDesign';
-import Config from 'react-native-config';
 import ImageSlider from 'react-native-image-slider';
-import MyTickets from './MainPageModal/MyTickets';
 import MemberModal from './MainPageModal/MemberModal';
 import GuestJoin from './MainPageModal/GuestJoin';
 import LinearGradient from 'react-native-linear-gradient';
 import { MainStyles } from '../../modules/MainStyles';
-import EncryptedStorage from 'react-native-encrypted-storage';
-import axios from 'axios';
 import getProfileImage from '../../hooks/getProfileImage';
 import getTickets from '../../hooks/getTickets';
 import { useSelector } from 'react-redux';
@@ -24,12 +18,12 @@ import { RootState } from '../../store/reducer';
 
 
 function MainPage() {
-  const navigation = useNavigation<NavigationProp<HomeRootStackParamList>>();
+  const navigation = useNavigation<NavigationProp<HomeRootStackParamList&MyPageRootStackParamList>>();
   const [gameBox, setGameBox] = useState([1, 2, 3, 4]);
   const [modalStatus, setModalStatus] = useState(false);
-  const [tiketModalStatus, setTiketModalStatus] = useState(false);
+  // const [tiketModalStatus, setTiketModalStatus] = useState(false);
   const [playMemberStatus, setPlayMemberStatus] = useState(false);
-  const [myCard, setMyCard] = useState('');
+  // const [myCard, setMyCard] = useState('');
   const { black, red, gold } = useSelector((state: RootState) => state.ticket);
 
   const onClickMember = () => {
@@ -43,8 +37,15 @@ function MainPage() {
   getTickets()
 
   const onOpenMyTikets = (text: any) => {
-    setTiketModalStatus(true);
-    setMyCard(text);
+    let _count:number=0;
+    if(text === "Black") {
+      _count = black
+    } else if(text === "Red") {
+      _count = red
+    } else if(text === "Gold") {
+      _count = gold
+    }
+    navigation.navigate('MyTickets',{card:text,count:_count})
   }
 
   getProfileImage()
@@ -69,7 +70,7 @@ function MainPage() {
 
       <View style={{ flex: 1 }}>
         <View style={MainStyles.mainTextBox2}>
-          <Text style={MainStyles.mainText}>My Tikets</Text>
+          <Text style={MainStyles.mainText} onPress={() => navigation.navigate('TicketPay',{id:10})}>My Tikets</Text>
         </View>
         <View style={{ flexDirection: 'row' }} >
           <View style={MainStyles.TicketBox} >
@@ -117,10 +118,6 @@ function MainPage() {
 
         </View> */}
       </View>
-
-      <Modal isVisible={tiketModalStatus} >
-        <MyTickets setTiketModalStatus={setTiketModalStatus} card={myCard} black={black} red={red} gold={gold} />
-      </Modal>
 
       <Modal isVisible={playMemberStatus} >
         <MemberModal setPlayMemberStatus={setPlayMemberStatus} />
