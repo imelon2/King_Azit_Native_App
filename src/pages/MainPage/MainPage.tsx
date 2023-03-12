@@ -52,31 +52,39 @@ function MainPage() {
   return (
     <SafeAreaView style={MainStyles.container} >
       <View style={{ flex: 1 }} >
-        {/* <View style={MainStyles.mainTextBox}>
-          <Text style={MainStyles.mainText}>Kings Azit</Text>
-        </View> */}
-
-        <View style={MainStyles.imgSlideBox2} >
-          <View style={MainStyles.imgSlideBox}  >
-            <ImageSlider
-              images={[
-                "https://source.unsplash.com/1024x768/?nature",
-                "https://source.unsplash.com/1024x768/?water",
-                "https://source.unsplash.com/1024x768/?girl",
-                "https://source.unsplash.com/1024x768/?tree",
-              ]}
-            />
-          </View>
+        {/* <View style={MainStyles.imgSlideBox2} > */}
+        <Image style={MainStyles.azitText} source={require('../../assets/KingsAzit.png')} />
+        <View style={MainStyles.imgSlideBox}  >
+          <ImageSlider
+            images={[
+              "https://source.unsplash.com/1024x768/?nature",
+              "https://source.unsplash.com/1024x768/?water",
+              "https://source.unsplash.com/1024x768/?girl",
+              "https://source.unsplash.com/1024x768/?tree",
+            ]}
+          />
         </View>
-
-
+        {/* </View> */}
       </View>
 
       <View style={{ flex: 1 }}>
         <View style={MainStyles.mainTextBox2}>
           <Text style={MainStyles.mainText}>My Tikets</Text>
         </View>
-        <View style={MainStyles.tiketContainer} >
+        <View style={{ flexDirection: 'row' }} >
+          <View style={MainStyles.TicketBox} >
+            <Image style={MainStyles.TicketBox} source={require('../../assets/black_TicketBox.png')} />
+          </View>
+          <View style={MainStyles.TicketBox} >
+            <Image style={MainStyles.TicketBox} source={require('../../assets/red_TicketBox.png')} />
+          </View>
+          <View style={MainStyles.TicketBox} >
+            <Image style={MainStyles.TicketBox} source={require('../../assets/gold_TicketBox.png')} />
+          </View>
+        </View>
+
+
+        {/* <View style={MainStyles.tiketContainer} >
 
           <LinearGradient style={MainStyles.groupPosition} locations={[0, 0.38, 0.45, 1]} colors={["#404040", "rgba(10, 10, 10, 0.16)", "rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 0.74)",]} >
             <TouchableOpacity activeOpacity={1} onPress={() => onOpenMyTikets('Black')}  >
@@ -107,7 +115,7 @@ function MainPage() {
             </TouchableOpacity>
           </LinearGradient>
 
-        </View>
+        </View> */}
       </View>
 
       <Modal isVisible={tiketModalStatus} >
@@ -118,13 +126,13 @@ function MainPage() {
         <MemberModal setPlayMemberStatus={setPlayMemberStatus} />
       </Modal>
 
-      <View style={{ flex: 1.6 }}>
+      <View style={{ flex: 1.8 }}>
         <View style={MainStyles.mainTextBox2}>
           <TouchableOpacity activeOpacity={1} >
             <Text style={MainStyles.mainText}>Game</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity activeOpacity={1} style={MainStyles.roomMakeBox}  onPress={() => navigation.navigate('RoomMake')}  >
+        <TouchableOpacity activeOpacity={1} style={MainStyles.roomMakeBox} onPress={() => navigation.navigate('RoomMake')}  >
           <Text style={MainStyles.roomMakeText} >+ 방 만들기</Text>
         </TouchableOpacity>
 
@@ -133,7 +141,7 @@ function MainPage() {
         </Modal>
 
         <View style={MainStyles.gameBox} >
-          <ScrollView
+          {/* <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false} >
             {gameBox.map((v, key) => (
@@ -172,7 +180,7 @@ function MainPage() {
                 </View>
               </View>
             ))}
-          </ScrollView>
+          </ScrollView> */}
         </View>
 
       </View>

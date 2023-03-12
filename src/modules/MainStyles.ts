@@ -5,9 +5,12 @@ const heightScale = heightData;
 
 export const MainStyles = StyleSheet.create({
     azitText: {
-        flex: 1,
-        aspectRatio: 1.5,
-        resizeMode: 'contain',
+        resizeMode: 'stretch',
+        position:'absolute',
+        top: -26 * heightScale,
+        left: -10 * heightScale,
+        width: 202 *heightScale,
+        height: 98 *heightScale,
       },
       container: {
         backgroundColor: '#121212',
@@ -26,7 +29,8 @@ export const MainStyles = StyleSheet.create({
       mainText: {
         fontWeight: 'bold',
         fontSize: heightScale * 15,
-        marginRight: 20,
+        // marginRight: 20 * heightScale,
+        marginTop: 27 * heightScale,
         color: 'white',
       },
       textBorder: {
@@ -36,16 +40,13 @@ export const MainStyles = StyleSheet.create({
         borderColor: '#C4C4C4',
       },
       imgSlideBox: {
+        marginTop: 46 * heightScale,
         width: '100%',
-        height: heightScale * 160,
-        borderWidth:1,
-        // borderColor: '#353535',
-        // marginTop: heightScale * 30,
+        height: heightScale * 155,
+        // borderWidth:1,
       },
       imgSlideBox2: {
         flex: 4,
-        // backgroundColor: 'red'
-        // paddingHorizontal: heightScale * 18,
       },
       tiketContainer: {
         flex: 10,
@@ -227,5 +228,9 @@ export const MainStyles = StyleSheet.create({
         backgroundColor: ' rgba(48, 48, 48, 0.4)',
         borderWidth:1,
         borderColor:'#E0E0E0'
+      },
+      TicketBox:{
+        width: 262 * heightScale,
+        height: 142 * heightScale,
       },
 });
