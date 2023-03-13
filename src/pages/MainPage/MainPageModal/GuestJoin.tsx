@@ -24,6 +24,7 @@ function GuestJoin(props: propsType) {
       if (!check) {
         return;
       }
+      props.setModalStatus(false)
       navigation.navigate('GamePage');
     }
 

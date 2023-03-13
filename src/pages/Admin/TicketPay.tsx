@@ -9,7 +9,11 @@ import {
   Text,
   TextInput,
   View,
-  Keyboard
+  Keyboard,
+  Dimensions,
+  Platform,
+  ImageSourcePropType,
+  ImageProps,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {
@@ -17,12 +21,10 @@ import {
   MyPageRootStackParamList,
 } from '../../../AppInner';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
-import Modal from "react-native-modal";
 import {heightData} from '../../modules/globalStyles';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
-import TicketsPayModal from './Components/TicketsPayModal';
+import {useHeaderHeight} from '@react-navigation/elements';
 const heightScale = heightData;
-
 type AdminScreenProps = NativeStackScreenProps<
   HomeRootStackParamList,
   'TicketPay'
@@ -31,20 +33,34 @@ type AdminScreenProps = NativeStackScreenProps<
 function TicketPay({route}: AdminScreenProps) {
   const [isOver, setIsOver] = useState(false);
   const [count, setCount] = useState('');
+  const [ticketName, setTicketName] = useState('');
+  const [ticketImgUrl, setTicketImgUrl] = useState<any>();
   const [popUpState, setPopUpState] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
+  const headerHeight = useHeaderHeight();
+  const {memberId,type,max} = route.params;
   const state = !!count && !isOver;
 
-  const {id} = route.params;
-  const card = 'Black';
-  const maxTicket = 10;
+
   const navigation =
     useNavigation<
       NavigationProp<MyPageRootStackParamList & HomeRootStackParamList>
     >();
 
+  useEffect(() => {
+    if (type == 'Black') {
+      setTicketName('블랙티켓')
+      setTicketImgUrl(require(`../../assets/BlackCard.png`))
+    } else if (type == 'Red') {
+      setTicketName('레드티켓')
+      setTicketImgUrl(require(`../../assets/RedCard.png`))
+    } else if (type == 'Gold') {
+      setTicketName('골드티켓')
+      setTicketImgUrl(require(`../../assets/KingsDaoCard.png`))
+    }
+  },[])
+
   const onChange = useCallback((text: any) => {
-    if (text > maxTicket) {
+    if (text > max) {
       setIsOver(true);
     } else {
       setIsOver(false);
@@ -56,6 +72,7 @@ function TicketPay({route}: AdminScreenProps) {
   const useTickets = useCallback(() => {
     try {
       Alert.alert('todo:', '티켓 차감 연동');
+      navigation.navigate('TicketsResult',{name:'한타피쉬',tickets:[{type:'black',counts:1}]})
     } catch (error) {}
   }, [state]);
 
@@ -63,34 +80,12 @@ function TicketPay({route}: AdminScreenProps) {
     if (!state) {
       return;
     }
-      Keyboard.dismiss();
-      setPopUpState(true)
+    Keyboard.dismiss();
+    setPopUpState(true);
   }, [state]);
 
-  const ticketType = () => {
-    if (card == 'Black') {
-      return (
-        <Image
-          style={styles.ticketBox}
-          source={require(`../../assets/BlackCard.png`)}
-        />
-      );
-    } else if (card == 'Red') {
-      return (
-        <Image
-          style={styles.ticketBox}
-          source={require(`../../assets/RedTiket.png`)}
-        />
-      );
-    } else if (card == 'Gold') {
-      return (
-        <Image
-          style={styles.ticketBox}
-          source={require(`../../assets/GoldTiket.png`)}
-        />
-      );
-    }
-  };
+
+
   return (
     <SafeAreaView style={styles.container}>
       {/* header */}
@@ -110,57 +105,73 @@ function TicketPay({route}: AdminScreenProps) {
           onPress={() => navigation.goBack()}
         />
       </View>
-      <View style={{marginHorizontal: heightScale * 51}}>
+      <KeyboardAvoidingView
+        style={{marginHorizontal: heightScale * 51, flex: 1}}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={headerHeight}>
         {/* info content */}
         <View style={{flexDirection: 'row', marginTop: heightScale * 50}}>
-          {ticketType()}
+          <Image
+            style={styles.ticketBox}
+            source={ticketImgUrl}
+          />
           <View
             style={{marginTop: heightScale * 35, marginLeft: heightScale * 32}}>
-            <Text style={styles.fontStyle2}>한나피쉬님의</Text>
-            <Text style={styles.fontStyle2}>블랙티켓을 차감합니다.</Text>
+            <Text style={styles.fontStyle2}>{memberId}님의</Text>
+            <Text style={styles.fontStyle2}>{ticketName}을 차감합니다.</Text>
           </View>
         </View>
         {/* textinput */}
-        <View style={{flexDirection: 'row', marginTop: heightScale * 50}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginTop: heightScale * 50,
+            paddingHorizontal: heightScale * 15,
+          }}>
           <Text style={styles.fontStyle3}>차감 갯수 :</Text>
-          <KeyboardAvoidingView style={styles.textInputWrapper}>
-            <TextInput
-              textAlign="right"
-              keyboardType="decimal-pad"
-              style={styles.textInputStyle}
-              value={count}
-              onChangeText={onChange}
-              onFocus={() =>setCount('')}
-            />
-            <Text style={[styles.fontStyle3]}>장</Text>
-          </KeyboardAvoidingView>
+          <View style={{flex: 1, alignItems: 'flex-end'}}>
+            <View style={styles.textInputWrapper}>
+              <TextInput
+                textAlign="right"
+                keyboardType="numeric"
+                style={styles.textInputStyle}
+                value={count}
+                onChangeText={onChange}
+                onFocus={() => setCount('')}
+                returnKeyType={'done'}
+              />
+              <Text style={[styles.fontStyle3]}>장</Text>
+            </View>
+            <View style={{alignItems: 'flex-end'}}>
+              <Text
+                style={
+                  isOver
+                    ? [styles.fontStyle4, {color: 'red'}]
+                    : styles.fontStyle4
+                }>
+                현재 보유중인 티켓 : {max}
+              </Text>
+            </View>
+          </View>
         </View>
-        <View style={{alignItems: 'flex-end'}}>
-          <Text
+        {/* Button */}
+        <View style={styles.buttonWrapper}>
+          <Pressable
             style={
-              isOver ? [styles.fontStyle4, {color: 'red'}] : styles.fontStyle4
-            }>
-            현재 보유중인 티켓 : {maxTicket}
-          </Text>
+              state
+                ? [styles.buttonStyle, {backgroundColor: '#F5FF82'}]
+                : styles.buttonStyle
+            }
+            onPress={onPopUp}>
+            <Text
+              style={
+                state ? [styles.buttonText, {color: '#000'}] : styles.buttonText
+              }>
+              차감하기
+            </Text>
+          </Pressable>
         </View>
-      </View>
-    {/* Button */}
-      <View style={styles.buttonWrapper}>
-        <Pressable
-          style={
-            state
-              ? [styles.buttonStyle, {backgroundColor: '#F5FF82'}]
-              : styles.buttonStyle
-          }
-          onPress={onPopUp}>
-          <Text
-            style={
-              state ? [styles.buttonText, {color: '#000'}] : styles.buttonText
-            }>
-            차감하기
-          </Text>
-        </Pressable>
-      </View>
+      </KeyboardAvoidingView>
       {/* popup page */}
       {popUpState ? (
         <View style={styles.popUpContainer}>
@@ -176,29 +187,33 @@ function TicketPay({route}: AdminScreenProps) {
               style={{flexDirection: 'row', flex: 1, alignItems: 'flex-end'}}>
               <Pressable
                 onPress={() => setPopUpState(false)}
-                style={[styles.popUpButtonStyle,{
-                  backgroundColor: '#8A8A8A',
-                  marginRight: heightScale * 30,
-                }]}>
-                <Text style={{color:'#fff',fontSize:heightScale*20}}>아니오</Text>
+                style={[
+                  styles.popUpButtonStyle,
+                  {
+                    backgroundColor: '#8A8A8A',
+                    marginRight: heightScale * 30,
+                  },
+                ]}>
+                <Text style={{color: '#fff', fontSize: heightScale * 20}}>
+                  아니오
+                </Text>
               </Pressable>
               <Pressable
-                style={[styles.popUpButtonStyle,{
-                  backgroundColor: '#F5FF82',
-                }]} 
+                style={[
+                  styles.popUpButtonStyle,
+                  {
+                    backgroundColor: '#F5FF82',
+                  },
+                ]}
                 onPress={useTickets}>
-                <Text style={{color:'#000',fontSize:heightScale*20}}>네</Text>
+                <Text style={{color: '#000', fontSize: heightScale * 20}}>
+                  네
+                </Text>
               </Pressable>
             </View>
           </View>
         </View>
-      ) : (
-        <></>
-      )}
-      {/* Success Pay Modal */}
-      <Modal isVisible={true}>
-        <TicketsPayModal/>
-      </Modal>
+      ) : (<></>)}
     </SafeAreaView>
   );
 }
@@ -222,7 +237,6 @@ const styles = StyleSheet.create({
   fontStyle4: {
     bottom: heightScale * 3,
     fontSize: heightScale * 12,
-    paddingRight: heightScale * 30,
     fontWeight: '400',
     color: '#7B7B7B',
   },
@@ -248,7 +262,6 @@ const styles = StyleSheet.create({
     borderBottomColor: 'white',
     borderBottomWidth: 1,
     justifyContent: 'flex-end',
-    marginLeft: heightScale * 64,
     alignItems: 'center',
   },
   textInputStyle: {
@@ -260,9 +273,9 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   buttonWrapper: {
-    alignItems: 'center',
     flex: 1,
     justifyContent: 'flex-end',
+    alignItems: 'center',
     marginBottom: heightScale * 12,
   },
   buttonStyle: {
@@ -292,12 +305,12 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: 'center',
   },
-  popUpButtonStyle : {
+  popUpButtonStyle: {
     width: heightScale * 145,
     height: heightScale * 60,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 6,
-  }
+  },
 });
 export default TicketPay;

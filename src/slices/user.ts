@@ -16,7 +16,7 @@ const initialState = {
     birth:'',
     gender:'',
     password:'',
-    roles:'',
+    roles:[],
     profileImage:'',
     access_token:''
 }

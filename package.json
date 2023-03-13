@@ -31,7 +31,6 @@
     "react-native-encrypted-storage": "^4.0.3",
     "react-native-image-crop-picker": "^0.39.0",
     "react-native-image-resizer": "^1.4.5",
-    "react-native-image-slider": "^2.0.3",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-linear-gradient": "^2.6.2",
     "react-native-modal": "^13.0.1",
@@ -42,10 +41,12 @@
     "react-native-screens": "^3.19.0",
     "react-native-shadow-2": "^7.0.6",
     "react-native-svg": "^13.8.0",
+    "react-native-swiper": "^1.6.0",
     "react-native-vector-icons": "^9.2.0",
     "react-native-video": "^5.2.1",
     "react-native-wheel-pick": "^1.2.0",
-    "react-redux": "^8.0.5"
+    "react-redux": "^8.0.5",
+    "socket.io-client": "^4.6.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

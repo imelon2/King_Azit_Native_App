@@ -1,6 +1,6 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Alert, Linking} from 'react-native';
+import {Alert} from 'react-native';
 import {useSelector} from 'react-redux';
 import {useEffect} from 'react';
 import EncryptedStorage from 'react-native-encrypted-storage';
@@ -30,7 +30,9 @@ import TicketsHistorys from './src/pages/MyPage/TicketsHistorys';
 import RoomMake from './src/pages/MainPage/RoomMake';
 import TicketPay from './src/pages/Admin/TicketPay';
 import MyTickets from './src/pages/MainPage/MainPageModal/MyTickets';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
+import TicketsResult from './src/pages/Admin/TicketsResult';
+import { deepLinkController } from './src/modules/Linking';
+import Forbidden from './src/pages/Admin/Forbidden';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -57,7 +59,19 @@ export type HomeRootStackParamList = {
     count: number;
   };
   TicketPay: {
-    id: number;
+    memberId: string;
+    type:string;
+    max:number;
+  };
+  TicketsResult: {
+    name:string;
+    tickets: [{
+      type:string;
+      counts:number;
+    }]
+  },
+  Forbidden:{
+    message:string;
   };
 };
 
@@ -104,10 +118,6 @@ function TabNavigator() {
 }
 
 function AppInner() {
-  const navigation =
-    useNavigation<
-      NavigationProp<MyPageRootStackParamList & HomeRootStackParamList>
-    >();
   const dispatch = useAppDispatch();
   const isLoggedIn = useSelector(
     (state: RootState) => !!state.user.access_token,
@@ -177,23 +187,8 @@ function AppInner() {
   // axios interceptors 중앙 경로
   interceptors();
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      // 최초 실행 시에 Universal link 또는 URL scheme요청이 있었을 때 여기서 찾을 수 있음
-      Linking.getInitialURL().then((value: any) => {
-          // value
-        });
-
-      Linking.addEventListener('url', e => {
-        // 앱이 실행되어있는 상태에서 요청이 왔을 때 처리하는 이벤트 등록
-        // Alert.alert(e.url);
-        navigation.navigate('TicketPay',{id:1})
-      });
-    }
-       return () => {
-        Linking.removeAllListeners('url');
-    };
-  }, [isLoggedIn]);
+  // DeepLink Controller
+  deepLinkController(isLoggedIn)
 
   return (
     <>
@@ -243,6 +238,11 @@ function AppInner() {
             options={{animation: 'none'}}
           />
           <HomeStack.Screen
+            name="TicketsResult"
+            component={TicketsResult}
+            options={{animation: 'none'}}
+          />
+          <HomeStack.Screen
             name="GamePage"
             component={GamePage}
             options={{animation: 'none'}}
@@ -250,6 +250,11 @@ function AppInner() {
           <HomeStack.Screen
             name="RoomMake"
             component={RoomMake}
+            options={{animation: 'none'}}
+          />
+          <HomeStack.Screen
+            name="Forbidden"
+            component={Forbidden}
             options={{animation: 'none'}}
           />
         </HomeStack.Navigator>

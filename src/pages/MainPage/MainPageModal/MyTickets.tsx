@@ -13,12 +13,17 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import {Shadow} from 'react-native-shadow-2';
 import QrCode from '../../../components/QrCode';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import IconEvilIcons from 'react-native-vector-icons/EvilIcons';
-import { HomeRootStackParamList,MyPageRootStackParamList } from '../../../../AppInner';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../store/reducer';
+import {
+  HomeRootStackParamList,
+  MyPageRootStackParamList,
+} from '../../../../AppInner';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {useSelector} from 'react-redux';
+import Config from 'react-native-config';
+import {RootState} from '../../../store/reducer';
+import axios from 'axios';
 const heightScale = heightData;
 
 // interface propsType {
@@ -29,28 +34,56 @@ const heightScale = heightData;
 //   gold: number;
 // }
 
-type MyTicketsScreenProps = NativeStackScreenProps<HomeRootStackParamList,'MyTickets'>
+type MyTicketsScreenProps = NativeStackScreenProps<
+  HomeRootStackParamList,
+  'MyTickets'
+>;
 
-function MyTickets({route,navigation}:MyTicketsScreenProps) {
-  const {card,count} = route.params
+function MyTickets({route, navigation}: MyTicketsScreenProps) {
+  const {card, count} = route.params;
   const memberId = useSelector((state: RootState) => state.user.name);
   const [qrViewState, setQrViewState] = useState(false);
+  // const [deepLinkUrl, setDeepLinkUrl] = useState('d');
+  const access_token = useSelector(
+    (state: RootState) => state.user.access_token,
+  );
+  let deepLinkUrl;
+  useEffect(() => {
+    getqrtoken();
+  }, []);
+
+  const getqrtoken = async () => {
+    try {
+      const qrtoken = await axios.get(`${Config.API_URL}/member/getqrtoken`, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      });
+      // console.log(qrtoken.data.qrToken);
+      
+    deepLinkUrl = (`kingazit://admin/${memberId}/${card}/${count}/${qrtoken.data.qrToken}`)
+    } catch (error) {
+      // todo :
+      console.log(error);
+    }
+  }
+
   const ticketType = () => {
-    if (card == 'Black') {
+    if (card == 'black') {
       return (
         <Image
           style={styles.tiketImg}
           source={require(`../../../assets/BlackTiket.png`)}
         />
       );
-    } else if (card == 'Red') {
+    } else if (card == 'red') {
       return (
         <Image
           style={styles.tiketImg}
           source={require(`../../../assets/RedTiket.png`)}
         />
       );
-    } else if (card == 'Gold') {
+    } else if (card == 'gold') {
       return (
         <Image
           style={styles.tiketImg}
@@ -113,13 +146,15 @@ function MyTickets({route,navigation}:MyTicketsScreenProps) {
             {ticketType()}
             <View style={styles.qrbox}>
               <View style={styles.qrStyle}>
-                <QrCode value={'kingazit://admin/10'} size={heightScale * 66} />
+                <QrCode value={deepLinkUrl} size={heightScale * 66} />
               </View>
             </View>
           </View>
         </View>
 
-        <Pressable style={styles.plusTextBox} onPress={() => setQrViewState(true)}>
+        <Pressable
+          style={styles.plusTextBox}
+          onPress={() => setQrViewState(true)}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text style={styles.plusText}>QR 크게보기</Text>
             <Image
@@ -144,19 +179,11 @@ function MyTickets({route,navigation}:MyTicketsScreenProps) {
       </View>
       {/* QR확대 팝업창 */}
       {qrViewState ? (
-        <View style={styles.qrViewContainer}>
-                      <IconEvilIcons
-            style={{position: 'absolute', right: 0, padding: heightScale * 24}}
-            name="close"
-            color={'white'}
-            size={heightScale * 50}
-            suppressHighlighting={true}
-            onPress={() => setQrViewState(false)}
-          />
-          <View style={styles.qrView}>
-            <QrCode value={'kingazit://admin/5'} size={heightScale * 320} />
+        <Pressable style={styles.qrViewContainer} onPress={() => setQrViewState(false)}>
+          <View>
+            <QrCode value={deepLinkUrl} size={heightScale * 320} />
           </View>
-        </View>
+          </Pressable>
       ) : (
         <></>
       )}
@@ -166,7 +193,7 @@ function MyTickets({route,navigation}:MyTicketsScreenProps) {
 
 const styles = StyleSheet.create({
   container: {
-    flex:1,
+    flex: 1,
     backgroundColor: '#000',
   },
   header: {
@@ -260,11 +287,8 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(12, 12, 12, 0.8)',
     alignItems: 'center',
-  },
-  qrView: {
-    alignItems: 'center',
-    top: heightScale * 150,
-  },
+    justifyContent:'center',
+  }
 });
 
 export default MyTickets;
