@@ -16,7 +16,6 @@ import Modal from 'react-native-modal';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import IconAntDesign2 from 'react-native-vector-icons/Feather';
 import { widthData, heightData } from '../../modules/globalStyles';
-import { Icon } from 'react-native-vector-icons/Icon';
 const heightScale = heightData;
 const { width, height } = Dimensions.get('window');
 
@@ -48,7 +47,7 @@ function GamePage() {
           <View
             style={{ flex: 1, flexDirection: 'row' }}>
             <View style={{ alignItems: 'flex-end', flex: 1 }}>
-              <View style={{ position: 'absolute', top: 25 * heightScale }} >
+              <View style={{ position: 'absolute',alignItems:'center', top: 25 * heightScale }} >
                 <View style={styles.joinIcon}
                   onTouchEnd={() => Alert.alert('Todo :', '자리 정하기 기능')}>
                   <Text style={{ color: '#000', fontSize: 22, fontWeight: '600' }} >+</Text>
@@ -70,7 +69,7 @@ function GamePage() {
               </View>
             </View>
             <View style={{ alignItems: 'flex-start', flex: 1 }}>
-              <View style={{ position: 'absolute', top: 25 * heightScale }} >
+              <View style={{ position: 'absolute', top: 25 * heightScale,alignItems:'center' }} >
                 <View style={styles.joinIcon}
                   onTouchEnd={() => Alert.alert('Todo :', '자리 정하기 기능')}>
                   <Text style={{ color: '#000', fontSize: 22, fontWeight: '600' }} >+</Text>
@@ -96,7 +95,6 @@ function GamePage() {
             </View>
             <View
               style={{
-                flex: 1,
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
@@ -298,9 +296,11 @@ const styles = StyleSheet.create({
     width: heightData * 280,
     height: heightData * 40,
     backgroundColor: '#D9D9D9',
-    lineHeight: heightData * 40,
+    // lineHeight: heightData * 40,
     paddingLeft: 8,
     borderRadius: 3,
+    paddingBottom:0,
+    paddingTop:0
   },
   textsub: {
     color: '#000',

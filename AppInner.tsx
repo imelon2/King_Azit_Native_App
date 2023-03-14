@@ -1,8 +1,16 @@
+<<<<<<< HEAD
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Alert, Linking } from 'react-native';
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
+=======
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {Alert} from 'react-native';
+import {useSelector} from 'react-redux';
+import {useEffect} from 'react';
+>>>>>>> 1b363a80bc660d58d3a014aa4245a0ec75c196ea
 import EncryptedStorage from 'react-native-encrypted-storage';
 import Config from 'react-native-config';
 import axios, { AxiosError } from 'axios';
@@ -31,7 +39,13 @@ import RoomMake from './src/pages/MainPage/RoomMake';
 import TicketPay from './src/pages/Admin/TicketPay';
 import TicketCharge from './src/pages/Admin/TicketCharge';
 import MyTickets from './src/pages/MainPage/MainPageModal/MyTickets';
+<<<<<<< HEAD
 import { NavigationProp, useNavigation } from '@react-navigation/native';
+=======
+import TicketsResult from './src/pages/Admin/TicketsResult';
+import { deepLinkController } from './src/modules/Linking';
+import Forbidden from './src/pages/Admin/Forbidden';
+>>>>>>> 1b363a80bc660d58d3a014aa4245a0ec75c196ea
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -58,7 +72,19 @@ export type HomeRootStackParamList = {
     count: number;
   };
   TicketPay: {
-    id: number;
+    memberId: string;
+    type:string;
+    max:number;
+  };
+  TicketsResult: {
+    name:string;
+    tickets: [{
+      type:string;
+      counts:number;
+    }]
+  },
+  Forbidden:{
+    message:string;
   };
   TicketCharge:undefined;
 };
@@ -106,10 +132,6 @@ function TabNavigator() {
 }
 
 function AppInner() {
-  const navigation =
-    useNavigation<
-      NavigationProp<MyPageRootStackParamList & HomeRootStackParamList>
-    >();
   const dispatch = useAppDispatch();
   const isLoggedIn = useSelector(
     (state: RootState) => !!state.user.access_token,
@@ -179,6 +201,7 @@ function AppInner() {
   // axios interceptors 중앙 경로
   interceptors();
 
+<<<<<<< HEAD
   useEffect(() => {
     if (isLoggedIn) {
       // 최초 실행 시에 Universal link 또는 URL scheme요청이 있었을 때 여기서 찾을 수 있음
@@ -196,6 +219,10 @@ function AppInner() {
       Linking.removeAllListeners('url');
     };
   }, [isLoggedIn]);
+=======
+  // DeepLink Controller
+  deepLinkController(isLoggedIn)
+>>>>>>> 1b363a80bc660d58d3a014aa4245a0ec75c196ea
 
   return (
     <>
@@ -250,6 +277,11 @@ function AppInner() {
             options={{ animation: 'none' }}
           />
           <HomeStack.Screen
+            name="TicketsResult"
+            component={TicketsResult}
+            options={{animation: 'none'}}
+          />
+          <HomeStack.Screen
             name="GamePage"
             component={GamePage}
             options={{ animation: 'none' }}
@@ -258,6 +290,11 @@ function AppInner() {
             name="RoomMake"
             component={RoomMake}
             options={{ animation: 'none' }}
+          />
+          <HomeStack.Screen
+            name="Forbidden"
+            component={Forbidden}
+            options={{animation: 'none'}}
           />
         </HomeStack.Navigator>
       ) : (

@@ -125,7 +125,7 @@ function MyTicket(): JSX.Element {
     image: '',
     count: 0,
   });
-  const CARDS = ticketsList();
+  const CARDS = ticketsList('basic');
   return (
     <SafeAreaView style={styles.container}>
       <View>
