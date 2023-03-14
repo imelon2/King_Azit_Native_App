@@ -25,23 +25,23 @@ function TicketCharge() {
     const [redState, setRedState] = useState(false);
     const [goldState, setGoldState] = useState(false);
 
-    const onClickBlack = useCallback(() => {
+    const onClickBlack = () => {
         if (black > 0) {
             setBlackState(true);
         }
-    }, []);
+    };
 
-    const onClickRed = useCallback(() => {
+    const onClickRed = () => {
         if (red > 0) {
             setRedState(true);
         }
-    }, []);
+    };
 
-    const onClickGold = useCallback(() => {
+    const onClickGold = () => {
         if (gold > 0) {
             setGoldState(true);
         }
-    }, []);
+    };
 
 
     const onChangeNicknane = useCallback((text: string) => {
