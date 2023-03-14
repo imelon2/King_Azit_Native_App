@@ -213,17 +213,7 @@ function TicketPay({route}: AdminScreenProps) {
             </View>
           </View>
         </View>
-<<<<<<< HEAD
-      ) : (
-        <></>
-      )}
-      {/* Success Pay Modal */}
-      <Modal isVisible={modalVisible}>
-        <TicketsPayModal/>
-      </Modal>
-=======
       ) : (<></>)}
->>>>>>> 1b363a80bc660d58d3a014aa4245a0ec75c196ea
     </SafeAreaView>
   );
 }
