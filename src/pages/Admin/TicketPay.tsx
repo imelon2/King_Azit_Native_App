@@ -196,7 +196,7 @@ function TicketPay({route}: AdminScreenProps) {
         <></>
       )}
       {/* Success Pay Modal */}
-      <Modal isVisible={true}>
+      <Modal isVisible={modalVisible}>
         <TicketsPayModal/>
       </Modal>
     </SafeAreaView>

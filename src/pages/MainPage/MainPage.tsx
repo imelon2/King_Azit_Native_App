@@ -71,6 +71,7 @@ function MainPage() {
       <View style={{ flex: 1 }}>
         <View style={MainStyles.mainTextBox2}>
           <Text style={MainStyles.mainText} onPress={() => navigation.navigate('TicketPay',{id:10})}>My Tikets</Text>
+          <Text style={MainStyles.mainText} onPress={() => navigation.navigate('TicketCharge')}>           TicketCharge</Text>
         </View>
         <View style={{ flexDirection: 'row' }} >
           <View style={MainStyles.TicketBox} >
