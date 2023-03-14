@@ -42,6 +42,7 @@
 		7193A2BFD72292AD4396734A /* libPods-KingAzitApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KingAzitApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7DA846E62997DF6E00E9C339 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		7DA847C92997E4E700E9C339 /* KingAzitApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = KingAzitApp.entitlements; path = KingAzitApp/KingAzitApp.entitlements; sourceTree = "<group>"; };
+		7DECDCFE29C061AE003B283C /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = KingAzitApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9190F9BC7D1DEDCF0C91B37C /* Pods-KingAzitApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KingAzitApp.release.xcconfig"; path = "Target Support Files/Pods-KingAzitApp/Pods-KingAzitApp.release.xcconfig"; sourceTree = "<group>"; };
 		D562E59BD6CC162D7F67BAD3 /* Pods-KingAzitApp-KingAzitAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KingAzitApp-KingAzitAppTests.release.xcconfig"; path = "Target Support Files/Pods-KingAzitApp-KingAzitAppTests/Pods-KingAzitApp-KingAzitAppTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -121,6 +122,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				7DECDCFE29C061AE003B283C /* Config.xcconfig */,
 				13B07FAE1A68108700A75B9A /* KingAzitApp */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* KingAzitAppTests */,
@@ -555,6 +557,7 @@
 		};
 		83CBBA201A601CBA00E9B192 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7DECDCFE29C061AE003B283C /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;

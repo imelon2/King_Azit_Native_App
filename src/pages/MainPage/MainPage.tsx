@@ -30,6 +30,8 @@ import getTickets from '../../hooks/getTickets';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../store/reducer';
 import ticketsList, {ticketsListType} from '../../modules/ticketsList';
+import useSocket from '../../hooks/useSocket';
+import GameBox, { roomType } from './MainPageModal/GameBox';
 const {width} = Dimensions.get('screen');
 
 function MainPage() {
@@ -37,9 +39,13 @@ function MainPage() {
     useNavigation<
       NavigationProp<HomeRootStackParamList & MyPageRootStackParamList>
     >();
-  
-  const [menu, setMenu] = useState([{name:'진행중',state:true},{name:'대기중',state:false},{name:'마감',state:false}]);
-  const [gameBox, setGameBox] = useState([1, 2, 3, 4]);
+  const [socket, disconnect] = useSocket();
+  const [menu, setMenu] = useState([
+    {name: '진행중', state: true},
+    {name: '대기중', state: false},
+    {name: '마감', state: false},
+  ]);
+  const [gameBox, setGameBox] = useState<roomType[]>();
   const [modalStatus, setModalStatus] = useState(false);
   // const [tiketModalStatus, setTiketModalStatus] = useState(false);
   const [playMemberStatus, setPlayMemberStatus] = useState(false);
@@ -51,6 +57,30 @@ function MainPage() {
   let _offset = 22;
   let _width = width - (_gap + _offset) * 2;
 
+
+  useEffect(() => {
+    const getGameRoomList = (data: any) => {
+      console.log(data);
+      
+      const arr: roomType[] = new Array();
+      Object.keys(data).map(key => {
+        arr.push(data[key]);
+      });
+      setGameBox([...arr]);
+    };
+
+    if (socket) {
+      socket.emit('getGameRoomList', 'init');
+      socket.on('getGameRoomList', getGameRoomList);
+      // socket.on('getMessage', callback);
+    }
+    return () => {
+      console.log('off getGameRoomList');
+      
+      socket?.off('getGameRoomList')
+    }
+  }, [socket]);
+
   const onClickMember = () => {
     setPlayMemberStatus(true);
   };
@@ -58,18 +88,18 @@ function MainPage() {
   const onClickJoinButton = () => {
     setModalStatus(true);
   };
-  
-  const onMemu = (text:string) => {
+
+  const onMemu = (text: string) => {
     const currentMunu = [...menu];
-    currentMunu.map((item) => {
-      if(item.name === text) {
-        item.state = true
+    currentMunu.map(item => {
+      if (item.name === text) {
+        item.state = true;
       } else {
-        item.state = false
+        item.state = false;
       }
     });
-    setMenu(currentMunu)
-  }
+    setMenu(currentMunu);
+  };
 
   // MyTickets 네비게이터
   const onOpenMyTikets = (text: any) => {
@@ -131,8 +161,12 @@ function MainPage() {
                 }}
               />
             }>
-            {images.map((uri,index) => (
-              <Image key={index} style={MainStyles.imgSlideBox2} source={{uri: uri}} />
+            {images.map((uri, index) => (
+              <Image
+                key={index}
+                style={MainStyles.imgSlideBox2}
+                source={{uri: uri}}
+              />
             ))}
           </Swiper>
         </View>
@@ -225,88 +259,29 @@ function MainPage() {
             <Text style={MainStyles.roomMakeText}>+ 방 만들기</Text>
           </TouchableOpacity>
 
-          <View style={MainStyles.gameBox}>
-            {/* 게임 메뉴 Header */}
-            <View style={MainStyles.gameMenuWrapper}>
-            {menu.map((text) => (
+          {/* Game 메뉴 Header */}
+          <View style={MainStyles.gameMenuWrapper}>
+            {menu.map(text => (
               <Pressable
-                style={MainStyles.gameMenuComponent} key={text.name} onPress={() => onMemu(text.name)}>
+                style={MainStyles.gameMenuComponent}
+                key={text.name}
+                onPress={() => onMemu(text.name)}>
                 <Text style={MainStyles.gameMenuText}>{text.name}</Text>
-                <View style={text.state ? MainStyles.onGameMenu : {display:'none'}}>
+                <View
+                  style={
+                    text.state ? MainStyles.onGameMenu : {display: 'none'}
+                  }>
                   <View style={MainStyles.onGameMenuEdge}></View>
                   <View style={MainStyles.onGameMenuBody}></View>
                   <View style={MainStyles.onGameMenuEdge}></View>
-                </View> 
+                </View>
               </Pressable>
             ))}
-              
-              
-            </View>
-            {/* <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {gameBox.map((v, key) => (
-                <View style={MainStyles.gameContainer} key={key}>
-                  <Image
-                    source={require('../../assets/game_bg.png')}
-                    style={MainStyles.gameContainer2}
-                  />
-                  <View
-                    style={{
-                      flex: 1,
-                      flexDirection: 'row',
-                      alignItems: 'flex-end',
-                    }}>
-                    <View style={{flex: 5}}>
-                      <Text style={MainStyles.tableNumText}>Table NO. 1</Text>
-                      <Text style={MainStyles.mainGameText}>Main Game</Text>
-                    </View>
-
-                    <View style={{flex: 2}}>
-                      <View style={MainStyles.gameStatusBox}>
-                        <Text style={MainStyles.gameStatus}>진행중</Text>
-                      </View>
-                      <View>
-                        <Text style={MainStyles.entryText}>Entry: 16/26</Text>
-                      </View>
-                    </View>
-                  </View>
-
-                  <View style={{flex: 1}}>
-                    <Text style={MainStyles.tiketBuy}>1 Black Ticket</Text>
-                    <Text style={MainStyles.Blind}>Blind 100/200 Ante: 0</Text>
-                  </View>
-
-                  <TouchableOpacity
-                    style={{
-                      flex: 1,
-                      flexDirection: 'row',
-                      alignItems: 'flex-end',
-                    }}
-                    onPress={() => setPlayMemberStatus(true)}
-                    activeOpacity={1}>
-                    <Image
-                      source={require('../../assets/Group_img.png')}
-                      style={MainStyles.group_icon}
-                    />
-                  </TouchableOpacity>
-
-                  <View
-                    style={{
-                      flex: 2,
-                      flexDirection: 'row',
-                      alignItems: 'flex-end',
-                    }}>
-                    <Shadow distance={5} offset={[0, 1]} startColor={'#FCFF72'}>
-                      <TouchableOpacity
-                        onPress={onClickJoinButton}
-                        activeOpacity={1}
-                        style={MainStyles.joinButton}>
-                        <Text style={MainStyles.joinButtonText}>참가하기</Text>
-                      </TouchableOpacity>
-                    </Shadow>
-                  </View>
-                </View>
-              ))}
-            </ScrollView> */}
+          </View>
+          {/* Game List */}
+          <View style={{alignItems: 'center'}}>
+            {/* game room component */}
+              {gameBox?.map((item) => <GameBox key={item.game_id} item={item}/>)}
           </View>
         </View>
 
