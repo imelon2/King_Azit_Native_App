@@ -1,8 +1,8 @@
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Alert} from 'react-native';
-import {useSelector} from 'react-redux';
-import {useEffect} from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Alert } from 'react-native';
+import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import Config from 'react-native-config';
 import axios, { AxiosError } from 'axios';
@@ -11,7 +11,6 @@ import userSlice from './src/slices/user';
 import decodeJWT from './src/modules/decodeJWT';
 import messaging from '@react-native-firebase/messaging';
 import { RootState } from './src/store/reducer';
-
 import SignIn from './src/pages/SignIn/SignIn';
 import SignUp from './src/pages/SignUp/SignUp';
 import MainPage from './src/pages/MainPage/MainPage';
@@ -30,6 +29,7 @@ import TicketsHistorys from './src/pages/MyPage/TicketsHistorys';
 import RoomMake from './src/pages/MainPage/RoomMake';
 import TicketPay from './src/pages/Admin/TicketPay';
 import TicketCharge from './src/pages/Admin/TicketCharge';
+import MemberManagement from './src/pages/Admin/MemberManagement';
 import MyTickets from './src/pages/MainPage/MainPageModal/MyTickets';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import TicketsResult from './src/pages/Admin/TicketsResult';
@@ -62,20 +62,21 @@ export type HomeRootStackParamList = {
   };
   TicketPay: {
     memberId: string;
-    type:string;
-    max:number;
+    type: string;
+    max: number;
   };
   TicketsResult: {
-    name:string;
+    name: string;
     tickets: [{
-      type:string;
-      counts:number;
+      type: string;
+      counts: number;
     }]
   },
-  Forbidden:{
-    message:string;
+  Forbidden: {
+    message: string;
   };
-  TicketCharge:undefined;
+  TicketCharge: undefined;
+  MemberManagement:undefined;
 };
 
 export type MyPageRootStackParamList = {
@@ -246,9 +247,14 @@ function AppInner() {
             options={{ animation: 'none' }}
           />
           <HomeStack.Screen
+            name="MemberManagement"
+            component={MemberManagement}
+            options={{ animation: 'none' }}
+          />
+          <HomeStack.Screen
             name="TicketsResult"
             component={TicketsResult}
-            options={{animation: 'none'}}
+            options={{ animation: 'none' }}
           />
           <HomeStack.Screen
             name="GamePage"
@@ -263,7 +269,7 @@ function AppInner() {
           <HomeStack.Screen
             name="Forbidden"
             component={Forbidden}
-            options={{animation: 'none'}}
+            options={{ animation: 'none' }}
           />
         </HomeStack.Navigator>
       ) : (
