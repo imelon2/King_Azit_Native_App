@@ -10,7 +10,7 @@ export const MainStyles = StyleSheet.create({
     resizeMode: 'contain',
   },
   container: {
-    backgroundColor: '#121212',
+    backgroundColor: '#000',
     flex: 1,
   },
   mainTextBox: {
@@ -89,6 +89,7 @@ export const MainStyles = StyleSheet.create({
   },
   gameMenuWrapper: {
     flexDirection: 'row',
+    marginBottom:heightScale*35
   },
   gameMenuComponent: {
     flex: 1,
@@ -110,31 +111,58 @@ export const MainStyles = StyleSheet.create({
     height: heightScale * 4,
     backgroundColor: '#F5FF82',
   },
-  gameBox: {
-    // flex: 7,
-    // backgroundColor:'orange'
+  gameBoxImg: {
+    width: heightScale * 390,
+    height: heightScale * 230,
+    resizeMode: 'contain',
+    borderWidth: 1,
+    borderColor: '#FEFFD7',
+    borderRadius: 5,
   },
   gameContainer: {
-    width: heightScale * 230,
-    height: heightScale * 254,
-    borderRadius: 6,
-    marginLeft: heightScale * 20,
-    paddingHorizontal: heightScale * 16,
-    backgroundColor: '#222',
-    borderWidth: 1,
-    borderColor: 'rgba(245, 255, 130, 0.3)',
-  },
-  gameContainer2: {
-    width: heightScale * 227,
-    height: heightScale * 252,
-    borderRadius: 6,
-    // marginLeft: heightScale * 20,
-    paddingHorizontal: heightScale * 16,
     position: 'absolute',
-    top: 0,
-    left: 0,
-    // backgroundColor:'#222',
+    width: heightScale * 390,
+    height: heightScale * 230,
+    padding: heightScale * 20,
   },
+  gameText : {
+    color: '#fff',
+    fontSize: heightScale * 14,
+    fontWeight: 'bold',
+  },
+  gameStateContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  gameStateStyle: {
+    width: heightScale*60,
+    height: heightScale*20,
+    backgroundColor: '#5F9A31',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 15,
+  },
+  gameStateText: {
+    color: '#fff',
+    fontSize: heightScale * 14,
+    fontWeight: '500',
+  },
+  gamePlayersContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      flex: 1,
+      justifyContent: 'flex-end',
+  },
+  gamePlayerIcon: {
+    borderWidth: 1,
+    borderColor: 'red',
+    width: heightScale * 30,
+    height: heightScale * 30,
+    backgroundColor: 'gray',
+    borderRadius: 15,
+  },
+
+
   tableNumText: {
     color: 'white',
     fontSize: heightScale * 10,
@@ -208,8 +236,8 @@ export const MainStyles = StyleSheet.create({
     width: heightScale * 200,
     height: heightScale * 35,
     backgroundColor: '#F5FF82',
-    borderRadius: 4,
-    marginBottom: heightScale * 16,
+    borderRadius: 4
+    // marginBottom: heightScale * 16,
   },
 
   groupPosition: {

@@ -1,0 +1,10 @@
+//
+//  Config.xcconfig
+//  KingAzitApp
+//
+//  Created by 최원혁 on 2023/03/14.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+#include? "tmp.xcconfig"
