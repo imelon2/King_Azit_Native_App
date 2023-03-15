@@ -5,12 +5,12 @@ import {useSelector} from 'react-redux';
 import {useEffect} from 'react';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import Config from 'react-native-config';
-import axios, {AxiosError} from 'axios';
-import {useAppDispatch} from './src/store';
+import axios, { AxiosError } from 'axios';
+import { useAppDispatch } from './src/store';
 import userSlice from './src/slices/user';
 import decodeJWT from './src/modules/decodeJWT';
 import messaging from '@react-native-firebase/messaging';
-import {RootState} from './src/store/reducer';
+import { RootState } from './src/store/reducer';
 
 import SignIn from './src/pages/SignIn/SignIn';
 import SignUp from './src/pages/SignUp/SignUp';
@@ -29,7 +29,9 @@ import interceptors from './src/hooks/interceptors';
 import TicketsHistorys from './src/pages/MyPage/TicketsHistorys';
 import RoomMake from './src/pages/MainPage/RoomMake';
 import TicketPay from './src/pages/Admin/TicketPay';
+import TicketCharge from './src/pages/Admin/TicketCharge';
 import MyTickets from './src/pages/MainPage/MainPageModal/MyTickets';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import TicketsResult from './src/pages/Admin/TicketsResult';
 import { deepLinkController } from './src/modules/Linking';
 import Forbidden from './src/pages/Admin/Forbidden';
@@ -73,6 +75,7 @@ export type HomeRootStackParamList = {
   Forbidden:{
     message:string;
   };
+  TicketCharge:undefined;
 };
 
 export type MyPageRootStackParamList = {
@@ -100,18 +103,18 @@ function TabNavigator() {
       <Tab.Screen
         name="MainPage"
         component={MainPage}
-        options={{title: 'MainPage', headerShown: false}}
+        options={{ title: 'MainPage', headerShown: false }}
       />
       <Tab.Screen
         name="Ranking"
         component={Ranking}
-        options={{title: 'Ranking', headerShown: false}}
+        options={{ title: 'Ranking', headerShown: false }}
       />
-      <Tab.Screen name="Game" component={Game} options={{title: 'Game'}} />
+      <Tab.Screen name="Game" component={Game} options={{ title: 'Game' }} />
       <Tab.Screen
         name="MyPage"
         component={MyPage}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
     </Tab.Navigator>
   );
@@ -153,8 +156,8 @@ function AppInner() {
             authorization: `Bearer ${token}`,
           },
         });
-        const {access_token, refresh_token} = refreshResult.data;
-        const {sub, roles, nickname} = decodeJWT(access_token);
+        const { access_token, refresh_token } = refreshResult.data;
+        const { sub, roles, nickname } = decodeJWT(access_token);
 
         dispatch(
           userSlice.actions.setUser({
@@ -195,47 +198,52 @@ function AppInner() {
       {isLoggedIn ? (
         <HomeStack.Navigator
           initialRouteName="Home"
-          screenOptions={{headerShown: false}}>
+          screenOptions={{ headerShown: false }}>
           <HomeStack.Screen name="Home" component={TabNavigator} />
           <HomeStack.Screen
             name="SetNickNameScreen"
             component={SetNickNameScreen}
-            options={{animation: 'none'}}
+            options={{ animation: 'none' }}
           />
           <HomeStack.Screen
             name="MyTicket"
             component={MyTicket}
-            options={{animation: 'none'}}
+            options={{ animation: 'none' }}
           />
           <HomeStack.Screen
             name="MyTickets"
             component={MyTickets}
-            options={{animation: 'none'}}
+            options={{ animation: 'none' }}
           />
           <HomeStack.Screen
             name="TicketsHistorys"
             component={TicketsHistorys}
-            options={{animation: 'none'}}
+            options={{ animation: 'none' }}
           />
           <HomeStack.Screen
             name="GameHostory"
             component={GameHostory}
-            options={{animation: 'none'}}
+            options={{ animation: 'none' }}
           />
           <HomeStack.Screen
             name="MyRanking"
             component={MyRanking}
-            options={{animation: 'none'}}
+            options={{ animation: 'none' }}
           />
           <HomeStack.Screen
             name="MyRankingScore"
             component={MyRankingScore}
-            options={{animation: 'none'}}
+            options={{ animation: 'none' }}
           />
           <HomeStack.Screen
             name="TicketPay"
             component={TicketPay}
-            options={{animation: 'none'}}
+            options={{ animation: 'none' }}
+          />
+          <HomeStack.Screen
+            name="TicketCharge"
+            component={TicketCharge}
+            options={{ animation: 'none' }}
           />
           <HomeStack.Screen
             name="TicketsResult"
@@ -245,12 +253,12 @@ function AppInner() {
           <HomeStack.Screen
             name="GamePage"
             component={GamePage}
-            options={{animation: 'none'}}
+            options={{ animation: 'none' }}
           />
           <HomeStack.Screen
             name="RoomMake"
             component={RoomMake}
-            options={{animation: 'none'}}
+            options={{ animation: 'none' }}
           />
           <HomeStack.Screen
             name="Forbidden"
@@ -267,12 +275,12 @@ function AppInner() {
           <Stack.Screen
             name="SignIn"
             component={SignIn}
-            options={{title: 'Login', headerShown: false}}
+            options={{ title: 'Login', headerShown: false }}
           />
           <Stack.Screen
             name="SignUp"
             component={SignUp}
-            options={{title: 'SignUp', headerShown: false}}
+            options={{ title: 'SignUp', headerShown: false }}
           />
         </Stack.Navigator>
       )}
