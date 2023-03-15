@@ -17,12 +17,12 @@ import ticketsList, { ticketsListType } from '../../modules/ticketsList';
 import MainPageAdmin from './Compoents/MainPageAdmin';
 const { width } = Dimensions.get('screen');
 
-
-const { roles } = useSelector((state: RootState) => state.user);
-// Only ROLE_ADMIN
-const isPermitted = roles.find((e: string) => e == 'ROLE_ADMIN');
-
 function MainPage() {
+
+  const { roles } = useSelector((state: RootState) => state.user);
+  // Only ROLE_ADMIN
+  const isPermitted = roles.find((e: string) => e == 'ROLE_ADMIN');
+
   const navigation =
     useNavigation<
       NavigationProp<HomeRootStackParamList & MyPageRootStackParamList>
@@ -96,31 +96,12 @@ function MainPage() {
               paginationStyle={{ bottom: heightScale * 5 }}
               activeDot={
                 <View
-                  style={{
-                    backgroundColor: '#484848',
-                    width: 27,
-                    height: 8,
-                    borderRadius: 4,
-                    marginLeft: 3,
-                    marginRight: 3,
-                    marginTop: 3,
-                    marginBottom: 3,
-                  }}
+                  style={MainStyles.activeDot}
                 />
               }
               dot={
                 <View
-                  style={{
-                    backgroundColor: '#484848',
-                    opacity: 0.5,
-                    width: 8,
-                    height: 8,
-                    borderRadius: 4,
-                    marginLeft: 3,
-                    marginRight: 3,
-                    marginTop: 3,
-                    marginBottom: 3,
-                  }}
+                  style={MainStyles.dot}
                 />
               }>
               {images.map((uri, index) => (

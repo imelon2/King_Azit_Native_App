@@ -1,6 +1,6 @@
-import {widthData, heightData} from './globalStyles';
-import {Dimensions, StyleSheet} from 'react-native';
-const {width, height} = Dimensions.get('window');
+import { widthData, heightData } from './globalStyles';
+import { Dimensions, StyleSheet } from 'react-native';
+const { width, height } = Dimensions.get('window');
 export const heightScale = heightData;
 
 export const MainStyles = StyleSheet.create({
@@ -41,6 +41,11 @@ export const MainStyles = StyleSheet.create({
   imgSlideBox2: {
     width: width,
     height: heightScale * 300,
+    // resizeMode:'center'
+  },
+  imgSlideBox3: {
+    width: width,
+    height: heightScale * 208,
     // resizeMode:'center'
   },
   tiketContainer: {
@@ -93,14 +98,14 @@ export const MainStyles = StyleSheet.create({
     color: '#fff',
     paddingVertical: 8,
   },
-  onGameMenu: {flexDirection: 'row', alignItems: 'center'},
+  onGameMenu: { flexDirection: 'row', alignItems: 'center' },
   onGameMenuBody: {
     backgroundColor: '#F5FF82',
     height: heightScale * 2,
     width: heightScale * 86,
   },
   onGameMenuEdge: {
-    transform: [{rotate: '45deg'}],
+    transform: [{ rotate: '45deg' }],
     width: heightScale * 4,
     height: heightScale * 4,
     backgroundColor: '#F5FF82',
@@ -246,5 +251,118 @@ export const MainStyles = StyleSheet.create({
     backgroundColor: ' rgba(48, 48, 48, 0.4)',
     borderWidth: 1,
     borderColor: '#E0E0E0',
+  },
+  activeDot: {
+    backgroundColor: '#484848',
+    width: 27,
+    height: 8,
+    borderRadius: 4,
+    marginLeft: 3,
+    marginRight: 3,
+    marginTop: 3,
+    marginBottom: 3,
+  },
+  dot: {
+    backgroundColor: '#484848',
+    opacity: 0.5,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginLeft: 3,
+    marginRight: 3,
+    marginTop: 3,
+    marginBottom: 3,
+  },
+  azitTextImg: {
+    width: 292 * heightScale,
+    height: 96 * heightScale,
+    resizeMode: 'contain',
+    position: 'absolute',
+    top: -10 * heightScale,
+  },
+  azitTextImg2: {
+    width: 124 * heightScale,
+    height: 76 * heightScale,
+    resizeMode: 'contain',
+    position: 'absolute',
+    top: 40 * heightScale,
+  },
+  contentsBox: {
+    width: 192 * heightScale,
+    height: 324 * heightScale,
+    borderRadius: 12,
+    backgroundColor: '#272727',
+    paddingHorizontal: 10 * heightScale,
+    paddingTop: 12 * heightScale,
+  },
+  contentsBox2: {
+    width: 196 * heightScale,
+    height: 158 * heightScale,
+    borderRadius: 12,
+    backgroundColor: '#272727',
+    marginLeft: 3 * heightScale,
+    paddingHorizontal: 10 * heightScale,
+    paddingTop: 12 * heightScale,
+  },
+  contentsBox3: {
+    width: 254 * heightScale,
+    height: 102 * heightScale,
+    borderRadius: 12,
+    backgroundColor: '#272727',
+    paddingHorizontal: 10 * heightScale,
+    paddingTop: 12 * heightScale,
+    marginTop: 8 * heightScale,
+    flexDirection:'row',
+  },
+
+  contentsBox4: {
+    width: 137 * heightScale,
+    height: 102 * heightScale,
+    borderRadius: 12,
+    backgroundColor: '#272727',
+    paddingHorizontal: 10 * heightScale,
+    paddingTop: 12 * heightScale,
+    marginTop: 8 * heightScale,
+  },
+  contentImg: {
+    width: 171 * heightScale,
+    height: 233 * heightScale,
+    marginTop: 22 * heightScale,
+  },
+  contentImg2: {
+    width: 189 * heightScale,
+    height: 88 * heightScale,
+    marginTop: 6 * heightScale,
+  },
+  contentImg3: {
+    width: 122 * heightScale,
+    height: 94 * heightScale,
+    marginLeft: 60 * heightScale,
+  },
+  contentImg4:{
+    width: 98 * heightScale,
+    height: 60 * heightScale,
+    marginLeft: 15 * heightScale,
+    marginTop: 10 * heightScale,
+  },
+  contentImg5:{
+    width: 70 * heightScale,
+    height: 91 * heightScale,
+    position:'absolute',
+    right: -1,
+    top: 10,
+    resizeMode:'contain',
+    // marginLeft: 15 * heightScale,
+    // marginTop: 10 * heightScale,
+  },
+  contentsText: {
+    fontSize: 20 * heightScale,
+    color: 'white',
+    fontWeight: '600',
+  },
+  contentsText2: {
+    fontSize: 12 * heightScale,
+    color: 'white',
+    marginTop: 5 * heightScale,
   },
 });
