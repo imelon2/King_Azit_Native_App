@@ -11,25 +11,32 @@ import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import { heightScale, MainStyles } from '../../modules/MainStyles';
 import getProfileImage from '../../hooks/getProfileImage';
 import getTickets from '../../hooks/getTickets';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store/reducer';
-import ticketsList, { ticketsListType } from '../../modules/ticketsList';
 import MainPageAdmin from './Compoents/MainPageAdmin';
-const { width } = Dimensions.get('screen');
+
+import {useSelector} from 'react-redux';
+import {RootState} from '../../store/reducer';
+import ticketsList, {ticketsListType} from '../../modules/ticketsList';
+import useSocket from '../../hooks/useSocket';
+import GameBox, { roomType } from './MainPageModal/GameBox';
 
 
-const { roles } = useSelector((state: RootState) => state.user);
-// Only ROLE_ADMIN
-const isPermitted = roles.find((e: string) => e == 'ROLE_ADMIN');
 
 function MainPage() {
   const navigation =
     useNavigation<
       NavigationProp<HomeRootStackParamList & MyPageRootStackParamList>
     >();
+const { roles } = useSelector((state: RootState) => state.user);
+// Only ROLE_ADMIN
+const isPermitted = roles.find((e: string) => e == 'ROLE_ADMIN');
+  const [socket, disconnect] = useSocket();
+  const [menu, setMenu] = useState([
+    {name: '진행중', state: true},
+    {name: '대기중', state: false},
+    {name: '마감', state: false},
+  ]);
+  const [gameBox, setGameBox] = useState<roomType[]>();
 
-  const [menu, setMenu] = useState([{ name: '진행중', state: true }, { name: '대기중', state: false }, { name: '마감', state: false }]);
-  const [gameBox, setGameBox] = useState([1, 2, 3, 4]);
   const [modalStatus, setModalStatus] = useState(false);
   // const [tiketModalStatus, setTiketModalStatus] = useState(false);
   const [playMemberStatus, setPlayMemberStatus] = useState(false);
@@ -41,6 +48,30 @@ function MainPage() {
   let _offset = 22;
   let _width = width - (_gap + _offset) * 2;
 
+
+  useEffect(() => {
+    const getGameRoomList = (data: any) => {
+      console.log(data);
+      
+      const arr: roomType[] = new Array();
+      Object.keys(data).map(key => {
+        arr.push(data[key]);
+      });
+      setGameBox([...arr]);
+    };
+
+    if (socket) {
+      socket.emit('getGameRoomList', 'init');
+      socket.on('getGameRoomList', getGameRoomList);
+      // socket.on('getMessage', callback);
+    }
+    return () => {
+      console.log('off getGameRoomList');
+      
+      socket?.off('getGameRoomList')
+    }
+  }, [socket]);
+
   const onClickMember = () => {
     setPlayMemberStatus(true);
   };
@@ -51,15 +82,15 @@ function MainPage() {
 
   const onMemu = (text: string) => {
     const currentMunu = [...menu];
-    currentMunu.map((item) => {
+    currentMunu.map(item => {
       if (item.name === text) {
-        item.state = true
+        item.state = true;
       } else {
-        item.state = false
+        item.state = false;
       }
     });
-    setMenu(currentMunu)
-  }
+    setMenu(currentMunu);
+  };
 
   // MyTickets 네비게이터
   const onOpenMyTikets = (text: any) => {
@@ -88,14 +119,76 @@ function MainPage() {
     <SafeAreaView style={MainStyles.container}>
       {isPermitted && <MainPageAdmin />}
       {!isPermitted &&
-        <ScrollView bounces={false}>
-          {/* 배너 */}
-          <View style={MainStyles.imgSlideBox}>
-            <Swiper
-              horizontal={true}
-              paginationStyle={{ bottom: heightScale * 5 }}
-              activeDot={
-                <View
+      <ScrollView bounces={false}>
+        {/* 배너 */}
+        <View style={MainStyles.imgSlideBox}>
+          <Swiper
+            horizontal={true}
+            paginationStyle={{bottom: heightScale * 5}}
+            activeDot={
+              <View
+                style={{
+                  backgroundColor: '#484848',
+                  width: 27,
+                  height: 8,
+                  borderRadius: 4,
+                  marginLeft: 3,
+                  marginRight: 3,
+                  marginTop: 3,
+                  marginBottom: 3,
+                }}
+              />
+            }
+            dot={
+              <View
+                style={{
+                  backgroundColor: '#484848',
+                  opacity: 0.5,
+                  width: 8,
+                  height: 8,
+                  borderRadius: 4,
+                  marginLeft: 3,
+                  marginRight: 3,
+                  marginTop: 3,
+                  marginBottom: 3,
+                }}
+              />
+            }>
+            {images.map((uri, index) => (
+              <Image
+                key={index}
+                style={MainStyles.imgSlideBox2}
+                source={{uri: uri}}
+              />
+            ))}
+          </Swiper>
+        </View>
+
+        {/* My Tickets */}
+        <View style={{marginTop: heightScale * 60}}>
+          <View style={MainStyles.mainTextBox2}>
+            <Text style={MainStyles.mainText}>My Tikets</Text>
+          </View>
+          <FlatList
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            automaticallyAdjustContentInsets={false}
+            snapToInterval={_width + _gap}
+            snapToAlignment="start"
+            decelerationRate="fast"
+            bounces={false}
+            data={CARDS}
+            keyExtractor={item => item.key.toString()}
+            contentContainerStyle={{
+              paddingHorizontal: _offset + _gap / 2,
+            }}
+            renderItem={({item}: {item: ticketsListType}) => (
+              <Pressable
+                key={item.key}
+                onPress={() => onOpenMyTikets(item.type)}
+                style={{justifyContent: 'center', alignItems: 'center'}}>
+                <Image
                   style={{
                     backgroundColor: '#484848',
                     width: 27,
@@ -300,6 +393,31 @@ function MainPage() {
               ))}
             </ScrollView> */}
             </View>
+            
+          {/* Game 메뉴 Header */}
+          <View style={MainStyles.gameMenuWrapper}>
+            {menu.map(text => (
+              <Pressable
+                style={MainStyles.gameMenuComponent}
+                key={text.name}
+                onPress={() => onMemu(text.name)}>
+                <Text style={MainStyles.gameMenuText}>{text.name}</Text>
+                <View
+                  style={
+                    text.state ? MainStyles.onGameMenu : {display: 'none'}
+                  }>
+                  <View style={MainStyles.onGameMenuEdge}></View>
+                  <View style={MainStyles.onGameMenuBody}></View>
+                  <View style={MainStyles.onGameMenuEdge}></View>
+                </View>
+              </Pressable>
+            ))}
+          </View>
+          {/* Game List */}
+          <View style={{alignItems: 'center'}}>
+            {/* game room component */}
+              {gameBox?.map((item) => <GameBox key={item.game_id} item={item}/>)}
+
           </View>
 
           <Modal isVisible={modalStatus} style={{ flex: 1 }}>
