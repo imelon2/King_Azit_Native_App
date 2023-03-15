@@ -12,13 +12,12 @@ import { heightScale, MainStyles } from '../../modules/MainStyles';
 import getProfileImage from '../../hooks/getProfileImage';
 import getTickets from '../../hooks/getTickets';
 import MainPageAdmin from './Compoents/MainPageAdmin';
-
 import {useSelector} from 'react-redux';
 import {RootState} from '../../store/reducer';
 import ticketsList, {ticketsListType} from '../../modules/ticketsList';
 import useSocket from '../../hooks/useSocket';
 import GameBox, { roomType } from './MainPageModal/GameBox';
-
+const {width} = Dimensions.get('window');
 
 
 function MainPage() {
@@ -26,9 +25,9 @@ function MainPage() {
     useNavigation<
       NavigationProp<HomeRootStackParamList & MyPageRootStackParamList>
     >();
-const { roles } = useSelector((state: RootState) => state.user);
-// Only ROLE_ADMIN
-const isPermitted = roles.find((e: string) => e == 'ROLE_ADMIN');
+  const { roles } = useSelector((state: RootState) => state.user);
+  // Only ROLE_ADMIN
+  const isAdmin = roles.find((e: string) => e == 'ROLE_ADMIN');
   const [socket, disconnect] = useSocket();
   const [menu, setMenu] = useState([
     {name: '진행중', state: true},
@@ -117,8 +116,8 @@ const isPermitted = roles.find((e: string) => e == 'ROLE_ADMIN');
   ];
   return (
     <SafeAreaView style={MainStyles.container}>
-      {isPermitted && <MainPageAdmin />}
-      {!isPermitted &&
+      {isAdmin && <MainPageAdmin />}
+      {!isAdmin &&
       <ScrollView bounces={false}>
         {/* 배너 */}
         <View style={MainStyles.imgSlideBox}>
@@ -163,64 +162,6 @@ const isPermitted = roles.find((e: string) => e == 'ROLE_ADMIN');
             ))}
           </Swiper>
         </View>
-
-        {/* My Tickets */}
-        <View style={{marginTop: heightScale * 60}}>
-          <View style={MainStyles.mainTextBox2}>
-            <Text style={MainStyles.mainText}>My Tikets</Text>
-          </View>
-          <FlatList
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            automaticallyAdjustContentInsets={false}
-            snapToInterval={_width + _gap}
-            snapToAlignment="start"
-            decelerationRate="fast"
-            bounces={false}
-            data={CARDS}
-            keyExtractor={item => item.key.toString()}
-            contentContainerStyle={{
-              paddingHorizontal: _offset + _gap / 2,
-            }}
-            renderItem={({item}: {item: ticketsListType}) => (
-              <Pressable
-                key={item.key}
-                onPress={() => onOpenMyTikets(item.type)}
-                style={{justifyContent: 'center', alignItems: 'center'}}>
-                <Image
-                  style={{
-                    backgroundColor: '#484848',
-                    width: 27,
-                    height: 8,
-                    borderRadius: 4,
-                    marginLeft: 3,
-                    marginRight: 3,
-                    marginTop: 3,
-                    marginBottom: 3,
-                  }}
-                />
-              }
-              dot={
-                <View
-                  style={{
-                    backgroundColor: '#484848',
-                    opacity: 0.5,
-                    width: 8,
-                    height: 8,
-                    borderRadius: 4,
-                    marginLeft: 3,
-                    marginRight: 3,
-                    marginTop: 3,
-                    marginBottom: 3,
-                  }}
-                />
-              }>
-              {images.map((uri, index) => (
-                <Image key={index} style={MainStyles.imgSlideBox2} source={{ uri: uri }} />
-              ))}
-            </Swiper>
-          </View>
 
           {/* My Tickets */}
           <View style={{ marginTop: heightScale * 60 }}>
@@ -310,7 +251,6 @@ const isPermitted = roles.find((e: string) => e == 'ROLE_ADMIN');
               <Text style={MainStyles.roomMakeText}>+ 방 만들기</Text>
             </TouchableOpacity>
 
-            <View style={MainStyles.gameBox}>
               {/* 게임 메뉴 Header */}
               <View style={MainStyles.gameMenuWrapper}>
                 {menu.map((text) => (
@@ -324,75 +264,8 @@ const isPermitted = roles.find((e: string) => e == 'ROLE_ADMIN');
                     </View>
                   </Pressable>
                 ))}
-
-
               </View>
-              {/* <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {gameBox.map((v, key) => (
-                <View style={MainStyles.gameContainer} key={key}>
-                  <Image
-                    source={require('../../assets/game_bg.png')}
-                    style={MainStyles.gameContainer2}
-                  />
-                  <View
-                    style={{
-                      flex: 1,
-                      flexDirection: 'row',
-                      alignItems: 'flex-end',
-                    }}>
-                    <View style={{flex: 5}}>
-                      <Text style={MainStyles.tableNumText}>Table NO. 1</Text>
-                      <Text style={MainStyles.mainGameText}>Main Game</Text>
-                    </View>
-
-                    <View style={{flex: 2}}>
-                      <View style={MainStyles.gameStatusBox}>
-                        <Text style={MainStyles.gameStatus}>진행중</Text>
-                      </View>
-                      <View>
-                        <Text style={MainStyles.entryText}>Entry: 16/26</Text>
-                      </View>
-                    </View>
-                  </View>
-
-                  <View style={{flex: 1}}>
-                    <Text style={MainStyles.tiketBuy}>1 Black Ticket</Text>
-                    <Text style={MainStyles.Blind}>Blind 100/200 Ante: 0</Text>
-                  </View>
-
-                  <TouchableOpacity
-                    style={{
-                      flex: 1,
-                      flexDirection: 'row',
-                      alignItems: 'flex-end',
-                    }}
-                    onPress={() => setPlayMemberStatus(true)}
-                    activeOpacity={1}>
-                    <Image
-                      source={require('../../assets/Group_img.png')}
-                      style={MainStyles.group_icon}
-                    />
-                  </TouchableOpacity>
-
-                  <View
-                    style={{
-                      flex: 2,
-                      flexDirection: 'row',
-                      alignItems: 'flex-end',
-                    }}>
-                    <Shadow distance={5} offset={[0, 1]} startColor={'#FCFF72'}>
-                      <TouchableOpacity
-                        onPress={onClickJoinButton}
-                        activeOpacity={1}
-                        style={MainStyles.joinButton}>
-                        <Text style={MainStyles.joinButtonText}>참가하기</Text>
-                      </TouchableOpacity>
-                    </Shadow>
-                  </View>
-                </View>
-              ))}
-            </ScrollView> */}
-            </View>
+          </View>
             
           {/* Game 메뉴 Header */}
           <View style={MainStyles.gameMenuWrapper}>
