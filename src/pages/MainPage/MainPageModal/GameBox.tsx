@@ -1,23 +1,38 @@
-import React from 'react';
-import {View, Image, Text, TouchableOpacity} from 'react-native';
+import React, { useState } from 'react';
+import {View, Image, Text, TouchableOpacity, Pressable, Modal} from 'react-native';
 import {Shadow} from 'react-native-shadow-2';
 import {heightScale, MainStyles} from '../../../modules/MainStyles';
+import { TicketType } from '../../../modules/ticketsList';
+
+type playerType = {
+  id : string;
+  uuid : string;
+  profile:string;
+}
 
 export type roomType = {
-    game_id: string;
-    table_no: number;
-    game_name: string;
-    blind: string;
-    ante: number | string;
-    ticket_type: string;
-    status: string;
-    playing_users: string[];
-    sitout_users: string[];
-    dealer_id: string;
-    entry: string;
-  };
+  game_id: string;
+  table_no: number;
+  game_name: string;
+  blind: string;
+  ante: number | string;
+  ticket_type: TicketType;
+  ticket_amount: number;
+  status: string;
+  playing_users: playerType[];
+  sitout_users: playerType[];
+  dealer_id: string;
+  entry_limit: number;
+  entry: string;
+};
 
-const GameBox = ({item}:{item:roomType}) => {
+interface propsType {
+  item: roomType;
+  onClickJoinButton(item: roomType): void;
+  onClickMember():void;
+}
+
+const GameBox = ({item,onClickJoinButton,onClickMember}: propsType) => {
   return (
     <>
       <View style={{marginBottom: heightScale * 30}}>
@@ -33,7 +48,7 @@ const GameBox = ({item}:{item:roomType}) => {
             <View>
               <Text style={MainStyles.gameText}>Table No. {item.table_no}</Text>
               <Text style={[MainStyles.gameText, {fontSize: heightScale * 20}]}>
-                {item.game_name}
+                {item.game_name} Game
               </Text>
             </View>
             <View style={{flex: 1, alignItems: 'flex-end'}}>
@@ -41,34 +56,60 @@ const GameBox = ({item}:{item:roomType}) => {
                 <View style={MainStyles.gameStateStyle}>
                   <Text style={MainStyles.gameStateText}>{item.status}</Text>
                 </View>
-                <Text style={MainStyles.gameStateText}>Entry: 16/25</Text>
+                <Text style={MainStyles.gameStateText}>
+                  Entry: {item.entry}/{item.entry_limit}
+                </Text>
               </View>
             </View>
           </View>
-          {/* contents 2 */}
+          {/* contents 2 참가자 아이콘 */}
           <View
             style={{
               flexDirection: 'row',
               marginTop: heightScale * 25,
             }}>
             <View>
-              <Text style={MainStyles.gameText}>1 {item.ticket_type}</Text>
-              <Text style={MainStyles.gameText}>Blind {item.blind} Ante:{item.ante}</Text>
+              <Text style={MainStyles.gameText}>
+                {item.ticket_amount} {item.ticket_type} Ticket
+              </Text>
+              <Text style={MainStyles.gameText}>
+                Blind {item.blind} Ante:{item.ante}
+              </Text>
             </View>
-            <View style={MainStyles.gamePlayersContainer}>
-              <View style={[MainStyles.gamePlayerIcon, {left: 10}]}></View>
-              <View style={[MainStyles.gamePlayerIcon, {left: 5}]}></View>
-              <View
-                style={[
-                  MainStyles.gamePlayerIcon,
-                  {
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  },
-                ]}>
-                <Text style={{color: '#fff', fontWeight: 'bold'}}>+6</Text>
+            {/* 플레이어 아이콘 */}
+            <Pressable style={MainStyles.gamePlayersContainer} onPress={() => onClickMember()}>
+              <View style={{width:heightScale*75,alignItems:'center'}}>
+                {item.playing_users.length != 0 ? (
+                  <>
+                    <View
+                      style={[
+                        MainStyles.gamePlayerIcon,
+                        {left: 10},
+                        item.playing_users[1] ? {} : {display: 'none'},
+                      ]}>
+                      {/* <Image /> // item.playing_users[1] */}
+                    </View>
+                    <View style={[MainStyles.gamePlayerIcon, {left: 5}]}>
+                      {/* <Image /> // item.playing_users[0] */}
+                    </View>
+                  </>
+                ) : (
+                  <></>
+                )}
+                <View
+                  style={[
+                    MainStyles.gamePlayerIcon,
+                    {
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    },
+                  ]}>
+                  <Text style={{color: '#fff', fontWeight: 'bold'}}>
+                    +{item.playing_users.length}
+                  </Text>
+                </View>
               </View>
-            </View>
+            </Pressable>
           </View>
           {/* contents 3 참가하기 버튼 */}
           <View
@@ -79,7 +120,7 @@ const GameBox = ({item}:{item:roomType}) => {
             }}>
             <Shadow distance={5} offset={[0, 1]} startColor={'#FCFF72'}>
               <TouchableOpacity
-                // onPress={onClickJoinButton}
+                onPress={() => onClickJoinButton(item)}
                 activeOpacity={1}
                 style={MainStyles.joinButton}>
                 <Text style={MainStyles.joinButtonText}>참가하기</Text>

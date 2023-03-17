@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useRef } from 'react';
+import React, {memo, useCallback, useRef} from 'react';
 import {Animated, Dimensions, StyleSheet, View} from 'react-native';
 const {width} = Dimensions.get('screen');
 import {heightData} from '../../../modules/globalStyles';
@@ -12,34 +12,39 @@ const MyTicketCarousel = ({...props}) => {
   const offsetX = heightScale * props.width + props.gap;
   const scrollX = React.useRef(new Animated.Value(0)).current;
 
-  
   const styles = StyleSheet.create({
     cardStyle: {
       width: heightScale * props.width,
       height: heightScale * props.height,
       marginHorizontal: props.gap / 2,
+      borderWidth: 1,
+      borderColor: '#A1A1A1',
+      borderRadius: 10,
     },
   });
 
   // Flatlist Focus된 page index 리턴
-  const onViewableItemsChanged = ({ viewableItems }:any) => {
+  const onViewableItemsChanged = ({viewableItems}: any) => {
     // 현재 Focus된 page index 전달
-    props.setSelectCard(DATA[viewableItems[0].index])
+    props.setSelectCard(DATA[viewableItems[0].index]);
+  };
+  const viewabilityConfig = {
+    itemVisiblePercentThreshold: 50, // View에 80% 이상 노출될 경우 실행
+  };
+  const viewabilityConfigCallbackPairs = useRef([
+    {viewabilityConfig, onViewableItemsChanged},
+  ]);
 
-  }
-  const viewabilityConfig={
-        itemVisiblePercentThreshold: 50 // View에 80% 이상 노출될 경우 실행
-      }
-  const viewabilityConfigCallbackPairs = useRef([{ viewabilityConfig,onViewableItemsChanged }])
+  const getItemLayout = (data: any, index: any) => ({
+    length: offsetX,
+    offset: offsetX * index,
+    index,
+  });
 
-  const getItemLayout = (data:any, index:any) => (
-    {length: offsetX, offset: offsetX * index, index}
-  );
-  
   return (
     <View>
       <Animated.FlatList
-      showsVerticalScrollIndicator
+        showsVerticalScrollIndicator
         horizontal
         pagingEnabled
         bounces={false}
@@ -52,23 +57,21 @@ const MyTicketCarousel = ({...props}) => {
           paddingHorizontal:
             (width - heightScale * props.width - props.gap) / 2,
         }}
-        onScroll={ 
-          Animated.event(
-            [
-              {
-                nativeEvent: {contentOffset: {x: scrollX}},
-              },
-            ],
+        onScroll={Animated.event(
+          [
             {
-              useNativeDriver: true,
-            }
-          )
-        }
+              nativeEvent: {contentOffset: {x: scrollX}},
+            },
+          ],
+          {
+            useNativeDriver: true,
+          },
+        )}
         viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
         // initialScrollIndex={1}
         getItemLayout={getItemLayout}
         keyExtractor={item => item.key}
-        renderItem={useCallback(({item, index}:{item:any,index:any}) => {
+        renderItem={useCallback(({item, index}: {item: any; index: any}) => {
           const inputRange = [
             (index - 1) * offsetX, // next slide
             index * offsetX, // current slide
@@ -87,7 +90,7 @@ const MyTicketCarousel = ({...props}) => {
               <Animated.Image source={item.image} style={styles.cardStyle} />
             </Animated.View>
           );
-        },[])}
+        }, [])}
       />
     </View>
   );

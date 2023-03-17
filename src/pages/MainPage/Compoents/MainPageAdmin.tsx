@@ -1,17 +1,19 @@
 import React from 'react';
-import { Text, View, Image , TouchableOpacity } from 'react-native';
+import { Text, View, Image , TouchableOpacity, SafeAreaView } from 'react-native';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { HomeRootStackParamList, MyPageRootStackParamList } from '../../../../AppInner';
 import Swiper from 'react-native-swiper';
 import { heightScale, MainStyles } from '../../../modules/MainStyles';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
+import usePermissions from '../../../hooks/usePermissions';
 
 function MainPageAdmin() {
   const navigation = useNavigation< NavigationProp<HomeRootStackParamList & MyPageRootStackParamList>>();
   const images = [require('../../../assets/swiper_bg.png'), require('../../../assets/swiper_bg.png')];
 
+  usePermissions();
   return (
-    <View style={{ flex: 1, backgroundColor: '#000' }} >
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#121212' }} >
       <View style={{ flex: 1 }} >
         <View style={{ flex: 1, alignItems: 'center' }}>
           <Image style={MainStyles.azitTextImg} source={require('../../../assets/Kings_Azit.png')} />
@@ -78,7 +80,7 @@ function MainPageAdmin() {
           </View>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

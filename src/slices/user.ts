@@ -18,7 +18,8 @@ const initialState = {
     password:'',
     roles:[],
     profileImage:'',
-    access_token:''
+    access_token:'',
+    uuid:''
 }
 
 const userSlice = createSlice({
@@ -63,6 +64,7 @@ const userSlice = createSlice({
             state.password = action.payload.password;
             state.profileImage = action.payload.profileImage; 
             state.access_token = action.payload.access_token;
+            state.uuid = action.payload.uuid;
         }
     },
     extraReducers : builder => {

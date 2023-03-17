@@ -26,7 +26,7 @@ import MyRanking from './src/pages/MyPage/MyRanking';
 import MyRankingScore from './src/pages/MyPage/MyPageCompoents/MyRankingScore';
 import interceptors from './src/hooks/interceptors';
 import TicketsHistorys from './src/pages/MyPage/TicketsHistorys';
-import RoomMake from './src/pages/MainPage/RoomMake';
+import RoomMake from './src/pages/Admin/RoomMake';
 import TicketPay from './src/pages/Admin/TicketPay';
 import TicketCharge from './src/pages/Admin/TicketCharge';
 import MemberManagement from './src/pages/Admin/MemberManagement';
@@ -173,7 +173,7 @@ function AppInner() {
           },
         });
         const { access_token, refresh_token } = refreshResult.data;
-        const { sub, roles, nickname } = decodeJWT(access_token);
+        const { sub, roles, nickname,uuid } = decodeJWT(access_token);
 
         dispatch(
           userSlice.actions.setUser({
@@ -181,6 +181,7 @@ function AppInner() {
             roles: roles,
             access_token: access_token,
             nickName: nickname,
+            uuid:uuid
           }),
         );
         await EncryptedStorage.setItem('refreshToken', refresh_token);

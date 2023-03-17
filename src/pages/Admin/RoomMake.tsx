@@ -8,41 +8,48 @@ import {
   TouchableOpacity,
   Dimensions,
   TextInput,
+  Pressable,
 } from 'react-native';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {HomeRootStackParamList} from '../../../AppInner';
-import React, {useEffect, useState, useCallback} from 'react';
-import {RootStackParamList} from '../../../AppInner';
-import Modal from 'react-native-modal';
-import {widthData, heightData} from '../../modules/globalStyles';
+import React, {useState, useCallback, useEffect} from 'react';
+import {heightData} from '../../modules/globalStyles';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import useSocket from '../../hooks/useSocket';
-import { request } from 'react-native-permissions';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store/reducer';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../store/reducer';
+import { TicketType } from '../../modules/ticketsList';
 const heightScale = heightData;
 
 const {width, height} = Dimensions.get('window');
+type GameType = 'Main' | 'Nft' | 'Custom';
+type StatusType = 'playing' | 'waiting';
+type DurationType = '8' | '9' | null;
 
 function RoomMake() {
   const navigation = useNavigation<NavigationProp<HomeRootStackParamList>>();
-  const {name,nickName} = useSelector((state: RootState) => state.user);
+  const {name, nickName} = useSelector((state: RootState) => state.user);
   const [socket, disconnect] = useSocket();
 
   const [selectDrop, setSelectDrop] = useState(false);
   const [ticketSelectDrop, setTicketSelectDrop] = useState(false);
 
   const [table, setTable] = useState(1);
-  const [gameType, setGameType] = useState('main');
-  const [buyin, setBuyin] = useState('0');
-  const [ticket, setTicket] = useState('Ticket');
-  const [entey, setEntry] = useState();
-  const [blind, setBlind] = useState("100/200");
-  const [status, setStatus] = useState('progress');
+  const [gameType, setGameType] = useState<GameType>('Main');
+  const [buyin, setBuyin] = useState<any>();
+  const [ticket, setTicket] = useState<TicketType>();
+  const [enteyLimit, setEntryLimit] = useState();
+  const [blind, setBlind] = useState('100/200');
+  const [duration, setDuration] = useState<DurationType>();
+  const [status, setStatus] = useState<StatusType>('playing');
 
   const table_Num = [1, 2, 3, 4];
+  const game_type: GameType[] = ['Main', 'Nft', 'Custom'];
+  const ticket_type: TicketType[] = ['Black', 'Red', 'Gold'];
+  const Blind_Duration: DurationType[] = ['8', '9'];
+  const statusList: StatusType[] = ['playing', 'waiting'];
+
 
   const onChangeBuyin = useCallback((text: any) => {
     setBuyin(text.trim());
@@ -53,8 +60,12 @@ function RoomMake() {
     setTicketSelectDrop(false);
   }, []);
 
-  const onChangeEntry = useCallback((text: any) => {
-    setEntry(text.trim());
+  const onChangeEntryLimit = useCallback((text: any) => {
+    setEntryLimit(text.trim());
+  }, []);
+
+  const onChangeDuration = useCallback((text: any) => {
+    setDuration(text.trim());
   }, []);
 
   const onChnageGameType = useCallback((text: any) => {
@@ -62,30 +73,63 @@ function RoomMake() {
     setTicketSelectDrop(false);
   }, []);
 
+  useEffect(() => {
+    if (gameType == 'Main') {
+      setBuyin('1');
+      setTicket('Black');
+      setDuration('8');
+    } else if (gameType == 'Nft') {
+      setBuyin('1');
+      setTicket('Black');
+      setDuration('9');
+    } else {
+      setBuyin("");
+      setTicket("");
+      setDuration('8');
+    }
+  }, [gameType]);
+
   const createRoom = () => {
     const callback = (data: any) => {
       console.log(data);
     };
+    console.log("table :" + table);
+    console.log("dealer id :" + nickName);
+    console.log("game name :" + gameType);
+    console.log("entey Limit :" + (enteyLimit == ""));
+    console.log("ticket amount :" + buyin);
+    console.log("ticket type :" + ticket);
+    console.log("blind :" + blind);
+    console.log("ante :" + "0");
+    console.log("status :" + status);
+    
     if (socket) {
       socket.emit('createGameRoom', {
         table_no: table,
-        // game_id: gameId,
         dealer_id: nickName,
-        game_name: gameType+" Game",
-        entry: entey,
+        game_name: gameType,
+        entry_limit: enteyLimit,
         ticket_amount: buyin,
         ticket_type: ticket,
         blind: blind,
         ante: 0,
         // playing_users: [],
         // sitout_users: [],
-        // status: 'playing', // default 삭제 필요
+        status: status, // default 삭제 필요
       });
     }
   };
 
+  const deleteTest = () => {
+    if (socket) {
+      socket.emit('finishGame', "");
+    }
+  }
+
+
   return (
     <SafeAreaView style={styles.container}>
+      {/* Header */}
       <View>
         <View style={styles.headerStyle}>
           <Text style={styles.fontStyle}>방만들기</Text>
@@ -105,6 +149,7 @@ function RoomMake() {
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps={'handled'}
         showsVerticalScrollIndicator={false}>
+        {/* Table Selects */}
         {selectDrop && (
           <View style={styles.selectBox}>
             {table_Num.map((item: any, i) => (
@@ -121,7 +166,9 @@ function RoomMake() {
             ))}
           </View>
         )}
+
         <View style={{flex: 1, paddingHorizontal: 18 * heightScale}}>
+          {/* Table Title */}
           <View style={{flex: 1}}>
             <Text style={styles.mainText}>Table</Text>
             <TouchableOpacity
@@ -137,63 +184,41 @@ function RoomMake() {
               />
             </TouchableOpacity>
           </View>
+
+          {/* Game Type Titlt */}
           <View style={{flex: 1}}>
             <Text style={styles.mainText}>Game Type</Text>
+            {/* Game Type Contents */}
             <View style={{flexDirection: 'row'}}>
-              <TouchableOpacity
-                onPress={() => onChnageGameType('main')}
-                style={[
-                  styles.touchBox,
-                  gameType == 'main' && styles.touchBox2,
-                ]}>
-                <Text
+              {game_type.map(item => (
+                <TouchableOpacity
+                  key={item}
+                  onPress={() => onChnageGameType(item)}
                   style={[
-                    styles.tableSelectText2,
-                    gameType == 'main' && styles.tableSelectText3,
+                    styles.touchBox,
+                    gameType == item && styles.touchBox2,
                   ]}>
-                  Main Game
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => onChnageGameType('nft')}
-                style={[
-                  styles.touchBox,
-                  styles.marginLeft,
-                  gameType == 'nft' && styles.touchBox2,
-                ]}>
-                <Text
-                  style={[
-                    styles.tableSelectText2,
-                    gameType == 'nft' && styles.tableSelectText3,
-                  ]}>
-                  NFT Game
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => onChnageGameType('custom')}
-                style={[
-                  styles.touchBox,
-                  styles.marginLeft,
-                  gameType == 'custom' && styles.touchBox2,
-                ]}>
-                <Text
-                  style={[
-                    styles.tableSelectText2,
-                    gameType == 'custom' && styles.tableSelectText3,
-                  ]}>
-                  Custom
-                </Text>
-              </TouchableOpacity>
+                  <Text
+                    style={[
+                      styles.tableSelectText2,
+                      gameType == item && styles.tableSelectText3,
+                    ]}>
+                    {item} Game
+                  </Text>
+                </TouchableOpacity>
+              ))}
             </View>
           </View>
+
           <View style={{flex: 1}}>
+            {/* Buy In Title */}
             <Text style={styles.mainText}>Buy-in</Text>
             <View style={{flexDirection: 'row'}}>
-              {gameType == 'main' ? (
+              {gameType == 'Main' || gameType == 'Nft' ? (
                 <View style={[styles.touchBox3]}>
                   <Text
                     style={[styles.tableSelectText2, styles.tableSelectText3]}>
-                    1 Black Ticket
+                    {buyin} {ticket} Ticket
                   </Text>
                 </View>
               ) : (
@@ -205,8 +230,6 @@ function RoomMake() {
                       onChangeText={onChangeBuyin}
                       value={buyin}
                       keyboardType={'decimal-pad'}
-                      // returnKeyType="next" // next key로 변환
-                      // onSubmitEditing={() => birthDateRef.current?.focus()} // Submit Key 클릭 시, 이벤트
                       placeholderTextColor="#6F6F6F"
                     />
                   </View>
@@ -214,7 +237,7 @@ function RoomMake() {
                     onPress={() => setTicketSelectDrop(!selectDrop)}
                     activeOpacity={1}
                     style={styles.tableSelect2}>
-                    <Text style={styles.tableSelectText}>{ticket}</Text>
+                    <Text style={styles.tableSelectText}>{ticket} Ticket</Text>
                     <IconAntDesign
                       name="down"
                       size={heightScale * 25}
@@ -226,90 +249,109 @@ function RoomMake() {
               )}
             </View>
           </View>
+
+          {/* Tickets Select Box */}
           {ticketSelectDrop && (
             <View style={styles.selectBox2}>
-              <TouchableOpacity
-                onPress={() => onClickTicket('Black Ticket')}
-                activeOpacity={1}
-                style={{flex: 1, zIndex: 2}}>
-                <Text style={styles.tableSelectText}>Black Ticket</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => onClickTicket('Red Ticket')}
-                activeOpacity={1}
-                style={{flex: 1, zIndex: 2}}>
-                <Text style={styles.tableSelectText}>Red Ticket</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => onClickTicket('Gold Ticket')}
-                activeOpacity={1}
-                style={{flex: 1, zIndex: 2}}>
-                <Text style={styles.tableSelectText}>Gold Ticket</Text>
-              </TouchableOpacity>
+              {ticket_type.map(item => (
+                <TouchableOpacity
+                  key={item}
+                  onPress={() => onClickTicket(item)}
+                  activeOpacity={1}
+                  style={{flex: 1, zIndex: 2}}>
+                  <Text style={styles.tableSelectText}>{item} Ticket</Text>
+                </TouchableOpacity>
+              ))}
             </View>
           )}
 
+          {/* Entry Title */}
           <View style={{flex: 1}}>
             <Text style={styles.mainText}>Entry</Text>
             <View>
               <TextInput
                 style={styles.TextInput}
                 placeholder="Enter"
-                onChangeText={onChangeEntry}
-                value={entey}
+                onChangeText={onChangeEntryLimit}
+                value={enteyLimit}
                 keyboardType={'number-pad'}
-                // returnKeyType="next" // next key로 변환
-                // onSubmitEditing={() => birthDateRef.current?.focus()} // Submit Key 클릭 시, 이벤트
                 placeholderTextColor="#6F6F6F"
               />
             </View>
           </View>
+
+          {/* Blind Duration Title */}
           <View style={{flex: 1}}>
             <Text style={styles.mainText}>Blind Duration</Text>
-            <View>
-              <TouchableOpacity style={[styles.touchBox, styles.touchBox2]}>
-                <Text
-                  style={[styles.tableSelectText2, styles.tableSelectText3]}>
-                  8 mins
-                </Text>
-              </TouchableOpacity>
+            <View style={{flexDirection: 'row'}}>
+              {gameType == 'Main' || gameType == 'Nft' ? (
+                <TouchableOpacity style={[styles.touchBox, styles.touchBox2]}>
+                  <Text
+                    style={[styles.tableSelectText2, styles.tableSelectText3]}>
+                    {duration} mins
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                <>
+                  {Blind_Duration.map(item => (
+                    <TouchableOpacity
+                      key={item}
+                      style={[
+                        styles.touchBox,
+                        duration == item && styles.touchBox2,
+                      ]}
+                      onPress={() => onChangeDuration(item)}
+                      >
+                      <Text
+                        style={[
+                          styles.tableSelectText2,
+                          duration == item && styles.tableSelectText3,
+                        ]}>
+                        {item} mins
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </>
+              )}
             </View>
           </View>
 
+          {/* Status Title */}
           <View style={{flex: 1}}>
             <Text style={styles.mainText}>Status</Text>
             <View style={{flexDirection: 'row'}}>
-              <TouchableOpacity
-                onPress={() => setStatus('progress')}
-                style={[
-                  styles.touchBox,
-                  status == 'progress' && styles.touchBox2,
-                ]}>
-                <Text
-                  style={[
-                    styles.tableSelectText2,
-                    status == 'progress' && styles.tableSelectText3,
-                  ]}>
-                  진행중
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => setStatus('loading')}
-                style={[
-                  styles.touchBox,
-                  styles.marginLeft,
-                  status == 'loading' && styles.touchBox2,
-                ]}>
-                <Text
-                  style={[
-                    styles.tableSelectText2,
-                    status == 'loading' && styles.tableSelectText3,
-                  ]}>
-                  대기중
-                </Text>
-              </TouchableOpacity>
+              {statusList.map(item => {
+                let _item;
+                if (item == 'playing') {
+                  _item = '진행중';
+                } else if (item == 'waiting') {
+                  _item = '대기중';
+                }
+                return (
+                  <TouchableOpacity
+                    key={item}
+                    onPress={() => setStatus(item)}
+                    style={[
+                      styles.touchBox,
+                      status == item && styles.touchBox2,
+                    ]}>
+                    <Text
+                      style={[
+                        styles.tableSelectText2,
+                        status == item && styles.tableSelectText3,
+                      ]}>
+                      {_item}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
             </View>
           </View>
+
+              <Pressable style={{backgroundColor:'red'}} onPress={deleteTest}>
+                <Text>delete</Text>
+              </Pressable>
+          {/* 방만들기 Button */}
           <View style={{justifyContent: 'center', alignItems: 'center'}}>
             <TouchableOpacity style={styles.buttonStyle} onPress={createRoom}>
               <Text style={styles.buttonTextStyle}> 방만들기 </Text>
@@ -389,6 +431,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 4,
     marginTop: 20 * heightScale,
+    marginRight: 20 * heightScale,
     backgroundColor: '#222',
   },
   touchBox2: {
@@ -402,9 +445,6 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     marginTop: 20 * heightScale,
     backgroundColor: '#F5FF82',
-  },
-  marginLeft: {
-    marginLeft: 20 * heightScale,
   },
   TextInput: {
     borderColor: '#f5ff82',

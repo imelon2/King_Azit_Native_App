@@ -71,7 +71,7 @@ function Login({navigation}:LoginScreenProps) {
 
       const {access_token,refresh_token} = loginResult.data;
       
-      const {sub,roles,nickname} = decodeJWT(access_token);
+      const {sub,roles,nickname,uuid} = decodeJWT(access_token);
       
       // 아직 승인되지 않은 유저
       const isPermitted = roles.find((e:string) => e == 'ROLE_PERMITTED')
@@ -85,6 +85,7 @@ function Login({navigation}:LoginScreenProps) {
           roles:roles,
           nickName:nickname,
           access_token: access_token,
+          uuid:uuid
         }),
       );
       await EncryptedStorage.setItem(

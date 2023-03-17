@@ -10,8 +10,8 @@ export const MainStyles = StyleSheet.create({
     resizeMode: 'contain',
   },
   container: {
-    backgroundColor: '#000',
-    flex: 1,
+    backgroundColor: '#121212',
+    height:'100%'
   },
   mainTextBox: {
     flex: 1,
@@ -119,6 +119,16 @@ export const MainStyles = StyleSheet.create({
     borderColor: '#FEFFD7',
     borderRadius: 5,
   },
+  noGameBoxContainer : {
+    width: heightScale * 390,
+    height: heightScale * 230,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#FEFFD7',
+    borderRadius: 5,
+    marginBottom: heightScale * 30,
+  },
   gameContainer: {
     position: 'absolute',
     width: heightScale * 390,
@@ -155,7 +165,7 @@ export const MainStyles = StyleSheet.create({
   },
   gamePlayerIcon: {
     borderWidth: 1,
-    borderColor: 'red',
+    borderColor: '#A4A4A4',
     width: heightScale * 30,
     height: heightScale * 30,
     backgroundColor: 'gray',

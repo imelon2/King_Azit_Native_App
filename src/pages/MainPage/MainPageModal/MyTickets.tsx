@@ -69,21 +69,21 @@ function MyTickets({route, navigation}: MyTicketsScreenProps) {
   }
 
   const ticketType = () => {
-    if (card == 'black') {
+    if (card == 'Black') {
       return (
         <Image
           style={styles.ticketImg}
           source={require(`../../../assets/BlackTicket.png`)}
         />
       );
-    } else if (card == 'red') {
+    } else if (card == 'Red') {
       return (
         <Image
           style={styles.ticketImg}
           source={require(`../../../assets/RedTicket.png`)}
         />
       );
-    } else if (card == 'gold') {
+    } else if (card == 'Gold') {
       return (
         <Image
           style={styles.ticketImg}

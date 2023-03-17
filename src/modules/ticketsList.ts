@@ -7,6 +7,7 @@ export type ticketsListType = {
     image:any,
     count:number
 }
+export type TicketType = 'Black' | 'Red' | 'Gold' | "";
 type EventType = "basic" | "width";
 
 const img = {
@@ -27,17 +28,17 @@ const ticketsList = (_type:EventType) => {
   const {red, black, gold} = useSelector((state: RootState) => state.ticket);
   const Cards = [
     {
-      type: 'red',
-      image: img[_type].RedCardImg,
-      count: red,
-    },
-    {
-      type: 'black',
+      type: 'Black',
       image: img[_type].BlackCardImg,
       count: black,
     },
     {
-      type: 'gold',
+      type: 'Red',
+      image: img[_type].RedCardImg,
+      count: red,
+    },
+    {
+      type: 'Gold',
       image: img[_type].GoldCardImg,
       count: gold,
     },

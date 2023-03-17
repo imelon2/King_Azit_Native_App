@@ -26,7 +26,8 @@ function getProfileImage() {
         );
         const base64ImageString = BinaryToBase64(profileImageResult.data);
         // console.log(profileImageResult.data);
-
+          console.log(base64ImageString);
+          
         dispatch(
           userSlice.actions.setProfileImage({
             profileImage: `data:image/png;base64,${base64ImageString}`,

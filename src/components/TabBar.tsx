@@ -72,10 +72,10 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     height:heightScale*80,
-    backgroundColor:'black',
+    backgroundColor:'#121212',
     // paddingVertical:5,
-    borderTopColor:'#A4A4A4',
-    borderTopWidth:StyleSheet.hairlineWidth,
+    // borderTopColor:'#A4A4A4',
+    // borderTopWidth:StyleSheet.hairlineWidth,
     // paddingTop:10
   },
   tabBarStyle: {
