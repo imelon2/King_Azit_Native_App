@@ -27,7 +27,7 @@ import axios from 'axios';
 const heightScale = heightData;
 
 // interface propsType {
-//   setTiketModalStatus(id: boolean): void;
+//   setTicketModalStatus(id: boolean): void;
 //   card: String;
 //   black: number;
 //   red: number;
@@ -72,22 +72,22 @@ function MyTickets({route, navigation}: MyTicketsScreenProps) {
     if (card == 'black') {
       return (
         <Image
-          style={styles.tiketImg}
-          source={require(`../../../assets/BlackTiket.png`)}
+          style={styles.ticketImg}
+          source={require(`../../../assets/BlackTicket.png`)}
         />
       );
     } else if (card == 'red') {
       return (
         <Image
-          style={styles.tiketImg}
-          source={require(`../../../assets/RedTiket.png`)}
+          style={styles.ticketImg}
+          source={require(`../../../assets/RedTicket.png`)}
         />
       );
     } else if (card == 'gold') {
       return (
         <Image
-          style={styles.tiketImg}
-          source={require(`../../../assets/GoldTiket.png`)}
+          style={styles.ticketImg}
+          source={require(`../../../assets/GoldTicket.png`)}
         />
       );
     }
@@ -110,7 +110,7 @@ function MyTickets({route, navigation}: MyTicketsScreenProps) {
         <View>
           {/* <Video
                         source={{ uri: "https://uploads-ssl.webflow.com/624b2c0795c4aab84ebe3296/624c5f468ac8f85e6acd1a08_kings%20NFT%203-transcode.mp4" }}
-                        style={styles.tiket}
+                        style={styles.ticket}
                         paused={false} // 재생/중지 여부
                         resizeMode={"cover"} // 프레임이 비디오 크기와 일치하지 않을 때 비디오 크기를 조정하는 방법을 결정합니다. cover : 비디오의 크기를 유지하면서 최대한 맞게
                         // onLoad={e => console.log(e)} // 미디어가 로드되고 재생할 준비가 되면 호출되는 콜백 함수입니다.
@@ -118,7 +118,7 @@ function MyTickets({route, navigation}: MyTicketsScreenProps) {
                     // onAnimatedValueUpdate={() => {}}
                     /> */}
 
-          <View style={styles.tiketBox}>
+          <View style={styles.ticketBox}>
             <View
               style={{
                 position: 'absolute',
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 10,
   },
-  tiket: {
+  ticket: {
     marginTop: 50 * heightScale,
     width: 264 * heightScale,
     height: 419 * heightScale,
@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
     marginTop: heightScale * 10,
     marginLeft: heightScale * 5,
   },
-  tiketBox: {
+  ticketBox: {
     width: 327 * heightScale,
     height: 518 * heightScale,
     borderColor: '#fff',
@@ -279,7 +279,7 @@ const styles = StyleSheet.create({
     marginTop: 50 * heightScale,
     borderRadius: 14,
   },
-  tiketImg: {
+  ticketImg: {
     width: 327 * heightScale,
     height: 404 * heightScale,
   },

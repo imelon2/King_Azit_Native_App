@@ -22,13 +22,17 @@ function MemberManagement() {
     }, []);
 
     const onClickUser = (key: number) => {
-        setModalStatus(true);
+        if (dummyData[key].state == 'Approved') {
+            navigation.navigate('UserDetail', { userData : dummyData[key]  });
+        } else {
+            setModalStatus(true);
+        }
         setSelectIndex(key);
     }
 
-    const dummyData = [{ name: '차원1', phone: '010-1234-1234', id: 'woncha', nickname: '한나퓌시', state: '', date: '2023.02.15' },
-    { name: '차원2', phone: '010-1234-1234', id: 'woncha', nickname: '한나퓌시', state: 'Approved', date: '2023.02.15' },
-    { name: '차원3', phone: '010-1234-1234', id: 'woncha', nickname: '한나퓌시', state: 'Deniend', date: '2023.02.15' }]
+    const dummyData = [{ name: '차원1', phone: '010-1234-1234', id: 'woncha', nickname: '한나퓌시', state: '', date: '2023.02.15' , email: 'hanagogi@email.com' , profileImage :''  },
+    { name: '차원2', phone: '010-1234-1234', id: 'woncha', nickname: '한나퓌시', state: 'Approved', date: '2023.02.15'  , profileImage :''  , email: 'hanagogi@email.com'  },
+    { name: '차원3', phone: '010-1234-1234', id: 'woncha', nickname: '한나퓌시', state: 'Deniend', date: '2023.02.15'  , profileImage :''   , email: 'hanagogi@email.com' }]
 
     return (
         <SafeAreaView style={styles.container}>

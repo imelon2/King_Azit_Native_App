@@ -36,7 +36,7 @@ function MainPage() {
   const [gameBox, setGameBox] = useState<roomType[]>();
 
   const [modalStatus, setModalStatus] = useState(false);
-  // const [tiketModalStatus, setTiketModalStatus] = useState(false);
+  // const [ticketModalStatus, setTicketModalStatus] = useState(false);
   const [playMemberStatus, setPlayMemberStatus] = useState(false);
   // const [myCard, setMyCard] = useState('');
   const { black, red, gold } = useSelector((state: RootState) => state.ticket);
@@ -91,7 +91,7 @@ function MainPage() {
   };
 
   // MyTickets 네비게이터
-  const onOpenMyTikets = (text: any) => {
+  const onOpenMyTickets = (text: any) => {
     let _count: number = 0;
     if (text === 'black') {
       _count = black;
@@ -165,7 +165,7 @@ function MainPage() {
           {/* My Tickets */}
           <View style={{ marginTop: heightScale * 60 }}>
             <View style={MainStyles.mainTextBox2}>
-              <Text style={MainStyles.mainText}>My Tikets</Text>
+              <Text style={MainStyles.mainText}>My Tickets</Text>
             </View>
             <FlatList
               horizontal
@@ -184,7 +184,7 @@ function MainPage() {
               renderItem={({ item }: { item: ticketsListType }) => (
                 <Pressable
                   key={item.key}
-                  onPress={() => onOpenMyTikets(item.type)}
+                  onPress={() => onOpenMyTickets(item.type)}
                   style={{ justifyContent: 'center', alignItems: 'center' }}>
                   <Image
                     style={{

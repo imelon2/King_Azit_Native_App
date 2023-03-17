@@ -32,12 +32,12 @@ function RoomMake() {
   const [socket, disconnect] = useSocket();
 
   const [selectDrop, setSelectDrop] = useState(false);
-  const [tiketSelectDrop, setTiketSelectDrop] = useState(false);
+  const [ticketSelectDrop, setTicketSelectDrop] = useState(false);
 
   const [table, setTable] = useState(1);
   const [gameType, setGameType] = useState('main');
   const [buyin, setBuyin] = useState('0');
-  const [tiket, setTiket] = useState('Ticket');
+  const [ticket, setTicket] = useState('Ticket');
   const [entey, setEntry] = useState();
   const [blind, setBlind] = useState("100/200");
   const [status, setStatus] = useState('progress');
@@ -49,8 +49,8 @@ function RoomMake() {
   }, []);
 
   const onClickTicket = useCallback((text: any) => {
-    setTiket(text.trim());
-    setTiketSelectDrop(false);
+    setTicket(text.trim());
+    setTicketSelectDrop(false);
   }, []);
 
   const onChangeEntry = useCallback((text: any) => {
@@ -59,7 +59,7 @@ function RoomMake() {
 
   const onChnageGameType = useCallback((text: any) => {
     setGameType(text.trim());
-    setTiketSelectDrop(false);
+    setTicketSelectDrop(false);
   }, []);
 
   const createRoom = () => {
@@ -74,7 +74,7 @@ function RoomMake() {
         game_name: gameType+" Game",
         entry: entey,
         ticket_amount: buyin,
-        ticket_type: tiket,
+        ticket_type: ticket,
         blind: blind,
         ante: 0,
         // playing_users: [],
@@ -211,10 +211,10 @@ function RoomMake() {
                     />
                   </View>
                   <TouchableOpacity
-                    onPress={() => setTiketSelectDrop(!selectDrop)}
+                    onPress={() => setTicketSelectDrop(!selectDrop)}
                     activeOpacity={1}
                     style={styles.tableSelect2}>
-                    <Text style={styles.tableSelectText}>{tiket}</Text>
+                    <Text style={styles.tableSelectText}>{ticket}</Text>
                     <IconAntDesign
                       name="down"
                       size={heightScale * 25}
@@ -226,7 +226,7 @@ function RoomMake() {
               )}
             </View>
           </View>
-          {tiketSelectDrop && (
+          {ticketSelectDrop && (
             <View style={styles.selectBox2}>
               <TouchableOpacity
                 onPress={() => onClickTicket('Black Ticket')}

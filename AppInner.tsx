@@ -30,11 +30,13 @@ import RoomMake from './src/pages/MainPage/RoomMake';
 import TicketPay from './src/pages/Admin/TicketPay';
 import TicketCharge from './src/pages/Admin/TicketCharge';
 import MemberManagement from './src/pages/Admin/MemberManagement';
+import UserDetail from './src/pages/Admin/UserDetail';
 import MyTickets from './src/pages/MainPage/MainPageModal/MyTickets';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import TicketsResult from './src/pages/Admin/TicketsResult';
 import { deepLinkController } from './src/modules/Linking';
 import Forbidden from './src/pages/Admin/Forbidden';
+import AdminTicketsHistory from './src/pages/Admin/AdminTicketsHistory';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -76,7 +78,20 @@ export type HomeRootStackParamList = {
     message: string;
   };
   TicketCharge: undefined;
-  MemberManagement:undefined;
+  MemberManagement: undefined;
+  UserDetail: {
+    userData: {
+      name: string;
+      phone: string;
+      id: string;
+      nickname: string;
+      state: string;
+      date: string;
+      profileImage: string;
+      email: string;
+    },
+  }
+  AdminTicketsHistory: undefined;
 };
 
 export type MyPageRootStackParamList = {
@@ -247,8 +262,18 @@ function AppInner() {
             options={{ animation: 'none' }}
           />
           <HomeStack.Screen
+            name="AdminTicketsHistory"
+            component={AdminTicketsHistory}
+            options={{ animation: 'none' }}
+          />
+          <HomeStack.Screen
             name="MemberManagement"
             component={MemberManagement}
+            options={{ animation: 'none' }}
+          />
+          <HomeStack.Screen
+            name="UserDetail"
+            component={UserDetail}
             options={{ animation: 'none' }}
           />
           <HomeStack.Screen

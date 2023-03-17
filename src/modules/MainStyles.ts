@@ -48,12 +48,12 @@ export const MainStyles = StyleSheet.create({
     height: heightScale * 208,
     // resizeMode:'center'
   },
-  tiketContainer: {
+  ticketContainer: {
     flex: 10,
     paddingTop: heightScale * 14, // 12나와야함
     paddingHorizontal: heightScale * 18,
   },
-  tiketBox: {
+  ticketBox: {
     width: '100%',
     height: heightScale * 46,
     marginTop: 2,
@@ -75,13 +75,13 @@ export const MainStyles = StyleSheet.create({
       height: 0,
     },
   },
-  tiketBoxColor: {
+  ticketBoxColor: {
     backgroundColor: '#656565',
   },
-  tiketBoxColor2: {
+  ticketBoxColor2: {
     backgroundColor: '#9A9A9A',
   },
-  tiketText: {
+  ticketText: {
     fontSize: heightScale * 13,
     color: 'white',
     lineHeight: heightScale * 46,
@@ -209,7 +209,7 @@ export const MainStyles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 12 * heightScale,
   },
-  tiketBuy: {
+  ticketBuy: {
     color: 'white',
     fontSize: heightScale * 15,
     marginTop: heightScale * 12,
