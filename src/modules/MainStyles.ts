@@ -10,8 +10,8 @@ export const MainStyles = StyleSheet.create({
     resizeMode: 'contain',
   },
   container: {
-    backgroundColor: '#000',
-    flex: 1,
+    backgroundColor: '#121212',
+    height:'100%'
   },
   mainTextBox: {
     flex: 1,

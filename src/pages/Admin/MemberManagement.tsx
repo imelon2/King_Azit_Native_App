@@ -1,8 +1,8 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Image, StyleSheet, Text, View, TextInput, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
+import { Image, StyleSheet, Text, View, TextInput, ScrollView, Dimensions, TouchableOpacity,SafeAreaView } from 'react-native';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { HomeRootStackParamList, } from '../../../AppInner';
-import { SafeAreaView } from 'react-native-safe-area-context';
+// import { SafeAreaView } from 'react-native-safe-area-context';
 import { heightData } from '../../modules/globalStyles';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import IconIonicons from 'react-native-vector-icons/Ionicons';
@@ -169,7 +169,7 @@ function MemberManagement() {
                         </View>
 
                     </View>
-                </SafeAreaView>
+                    </SafeAreaView>
             </Modal>
         </SafeAreaView>
     )
@@ -183,8 +183,7 @@ const styles = StyleSheet.create({
     container2: {
         width: width,
         height: height,
-        position: 'absolute',
-        left: - 20,
+        left: - heightScale*22,
         backgroundColor: '#121212',
     },
     fontStyle: { fontSize: heightScale * 18, fontWeight: 'bold', color: 'white' },

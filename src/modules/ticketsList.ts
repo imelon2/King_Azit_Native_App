@@ -28,14 +28,14 @@ const ticketsList = (_type:EventType) => {
   const {red, black, gold} = useSelector((state: RootState) => state.ticket);
   const Cards = [
     {
-      type: 'Red',
-      image: img[_type].RedCardImg,
-      count: red,
-    },
-    {
       type: 'Black',
       image: img[_type].BlackCardImg,
       count: black,
+    },
+    {
+      type: 'Red',
+      image: img[_type].RedCardImg,
+      count: red,
     },
     {
       type: 'Gold',

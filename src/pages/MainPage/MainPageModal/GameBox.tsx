@@ -4,6 +4,12 @@ import {Shadow} from 'react-native-shadow-2';
 import {heightScale, MainStyles} from '../../../modules/MainStyles';
 import { TicketType } from '../../../modules/ticketsList';
 
+type playerType = {
+  id : string;
+  uuid : string;
+  profile:string;
+}
+
 export type roomType = {
   game_id: string;
   table_no: number;
@@ -13,14 +19,20 @@ export type roomType = {
   ticket_type: TicketType;
   ticket_amount: number;
   status: string;
-  playing_users: string[];
-  sitout_users: string[];
+  playing_users: playerType[];
+  sitout_users: playerType[];
   dealer_id: string;
   entry_limit: number;
   entry: string;
 };
 
-const GameBox = ({item,onClickJoinButton,onClickMember}: {item: roomType,onClickJoinButton(items:roomType):void,onClickMember:() => void}) => {
+interface propsType {
+  item: roomType;
+  onClickJoinButton(item: roomType): void;
+  onClickMember():void;
+}
+
+const GameBox = ({item,onClickJoinButton,onClickMember}: propsType) => {
   return (
     <>
       <View style={{marginBottom: heightScale * 30}}>

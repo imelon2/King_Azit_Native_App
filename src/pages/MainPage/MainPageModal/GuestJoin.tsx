@@ -14,9 +14,13 @@ import {heightData} from '../../../modules/globalStyles';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {HomeRootStackParamList} from '../../../../AppInner';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
-import React, {useEffect, useState} from 'react';
-import ticketsList, {ticketsListType, TicketType} from '../../../modules/ticketsList';
-import { roomType } from './GameBox';
+import React, {useEffect, useRef, useState} from 'react';
+import ticketsList, {
+  ticketsListType,
+  TicketType,
+} from '../../../modules/ticketsList';
+import {roomType} from './GameBox';
+import getTickets from '../../../hooks/getTickets';
 const {width, height} = Dimensions.get('window');
 const heightScale = heightData;
 
@@ -27,10 +31,20 @@ interface propsType {
 
 function GuestJoin(props: propsType) {
   const navigation = useNavigation<NavigationProp<HomeRootStackParamList>>();
-  const CARDS = ticketsList('basic');
-  const [ticket,setTicket] = useState<ticketsListType>();
+  const CARDS = ticketsList('basic').filter(
+    keys => keys.type == 'Red' || keys.type == 'Black',
+  );
   const [check, setcheck] = useState(false);
-  const [isEnoughCard, setIsEnoughCard] = useState(false);
+  const [change, setChange] = useState<number>(5);
+  const [price, setPrice] = useState<number>(0);
+  const [isEnoughCard, setIsEnoughCard] = useState<boolean>(true);
+
+  let _gap = heightScale*40;
+  let _offset = heightScale*80;
+  let _width = width - (_gap + _offset) * 2;
+
+  // 현재 유저 보유 티켓 가져오기
+  getTickets();
 
   const onClickCheckBox = () => {
     setcheck(!check);
@@ -41,24 +55,59 @@ function GuestJoin(props: propsType) {
     if (!check) {
       return;
     }
-    if(props.item.ticket_amount <= ticket!.count) {
-      return
-    }
+    // if (props.item.ticket_amount <= ticket!.count) {
+    //   return;
+    // }
 
     props.setModalStatus(false);
     navigation.navigate('GamePage');
   };
-  
-  useEffect(() => {
-    const _ticket = CARDS.find(i => i.type == props.item.ticket_type)
-    setTicket(_ticket);
-    setIsEnoughCard(props.item.ticket_amount <= _ticket!.count)
-  },[])
+
+  // useEffect(() => {
+  //   const _ticket = CARDS.find(i => i.type == props.item.ticket_type);
+  //   setTicket(_ticket);
+  //   setIsEnoughCard(props.item.ticket_amount <= _ticket!.count);
+  // }, []);
+
+  // Flatlist Focus된 page index 리턴
+  const onViewableItemsChanged = ({viewableItems}: any) => {
+    // 현재 Focus된 page index 전달
+    let price: any;
+    if (props.item.ticket_type === 'Black') {
+      if (viewableItems[0].item.type === 'Red') {
+        price = props.item.ticket_amount * 5;
+        setChange(5);
+      }
+      if (viewableItems[0].item.type === 'Black') {
+        price = props.item.ticket_amount;
+        setChange(5);
+      }
+    }
+    if (props.item.ticket_type === 'Red') {
+      if (viewableItems[0].item.type === 'Red') {
+        price = props.item.ticket_amount;
+        setChange(5);
+      }
+      if (viewableItems[0].item.type === 'Black') {
+        price = Math.ceil(props.item.ticket_amount / 5);
+        setChange(5 - (props.item.ticket_amount % 5));
+      }
+    }
+    setPrice(price);
+    setIsEnoughCard(price <= viewableItems[0].item.count ? true : false);
+  };
+  const viewabilityConfig = {
+    itemVisiblePercentThreshold: 50, // View에 50% 이상 노출될 경우 실행
+  };
+  const viewabilityConfigCallbackPairs = useRef([
+    {viewabilityConfig, onViewableItemsChanged},
+  ]);
+
 
   return (
     <View style={styles.modalbox}>
       {/* Close Icon */}
-      <View style={{flex: 1, alignItems: 'flex-end'}}>
+      <View style={{alignItems: 'flex-end'}}>
         <IconAntDesign
           onPress={() => props.setModalStatus(false)}
           name="close"
@@ -67,32 +116,65 @@ function GuestJoin(props: propsType) {
           style={styles.closeButton}
         />
       </View>
-
       {/* 티켓 정보 */}
-      <View style={{flex: 7, alignItems: 'center'}}>
-        <View
-          // onPrss={() => onOpenMyTikets(item.type)}
-          style={{justifyContent: 'center', alignItems: 'center'}}>
-          <View style={{flexDirection: 'row'}}>
-            <Text style={styles.cardText}>{ticket?.type} Card</Text>
-            <Text style={styles.cardText2}> | 보유 {ticket?.count} 개</Text>
-          </View>
-          <Image
-            style={{
-              resizeMode: 'stretch',
-              width: 220*heightScale,
-              height: heightScale * 280,
-              borderWidth: 2,
-              borderColor: '#A1A1A1',
-              borderRadius: 11,
-            }}
-            source={ticket?.image}
-          />
+      <View>
+        <FlatList
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          automaticallyAdjustContentInsets={false}
+          snapToInterval={_width + _gap}
+          snapToAlignment="start"
+          decelerationRate="fast"
+          bounces={false}
+          data={CARDS}
+          keyExtractor={item => item.key.toString()}
+          viewabilityConfigCallbackPairs={
+            viewabilityConfigCallbackPairs.current
+          }
+          style={{marginTop: heightScale * 40}}
+          contentContainerStyle={{
+            paddingHorizontal: _offset + _gap / 2,
+          }}
+          renderItem={({item}: {item: ticketsListType}) => (
+            <View style={{marginHorizontal: _gap / 2}}>
+              <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                <View style={{flexDirection: 'row'}}>
+                  <Text style={styles.cardText}>{item.type} Tickets</Text>
+                  <Text style={styles.cardText2}> | 보유 {item.count} 개</Text>
+                </View>
+                <Image
+                  style={{
+                    resizeMode: 'stretch',
+                    width: _width,
+                    height: heightScale * 280,
+                    borderWidth: 2,
+                    borderColor: '#A1A1A1',
+                    borderRadius: 11,
+                  }}
+                  source={item.image}
+                />
+              </View>
+            </View>
+          )}
+        />
+      </View>
+      <View style={{alignItems: 'center'}}>
+        <View style={styles.useTextWrapper}>
+          <Text style={styles.useText}>소모 : {price} 장</Text>
+          {change === 5 ? (
+            <Text> </Text>
+          ) : (
+            <Text style={{color:"red"}}>Red Ticekt + {change} </Text>
+          )}
         </View>
         <TouchableOpacity
           onPress={onClickCheckBox}
           activeOpacity={1}
-          style={{flex: 1, flexDirection: 'row',marginTop:heightScale*35}}>
+          style={{
+            flexDirection: 'row',
+            marginTop: heightScale * 29,
+          }}>
           <IconAntDesign
             name="checksquareo"
             size={30}
@@ -100,16 +182,20 @@ function GuestJoin(props: propsType) {
           />
           <Text style={styles.checkText}>For Guest Player</Text>
         </TouchableOpacity>
-        <View style={styles.useText}>
-          <Text>소모 : {props.item.ticket_amount} 장</Text>
-        </View>
       </View>
-      <View style={{flex: 2.5, alignItems: 'center'}}>
+      <View
+        style={{
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+          marginTop: heightScale * 40,
+        }}>
         <TouchableOpacity
           onPress={guJoinButton}
           activeOpacity={1}
-          style={isEnoughCard ? styles.gujoinButton2: styles.gujoinButton}>
-          <Text style={[styles.gujoinButtonText]}> {isEnoughCard ? "참가하기": "티켓이 부족합니다"} </Text>
+          style={isEnoughCard ? styles.gujoinButton2 : styles.gujoinButton}>
+          <Text style={[styles.gujoinButtonText]}>
+            {isEnoughCard ? '참가하기' : '티켓이 부족합니다'}{' '}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -153,34 +239,34 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   useText: {
-    marginTop: 20 * heightScale,
-    width: 100 * heightScale,
-    height: 30 * heightScale,
-    borderRadius:20,
+    paddingHorizontal: heightScale * 10,
+    paddingVertical: heightScale * 3,
+    borderRadius: 20,
     backgroundColor: '#D9D9D9',
-    justifyContent:'center',
-    alignItems:'center'
+  },
+  useTextWrapper: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: heightScale * 30,
   },
   gujoinButton: {
     width: heightScale * 250,
     height: heightScale * 60,
     backgroundColor: '#FF3434',
     borderRadius: 6,
-    marginTop: heightScale * 50,
   },
   gujoinButton2: {
     width: heightScale * 250,
     height: heightScale * 60,
     backgroundColor: '#2C2A2A',
     borderRadius: 6,
-    marginTop: heightScale * 50,
   },
   gujoinButtonText: {
     textAlign: 'center',
     lineHeight: heightScale * 60,
     color: 'white',
     fontSize: heightScale * 20,
-    fontWeight:"500",
+    fontWeight: '500',
   },
 });
 
