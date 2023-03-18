@@ -118,7 +118,7 @@ function TicketCharge() {
                         <View style={{ flex: 1, justifyContent: 'center' }} >
                             <Image
                                 style={styles.ticketImg}
-                                source={require(`../../assets/RedTiket.png`)} />
+                                source={require(`../../assets/RedTicket.png`)} />
                         </View>
                         <View style={{ flex: 3, paddingHorizontal: 13 * heightScale, justifyContent: 'center' }} >
                             <View style={{ height: 76 * heightScale }}>
@@ -140,7 +140,7 @@ function TicketCharge() {
                         <View style={{ flex: 1, justifyContent: 'center' }} >
                             <Image
                                 style={styles.ticketImg}
-                                source={require(`../../assets/GoldTiket.png`)} />
+                                source={require(`../../assets/GoldTicket.png`)} />
                         </View>
                         <View style={{ flex: 3, paddingHorizontal: 13 * heightScale, justifyContent: 'center' }} >
                             <View style={{ height: 76 * heightScale }}>
@@ -171,7 +171,7 @@ function TicketCharge() {
                                 <View style={{ flex: 1, alignItems: 'center', flexDirection: 'row' }}>
                                     <Image
                                         style={styles.ticketImg2}
-                                        source={require(`../../assets/BlackTiket.png`)} />
+                                        source={require(`../../assets/BlackTicket.png`)} />
                                     <Text style={styles.fontStyle5} >Black Ticket</Text>
                                 </View>
                                 <View style={{ flex: 1, alignItems: 'center', flexDirection: 'row', paddingLeft: 110 * heightScale }}>
@@ -191,7 +191,7 @@ function TicketCharge() {
                                 <View style={{ flex: 1, alignItems: 'center', flexDirection: 'row' }}>
                                     <Image
                                         style={styles.ticketImg2}
-                                        source={require(`../../assets/RedTiket.png`)} />
+                                        source={require(`../../assets/RedTicket.png`)} />
                                     <Text style={styles.fontStyle5} >Red Ticket</Text>
                                 </View>
                                 <View style={{ flex: 1, alignItems: 'center', flexDirection: 'row', paddingLeft: 110 * heightScale }}>
@@ -211,7 +211,7 @@ function TicketCharge() {
                                 <View style={{ flex: 1, alignItems: 'center', flexDirection: 'row' }}>
                                     <Image
                                         style={styles.ticketImg2}
-                                        source={require(`../../assets/GoldTiket.png`)} />
+                                        source={require(`../../assets/GoldTicket.png`)} />
                                     <Text style={styles.fontStyle5} >Gold Ticket</Text>
                                 </View>
                                 <View style={{ flex: 1, alignItems: 'center', flexDirection: 'row', paddingLeft: 110 * heightScale }}>

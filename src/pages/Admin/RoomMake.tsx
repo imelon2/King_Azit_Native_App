@@ -33,12 +33,12 @@ function RoomMake() {
   const [socket, disconnect] = useSocket();
 
   const [selectDrop, setSelectDrop] = useState(false);
-  const [tiketSelectDrop, setTiketSelectDrop] = useState(false);
+  const [ticketSelectDrop, setTicketSelectDrop] = useState(false);
 
   const [table, setTable] = useState(1);
   const [gameType, setGameType] = useState<GameType>('Main');
   const [buyin, setBuyin] = useState<any>();
-  const [tiket, setTiket] = useState<TicketType>();
+  const [ticket, setTicket] = useState<TicketType>();
   const [enteyLimit, setEntryLimit] = useState();
   const [blind, setBlind] = useState('100/200');
   const [duration, setDuration] = useState<DurationType>();
@@ -56,8 +56,8 @@ function RoomMake() {
   }, []);
 
   const onClickTicket = useCallback((text: any) => {
-    setTiket(text.trim());
-    setTiketSelectDrop(false);
+    setTicket(text.trim());
+    setTicketSelectDrop(false);
   }, []);
 
   const onChangeEntryLimit = useCallback((text: any) => {
@@ -70,21 +70,21 @@ function RoomMake() {
 
   const onChnageGameType = useCallback((text: any) => {
     setGameType(text.trim());
-    setTiketSelectDrop(false);
+    setTicketSelectDrop(false);
   }, []);
 
   useEffect(() => {
     if (gameType == 'Main') {
       setBuyin('1');
-      setTiket('Black');
+      setTicket('Black');
       setDuration('8');
     } else if (gameType == 'Nft') {
       setBuyin('1');
-      setTiket('Black');
+      setTicket('Black');
       setDuration('9');
     } else {
       setBuyin("");
-      setTiket("");
+      setTicket("");
       setDuration('8');
     }
   }, [gameType]);
@@ -98,7 +98,7 @@ function RoomMake() {
     console.log("game name :" + gameType);
     console.log("entey Limit :" + (enteyLimit == ""));
     console.log("ticket amount :" + buyin);
-    console.log("ticket type :" + tiket);
+    console.log("ticket type :" + ticket);
     console.log("blind :" + blind);
     console.log("ante :" + "0");
     console.log("status :" + status);
@@ -110,7 +110,7 @@ function RoomMake() {
         game_name: gameType,
         entry_limit: enteyLimit,
         ticket_amount: buyin,
-        ticket_type: tiket,
+        ticket_type: ticket,
         blind: blind,
         ante: 0,
         // playing_users: [],
@@ -218,7 +218,7 @@ function RoomMake() {
                 <View style={[styles.touchBox3]}>
                   <Text
                     style={[styles.tableSelectText2, styles.tableSelectText3]}>
-                    {buyin} {tiket} Ticket
+                    {buyin} {ticket} Ticket
                   </Text>
                 </View>
               ) : (
@@ -234,10 +234,10 @@ function RoomMake() {
                     />
                   </View>
                   <TouchableOpacity
-                    onPress={() => setTiketSelectDrop(!selectDrop)}
+                    onPress={() => setTicketSelectDrop(!selectDrop)}
                     activeOpacity={1}
                     style={styles.tableSelect2}>
-                    <Text style={styles.tableSelectText}>{tiket} Ticket</Text>
+                    <Text style={styles.tableSelectText}>{ticket} Ticket</Text>
                     <IconAntDesign
                       name="down"
                       size={heightScale * 25}
@@ -251,7 +251,7 @@ function RoomMake() {
           </View>
 
           {/* Tickets Select Box */}
-          {tiketSelectDrop && (
+          {ticketSelectDrop && (
             <View style={styles.selectBox2}>
               {ticket_type.map(item => (
                 <TouchableOpacity
