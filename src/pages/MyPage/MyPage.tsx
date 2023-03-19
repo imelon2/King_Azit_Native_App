@@ -31,9 +31,11 @@ function MyPage() {
   const navigation = useNavigation<NavigationProp<MyPageRootStackParamList>>();
   const nickname = useSelector((state: RootState) => state.user.nickName);
   const name = useSelector((state: RootState) => state.user.name);
+  const uuid = useSelector((state: RootState) => state.user.uuid);
   const profileImage = useSelector(
     (state: RootState) => state.user.profileImage,
   );
+  
   const access_token = useSelector(
     (state: RootState) => state.user.access_token,
   );
@@ -99,7 +101,7 @@ function MyPage() {
 
   const getProfileImageHttps = async () => {
     try {
-      const refreshResult = await axios.get(`${Config.API_URL}/member/image`, {
+      const refreshResult = await axios.get(`${Config.API_URL}/member/image?memberUuid=${uuid}`, {
         responseType: 'arraybuffer',
         headers: {
           authorization: `Bearer ${access_token}`,

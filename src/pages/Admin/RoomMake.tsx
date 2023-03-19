@@ -20,15 +20,16 @@ import useSocket from '../../hooks/useSocket';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../store/reducer';
 import { TicketType } from '../../modules/ticketsList';
+import { getGameListArr } from '../../hooks/getGameList';
 const heightScale = heightData;
 
-const {width, height} = Dimensions.get('window');
 type GameType = 'Main' | 'Nft' | 'Custom';
 type StatusType = 'playing' | 'waiting';
 type DurationType = '8' | '9' | null;
 
 function RoomMake() {
   const navigation = useNavigation<NavigationProp<HomeRootStackParamList>>();
+  const gameData:any = useSelector((state: RootState) => state.games);
   const {name, nickName} = useSelector((state: RootState) => state.user);
   const [socket, disconnect] = useSocket();
 
@@ -44,7 +45,8 @@ function RoomMake() {
   const [duration, setDuration] = useState<DurationType>();
   const [status, setStatus] = useState<StatusType>('playing');
 
-  const table_Num = [1, 2, 3, 4];
+  const [table_Num, setTable_Num] = useState([1, 2, 3, 4]);
+
   const game_type: GameType[] = ['Main', 'Nft', 'Custom'];
   const ticket_type: TicketType[] = ['Black', 'Red', 'Gold'];
   const Blind_Duration: DurationType[] = ['8', '9'];
@@ -72,6 +74,22 @@ function RoomMake() {
     setGameType(text.trim());
     setTicketSelectDrop(false);
   }, []);
+
+  useEffect(() => {
+    const callback = (data: any) => {
+      console.log(data);
+    };
+    if(socket) {
+      socket.on('error', callback);
+    }
+  },[])
+
+  useEffect(() => {
+    const gameList = getGameListArr(gameData);
+    gameList.find((key) => key.table_no)
+    const currTableNum = table_Num.filter((key) => !gameList.map((key) => key.table_no).includes(key))
+    setTable_Num([...currTableNum])
+  },[gameData])
 
   useEffect(() => {
     if (gameType == 'Main') {
@@ -122,6 +140,8 @@ function RoomMake() {
 
   const deleteTest = () => {
     if (socket) {
+      console.log("delete Room");
+      
       socket.emit('finishGame', "");
     }
   }

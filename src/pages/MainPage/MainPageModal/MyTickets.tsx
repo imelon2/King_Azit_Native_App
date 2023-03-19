@@ -24,6 +24,7 @@ import {useSelector} from 'react-redux';
 import Config from 'react-native-config';
 import {RootState} from '../../../store/reducer';
 import axios from 'axios';
+import { img } from '../../../modules/ticketsList';
 const heightScale = heightData;
 
 // interface propsType {
@@ -73,21 +74,21 @@ function MyTickets({route, navigation}: MyTicketsScreenProps) {
       return (
         <Image
           style={styles.ticketImg}
-          source={require(`../../../assets/BlackTicket.png`)}
+          source={img['basic'].BlackCardImg}
         />
       );
     } else if (card == 'Red') {
       return (
         <Image
           style={styles.ticketImg}
-          source={require(`../../../assets/RedTicket.png`)}
+          source={img['basic'].RedCardImg}
         />
       );
     } else if (card == 'Gold') {
       return (
         <Image
           style={styles.ticketImg}
-          source={require(`../../../assets/GoldTicket.png`)}
+          source={img['basic'].GoldCardImg}
         />
       );
     }
