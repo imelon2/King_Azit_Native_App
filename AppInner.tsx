@@ -29,6 +29,7 @@ import TicketsHistorys from './src/pages/MyPage/TicketsHistorys';
 import RoomMake from './src/pages/Admin/RoomMake';
 import TicketPay from './src/pages/Admin/TicketPay';
 import TicketCharge from './src/pages/Admin/TicketCharge';
+import MemberManagePage from './src/pages/Admin/MemberManagePage';
 import MemberManagement from './src/pages/Admin/MemberManagement';
 import UserDetail from './src/pages/Admin/UserDetail';
 import MyTickets from './src/pages/MainPage/MainPageModal/MyTickets';
@@ -78,7 +79,9 @@ export type HomeRootStackParamList = {
     message: string;
   };
   TicketCharge: undefined;
-  MemberManagement: undefined;
+  MemberManagement: {
+    status : string;
+  };
   UserDetail: {
     userData: {
       name: string;
@@ -91,6 +94,7 @@ export type HomeRootStackParamList = {
       email: string;
     },
   }
+  MemberManagePage: undefined;
   AdminTicketsHistory: undefined;
 };
 
@@ -173,7 +177,7 @@ function AppInner() {
           },
         });
         const { access_token, refresh_token } = refreshResult.data;
-        const { sub, roles, nickname,uuid } = decodeJWT(access_token);
+        const { sub, roles, nickname, uuid } = decodeJWT(access_token);
 
         dispatch(
           userSlice.actions.setUser({
@@ -181,7 +185,7 @@ function AppInner() {
             roles: roles,
             access_token: access_token,
             nickName: nickname,
-            uuid:uuid
+            uuid: uuid
           }),
         );
         await EncryptedStorage.setItem('refreshToken', refresh_token);
@@ -270,6 +274,11 @@ function AppInner() {
           <HomeStack.Screen
             name="MemberManagement"
             component={MemberManagement}
+            options={{ animation: 'none' }}
+          />
+          <HomeStack.Screen
+            name="MemberManagePage"
+            component={MemberManagePage}
             options={{ animation: 'none' }}
           />
           <HomeStack.Screen

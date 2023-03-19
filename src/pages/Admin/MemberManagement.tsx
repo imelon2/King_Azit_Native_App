@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Image, StyleSheet, Text, View, TextInput, ScrollView, Dimensions, TouchableOpacity,SafeAreaView } from 'react-native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { Image, StyleSheet, Text, View, TextInput, ScrollView, Dimensions, TouchableOpacity, SafeAreaView } from 'react-native';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { HomeRootStackParamList, } from '../../../AppInner';
 // import { SafeAreaView } from 'react-native-safe-area-context';
@@ -10,8 +11,10 @@ import Modal from 'react-native-modal';
 const { width, height } = Dimensions.get('window');
 const heightScale = heightData;
 
+type AdminScreenProps = NativeStackScreenProps<HomeRootStackParamList, 'MemberManagement'>;
 
-function MemberManagement() {
+function MemberManagement({ route }: AdminScreenProps) {
+    const { status } = route.params
     const navigation = useNavigation<NavigationProp<HomeRootStackParamList>>();
     const [nickname, setNickname] = useState<string>('');
     const [modalStatus, setModalStatus] = useState(false);
@@ -22,23 +25,34 @@ function MemberManagement() {
     }, []);
 
     const onClickUser = (key: number) => {
-        if (dummyData[key].state == 'Approved') {
-            navigation.navigate('UserDetail', { userData : dummyData[key]  });
-        } else {
-            setModalStatus(true);
+        if (status == "exist" || status == "admin") {
+            navigation.navigate('UserDetail', { userData: dummyData[key] });
         }
+
+        if (status == "new") {
+            if (dummyData[key].state == 'Approved') {
+                navigation.navigate('UserDetail', { userData: dummyData[key] });
+            } else {
+                setModalStatus(true);
+            }
+        }
+
         setSelectIndex(key);
     }
 
-    const dummyData = [{ name: '차원1', phone: '010-1234-1234', id: 'woncha', nickname: '한나퓌시', state: '', date: '2023.02.15' , email: 'hanagogi@email.com' , profileImage :''  },
-    { name: '차원2', phone: '010-1234-1234', id: 'woncha', nickname: '한나퓌시', state: 'Approved', date: '2023.02.15'  , profileImage :''  , email: 'hanagogi@email.com'  },
-    { name: '차원3', phone: '010-1234-1234', id: 'woncha', nickname: '한나퓌시', state: 'Deniend', date: '2023.02.15'  , profileImage :''   , email: 'hanagogi@email.com' }]
+    const dummyData = [{ name: '차원1', phone: '010-1234-1234', id: 'woncha', nickname: '한나퓌시', state: '', date: '2023.02.15', email: 'hanagogi@email.com', profileImage: '' },
+    { name: '차원2', phone: '010-1234-1234', id: 'woncha', nickname: '한나퓌시', state: 'Approved', date: '2023.02.15', profileImage: '', email: 'hanagogi@email.com' },
+    { name: '차원3', phone: '010-1234-1234', id: 'woncha', nickname: '한나퓌시', state: 'Deniend', date: '2023.02.15', profileImage: '', email: 'hanagogi@email.com' }]
 
     return (
         <SafeAreaView style={styles.container}>
             <View>
                 <View style={styles.headerStyle}>
-                    <Text style={styles.fontStyle}>가입 신청 내역</Text>
+                    <Text style={styles.fontStyle}>
+                        {status == 'exist' && '기존 멤버 관리'}
+                        {status == 'new' && '신규 멤버 관리'}
+                        {status == 'admin' && '어드민 관리'}
+                    </Text>
                 </View>
                 <IconAntDesign
                     name="left"
@@ -47,6 +61,16 @@ function MemberManagement() {
                     style={styles.beforeIcon}
                     onPress={() => navigation.goBack()}
                 />
+                {status == 'admin' && (
+                    <IconAntDesign
+                        name="plus"
+                        size={heightScale * 28}
+                        color="white"
+                        style={styles.plusIcon}
+                        // onPress={() => navigation.goBack()}
+                    />
+
+                )}
             </View>
             <View style={{ alignItems: 'center' }} >
                 <View style={styles.giftModalTextInput}>
@@ -173,7 +197,7 @@ function MemberManagement() {
                         </View>
 
                     </View>
-                    </SafeAreaView>
+                </SafeAreaView>
             </Modal>
         </SafeAreaView>
     )
@@ -187,7 +211,7 @@ const styles = StyleSheet.create({
     container2: {
         width: width,
         height: height,
-        left: - heightScale*22,
+        left: - heightScale * 22,
         backgroundColor: '#121212',
     },
     fontStyle: { fontSize: heightScale * 18, fontWeight: 'bold', color: 'white' },
@@ -229,6 +253,12 @@ const styles = StyleSheet.create({
         position: 'absolute',
         marginTop: (heightScale * (61 - 28)) / 2,
         marginLeft: heightScale * 15,
+    },
+    plusIcon: {
+        position: 'absolute',
+        right:0,
+        marginTop: (heightScale * (61 - 28)) / 2,
+        marginRight: heightScale * 15,
     },
     giftModalTextInput: {
         flexDirection: 'row',

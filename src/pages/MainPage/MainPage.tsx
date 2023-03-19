@@ -18,8 +18,8 @@ function MainPage() {
 
   return (
     <>
-      {!isAdmin && <MainPageAdmin />}
-      {!!isAdmin && (<MainPageUser />)}
+      {isAdmin && <MainPageAdmin />}
+      {!isAdmin && (<MainPageUser />)}
     </>
   );
 }

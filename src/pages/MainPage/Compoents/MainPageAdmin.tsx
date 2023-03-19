@@ -63,7 +63,7 @@ function MainPageAdmin() {
         </View>
         <View style={{ flex: 1, flexDirection: 'row' }} >
           <View style={{ flex: 1.9 }} >
-            <TouchableOpacity activeOpacity={1} onPress={() => navigation.navigate('MemberManagement')}  style={MainStyles.contentsBox3} >
+            <TouchableOpacity activeOpacity={1} onPress={() => navigation.navigate('MemberManagePage')}  style={MainStyles.contentsBox3} >
               <View>
                 <Text style={MainStyles.contentsText} >멤버 관리</Text>
                 <Text style={MainStyles.contentsText2}>가입신청 승인/거절/탈퇴</Text>
