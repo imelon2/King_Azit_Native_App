@@ -10,7 +10,7 @@ export type ticketsListType = {
 export type TicketType = 'Black' | 'Red' | 'Gold' | "";
 type EventType = "basic" | "width";
 
-const img = {
+export const img = {
   basic:{
     RedCardImg : require('../assets/RedCard.png'),
     BlackCardImg : require('../assets/BlackCard.png'),

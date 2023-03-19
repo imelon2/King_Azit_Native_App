@@ -1,12 +1,21 @@
 import {useNavigation, NavigationProp} from '@react-navigation/native';
 import React from 'react';
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {
   MyPageRootStackParamList,
   HomeRootStackParamList,
 } from '../../../AppInner';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import {heightData} from '../../modules/globalStyles';
+import {MainStyles} from '../../modules/MainStyles';
+import GameList from '../MainPage/Compoents/GameList';
 const heightScale = heightData;
 function CreateRoom() {
   const navigation =
@@ -15,6 +24,7 @@ function CreateRoom() {
     >();
   return (
     <SafeAreaView style={styles.container}>
+      {/* header */}
       <View>
         <View style={styles.headerStyle}>
           <Text style={styles.fontStyle}>방만들기</Text>
@@ -31,6 +41,29 @@ function CreateRoom() {
           onPress={() => navigation.goBack()}
         />
       </View>
+      {/* 방 만들기 */}
+      <View style={{alignItems: 'center', marginTop: heightScale * 41}}>
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={() => navigation.navigate('RoomMake')}
+          style={styles.createRoomBtnWrapper}>
+          <View style={{borderRadius: 50, backgroundColor: '#F5FF82'}}>
+            <Text style={styles.createRoomBtnText}>방 만들기</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+      {/* Game */}
+      <View style={{marginTop: heightScale * 60}}>
+        {/* Header */}
+        <View style={MainStyles.mainTextBox2}>
+          <TouchableOpacity activeOpacity={1}>
+            <Text style={MainStyles.mainText}>Game</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* 게임 현재 리스트 */}
+        <GameList />
+      </View>
     </SafeAreaView>
   );
 }
@@ -38,7 +71,7 @@ function CreateRoom() {
 const styles = StyleSheet.create({
   container: {
     height: '100%',
-    backgroundColor: '121212',
+    backgroundColor: '#121212',
   },
   fontStyle: {fontSize: heightScale * 18, fontWeight: 'bold', color: 'white'},
   headerStyle: {
@@ -47,6 +80,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomWidth: 2,
     borderBottomColor: '#484848',
+  },
+  createRoomBtnWrapper: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#222222',
+    width: heightScale * 380,
+    height: heightScale * 220,
+    borderWidth: 1,
+    borderColor: '#F5FF82',
+    borderRadius: 5,
+  },
+  createRoomBtnText: {
+    fontSize: heightScale * 16,
+    paddingVertical: heightScale * 15,
+    paddingHorizontal: heightScale * 30,
+    color: 'black',
   },
 });
 export default CreateRoom;

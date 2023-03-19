@@ -7,6 +7,7 @@ import { RootState } from '../store/reducer';
 let socket: Socket | undefined;
 const useSocket = (): [Socket | undefined, () => void] => {
     const access_token = useSelector((state: RootState) => state.user.access_token);
+    const nickName = useSelector((state: RootState) => state.user.nickName);
   const disconnect = useCallback(() => {
     if (socket) {
       socket.disconnect();
@@ -15,7 +16,7 @@ const useSocket = (): [Socket | undefined, () => void] => {
   }, []);
 
   if (!socket) {
-    console.log('connect Socket');
+    console.log('connect Socket : ' + nickName);
     socket = SocketIOClient(`${Config.SOCKET_URL}`, {
       transports: ['websocket'],
       extraHeaders: {
@@ -23,6 +24,9 @@ const useSocket = (): [Socket | undefined, () => void] => {
       }
     });
     
+    socket.on('connect', function() {
+      console.log('is connect socket : ' + socket?.connected);
+    });
   }
   return [socket, disconnect];
 };

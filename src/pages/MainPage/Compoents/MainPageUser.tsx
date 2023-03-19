@@ -26,9 +26,10 @@ import BinaryToBase64 from '../../../modules/BinaryToBase64';
 import {MainStyles, heightScale} from '../../../modules/MainStyles';
 import ticketsList, {ticketsListType} from '../../../modules/ticketsList';
 import {RootState} from '../../../store/reducer';
-import GameBox, {roomType} from '../MainPageModal/GameBox';
+import GameBox, {roomType} from './GameBox';
 import GuestJoin from '../MainPageModal/GuestJoin';
 import MemberModal from '../MainPageModal/MemberModal';
+import GameList from './GameList';
 const {width} = Dimensions.get('window');
 
 function MainPageUser() {
@@ -37,17 +38,6 @@ function MainPageUser() {
     useNavigation<
       NavigationProp<HomeRootStackParamList & MyPageRootStackParamList>
     >();
-
-  const [socket, disconnect] = useSocket();
-  const [menu, setMenu] = useState([
-    {name: 'playing', state: true},
-    {name: 'waiting', state: false},
-    {name: 'end', state: false},
-  ]);
-  const [gameBox, setGameBox] = useState<roomType[]>([]);
-  const [selectGameItems, setSelectGameItems] = useState<roomType>();
-  const [playMemberStatus, setPlayMemberStatus] = useState(false);
-  const [modalStatus, setModalStatus] = useState(false);
   const {black, red, gold} = useSelector((state: RootState) => state.ticket);
   const CARDS = ticketsList('width');
 
@@ -62,112 +52,6 @@ function MainPageUser() {
     'https://source.unsplash.com/1024x768/?tree',
   ];
 
-  // useEffect(() => {
-  //   console.log('images test');
-  //   const list = ['admin','user','user1','user2']
-  //   const a = async() => {
-  //     try {
-  //       for(let i = 0; i < list.length ; i++) {
-  //         const profileImageResult = await axios.get(
-  //           `${Config.API_URL}/member/image?member=${list[i]}`,
-  //           {
-  //             responseType: 'arraybuffer',
-  //             headers: {
-  //               authorization: `Bearer ${access_token}`,
-  //             },
-  //           },
-  //         );
-  
-  //         console.log('images test ' + list[i]);
-          
-  //         const base64ImageString = BinaryToBase64(profileImageResult.data);
-  //         console.log(base64ImageString.length);
-  //       }
-  //     } catch (error) {
-  //       console.log((error as AxiosError).response?.errorMessage);
-        
-  //     }
-  //     }
-  //   a();
-  // },[])
-
-
-  // Socket
-  useEffect(() => {
-    const getGameRoomList = (data: any) => {
-      console.log(data);
-
-      const arr: roomType[] = new Array();
-      Object.keys(data).map(key => {
-        data[key].playing_users
-        arr.push(data[key]);
-      });
-      setGameBox([...arr]);
-    };
-
-    const callback = (data: any) => {
-      console.log(data);
-    };
-
-    if (socket) {
-      socket.emit('getGameRoomList', 'init');
-      socket.on('getGameRoomList', getGameRoomList);
-      socket.on('error', callback);
-    }
-    return () => {
-      console.log('off getGameRoomList');
-
-      socket?.off('getGameRoomList');
-    };
-  }, [socket]);
-
-  // Game List 분류작업
-  const setGameBoxArr = () => {
-    const curr = menu.find(i => i.state);
-    const sort = gameBox!.filter(i => i.status == curr?.name);
-    if (sort.length == 0) {
-      let _name;
-      if (curr?.name == 'playing') _name = '진행중인';
-      else if (curr?.name == 'waiting') _name = '대기중인';
-      else if (curr?.name == 'end') _name = '마감된';
-      return (
-        <View style={MainStyles.noGameBoxContainer}>
-          <Text style={{color: '#A1A1A1', fontSize: heightScale * 18}}>
-            현재 {_name} 게임이 없습니다.
-          </Text>
-        </View>
-      );
-    }
-    return sort.map(item => (
-      <GameBox
-        key={item.game_id}
-        item={item}
-        onClickJoinButton={onClickJoinButton}
-        onClickMember={onClickMember}
-      />
-    ));
-  };
-
-  const onMemu = (text: string) => {
-    const currentMunu = [...menu];
-    currentMunu.map(item => {
-      if (item.name === text) {
-        item.state = true;
-      } else {
-        item.state = false;
-      }
-    });
-    setMenu(currentMunu);
-  };
-
-  const onClickMember = () => {
-    setPlayMemberStatus(true);
-  };
-
-  const onClickJoinButton = (items: roomType) => {
-    setSelectGameItems(items);
-    setModalStatus(true);
-  };
 
   // MyTickets 네비게이터
   const onOpenMyTikets = (text: any) => {
@@ -312,54 +196,11 @@ function MainPageUser() {
               <Text style={MainStyles.mainText}>Game</Text>
             </TouchableOpacity>
           </View>
-          {/* 방만들기 */}
-          <TouchableOpacity
-            activeOpacity={1}
-            style={MainStyles.roomMakeBox}
-            onPress={() => navigation.navigate('RoomMake')}>
-            <Text style={MainStyles.roomMakeText}>+ 방 만들기</Text>
-          </TouchableOpacity>
 
-          {/* 게임 메뉴 Header */}
-          <View style={MainStyles.gameMenuWrapper}>
-            {menu.map(text => {
-              let _name;
-              if (text.name == 'playing') _name = '진행중';
-              else if (text.name == 'waiting') _name = '대기중';
-              else if (text.name == 'end') _name = '마감';
-              return (
-                <Pressable
-                  style={MainStyles.gameMenuComponent}
-                  key={text.name}
-                  onPress={() => onMemu(text.name)}>
-                  <Text style={MainStyles.gameMenuText}>{_name}</Text>
-                  <View
-                    style={
-                      text.state ? MainStyles.onGameMenu : {display: 'none'}
-                    }>
-                    <View style={MainStyles.onGameMenuEdge}></View>
-                    <View style={MainStyles.onGameMenuBody}></View>
-                    <View style={MainStyles.onGameMenuEdge}></View>
-                  </View>
-                </Pressable>
-              );
-            })}
-          </View>
-          {/* Game List */}
-          <View style={{alignItems: 'center'}}>
-            {/* game room component */}
-            {setGameBoxArr()}
-          </View>
+          {/* 게임 현재 리스트 */}
+          <GameList />
         </View>
       </ScrollView>
-
-      <Modal isVisible={modalStatus} style={{flex:1}}>
-        <GuestJoin setModalStatus={setModalStatus} item={selectGameItems!} />
-      </Modal>
-
-      <Modal isVisible={playMemberStatus}>
-        <MemberModal setPlayMemberStatus={setPlayMemberStatus} />
-      </Modal>
     </SafeAreaView>
   );
 }

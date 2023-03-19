@@ -11,12 +11,12 @@ import { RootState } from '../store/reducer';
 function getProfileImage() {
     const dispatch = useAppDispatch();
     const access_token = useSelector((state: RootState) => state.user.access_token);
-    const id = useSelector((state: RootState) => state.user.name);
+    const uuid = useSelector((state: RootState) => state.user.uuid);
   useEffect(() => {
     const getProfileImage = async () => {
       try {
         const profileImageResult = await axios.get(
-          `${Config.API_URL}/member/image?member=${id}`,
+          `${Config.API_URL}/member/image?memberUuid=${uuid}`,
           {
             responseType: 'arraybuffer',
             headers: {
@@ -25,12 +25,10 @@ function getProfileImage() {
           },
         );
         const base64ImageString = BinaryToBase64(profileImageResult.data);
-        // console.log(profileImageResult.data);
-          console.log(base64ImageString);
           
         dispatch(
           userSlice.actions.setProfileImage({
-            profileImage: `data:image/png;base64,${base64ImageString}`,
+            profileImage: base64ImageString ? `data:image/png;base64,${base64ImageString}`: "",
           }),
         );
       } catch (error) {
