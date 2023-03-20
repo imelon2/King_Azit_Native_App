@@ -98,7 +98,7 @@ function SetNickNameScreen() {
         </View>
       </KeyboardAwareScrollView>
 
-      <View>
+      <View style={{alignItems:'center'}}>
         <Text
           style={
             nickName

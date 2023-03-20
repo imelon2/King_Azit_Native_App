@@ -38,6 +38,8 @@ import TicketsResult from './src/pages/Admin/TicketsResult';
 import { deepLinkController } from './src/modules/Linking';
 import Forbidden from './src/pages/Admin/Forbidden';
 import AdminTicketsHistory from './src/pages/Admin/AdminTicketsHistory';
+import QRCodeScanner from './src/pages/Admin/Components/QRCodeScanner';
+import CreateRoom from './src/pages/Admin/CreateRoom';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -96,6 +98,8 @@ export type HomeRootStackParamList = {
   }
   MemberManagePage: undefined;
   AdminTicketsHistory: undefined;
+  QRCodeScanner : undefined;
+  CreateRoom:undefined;
 };
 
 export type MyPageRootStackParamList = {
@@ -191,6 +195,7 @@ function AppInner() {
         await EncryptedStorage.setItem('refreshToken', refresh_token);
       } catch (error) {
         // refresh token 기간만료됬을 경우
+        console.log('refresh Result Error')
         console.log((error as AxiosError).response?.status);
         if (
           (error as AxiosError).response?.status === 400 ||
@@ -302,8 +307,18 @@ function AppInner() {
             options={{ animation: 'none' }}
           />
           <HomeStack.Screen
+            name="CreateRoom"
+            component={CreateRoom}
+            options={{ animation: 'none' }}
+          />
+          <HomeStack.Screen
             name="Forbidden"
             component={Forbidden}
+            options={{ animation: 'none' }}
+          />
+          <HomeStack.Screen
+            name="QRCodeScanner"
+            component={QRCodeScanner}
             options={{ animation: 'none' }}
           />
         </HomeStack.Navigator>

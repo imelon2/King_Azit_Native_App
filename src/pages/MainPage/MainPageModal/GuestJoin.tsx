@@ -19,8 +19,9 @@ import ticketsList, {
   ticketsListType,
   TicketType,
 } from '../../../modules/ticketsList';
-import {roomType} from './GameBox';
+import {roomType} from '../Compoents/GameBox';
 import getTickets from '../../../hooks/getTickets';
+import useSocket from '../../../hooks/useSocket';
 const {width, height} = Dimensions.get('window');
 const heightScale = heightData;
 
@@ -31,6 +32,7 @@ interface propsType {
 
 function GuestJoin(props: propsType) {
   const navigation = useNavigation<NavigationProp<HomeRootStackParamList>>();
+  const [socket, disconnect] = useSocket();
   const CARDS = ticketsList('basic').filter(
     keys => keys.type == 'Red' || keys.type == 'Black',
   );
@@ -42,6 +44,18 @@ function GuestJoin(props: propsType) {
   let _gap = heightScale*40;
   let _offset = heightScale*80;
   let _width = width - (_gap + _offset) * 2;
+
+
+  useEffect(() => {
+    const callback = (data: any) => {
+      console.log(data);
+    };
+    if(socket) {
+      socket.on('error', callback);
+      socket.on('getMessage', callback);
+    }
+  },[])
+
 
   // 현재 유저 보유 티켓 가져오기
   getTickets();
@@ -58,16 +72,16 @@ function GuestJoin(props: propsType) {
     // if (props.item.ticket_amount <= ticket!.count) {
     //   return;
     // }
-
-    props.setModalStatus(false);
-    navigation.navigate('GamePage');
+    if (socket) {
+      console.log('enter room id : ' + props.item.game_id);
+      
+    socket.emit('enterGameRoom',props.item.game_id)
+    socket.emit('getGameRoomList', 'init');
+    // props.setModalStatus(false);
+    // navigation.navigate('GamePage');
+    }
   };
 
-  // useEffect(() => {
-  //   const _ticket = CARDS.find(i => i.type == props.item.ticket_type);
-  //   setTicket(_ticket);
-  //   setIsEnoughCard(props.item.ticket_amount <= _ticket!.count);
-  // }, []);
 
   // Flatlist Focus된 page index 리턴
   const onViewableItemsChanged = ({viewableItems}: any) => {

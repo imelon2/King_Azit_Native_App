@@ -7,6 +7,8 @@ import { heightScale, MainStyles } from '../../../modules/MainStyles';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import usePermissions from '../../../hooks/usePermissions';
 
+
+
 function MainPageAdmin() {
   const navigation = useNavigation< NavigationProp<HomeRootStackParamList & MyPageRootStackParamList>>();
   const images = [require('../../../assets/swiper_bg.png'), require('../../../assets/swiper_bg.png')];
@@ -40,13 +42,13 @@ function MainPageAdmin() {
       <View style={{ flex: 1.5, backgroundColor: '#121212', paddingHorizontal: 14 * heightScale, paddingVertical: 14 * heightScale }}>
         <View style={{ flex: 2.9, flexDirection: 'row' }} >
           <View style={{ flex: 1 }} >
-            <View style={MainStyles.contentsBox} >
+            <TouchableOpacity activeOpacity={1} onPress={() => navigation.navigate('CreateRoom')} style={MainStyles.contentsBox} >
               <Text style={MainStyles.contentsText} >Game 방 만들기</Text>
               <Text style={MainStyles.contentsText2}>새로운 게임 시작하기</Text>
               <View style={{ alignItems: 'center' }} >
                 <Image style={MainStyles.contentImg} source={require('../../../assets/room_make_img.png')} />
               </View>
-            </View>
+            </TouchableOpacity>
           </View>
           <View style={{ flex: 1 }} >
             <TouchableOpacity activeOpacity={1} onPress={() => navigation.navigate('TicketCharge')} style={MainStyles.contentsBox2}  >
@@ -54,11 +56,11 @@ function MainPageAdmin() {
               <Text style={MainStyles.contentsText2}>유저에게 티켓 넣어주기</Text>
               <Image style={MainStyles.contentImg2} source={require('../../../assets/contents_img.png')} />
             </TouchableOpacity>
-            <View style={[{ marginTop: 10 * heightScale }, MainStyles.contentsBox2]} >
+            <TouchableOpacity onPress={() => navigation.navigate('QRCodeScanner')} style={[{ marginTop: 10 * heightScale }, MainStyles.contentsBox2]} >
               <Text style={MainStyles.contentsText} >Ticket 결제</Text>
               <Text style={MainStyles.contentsText2}>QR 스캔으로 티켓 소모</Text>
               <Image style={MainStyles.contentImg3} source={require('../../../assets/contents_img2.png')} />
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
         <View style={{ flex: 1, flexDirection: 'row' }} >
