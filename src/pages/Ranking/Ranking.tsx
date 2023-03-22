@@ -1,52 +1,85 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Image, Dimensions, Animated } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import IconAntDesign from 'react-native-vector-icons/AntDesign';
-import IconAntDesign2 from 'react-native-vector-icons/Entypo';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { HomeRootStackParamList, MyPageRootStackParamList } from '../../../AppInner';
 import { heightData } from '../../modules/globalStyles';
+import { useAppDispatch } from '../../store';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/reducer';
+import Config from 'react-native-config';
 const { width, height } = Dimensions.get('window');
-import LinearGradient from 'react-native-linear-gradient';
-import Modal from "react-native-modal";
-import { Icon } from 'react-native-vector-icons/Icon';
+import axios from 'axios';
 const heightScale = heightData;
 
 function Ranking() {
-    const [status, setStatus] = useState('month');
-    const [myNum, setMyNum] = useState(3);
-    const [rankingData, setRankingData] = useState([{ ranking: 1, name: '한나피쉬', point: 25, status: 'up' }, { ranking: 2, name: '한나피쉬', point: 24, status: '' }
-        , { ranking: 3, name: '한나피쉬', point: 23, status: 'up' }, { ranking: 4, name: '한나피쉬', point: 22, status: 'down' }
-        , { ranking: 5, name: '한나피쉬', point: 21, status: '' }, { ranking: 6, name: '한나피쉬', point: 20, status: 'down' }
-        , { ranking: 7, name: '한나피쉬', point: 19, status: 'up' }, { ranking: 8, name: '한나피쉬', point: 18, status: 'down' }
-        , { ranking: 9, name: '한나피쉬', point: 17, status: 'down' }, { ranking: 10, name: '한나피쉬', point: 16, status: '' }]
-    );
-
-    const animation = useRef(new Animated.Value(1)).current;
-
-    Animated.timing(animation, {
-        toValue: 4, // 어떤 값으로 변경할지 - 필수
-        duration: 1000, // 애니메이션에 걸리는 시간(밀리세컨드) - 기본값 500
-        delay: 0, // 딜레이 이후 애니메이션 시작 - 기본값 0
-        useNativeDriver: true, // 네이티브 드라이버 사용 여부 - 필수
-        isInteraction: true, // 사용자 인터랙션에 의해 시작한 애니메이션인지 지정 - 기본값 true
-
-        // easing: Easing.inOut(Easing.ease), // 애니메이션 속서 변경 함수 - 기본값 Easing.inOut(Easing.ease)
-    }).start(() => {
-        // 애니메이션 처리 완료 후 실행할 작업
-    })
-
-
-    const animationStyles = {
-        transform: [
-            {
-                rotate: animation.interpolate({
-                    inputRange: [0, 360],
-                    outputRange: ['0deg', '360deg']
-                })
-            }
-        ]
+    type DataType = {
+        nickname: String,
+        ranking: String,
+        points: String
     };
+    const Data = {
+        nickname: '',
+        ranking: '',
+        points: ''
+    };
+
+
+    const [status, setStatus] = useState('month');
+    const [myName, setNickName] = useState('');
+    const [monthData, setMonthData] = useState<[DataType, DataType, DataType]>([Data, Data, Data]);
+    const [weekData, setWeekData] = useState<[DataType, DataType, DataType]>([Data, Data, Data]);
+
+    const access_token = useSelector((state: RootState) => state.user.access_token);
+
+    // const { nickName } = useSelector((state: RootState) => state.user);
+    // setNickName(nickName);
+
+    useEffect(() => {
+        let today = new Date();
+        let year = today.getFullYear();
+        let month = today.getMonth() + 1;
+        let date = today.getDate();
+        let day = year + '-' + month + '-' + date;
+        getMonth(day);
+        getWeek(day);
+
+    }, []);
+
+    const getMonth = (day: String) => {
+        const getmon = async (day: String) => {
+            try {
+                const getTicketsResult = await axios.get(
+                    `${Config.API_URL}/member/ranking/monthly?date=${day}`,
+                    {
+                        headers: {
+                            authorization: `Bearer ${access_token}`,
+                        },
+                    },
+                );
+                setMonthData(getTicketsResult.data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        getmon(day);
+    }
+    const getWeek = (day: String) => {
+        const week = async (day: String) => {
+            try {
+                const getTicketsResult = await axios.get(
+                    `${Config.API_URL}/member/ranking/weekly?date=${day}`,
+                    {
+                        headers: {
+                            authorization: `Bearer ${access_token}`,
+                        },
+                    },
+                );
+                setWeekData(getTicketsResult.data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        week(day);
+    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -70,8 +103,12 @@ function Ranking() {
                         <Image style={styles.playerRound2} source={require('../../assets/2_round.png')} />
                         <Image style={styles.playerImg2} source={require('../../assets/2_img.png')} />
                         <View style={{ flex: 1, alignItems: 'center', flexDirection: 'column', paddingBottom: 38 * heightScale }} >
-                            <Text style={{ color: 'white', textAlign: 'center', fontSize: 14 * heightScale }} >moomoo</Text>
-                            <Text style={{ color: 'white', textAlign: 'center', fontSize: 14 * heightScale, marginTop: 2 * heightScale, fontWeight: '600' }}>30pts</Text>
+                            <Text style={{ color: 'white', textAlign: 'center', fontSize: 14 * heightScale }} >
+                                {status == 'week' && weekData[1].nickname}{status == 'month' && monthData[1].nickname}
+                            </Text>
+                            <Text style={{ color: 'white', textAlign: 'center', fontSize: 14 * heightScale, marginTop: 2 * heightScale, fontWeight: '600' }}>
+                                {status == 'week' && weekData[1].points}{status == 'month' && monthData[1].points} pts
+                            </Text>
                         </View>
                     </View>
                 </View>
@@ -82,8 +119,12 @@ function Ranking() {
                         <Image style={styles.playerImg} source={require('../../assets/1_img.png')} />
                         <View style={{ flex: 1, alignItems: 'center', flexDirection: 'column', paddingBottom: 30 * heightScale }} >
                             <Image style={styles.nameWing1} source={require('../../assets/nameWing1.png')} />
-                            <Text style={{ color: 'white', textAlign: 'center', fontSize: 14 * heightScale }} >케토피이1234</Text>
-                            <Text style={{ color: 'white', textAlign: 'center', fontSize: 14 * heightScale, marginTop: 2 * heightScale, fontWeight: '600' }}>35pts</Text>
+                            <Text style={{ color: 'white', textAlign: 'center', fontSize: 14 * heightScale }} >
+                                {status == 'week' && weekData[0].nickname}{status == 'month' && monthData[0].nickname}
+                            </Text>
+                            <Text style={{ color: 'white', textAlign: 'center', fontSize: 14 * heightScale, marginTop: 2 * heightScale, fontWeight: '600' }}>
+                                {status == 'week' && weekData[0].points}{status == 'month' && monthData[0].points} pts
+                            </Text>
                             <Image style={styles.nameWing2} source={require('../../assets/nameWing2.png')} />
                         </View>
                     </View>
@@ -94,8 +135,12 @@ function Ranking() {
                         <Image style={styles.playerRound2} source={require('../../assets/3_round.png')} />
                         <Image style={styles.playerImg2} source={require('../../assets/3_img.png')} />
                         <View style={{ flex: 1, alignItems: 'center', flexDirection: 'column', paddingBottom: 38 * heightScale }} >
-                            <Text style={{ color: 'white', textAlign: 'center', fontSize: 14 * heightScale }} >moomoo</Text>
-                            <Text style={{ color: 'white', textAlign: 'center', fontSize: 14 * heightScale, marginTop: 2 * heightScale, fontWeight: '600' }}>30pts</Text>
+                            <Text style={{ color: 'white', textAlign: 'center', fontSize: 14 * heightScale }} >
+                                {status == 'week' && weekData[2].nickname}{status == 'month' && monthData[2].nickname}
+                            </Text>
+                            <Text style={{ color: 'white', textAlign: 'center', fontSize: 14 * heightScale, marginTop: 2 * heightScale, fontWeight: '600' }}>
+                                {status == 'week' && weekData[2].points}{status == 'month' && monthData[2].points} pts
+                            </Text>
                         </View>
                     </View>
                 </View>
@@ -124,16 +169,32 @@ function Ranking() {
                                 </View>
                             </View>
 
-                            {rankingData.map((v: any, key) => (
-                                <View style={[styles.rankingLineOne, myNum == key && styles.rankingLineOne2]} key={key} >
+                            {status == "month" && monthData.map((v: any, key) => (
+                                <View style={[styles.rankingLineOne, myName == v.nickName && styles.rankingLineOne2]} key={key} >
                                     <View style={styles.lineRankingImg} ></View>
-                                    <View style={styles.RankingTextBox}  ><Text style={[styles.lineText, myNum == key && styles.lineText2]} >{v.ranking}</Text></View>
+                                    <View style={styles.RankingTextBox} ><Text style={[styles.lineText, myName == v.nickName && styles.lineText2]} >{v.ranking}</Text></View>
                                     <View style={styles.imgBox} >
                                         <Image style={styles.userIcon} source={require('../../assets/UserIcon.png')} />
                                     </View>
-                                    <View style={{ marginLeft: 20 * heightScale }} ><Text style={[styles.lineText, myNum == key && styles.lineText2]} >{v.name}</Text></View>
+                                    <View style={{ marginLeft: 20 * heightScale }} ><Text style={[styles.lineText, myName == v.nickName && styles.lineText2]} >{v.nickname}</Text></View>
                                     <View style={{ flex: 1, alignItems: 'flex-end' }} >
-                                        <Text style={[styles.menuText, styles.marginRight, styles.lineText, myNum == key && styles.lineText2]}>{v.point}</Text>
+                                        <Text style={[styles.menuText, styles.marginRight, styles.lineText, myName == v.nickName && styles.lineText2]}>{v.points}</Text>
+                                    </View>
+
+                                </View>
+                            ))}
+
+
+                            {status == "week" && weekData.map((v: any, key) => (
+                                <View style={[styles.rankingLineOne, myName == v.nickName && styles.rankingLineOne2]} key={key} >
+                                    <View style={styles.lineRankingImg} ></View>
+                                    <View style={styles.RankingTextBox} ><Text style={[styles.lineText, myName == v.nickName && styles.lineText2]} >{v.ranking}</Text></View>
+                                    <View style={styles.imgBox} >
+                                        <Image style={styles.userIcon} source={require('../../assets/UserIcon.png')} />
+                                    </View>
+                                    <View style={{ marginLeft: 20 * heightScale }} ><Text style={[styles.lineText, myName == v.nickName && styles.lineText2]} >{v.nickname}</Text></View>
+                                    <View style={{ flex: 1, alignItems: 'flex-end' }} >
+                                        <Text style={[styles.menuText, styles.marginRight, styles.lineText, myName == v.nickName && styles.lineText2]}>{v.points}</Text>
                                     </View>
 
                                 </View>
