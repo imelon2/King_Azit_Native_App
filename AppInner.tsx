@@ -82,7 +82,7 @@ export type HomeRootStackParamList = {
   };
   TicketCharge: undefined;
   MemberManagement: {
-    status : string;
+    status: string;
   };
   UserDetail: {
     userData: {
@@ -98,8 +98,8 @@ export type HomeRootStackParamList = {
   }
   MemberManagePage: undefined;
   AdminTicketsHistory: undefined;
-  QRCodeScanner : undefined;
-  CreateRoom:undefined;
+  QRCodeScanner: undefined;
+  CreateRoom: undefined;
 };
 
 export type MyPageRootStackParamList = {
@@ -134,7 +134,11 @@ function TabNavigator() {
         component={Ranking}
         options={{ title: 'Ranking', headerShown: false }}
       />
-      <Tab.Screen name="Game" component={Game} options={{ title: 'Game' }} />
+      <Tab.Screen
+        name="Game"
+        component={Game}
+        options={{ title: 'Game', headerShown: false }}
+      />
       <Tab.Screen
         name="MyPage"
         component={MyPage}

@@ -39,7 +39,7 @@ const GameBox = ({item,onClickJoinButton,onClickMember}: propsType) => {
         <View>
           <Image
             style={MainStyles.gameBoxImg}
-            source={require('../../../assets/Game_bg.png')}
+            source={require('../../../assets/game_bg.png')}
           />
         </View>
         <View style={MainStyles.gameContainer}>
