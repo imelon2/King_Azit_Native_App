@@ -16,25 +16,130 @@ import Modal from 'react-native-modal';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import IconAntDesign2 from 'react-native-vector-icons/Feather';
 import { widthData, heightData } from '../../modules/globalStyles';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/reducer';
+import { roomType } from './Compoents/GameBox';
+import PayTicketForJoinGame from './MainPageModal/PayTicketForJoinGame';
+import useSocket from '../../hooks/useSocket';
 const heightScale = heightData;
 const { width, height } = Dimensions.get('window');
 
-function GamePage() {
-  const navigation = useNavigation<NavigationProp<HomeRootStackParamList>>();
-  const [modalStatus, setModalStatus] = useState(false);
+type GamePageScreenProps = NativeStackScreenProps<
+  HomeRootStackParamList,
+  'GamePage'
+>;
+
+function GamePage({route,navigation}:GamePageScreenProps) {
+  const gameData:any = useSelector((state: RootState) => state.games);
+  const {roles} = useSelector((state: RootState) => state.user);
+  const isAdmin = roles.find((e: string) => e == 'ROLE_ADMIN');
+  const [socket, disconnect] = useSocket();
+  
+  const [modalStatus, setModalStatus] = useState(false); 
+  const [currentGameData, setCurrentGameData] = useState<roomType>();
+
+  useEffect(() => {
+    const data:roomType = gameData['constructor'][route.params.gameId]
+    setCurrentGameData(data)
+
+  },[gameData])
+
+  // 소켓 메세지 관리 및 어드민 게임 참여
+  useEffect(() => {
+      console.log("Enter Room ID : " + route.params.gameId);
+      // admin이면 바로 입장
+      if(isAdmin && socket && route.params.gameId) {
+        socket.emit('enterGameRoom', {gameId:route.params.gameId});
+      }
+
+    const callbackError = (data: any) => {
+      if(data.type === 'finishGame') {
+        if(data.msg.includes('insert others data error. try again and check the logs: ')) {
+          Alert.alert('Error',"현재 게임 종료에 문제가 생겼습니다. 잠시만 기다려 주세요.");
+        }
+        console.log(data.msg);
+      }
+
+      if(data.type === 'sitout') {
+        Alert.alert('Sitout Error',data.msg)
+      }
+    };
+    
+    const getMessage = (data:any) => {
+      // 싯아웃 성공 시
+      if(socket && data === '유저닉네임sitout') {
+        console.log("sitout : ",data);
+        socket.emit('getGameRoomList', 'init');
+      }
+      
+      // 게임 종료 성공 시
+      if(socket && data === "게임 기록 성공!") {
+          // 삭제 후, 새로운 데이터 리턴
+          socket.emit('getGameRoomList', 'init');
+          // 권한 별 네비게이트
+          navigateFunc();
+        }
+    }
+
+    if (socket) {
+      socket.on('error', callbackError);
+      socket.on('getMessage', getMessage);
+    }
+
+    return () => {
+      if (socket) {
+        socket.off('error', callbackError);
+        socket.off('getMessage', getMessage);
+      }
+    };
+  },[])
+
+  const onClickJoinButton = () => {
+    setModalStatus(true);
+  };
+  
+  const finishGame = () => {
+    if (socket) {
+      console.log("delete Room");
+      socket.emit('finishGame',""
+      // {
+      //   user_1st: user_1st,
+      //   user_2nd: user_2nd,
+      //   user_3rd: user_3rd,
+      //   prize_type: prize_type,
+      //   prize_amount: prize_amount,
+      // }
+      );
+    }
+  }
+
+  const sitout = () => {
+    if (socket) {
+      socket.emit('sitout', '유저닉네임');
+    }
+  }
+
+  const navigateFunc = () => {
+      if(isAdmin) {
+        navigation.navigate('CreateRoom')
+      } else {
+        navigation.navigate('Home')
+      }
+  }
 
   return (
     <SafeAreaView style={styles.container}>
       <View>
         <View style={styles.headerStyle}>
-          <Text style={styles.fontStyle}>게임</Text>
+          <Text style={styles.fontStyle}>Table No. {currentGameData?.table_no}</Text>
         </View>
         <IconAntDesign
           name="left"
           size={heightScale * 28}
           color="white"
           style={styles.headerIcon}
-          onPress={() => navigation.goBack()}
+          onPress={() => navigateFunc()}
         />
       </View>
       <View style={styles.contents}>
@@ -49,7 +154,7 @@ function GamePage() {
             <View style={{ alignItems: 'flex-end', flex: 1 }}>
               <View style={{ position: 'absolute',alignItems:'center', top: 25 * heightScale }} >
                 <View style={styles.joinIcon}
-                  onTouchEnd={() => Alert.alert('Todo :', '자리 정하기 기능')}>
+                  onTouchEnd={() => onClickJoinButton()}>
                   <Text style={{ color: '#000', fontSize: 22, fontWeight: '600' }} >+</Text>
                 </View>
                 <View
@@ -99,7 +204,7 @@ function GamePage() {
                 alignItems: 'center',
               }}>
               <Text style={{ color: '#000', fontWeight: '600' }}>Blinds : Level 2</Text>
-              <Text style={{ color: '#000', fontWeight: '600' }}>200/400 Ante: 0</Text>
+              <Text style={{ color: '#000', fontWeight: '600' }}>{currentGameData?.blind} Ante: {currentGameData?.ante}</Text>
             </View>
             <View style={{ alignItems: 'flex-end', flex: 1 }}>
               <View style={styles.joinIcon}
@@ -143,7 +248,7 @@ function GamePage() {
             <View style={{ alignItems: 'flex-end', flex: 1 }}>
               <View
                 style={styles.dealer}>
-                <Text style={{ color: '#56FFA7' }}>딜러</Text>
+                <Text style={{ color: '#56FFA7' }} onPress={sitout}>딜러</Text>
               </View>
             </View>
           </View>
@@ -209,36 +314,19 @@ function GamePage() {
             </View>
           </View>
         </View>
-        <View style={{ alignItems: 'center',  }} >
+
+        {isAdmin ? <TouchableOpacity onPress={() => finishGame()} activeOpacity={1} style={{ alignItems: 'center',  }} >
           <View style={styles.gameOutButton} >
             <Image style={styles.endButtonImg} source={require('../../assets/Power.png')} />
             <Text  style={styles.endButtonText} >게임 종료</Text>
           </View>
-        </View>
+        </TouchableOpacity> : <></>}
       </View>
 
-      <View style={{ alignItems: 'center', flexDirection: 'row' }}>
-        <Modal isVisible={modalStatus}>
-          <View style={styles.modalBox}>
-            <Text style={styles.mainText}>임시 닉네임 설정</Text>
-            <TextInput style={styles.textInput} placeholder="입력" />
-            <Text style={styles.textsub}>
-              설정할 닉네임을 입력해 주세요. (한글, 숫자, 영문2~8자)
-            </Text>
+      <Modal isVisible={modalStatus} style={{flex: 1}}>
+        <PayTicketForJoinGame setModalStatus={setModalStatus} item={currentGameData!} />
+      </Modal>
 
-            <View style={{ alignItems: 'center' }}>
-              <View style={styles.buttonBox}>
-                <TouchableOpacity activeOpacity={1} style={styles.button}>
-                  <Text style={styles.buttonText}> 중복확인 </Text>
-                </TouchableOpacity>
-                <TouchableOpacity activeOpacity={1} style={styles.button}>
-                  <Text style={styles.buttonText}> 확인 </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </Modal>
-      </View>
     </SafeAreaView>
   );
 }
@@ -273,58 +361,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: width,
     height: heightData * 630,
-  },
-  modalBox: {
-    width: width - 80,
-    height: heightData * 220,
-    backgroundColor: '#C5C5C5',
-    borderRadius: 15,
-    position: 'absolute',
-    top: 160,
-    left: 20,
-    alignItems: 'center',
-  },
-  mainText: {
-    color: '#000',
-    fontWeight: '600',
-    fontSize: heightData * 18,
-    textAlign: 'center',
-    marginTop: heightData * 12,
-    marginBottom: heightData * 18,
-  },
-  textInput: {
-    width: heightData * 280,
-    height: heightData * 40,
-    backgroundColor: '#D9D9D9',
-    // lineHeight: heightData * 40,
-    paddingLeft: 8,
-    borderRadius: 3,
-    paddingBottom:0,
-    paddingTop:0
-  },
-  textsub: {
-    color: '#000',
-    fontSize: heightData * 11,
-    marginTop: heightData * 9,
-  },
-  buttonBox: {
-    width: heightData * 280,
-    flexDirection: 'row',
-    marginTop: heightData * 40,
-    alignItems: 'center',
-  },
-  button: {
-    width: heightData * 120,
-    height: heightData * 45,
-    backgroundColor: '#2C2A2A',
-    borderRadius: 4,
-    marginLeft: heightData * 13,
-  },
-  buttonText: {
-    lineHeight: heightData * 45,
-    color: 'white',
-    textAlign: 'center',
-    fontSize: heightData * 15,
   },
   joinIcon: {
     width: heightScale * 62,

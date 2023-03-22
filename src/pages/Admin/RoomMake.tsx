@@ -9,6 +9,7 @@ import {
   Dimensions,
   TextInput,
   Pressable,
+  ActivityIndicator,
 } from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {HomeRootStackParamList} from '../../../AppInner';
@@ -19,8 +20,8 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import useSocket from '../../hooks/useSocket';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../store/reducer';
-import { TicketType } from '../../modules/ticketsList';
-import { getGameListArr } from '../../hooks/getGameList';
+import {TicketType} from '../../modules/ticketsList';
+import {getGameListArr} from '../../hooks/getGameList';
 const heightScale = heightData;
 
 type GameType = 'Main' | 'Nft' | 'Custom';
@@ -29,18 +30,20 @@ type DurationType = '8' | '9' | null;
 
 function RoomMake() {
   const navigation = useNavigation<NavigationProp<HomeRootStackParamList>>();
-  const gameData:any = useSelector((state: RootState) => state.games);
-  const {name, nickName} = useSelector((state: RootState) => state.user);
+  const gameData: any = useSelector((state: RootState) => state.games);
+  const {nickName} = useSelector((state: RootState) => state.user);
   const [socket, disconnect] = useSocket();
 
   const [selectDrop, setSelectDrop] = useState(false);
   const [ticketSelectDrop, setTicketSelectDrop] = useState(false);
 
-  const [table, setTable] = useState(1);
+  const [loading, setLoading] = useState(false);
+
+  const [table, setTable] = useState();
   const [gameType, setGameType] = useState<GameType>('Main');
   const [buyin, setBuyin] = useState<any>();
   const [ticket, setTicket] = useState<TicketType>();
-  const [enteyLimit, setEntryLimit] = useState();
+  const [enteyLimit, setEntryLimit] = useState<string>();
   const [blind, setBlind] = useState('100/200');
   const [duration, setDuration] = useState<DurationType>();
   const [status, setStatus] = useState<StatusType>('playing');
@@ -52,7 +55,6 @@ function RoomMake() {
   const Blind_Duration: DurationType[] = ['8', '9'];
   const statusList: StatusType[] = ['playing', 'waiting'];
 
-
   const onChangeBuyin = useCallback((text: any) => {
     setBuyin(text.trim());
   }, []);
@@ -63,6 +65,10 @@ function RoomMake() {
   }, []);
 
   const onChangeEntryLimit = useCallback((text: any) => {
+    if(text.trim() >= 25) {
+      setEntryLimit("25")
+      return;
+    }
     setEntryLimit(text.trim());
   }, []);
 
@@ -79,17 +85,35 @@ function RoomMake() {
     const callback = (data: any) => {
       console.log(data);
     };
-    if(socket) {
+
+    const enterNewRoom = (gameId: string) => {
+      setLoading(false);
+      console.log(gameId);
+      navigation.navigate('GamePage', {gameId});
+    };
+
+    if (socket) {
+      socket.on('newRoom', enterNewRoom);
       socket.on('error', callback);
+      // socket.on('getMessage', callback);
     }
-  },[])
+
+    return () => {
+      if (socket) {
+        socket.off('newRoom', enterNewRoom);
+        socket.off('error', callback);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const gameList = getGameListArr(gameData);
-    gameList.find((key) => key.table_no)
-    const currTableNum = table_Num.filter((key) => !gameList.map((key) => key.table_no).includes(key))
-    setTable_Num([...currTableNum])
-  },[gameData])
+    gameList.find(key => key.table_no);
+    const currTableNum = table_Num.filter(
+      key => !gameList.map(key => key.table_no).includes(key),
+    );
+    setTable_Num([...currTableNum]);
+  }, [gameData]);
 
   useEffect(() => {
     if (gameType == 'Main') {
@@ -101,26 +125,24 @@ function RoomMake() {
       setTicket('Black');
       setDuration('9');
     } else {
-      setBuyin("");
-      setTicket("");
+      setBuyin('');
+      setTicket('');
       setDuration('8');
     }
   }, [gameType]);
 
   const createRoom = () => {
-    const callback = (data: any) => {
-      console.log(data);
-    };
-    console.log("table :" + table);
-    console.log("dealer id :" + nickName);
-    console.log("game name :" + gameType);
-    console.log("entey Limit :" + (enteyLimit == ""));
-    console.log("ticket amount :" + buyin);
-    console.log("ticket type :" + ticket);
-    console.log("blind :" + blind);
-    console.log("ante :" + "0");
-    console.log("status :" + status);
-    
+    setLoading(true)
+    console.log('table :' + table);
+    console.log('dealer id :' + nickName);
+    console.log('game name :' + gameType);
+    console.log('entey Limit :' + (enteyLimit == ''));
+    console.log('ticket amount :' + buyin);
+    console.log('ticket type :' + ticket);
+    console.log('blind :' + blind);
+    console.log('ante :' + '0');
+    console.log('status :' + status);
+
     if (socket) {
       socket.emit('createGameRoom', {
         table_no: table,
@@ -137,15 +159,6 @@ function RoomMake() {
       });
     }
   };
-
-  const deleteTest = () => {
-    if (socket) {
-      console.log("delete Room");
-      
-      socket.emit('finishGame', "");
-    }
-  }
-
 
   return (
     <SafeAreaView style={styles.container}>
@@ -171,7 +184,11 @@ function RoomMake() {
         showsVerticalScrollIndicator={false}>
         {/* Table Selects */}
         {selectDrop && (
-          <View style={styles.selectBox}>
+          <View
+            style={[
+              styles.selectBox,
+              {marginTop: 110 * heightScale,marginLeft:18 * heightScale,flex: 1},
+            ]}>
             {table_Num.map((item: any, i) => (
               <TouchableOpacity
                 key={i}
@@ -186,16 +203,17 @@ function RoomMake() {
             ))}
           </View>
         )}
-
         <View style={{flex: 1, paddingHorizontal: 18 * heightScale}}>
           {/* Table Title */}
           <View style={{flex: 1}}>
-            <Text style={styles.mainText}>Table</Text>
+            <Text style={styles.mainText}>Table No</Text>
             <TouchableOpacity
               onPress={() => setSelectDrop(!selectDrop)}
               activeOpacity={1}
               style={styles.tableSelect}>
-              <Text style={styles.tableSelectText}>Table No. {table}</Text>
+              <Text style={styles.tableSelectText}>
+                {table ? 'Table No. ' + table : 'Select Table'}
+              </Text>
               <IconAntDesign
                 name="down"
                 size={heightScale * 25}
@@ -320,8 +338,7 @@ function RoomMake() {
                         styles.touchBox,
                         duration == item && styles.touchBox2,
                       ]}
-                      onPress={() => onChangeDuration(item)}
-                      >
+                      onPress={() => onChangeDuration(item)}>
                       <Text
                         style={[
                           styles.tableSelectText2,
@@ -367,14 +384,10 @@ function RoomMake() {
               })}
             </View>
           </View>
-
-              <Pressable style={{backgroundColor:'red'}} onPress={deleteTest}>
-                <Text>delete</Text>
-              </Pressable>
           {/* 방만들기 Button */}
           <View style={{justifyContent: 'center', alignItems: 'center'}}>
             <TouchableOpacity style={styles.buttonStyle} onPress={createRoom}>
-              <Text style={styles.buttonTextStyle}> 방만들기 </Text>
+              <Text style={styles.buttonTextStyle}> {loading ?<ActivityIndicator />: "방만들기" } </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -434,8 +447,8 @@ const styles = StyleSheet.create({
   },
   selectBox: {
     position: 'absolute',
-    top: 176 * heightScale,
-    left: 18 * heightScale,
+    // top: 176 * heightScale,
+    // left: 18 * heightScale,
     width: 208 * heightScale,
     height: 177 * heightScale,
     borderColor: '#F5FF82',
@@ -501,6 +514,8 @@ const styles = StyleSheet.create({
   },
   buttonStyle: {
     backgroundColor: '#F5FF82',
+    justifyContent:'center',
+    alignItems:'center',
     width: 370 * heightScale,
     height: 64 * heightScale,
     borderColor: '#F5FF82',
@@ -509,7 +524,6 @@ const styles = StyleSheet.create({
     marginTop: 23 * heightScale,
   },
   buttonTextStyle: {
-    lineHeight: 64 * heightScale,
     fontSize: 20 * heightScale,
     fontWeight: '600',
     textAlign: 'center',

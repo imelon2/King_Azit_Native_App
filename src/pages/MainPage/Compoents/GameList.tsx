@@ -4,7 +4,7 @@ import {heightScale, MainStyles} from '../../../modules/MainStyles';
 import GameBox, {roomType} from './GameBox';
 import {View, Text, Pressable} from 'react-native';
 import Modal from 'react-native-modal';
-import GuestJoin from '../MainPageModal/GuestJoin';
+import GuestJoin from '../MainPageModal/PayTicketForJoinGame';
 import MemberModal from '../MainPageModal/MemberModal';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/reducer';
@@ -14,14 +14,12 @@ import getGameList, { getGameListArr } from '../../../hooks/getGameList';
 
 
 const GameList = () => {
-  const [socket, disconnect] = useSocket();
   const [gameBox, setGameBox] = useState<roomType[]>([]);
   const [menu, setMenu] = useState([
     {name: 'playing', state: true},
     {name: 'waiting', state: false},
     {name: 'end', state: false},
   ]);
-  const dispatch = useAppDispatch();
   const gameData:any = useSelector((state: RootState) => state.games);
   const [selectGameItems, setSelectGameItems] = useState<roomType>();
   const [playMemberStatus, setPlayMemberStatus] = useState(false);
@@ -31,7 +29,6 @@ const GameList = () => {
   getGameList();
 
   useEffect(() => {
-    // console.log(gameData['constructor']);
     const arr = getGameListArr(gameData);
     setGameBox([...arr]);
   },[gameData])
@@ -57,7 +54,6 @@ const GameList = () => {
       <GameBox
         key={item.game_id}
         item={item}
-        onClickJoinButton={onClickJoinButton}
         onClickMember={onClickMember}
       />
     ));
@@ -77,11 +73,6 @@ const GameList = () => {
 
   const onClickMember = () => {
     setPlayMemberStatus(true);
-  };
-
-  const onClickJoinButton = (items: roomType) => {
-    setSelectGameItems(items);
-    setModalStatus(true);
   };
 
   return (
@@ -114,10 +105,6 @@ const GameList = () => {
         {/* game room component */}
         {setGameBoxArr()}
       </View>
-
-      <Modal isVisible={modalStatus} style={{flex: 1}}>
-        <GuestJoin setModalStatus={setModalStatus} item={selectGameItems!} />
-      </Modal>
 
       <Modal isVisible={playMemberStatus}>
         <MemberModal setPlayMemberStatus={setPlayMemberStatus} />

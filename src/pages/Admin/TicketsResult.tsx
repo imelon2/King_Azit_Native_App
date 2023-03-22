@@ -17,9 +17,10 @@ type TicketsResultScreenProps = NativeStackScreenProps<
   HomeRootStackParamList,
   'TicketsResult'
 >;
+export type ticketsResultType = "pay" | "charge" ;
 
 function TicketsResult({route,navigation}:TicketsResultScreenProps) {
-  const {name,tickets} = route.params
+  const {name,tickets,type} = route.params
 
   // Android 뒤로가기 버튼 컨트롤
   useEffect(() => {
@@ -37,12 +38,20 @@ function TicketsResult({route,navigation}:TicketsResultScreenProps) {
   },[navigation])
 
   const ticketsType = (type:string) => {
-    if(type == 'black') {
+    if(type == 'Black') {
       return '블랙티켓'
-    } else if (type === 'red') {
+    } else if (type === 'Red') {
       return '레드카드'
-    } else if (type === 'gold') {
+    } else if (type === 'Gold') {
       return '골드카드'
+    }
+  }
+
+  const resultText = () => {
+    if(type === 'pay') {
+      return "차감"
+    } else if (type === 'charge') {
+      return "충전"
     }
   }
     return (
@@ -53,7 +62,7 @@ function TicketsResult({route,navigation}:TicketsResultScreenProps) {
           <View style={{alignItems:'center'}}>
             <Text style={[styles.fontStyle,{marginBottom:heightScale*40}]}>{name}님의</Text>
             {tickets.map((data,i) => <Text key={i} style={styles.fontStyle}>[{ticketsType(data.type)} {data.counts}장]</Text> )}
-            <Text style={styles.fontStyle}>차감 되었습니다.</Text>
+            <Text style={styles.fontStyle}>{resultText()} 되었습니다.</Text>
           </View>
           {/* Button */}
           <View style={styles.buttonWrapper}>

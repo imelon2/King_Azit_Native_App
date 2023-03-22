@@ -165,7 +165,7 @@ function TicketCharge() {
             <View style={{ flex: 1.5 }} >
                 <View style={styles.container1} >
                     <Text style={styles.fontStyle4} >장바구니</Text>
-                    <ScrollView style={{ marginBottom: 50 * heightScale }} >
+                    <ScrollView style={{ marginBottom: 50 * heightScale }} bounces={false}>
                         {blackState && (
                             <View style={styles.shopBox} >
                                 <View style={{ flex: 1, alignItems: 'center', flexDirection: 'row' }}>

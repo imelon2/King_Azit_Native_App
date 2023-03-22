@@ -38,7 +38,7 @@ function CreateRoom() {
             marginTop: (heightScale * (61 - 28)) / 2,
             marginLeft: heightScale * 15,
           }}
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.navigate('Home')}
         />
       </View>
       {/* 방 만들기 */}

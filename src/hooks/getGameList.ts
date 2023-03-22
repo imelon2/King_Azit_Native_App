@@ -12,7 +12,7 @@ function getGameList() {
       // Socket
   useEffect(() => {
     const getGameRoomList = (data: any) => {
-    //   console.log(data);
+      console.log(data);
       dispatch(
         gamesSlice.actions.setGameData({
             gameData:data
@@ -21,12 +21,14 @@ function getGameList() {
     };
 
     const callback = (data: any) => {
+      console.log('here?');
+      
       console.log(data);
     };
 
     if (socket) {
-      socket.emit('getGameRoomList', 'init');
       socket.on('getGameRoomList', getGameRoomList);
+      socket.emit('getGameRoomList', 'init');
       socket.on('error', callback);
     }
     return () => {
@@ -44,4 +46,5 @@ export const getGameListArr = (gameData:any):roomType[] => {
 
     return arr
 }
+
 export default getGameList

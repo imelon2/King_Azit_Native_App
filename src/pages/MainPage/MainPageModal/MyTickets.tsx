@@ -60,9 +60,9 @@ function MyTickets({route, navigation}: MyTicketsScreenProps) {
           Authorization: `Bearer ${access_token}`,
         },
       });
-      // console.log(qrtoken.data.qrToken);
       
     deepLinkUrl = (`kingazit://admin/${memberId}/${card}/${count}/${qrtoken.data.qrToken}`)
+    console.log(`kingazit://admin/${memberId}/${card}/${count}/${qrtoken.data.qrToken}`);
     } catch (error) {
       // todo :
       console.log(error);

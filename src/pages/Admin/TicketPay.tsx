@@ -24,6 +24,7 @@ import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import {heightData} from '../../modules/globalStyles';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
 import {useHeaderHeight} from '@react-navigation/elements';
+import { img } from '../../modules/ticketsList';
 const heightScale = heightData;
 type AdminScreenProps = NativeStackScreenProps<
   HomeRootStackParamList,
@@ -32,7 +33,7 @@ type AdminScreenProps = NativeStackScreenProps<
 
 function TicketPay({route}: AdminScreenProps) {
   const [isOver, setIsOver] = useState(false);
-  const [count, setCount] = useState('');
+  const [count, setCount] = useState("");
   const [ticketName, setTicketName] = useState('');
   const [ticketImgUrl, setTicketImgUrl] = useState<any>();
   const [popUpState, setPopUpState] = useState(false);
@@ -49,13 +50,13 @@ function TicketPay({route}: AdminScreenProps) {
   useEffect(() => {
     if (type == 'Black') {
       setTicketName('블랙티켓')
-      setTicketImgUrl(require(`../../assets/BlackCard.png`))
+      setTicketImgUrl(img['basic'].BlackCardImg)
     } else if (type == 'Red') {
       setTicketName('레드티켓')
-      setTicketImgUrl(require(`../../assets/RedCard.png`))
+      setTicketImgUrl(img['basic'].RedCardImg)
     } else if (type == 'Gold') {
       setTicketName('골드티켓')
-      setTicketImgUrl(require(`../../assets/KingsDaoCard.png`))
+      setTicketImgUrl(img['basic'].GoldCardImg)
     }
   },[])
 
@@ -72,7 +73,7 @@ function TicketPay({route}: AdminScreenProps) {
   const useTickets = useCallback(() => {
     try {
       Alert.alert('todo:', '티켓 차감 연동');
-      navigation.navigate('TicketsResult',{name:'한타피쉬',tickets:[{type:'black',counts:1}]})
+      navigation.navigate('TicketsResult',{name:memberId,type:'pay',tickets:[{type:type,counts:Number(count)}]})
     } catch (error) {}
   }, [state]);
 

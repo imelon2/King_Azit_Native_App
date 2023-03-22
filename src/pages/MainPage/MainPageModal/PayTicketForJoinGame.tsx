@@ -9,6 +9,7 @@ import {
   Dimensions,
   FlatList,
   Pressable,
+  TextInput,
 } from 'react-native';
 import {heightData} from '../../../modules/globalStyles';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
@@ -22,6 +23,8 @@ import ticketsList, {
 import {roomType} from '../Compoents/GameBox';
 import getTickets from '../../../hooks/getTickets';
 import useSocket from '../../../hooks/useSocket';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../../store/reducer';
 const {width, height} = Dimensions.get('window');
 const heightScale = heightData;
 
@@ -30,32 +33,47 @@ interface propsType {
   item: roomType;
 }
 
-function GuestJoin(props: propsType) {
+function PayTicketForJoinGame(props: propsType) {
   const navigation = useNavigation<NavigationProp<HomeRootStackParamList>>();
+  const nickName = useSelector((state: RootState) => state.user.nickName);
   const [socket, disconnect] = useSocket();
   const CARDS = ticketsList('basic').filter(
     keys => keys.type == 'Red' || keys.type == 'Black',
   );
   const [check, setcheck] = useState(false);
+  const [guestNickNameModal, setGuestNickNameModal] = useState(true);
   const [change, setChange] = useState<number>(5);
   const [price, setPrice] = useState<number>(0);
   const [isEnoughCard, setIsEnoughCard] = useState<boolean>(true);
 
-  let _gap = heightScale*40;
-  let _offset = heightScale*80;
+  let _gap = heightScale * 40;
+  let _offset = heightScale * 80;
   let _width = width - (_gap + _offset) * 2;
-
 
   useEffect(() => {
     const callback = (data: any) => {
       console.log(data);
     };
-    if(socket) {
-      socket.on('error', callback);
-      socket.on('getMessage', callback);
-    }
-  },[])
 
+    const userEnterRoom = (data: any) => {
+      if (socket && data === nickName + ' 게임 참가') {
+        socket.emit('getGameRoomList', 'init');
+      }
+      console.log('userEnterRoom : ' + data);
+    };
+
+    if (socket) {
+      socket.on('error', callback);
+      socket.on('getMessage', userEnterRoom);
+    }
+
+    return () => {
+      if (socket) {
+        socket.off('error', callback);
+        socket.off('getMessage', userEnterRoom);
+      }
+    };
+  }, []);
 
   // 현재 유저 보유 티켓 가져오기
   getTickets();
@@ -66,22 +84,15 @@ function GuestJoin(props: propsType) {
 
   // GameId & Ticket 소모 필요
   const guJoinButton = () => {
-    if (!check) {
+    if (check) {
       return;
     }
-    // if (props.item.ticket_amount <= ticket!.count) {
-    //   return;
-    // }
+
     if (socket) {
-      console.log('enter room id : ' + props.item.game_id);
-      
-    socket.emit('enterGameRoom',props.item.game_id)
-    socket.emit('getGameRoomList', 'init');
-    // props.setModalStatus(false);
-    // navigation.navigate('GamePage');
+      socket.emit('enterGameRoom', {gameId:props.item.game_id});
+      props.setModalStatus(false);
     }
   };
-
 
   // Flatlist Focus된 page index 리턴
   const onViewableItemsChanged = ({viewableItems}: any) => {
@@ -116,7 +127,6 @@ function GuestJoin(props: propsType) {
   const viewabilityConfigCallbackPairs = useRef([
     {viewabilityConfig, onViewableItemsChanged},
   ]);
-
 
   return (
     <View style={styles.modalbox}>
@@ -176,14 +186,17 @@ function GuestJoin(props: propsType) {
       <View style={{alignItems: 'center'}}>
         <View style={styles.useTextWrapper}>
           <Text style={styles.useText}>소모 : {price} 장</Text>
+        </View>
           {change === 5 ? (
             <Text> </Text>
           ) : (
-            <Text style={{color:"red"}}>Red Ticekt + {change} </Text>
+            <Text style={{color: 'red'}}>Red Ticekt + {change} </Text>
           )}
-        </View>
         <TouchableOpacity
-          onPress={onClickCheckBox}
+          onPress={() => {
+            if (isEnoughCard) return;
+            setGuestNickNameModal(true);
+          }}
           activeOpacity={1}
           style={{
             flexDirection: 'row',
@@ -212,6 +225,43 @@ function GuestJoin(props: propsType) {
           </Text>
         </TouchableOpacity>
       </View>
+
+      {/* 게스트 초대 시, 닉네임 설정 모달 */}
+      {guestNickNameModal ? (
+        <View style={styles.nickNameBoxWrapper}>
+          <View style={styles.modalBox}>
+            <IconAntDesign
+              onPress={() => setGuestNickNameModal(false)}
+              name="close"
+              size={25}
+              color="#000"
+              style={{
+                position: 'absolute',
+                right: heightData * 10,
+                marginTop: heightData * 10,
+              }}
+            />
+            <Text style={styles.mainText}>임시 닉네임 설정</Text>
+            <TextInput style={styles.textInput} placeholder="입력" />
+            <Text style={styles.textsub}>
+              설정할 닉네임을 입력해 주세요. (한글, 숫자, 영문2~8자)
+            </Text>
+
+            <View style={{alignItems: 'center'}}>
+              <View style={styles.buttonBox}>
+                <TouchableOpacity activeOpacity={1} style={styles.button}>
+                  <Text style={styles.buttonText}> 중복확인 </Text>
+                </TouchableOpacity>
+                <TouchableOpacity activeOpacity={1} style={styles.button}>
+                  <Text style={styles.buttonText}> 확인 </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </View>
+      ) : (
+        <></>
+      )}
     </View>
   );
 }
@@ -253,15 +303,18 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   useText: {
+    fontSize:15,
     paddingHorizontal: heightScale * 10,
     paddingVertical: heightScale * 3,
-    borderRadius: 20,
-    backgroundColor: '#D9D9D9',
   },
   useTextWrapper: {
+    paddingHorizontal: heightScale * 10,
+    paddingVertical: heightScale * 3,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems:'center',
     marginTop: heightScale * 30,
+    borderRadius: 20,
+    backgroundColor: '#D9D9D9',
   },
   gujoinButton: {
     width: heightScale * 250,
@@ -282,6 +335,63 @@ const styles = StyleSheet.create({
     fontSize: heightScale * 20,
     fontWeight: '500',
   },
+  //
+  nickNameBoxWrapper: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'center',
+    flexDirection: 'row',
+    backgroundColor: 'rgba(12, 12, 12, 0.8)',
+  },
+  modalBox: {
+    width: width - 80,
+    height: heightData * 220,
+    backgroundColor: '#C5C5C5',
+    borderRadius: 15,
+    alignItems: 'center',
+    marginTop: heightScale * -20,
+  },
+  mainText: {
+    color: '#000',
+    fontWeight: '600',
+    fontSize: heightData * 18,
+    textAlign: 'center',
+    marginTop: heightData * 12,
+    marginBottom: heightData * 18,
+  },
+  textInput: {
+    width: heightData * 280,
+    height: heightData * 40,
+    backgroundColor: '#D9D9D9',
+    // lineHeight: heightData * 40,
+    paddingLeft: 8,
+    borderRadius: 3,
+    paddingBottom: 0,
+    paddingTop: 0,
+  },
+  textsub: {
+    color: '#000',
+    fontSize: heightData * 11,
+    marginTop: heightData * 9,
+  },
+  buttonBox: {
+    width: heightData * 280,
+    flexDirection: 'row',
+    marginTop: heightData * 40,
+    alignItems: 'center',
+  },
+  button: {
+    width: heightData * 120,
+    height: heightData * 45,
+    backgroundColor: '#2C2A2A',
+    borderRadius: 4,
+    marginLeft: heightData * 13,
+  },
+  buttonText: {
+    lineHeight: heightData * 45,
+    color: 'white',
+    textAlign: 'center',
+    fontSize: heightData * 15,
+  },
 });
 
-export default GuestJoin;
+export default PayTicketForJoinGame;

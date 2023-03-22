@@ -27,13 +27,12 @@ import {MainStyles, heightScale} from '../../../modules/MainStyles';
 import ticketsList, {ticketsListType} from '../../../modules/ticketsList';
 import {RootState} from '../../../store/reducer';
 import GameBox, {roomType} from './GameBox';
-import GuestJoin from '../MainPageModal/GuestJoin';
+import GuestJoin from '../MainPageModal/PayTicketForJoinGame';
 import MemberModal from '../MainPageModal/MemberModal';
 import GameList from './GameList';
 const {width} = Dimensions.get('window');
 
 function MainPageUser() {
-  const access_token = useSelector((state: RootState) => state.user.access_token);
   const navigation =
     useNavigation<
       NavigationProp<HomeRootStackParamList & MyPageRootStackParamList>

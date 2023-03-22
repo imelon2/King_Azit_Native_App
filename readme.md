@@ -12,7 +12,7 @@ King Azit Native App
 ``` 
 npx uri-scheme open "kingazit://admin/user/Black/10/eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiZXhwIjoxNjc4NjgwODg1LCJpYXQiOjE2Nzg2ODA3MDV9.6kVS-HQX5YXhSDtuxuycNSessUvJ8t4yCMwU33fUJ-s" --ios
 
-npx uri-scheme open "kingazit://admin/user/Black/10/eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY3ODcxNDEwNSwiaWF0IjoxNjc4NzEzOTI1fQ.2y6jpLeO9Ui4AW1SgCSaZC61mTtlvHX1yYAM7mt6shA" --ios
+npx uri-scheme open "kingazit://admin/user/Gold/1/eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiZXhwIjoxNjc5MzE4MDE4LCJpYXQiOjE2NzkzMTc4Mzh9.QkUcbaPYYrZwxK1pEvCn3gxpkQ44n1LF_eNRBIVKXK8" --ios
 ```
 #### [Android]
 ``` 

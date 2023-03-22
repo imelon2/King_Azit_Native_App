@@ -73,8 +73,7 @@ function MyPage() {
       formData.append('file', image);
   
       await setProfileImageHttps(formData);
-      const urlBase64: any = await getProfileImageHttps();
-      setProfileImage(urlBase64);
+      await getProfileImageHttps();
     } catch (error) {
       // [Error MSG : User cancelled image selection] :  ImagePicker.openPicker ERROR
       console.log((error as AxiosError));
@@ -108,14 +107,15 @@ function MyPage() {
         },
       });
       const base64ImageString = BinaryToBase64(refreshResult.data)
-      return `data:image/png;base64,${base64ImageString}`;
+
+      dispatch(
+        userSlice.actions.setProfileImage({
+          profileImage: base64ImageString ? `data:image/png;base64,${base64ImageString}`: "",
+        }),
+      );
     } catch (error) {
       // todo :
     }
-  };
-
-  const setProfileImage = (image: string) => {
-    dispatch(userSlice.actions.setProfileImage({profileImage: image}));
   };
 
   const logout = async () => {

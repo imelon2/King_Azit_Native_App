@@ -34,7 +34,7 @@ import MemberManagement from './src/pages/Admin/MemberManagement';
 import UserDetail from './src/pages/Admin/UserDetail';
 import MyTickets from './src/pages/MainPage/MainPageModal/MyTickets';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import TicketsResult from './src/pages/Admin/TicketsResult';
+import TicketsResult, { ticketsResultType } from './src/pages/Admin/TicketsResult';
 import { deepLinkController } from './src/modules/Linking';
 import Forbidden from './src/pages/Admin/Forbidden';
 import AdminTicketsHistory from './src/pages/Admin/AdminTicketsHistory';
@@ -59,7 +59,9 @@ export type RootStackParamList = {
 
 export type HomeRootStackParamList = {
   Home: undefined; // Tab Navigator
-  GamePage: undefined;
+  GamePage: {
+    gameId:string;
+  };
   RoomMake: undefined;
   MyTickets: {
     card: string;
@@ -72,6 +74,7 @@ export type HomeRootStackParamList = {
   };
   TicketsResult: {
     name: string;
+    type : ticketsResultType;
     tickets: [{
       type: string;
       counts: number;
@@ -182,6 +185,9 @@ function AppInner() {
         });
         const { access_token, refresh_token } = refreshResult.data;
         const { sub, roles, nickname, uuid } = decodeJWT(access_token);
+        console.log("uuid : " + uuid);
+        console.log("Config.IMG_URL : " + Config.IMG_URL);
+        
 
         dispatch(
           userSlice.actions.setUser({
@@ -205,6 +211,7 @@ function AppInner() {
             '알림',
             '자동로그인 기간이 만료되었습니다. 다시 로그인 해주세요.',
           );
+          await EncryptedStorage.removeItem('refreshToken');
         } else {
           Alert.alert('Error', '죄송합니다. 잠시후에 다시 시도해주세요.');
         }
