@@ -17,9 +17,19 @@ function TicketManagement() {
     const [step, setStep] = useState(0);
     const [selectTicket, setSelectTicket] = useState('');
     const [count, setCount] = useState(0);
+    const [select, setSelect] = useState('');
+    const [selectCount, setSelectCount] = useState(0);
     const canAdd = count === 0 ? true : false;
+    const canMius = count === selectCount ? true : false;
 
-    const onClickButton = () => {
+    const onClickButton = (text: string) => {
+        if (text == 'black')
+            setSelectCount(black);
+        if (text == 'gold')
+            setSelectCount(gold);
+        if (text == 'red')
+            setSelectCount(red);
+
         setModalStatus(true);
     }
     const nextStep = () => {
@@ -28,7 +38,7 @@ function TicketManagement() {
         setAlretModalStatus(true);
     }
 
-    const onClickClose = () =>{
+    const onClickClose = () => {
         setAlretModalStatus(false);
         setModalStatus(false);
         setCount(0);
@@ -43,7 +53,7 @@ function TicketManagement() {
                     <Text style={styles.fontStyle} >{black}  Black Ticket</Text>
                 </View>
                 <View style={{ height: 76 * heightScale, justifyContent: 'center' }} >
-                    <TouchableOpacity activeOpacity={1} style={styles.buttonStyle} onPress={() => onClickButton()} >
+                    <TouchableOpacity activeOpacity={1} style={styles.buttonStyle} onPress={() => onClickButton('black')} >
                         <Text style={styles.fontStyle2} >차감</Text>
                     </TouchableOpacity>
                 </View>
@@ -54,7 +64,7 @@ function TicketManagement() {
                     <Text style={styles.fontStyle} >{red}  Red Ticket</Text>
                 </View>
                 <View style={{ height: 76 * heightScale, justifyContent: 'center' }} >
-                    <TouchableOpacity activeOpacity={1} style={styles.buttonStyle} onPress={() => onClickButton()} >
+                    <TouchableOpacity activeOpacity={1} style={styles.buttonStyle} onPress={() => onClickButton('red')} >
                         <Text style={styles.fontStyle2} >차감</Text>
                     </TouchableOpacity>
                 </View>
@@ -65,7 +75,7 @@ function TicketManagement() {
                     <Text style={styles.fontStyle} >{gold}  Gold Ticket</Text>
                 </View>
                 <View style={{ height: 76 * heightScale, justifyContent: 'center' }} >
-                    <TouchableOpacity activeOpacity={1} style={styles.buttonStyle} onPress={() => onClickButton()} >
+                    <TouchableOpacity activeOpacity={1} style={styles.buttonStyle} onPress={() => onClickButton('gold')} >
                         <Text style={styles.fontStyle2} >차감</Text>
                     </TouchableOpacity>
                 </View>
@@ -110,11 +120,12 @@ function TicketManagement() {
                                             styles.countButtonStyle,
                                             { borderLeftWidth: 1, borderLeftColor: '#F5FF82' },
                                         ]}
+                                        disabled={canMius}
                                         onPress={() => setCount(count + 1)}>
                                         <IconAntDesign
                                             size={heightScale * 24}
                                             name="plus"
-                                            color={'#FFFFFF'}
+                                            color={canMius ? '#787878' : '#FFFFFF'}
                                         />
                                     </Pressable>
                                 </View>
@@ -141,18 +152,18 @@ function TicketManagement() {
                     )}
 
                     {step == 1 && (
-                        <View style={{ flex: 1, width: 390 * heightScale, flexDirection: 'row' , paddingHorizontal: 24 * heightScale  }} >
-                                <TouchableOpacity activeOpacity={1} onPress={() => onClickClose()} style={styles.buttonStyle4}>
-                                    <Text style={styles.fontStyle5} >아니요</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity activeOpacity={1} onPress={() => nextStep()} style={styles.buttonStyle5} >
-                                    <Text style={styles.fontStyle6} >네</Text>
-                                </TouchableOpacity>
+                        <View style={{ flex: 1, width: 390 * heightScale, flexDirection: 'row', paddingHorizontal: 24 * heightScale }} >
+                            <TouchableOpacity activeOpacity={1} onPress={() => onClickClose()} style={styles.buttonStyle4}>
+                                <Text style={styles.fontStyle5} >아니요</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity activeOpacity={1} onPress={() => nextStep()} style={styles.buttonStyle5} >
+                                <Text style={styles.fontStyle6} >네</Text>
+                            </TouchableOpacity>
                         </View>
                     )}
                 </View>
             </Modal >
-            <Modal isVisible={alretModalStatus} style={{ alignItems:'center', justifyContent:'center' }} >
+            <Modal isVisible={alretModalStatus} style={{ alignItems: 'center', justifyContent: 'center' }} >
                 <View style={styles.popUpComponent}>
                     <Text style={[styles.fontStyle5, { paddingBottom: heightScale * 15 }]}>
                         한나피쉬님의
@@ -250,14 +261,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: '#f5ff82',
     },
-    buttonStyle6:{
-        width:320 * heightScale,
+    buttonStyle6: {
+        width: 320 * heightScale,
         height: 60 * heightScale,
-        backgroundColor:'#F5FF82',
-        borderRadius:6,
-        alignItems:'center',
-        justifyContent:'center',
-        marginTop: 60 *heightScale,
+        backgroundColor: '#F5FF82',
+        borderRadius: 6,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 60 * heightScale,
     },
     buttonText: {
         color: '#7B7B7B',

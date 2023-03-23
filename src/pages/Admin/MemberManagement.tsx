@@ -99,9 +99,9 @@ function MemberManagement({ route }: AdminScreenProps) {
                             <View style={{ flex: 4, paddingLeft: 20 * heightScale }} >
                                 <View style={{ flexDirection: 'row' }} >
                                     <Text style={styles.fontStyle2} >{val.name}   </Text>
-                                    {val.state == 'Approved' && (<View style={styles.Approved}>
+                                    {/* {val.state == 'Approved' && (<View style={styles.Approved}>
                                         <Text style={styles.fontStyle4}>Approved</Text>
-                                    </View>)}
+                                    </View>)} */}
                                     {val.state == 'Deniend' && (<View style={styles.Deniend}>
                                         <Text style={styles.fontStyle4}>Deniend</Text>
                                     </View>)}
