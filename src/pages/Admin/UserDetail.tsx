@@ -10,6 +10,8 @@ import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import TicketManagement from './Components/TicketManagement'
 import TicketHistory from './Components/TicketHistory'
 import TicketCharge from './Components/TicketCharge'
+import Modal from 'react-native-modal';
+import UserInformation from './Components/UserInformation';
 
 
 
@@ -24,6 +26,7 @@ function UserDetail({ route }: AdminScreenProps) {
     const { profileImage, name, email } = route.params.userData;
     const [menu, setMenu] = useState(['charge', 'history', 'management']);
     const [status, setStatus] = useState('charge');
+    const [modalStatus , setModalStatus] = useState(false);
 
     return (
         <SafeAreaView style={styles.container} >
@@ -41,8 +44,8 @@ function UserDetail({ route }: AdminScreenProps) {
             </View>
 
             <View style={{ flex: 1 }} >
-                <View style={styles.myInfoStyle}>
-                    <Pressable>
+                <Pressable style={styles.myInfoStyle} onPress={() => setModalStatus(true)}>
+                    <Pressable  >
                         <Image source={
                             profileImage
                                 ? { uri: profileImage }
@@ -65,7 +68,7 @@ function UserDetail({ route }: AdminScreenProps) {
                         // onPress={() => navigation.goBack()}
                         />
                     </View>
-                </View>
+                </Pressable>
             </View>
             <View style={{ flex: 3.6 }} >
                 <View style={{ flexDirection: 'row' }} >
@@ -94,7 +97,9 @@ function UserDetail({ route }: AdminScreenProps) {
                 )}
             </View>
 
-
+            <Modal isVisible={modalStatus} >
+                <UserInformation setModalStatus={setModalStatus} data = {route.params.userData} state = 'exist' />
+            </Modal>
 
         </SafeAreaView>
     )

@@ -9,6 +9,7 @@ import { useNavigation, NavigationProp } from '@react-navigation/native';
 import CountBox from './Components/CountBox'
 import IconIonicons from 'react-native-vector-icons/Ionicons';
 import IconAntDesign2 from 'react-native-vector-icons/Feather';
+import Modal from 'react-native-modal';
 
 const heightScale = heightData;
 const { width, height } = Dimensions.get('window');
@@ -16,6 +17,7 @@ const { width, height } = Dimensions.get('window');
 
 function TicketCharge() {
     const navigation = useNavigation<NavigationProp<HomeRootStackParamList>>();
+    const [ModalStatus, setModalStatus] = useState(true);
     const [nickname, setNickname] = useState<string>('');
     const [black, setBlack] = useState(0);
     const [red, setRed] = useState(0);
@@ -66,106 +68,107 @@ function TicketCharge() {
                     onPress={() => navigation.goBack()}
                 />
             </View>
-            <View style={{ flex: 1 }} >
-                <View style={styles.container1} >
-                    <Text style={styles.fontStyle2} >티켓 충전 유저</Text>
+            <ScrollView style={{ marginBottom: 90 * heightScale }} >
+                <View style={{ flex: 1 }} >
+                    <View style={styles.container1} >
+                        <Text style={styles.fontStyle2} >티켓 충전 유저</Text>
 
-                    <View style={styles.giftModalTextInput}>
-                        <IconIonicons
-                            name="search"
-                            color={'#929292'}
-                            size={heightScale * 24}
-                        />
-                        <TextInput
-                            autoCapitalize="none"
-                            autoCorrect={false}
-                            clearButtonMode="always"
-                            onChangeText={onChangeNicknane}
-                            placeholderTextColor={'#929292'}
-                            style={styles.textInput}
-                            placeholder="닉네임 검색"
-                            value={nickname}
-                        />
-                    </View>
-                </View>
-            </View>
-            <View style={{ flex: 3.2 }} >
-                <View style={styles.container1} >
-                    <Text style={styles.fontStyle2} >티켓 종류</Text>
-                    <View style={styles.ticketBox} >
-                        <View style={{ flex: 1, justifyContent: 'center' }} >
-                            <Image
-                                style={styles.ticketImg}
-                                source={require(`../../assets/BlackCard.png`)} />
-                        </View>
-                        <View style={{ flex: 3, paddingHorizontal: 13 * heightScale, justifyContent: 'center' }} >
-                            <View style={{ height: 76 * heightScale }}>
-                                <Text style={styles.fontStyle3} >Black Ticket</Text>
-                                <CountBox ticket={black} setTicket={setBlack} />
-                            </View>
-                        </View>
-                        <View style={{ flex: 1.2, alignItems: 'flex-end' }} >
-                            <TouchableOpacity activeOpacity={1} style={styles.shopButton} onPress={onClickBlack} >
-                                <IconAntDesign
-                                    name="shoppingcart"
-                                    size={heightScale * 25}
-                                    color="black"
-                                />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    <View style={styles.ticketBox} >
-                        <View style={{ flex: 1, justifyContent: 'center' }} >
-                            <Image
-                                style={styles.ticketImg}
-                                source={require(`../../assets/RedTicket.png`)} />
-                        </View>
-                        <View style={{ flex: 3, paddingHorizontal: 13 * heightScale, justifyContent: 'center' }} >
-                            <View style={{ height: 76 * heightScale }}>
-                                <Text style={styles.fontStyle3} >Red Ticket</Text>
-                                <CountBox ticket={red} setTicket={setRed} />
-                            </View>
-                        </View>
-                        <View style={{ flex: 1.2, alignItems: 'flex-end' }} >
-                            <TouchableOpacity activeOpacity={1} style={styles.shopButton} onPress={onClickRed} >
-                                <IconAntDesign
-                                    name="shoppingcart"
-                                    size={heightScale * 25}
-                                    color="black"
-                                />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    <View style={styles.ticketBox} >
-                        <View style={{ flex: 1, justifyContent: 'center' }} >
-                            <Image
-                                style={styles.ticketImg}
-                                source={require(`../../assets/GoldTicket.png`)} />
-                        </View>
-                        <View style={{ flex: 3, paddingHorizontal: 13 * heightScale, justifyContent: 'center' }} >
-                            <View style={{ height: 76 * heightScale }}>
-                                <Text style={styles.fontStyle3} >Gold Ticket</Text>
-                                <CountBox ticket={gold} setTicket={setGold} />
-                            </View>
-                        </View>
-                        <View style={{ flex: 1.2, alignItems: 'flex-end' }} >
-                            <TouchableOpacity activeOpacity={1} style={styles.shopButton} onPress={onClickGold} >
-                                <IconAntDesign
-                                    name="shoppingcart"
-                                    size={heightScale * 25}
-                                    color="black"
-                                />
-                            </TouchableOpacity>
+                        <View style={styles.giftModalTextInput}>
+                            <IconIonicons
+                                name="search"
+                                color={'#929292'}
+                                size={heightScale * 24}
+                            />
+                            <TextInput
+                                autoCapitalize="none"
+                                autoCorrect={false}
+                                clearButtonMode="always"
+                                onChangeText={onChangeNicknane}
+                                placeholderTextColor={'#929292'}
+                                style={styles.textInput}
+                                placeholder="닉네임 검색"
+                                value={nickname}
+                            />
                         </View>
                     </View>
                 </View>
-                <View style={styles.boxBorder} >
+                <View style={{ flex: 3.2 }} >
+                    <View style={styles.container1} >
+                        <Text style={styles.fontStyle2} >티켓 종류</Text>
+                        <View style={styles.ticketBox} >
+                            <View style={{ flex: 1, justifyContent: 'center' }} >
+                                <Image
+                                    style={styles.ticketImg}
+                                    source={require(`../../assets/BlackCard.png`)} />
+                            </View>
+                            <View style={{ flex: 3, paddingHorizontal: 13 * heightScale, justifyContent: 'center' }} >
+                                <View style={{ height: 76 * heightScale }}>
+                                    <Text style={styles.fontStyle3} >Black Ticket</Text>
+                                    <CountBox ticket={black} setTicket={setBlack} />
+                                </View>
+                            </View>
+                            <View style={{ flex: 1.2, alignItems: 'flex-end' }} >
+                                <TouchableOpacity activeOpacity={1} style={styles.shopButton} onPress={onClickBlack} >
+                                    <IconAntDesign
+                                        name="shoppingcart"
+                                        size={heightScale * 25}
+                                        color="black"
+                                    />
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                        <View style={styles.ticketBox} >
+                            <View style={{ flex: 1, justifyContent: 'center' }} >
+                                <Image
+                                    style={styles.ticketImg}
+                                    source={require(`../../assets/RedTicket.png`)} />
+                            </View>
+                            <View style={{ flex: 3, paddingHorizontal: 13 * heightScale, justifyContent: 'center' }} >
+                                <View style={{ height: 76 * heightScale }}>
+                                    <Text style={styles.fontStyle3} >Red Ticket</Text>
+                                    <CountBox ticket={red} setTicket={setRed} />
+                                </View>
+                            </View>
+                            <View style={{ flex: 1.2, alignItems: 'flex-end' }} >
+                                <TouchableOpacity activeOpacity={1} style={styles.shopButton} onPress={onClickRed} >
+                                    <IconAntDesign
+                                        name="shoppingcart"
+                                        size={heightScale * 25}
+                                        color="black"
+                                    />
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                        <View style={styles.ticketBox} >
+                            <View style={{ flex: 1, justifyContent: 'center' }} >
+                                <Image
+                                    style={styles.ticketImg}
+                                    source={require(`../../assets/GoldTicket.png`)} />
+                            </View>
+                            <View style={{ flex: 3, paddingHorizontal: 13 * heightScale, justifyContent: 'center' }} >
+                                <View style={{ height: 76 * heightScale }}>
+                                    <Text style={styles.fontStyle3} >Gold Ticket</Text>
+                                    <CountBox ticket={gold} setTicket={setGold} />
+                                </View>
+                            </View>
+                            <View style={{ flex: 1.2, alignItems: 'flex-end' }} >
+                                <TouchableOpacity activeOpacity={1} style={styles.shopButton} onPress={onClickGold} >
+                                    <IconAntDesign
+                                        name="shoppingcart"
+                                        size={heightScale * 25}
+                                        color="black"
+                                    />
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                    <View style={styles.boxBorder} >
+                    </View>
                 </View>
-            </View>
-            <View style={{ flex: 1.5 }} >
-                <View style={styles.container1} >
-                    <Text style={styles.fontStyle4} >장바구니</Text>
-                    <ScrollView style={{ marginBottom: 50 * heightScale }} bounces={false}>
+                <View style={{ flex: 1.5 }} >
+                    <View style={styles.container1} >
+                        <Text style={styles.fontStyle4} >장바구니</Text>
+                        {/* <ScrollView style={{ marginBottom: 50 * heightScale }} bounces={false}> */}
                         {blackState && (
                             <View style={styles.shopBox} >
                                 <View style={{ flex: 1, alignItems: 'center', flexDirection: 'row' }}>
@@ -227,9 +230,40 @@ function TicketCharge() {
                             </View>
                         )}
 
-                    </ScrollView>
+                        {/* </ScrollView> */}
+                    </View>
                 </View>
+            </ScrollView>
+            <View style={{ alignItems: 'center' }}  >
+                <TouchableOpacity onPress={() => setModalStatus(true)}   activeOpacity={1} style={[styles.buttonStyle, (blackState || redState || goldState) && styles.buttonStyle2]} >
+                    <Text style={[styles.fontStyle5, (blackState || redState || goldState) && styles.fontStyle7]} >충전하기</Text>
+                </TouchableOpacity>
             </View>
+
+            <Modal isVisible={ModalStatus} style={{ alignItems: 'center', justifyContent: 'center' }} >
+                <View style={styles.popUpComponent}>
+                    <View style={{ flex: 1.5 }} >
+                        <Text style={[styles.fontStyle4, { paddingBottom: heightScale * 15, marginTop: 8 * heightScale }]}>
+                            한나피쉬님에게
+                        </Text>
+                        <Text style={[{}, styles.fontStyle4]}>
+                            {blackState && `[Black Ticket ${black}장 ],`} {'\n'}
+                            {redState && `[Red Ticket ${red}장 ],`}
+                            {goldState && `[Gold Ticket ${gold}장 ]`}{'\n'}
+                            을 충전 하시겠습니까?
+                        </Text>
+                    </View>
+                    <View style={{ flex: 1, alignItems: 'flex-end', flexDirection: 'row', paddingHorizontal: 24 * heightScale }} >
+                        <TouchableOpacity onPress={() => setModalStatus(false)} activeOpacity={1} style={styles.buttonStyle4}>
+                            <Text style={styles.fontStyle6} >아니요</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity  onPress={() => setModalStatus(false)}  activeOpacity={1} style={styles.buttonStyle5} >
+                            <Text style={styles.fontStyle7} >네</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+
         </SafeAreaView >
     );
 }
@@ -271,6 +305,14 @@ const styles = StyleSheet.create({
         fontSize: heightScale * 16,
         marginLeft: 22 * heightScale,
         color: 'white',
+    },
+    fontStyle6: {
+        fontSize: heightScale * 20,
+        color: 'white',
+    },
+    fontStyle7: {
+        fontSize: heightScale * 20,
+        color: 'black',
     },
     giftModalTextInput: {
         flexDirection: 'row',
@@ -336,6 +378,45 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         flexDirection: 'row',
         marginBottom: 20 * heightScale,
+    },
+    buttonStyle: {
+        width: 390 * heightScale,
+        height: 64 * heightScale,
+        borderRadius: 4,
+        backgroundColor: '#3B3B3B',
+        position: 'absolute',
+        bottom: 20 * heightScale,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    buttonStyle2: {
+        backgroundColor: '#F5FF82',
+    },
+    buttonStyle4: {
+        width: 145 * heightScale,
+        height: 60 * heightScale,
+        borderRadius: 6,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#8A8A8A',
+        marginRight: 33 * heightScale,
+    },
+    buttonStyle5: {
+        width: 145 * heightScale,
+        height: 60 * heightScale,
+        borderRadius: 6,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#f5ff82',
+    },
+    popUpComponent: {
+        width: heightScale * 360,
+        height: heightScale * 250,
+        padding: heightScale * 24,
+        backgroundColor: '#353535',
+        // top: heightScale * 210,
+        borderRadius: 20,
+        alignItems: 'center',
     },
 
 

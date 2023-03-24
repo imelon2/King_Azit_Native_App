@@ -8,6 +8,8 @@ import Modal from 'react-native-modal';
 const { width, height } = Dimensions.get('window');
 const heightScale = heightData;
 
+
+
 function TicketManagement() {
     const [gold, setGold] = useState(0);
     const [red, setRed] = useState(5);
