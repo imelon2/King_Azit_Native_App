@@ -139,7 +139,8 @@ const styles = StyleSheet.create({
     fontStyle: { 
         fontSize: heightScale * 18, 
         fontWeight: 'bold', 
-        color: 'white' 
+        color: 'white' ,
+    },
     container2: {
         width: width,
         height: height-20,
