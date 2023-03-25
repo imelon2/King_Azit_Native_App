@@ -8,6 +8,7 @@ import { heightData } from '../../modules/globalStyles';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import IconIonicons from 'react-native-vector-icons/Ionicons';
 import Modal from 'react-native-modal';
+import UserInformation from './Components/UserInformation'
 const { width, height } = Dimensions.get('window');
 const heightScale = heightData;
 
@@ -99,9 +100,9 @@ function MemberManagement({ route }: AdminScreenProps) {
                             <View style={{ flex: 4, paddingLeft: 20 * heightScale }} >
                                 <View style={{ flexDirection: 'row' }} >
                                     <Text style={styles.fontStyle2} >{val.name}   </Text>
-                                    {val.state == 'Approved' && (<View style={styles.Approved}>
+                                    {/* {val.state == 'Approved' && (<View style={styles.Approved}>
                                         <Text style={styles.fontStyle4}>Approved</Text>
-                                    </View>)}
+                                    </View>)} */}
                                     {val.state == 'Deniend' && (<View style={styles.Deniend}>
                                         <Text style={styles.fontStyle4}>Deniend</Text>
                                     </View>)}
@@ -124,80 +125,7 @@ function MemberManagement({ route }: AdminScreenProps) {
             </View>
 
             <Modal isVisible={modalStatus} >
-                <SafeAreaView style={styles.container2}>
-                    <View>
-                        <View style={styles.headerStyle}>
-                            <Text style={styles.fontStyle}>사용자</Text>
-                        </View>
-                        <IconAntDesign
-                            name="left"
-                            size={heightScale * 28}
-                            color="white"
-                            style={styles.beforeIcon}
-                            onPress={() => setModalStatus(false)}
-                        />
-                    </View>
-                    <View style={{ paddingHorizontal: 24 * heightScale, paddingTop: 40 * heightScale }} >
-
-                        <View>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', paddingLeft: 4 * heightScale }} >
-                                <Image source={require('../../assets/Rectangle.png')} />
-                                <Text style={styles.fontStyle5} >이름</Text>
-                            </View>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 * heightScale }} >
-                                <Image source={require('../../assets/Rectangle2.png')} />
-                                <Text style={styles.fontStyle6} >{dummyData[selectIndex].name}</Text>
-                            </View>
-                        </View>
-
-                        <View style={{ marginTop: 28 * heightScale }} >
-                            <View style={{ flexDirection: 'row', alignItems: 'center', paddingLeft: 4 * heightScale }} >
-                                <Image source={require('../../assets/Rectangle.png')} />
-                                <Text style={styles.fontStyle5} >핸드폰 번호</Text>
-                            </View>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 * heightScale }} >
-                                <Image source={require('../../assets/Rectangle2.png')} />
-                                <Text style={styles.fontStyle6} >{dummyData[selectIndex].phone}</Text>
-                            </View>
-                        </View>
-
-                        <View style={{ marginTop: 28 * heightScale }}>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', paddingLeft: 4 * heightScale }} >
-                                <Image source={require('../../assets/Rectangle.png')} />
-                                <Text style={styles.fontStyle5} >아이디 (이메일)</Text>
-                            </View>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 * heightScale }} >
-                                <Image source={require('../../assets/Rectangle2.png')} />
-                                <Text style={styles.fontStyle6} >{dummyData[selectIndex].id}</Text>
-                            </View>
-                        </View>
-
-                        <View style={{ marginTop: 28 * heightScale }}>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', paddingLeft: 4 * heightScale }} >
-                                <Image source={require('../../assets/Rectangle.png')} />
-                                <Text style={styles.fontStyle5} >닉네임</Text>
-                            </View>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 * heightScale }} >
-                                <Image source={require('../../assets/Rectangle2.png')} />
-                                <Text style={styles.fontStyle6} >{dummyData[selectIndex].nickname}</Text>
-                            </View>
-                        </View>
-
-                        <View style={{ marginTop: heightScale * 150, flexDirection: 'row' }}>
-                            <View style={{ flex: 1, alignItems: 'flex-start' }} >
-                                <View style={styles.buttonStyle} >
-                                    <Text style={{ fontSize: 20 * heightScale, color: 'white' }} >거절</Text>
-                                </View>
-                            </View>
-                            <View style={{ flex: 1, alignItems: 'flex-end' }} >
-                                <View style={styles.buttonStyle2} >
-                                    <Text style={{ fontSize: 20 * heightScale, color: 'black' }} >승인</Text>
-                                </View>
-                            </View>
-                        </View>
-
-                    </View>
-                </SafeAreaView>
+                <UserInformation data={dummyData[selectIndex]} setModalStatus={setModalStatus} state="new" />
             </Modal>
         </SafeAreaView>
     )
@@ -208,13 +136,16 @@ const styles = StyleSheet.create({
         backgroundColor: '#121212',
         paddingBottom: heightScale * 40
     },
+    fontStyle: { 
+        fontSize: heightScale * 18, 
+        fontWeight: 'bold', 
+        color: 'white' 
     container2: {
         width: width,
         height: height-20,
         left: - heightScale * 22,
         backgroundColor: '#121212',
     },
-    fontStyle: { fontSize: heightScale * 18, fontWeight: 'bold', color: 'white' },
     fontStyle2: {
         fontSize: 18 * heightScale,
         color: 'white',

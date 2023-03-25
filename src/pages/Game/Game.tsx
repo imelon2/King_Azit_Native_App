@@ -1,46 +1,49 @@
 import React, { useState } from "react"
-import { Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View, TouchableOpacity, Animated, Dimensions } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, Dimensions, Image, TextInput } from 'react-native';
 import { heightData } from '../../modules/globalStyles';
-const { width } = Dimensions.get("window");
+import SwitchSelector from "react-native-switch-selector";
+import BestHand from "./components/BestHand";
+import Bingo from './components/Bingo'
 const heightScale = heightData;
-import { useSpring, animated } from "@react-spring/native";
 
-const AnimatedView = animated(View);
+
+
 
 function Game() {
-    const [activeIndex, setActiveIndex] = React.useState(1);
-
-    function handleItemChange(nextIndex: any) {
-        setActiveIndex(nextIndex);
-    }
+    const [tab, setTab] = useState('bingo');
+    const options = [
+        { label: "BINGO", value: "bingo" },
+        { label: "BEST HAND", value: "hand" }
+    ];
 
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.headerStyle}>
                 <Text style={styles.fontStyle}>미니 게임</Text>
             </View>
-            <View>
-                {/* <TabBar
-                    items={["Short Tab", "Looooooooooooooooooooooong Tab", "Nah"]}
-                    activeIndex={activeIndex}
-                    onItemChange={handleItemChange}
-                    indicatorColor={colors[activeIndex]}
-                    renderItem={(item, index) => (
-                        <View
-                            style={{
-                                paddingHorizontal: 24,
-                                flex: 1,
-                                justifyContent: "center",
-                                alignItems: "center",
-                                marginBottom: 5
-                            }}
-                        >
-                            <Text>{item}</Text>
-                        </View>
-                    )}
-                /> */}
+            <View style={{ flex: 1, alignItems: 'center', paddingTop: 20 * heightScale }} >
+                <SwitchSelector
+                    style={{ width: 390 * heightScale }}
+                    options={options}
+                    initial={0}
+                    onPress={(value: string) => setTab(value)}
+                    buttonColor={'#F5FF82'}
+                    textColor={'#464646'}
+                    selectedColor={'#000'}
+                    backgroundColor={'#A8A7A7'}
+                    hasPadding
+                    height={48 * heightScale}
+                />
             </View>
-        </SafeAreaView>
+            {tab == 'hand' && (
+                <BestHand />
+            )}
+            {tab == 'bingo' && (
+                <Bingo />
+            )}
+
+
+        </SafeAreaView >
     )
 }
 
@@ -62,8 +65,6 @@ const styles = StyleSheet.create({
         color: 'white',
         paddingVertical: heightScale * 4.5,
     },
-
 });
 
 export default Game
-
