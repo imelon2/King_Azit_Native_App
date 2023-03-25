@@ -1,6 +1,6 @@
-import { widthData, heightData } from './globalStyles';
-import { Dimensions, StyleSheet } from 'react-native';
-const { width, height } = Dimensions.get('window');
+import {widthData, heightData} from './globalStyles';
+import {Dimensions, StyleSheet} from 'react-native';
+const {width, height} = Dimensions.get('window');
 export const heightScale = heightData;
 
 export const MainStyles = StyleSheet.create({
@@ -11,7 +11,7 @@ export const MainStyles = StyleSheet.create({
   },
   container: {
     backgroundColor: '#121212',
-    height:'100%'
+    height: '100%',
   },
   mainTextBox: {
     flex: 1,
@@ -41,7 +41,7 @@ export const MainStyles = StyleSheet.create({
   imgSlideBox2: {
     width: width,
     height: heightScale * 300,
-    // resizeMode:'center'
+    resizeMode: 'stretch',
   },
   imgSlideBox3: {
     width: width,
@@ -89,7 +89,7 @@ export const MainStyles = StyleSheet.create({
   },
   gameMenuWrapper: {
     flexDirection: 'row',
-    marginBottom:heightScale*35
+    marginBottom: heightScale * 35,
   },
   gameMenuComponent: {
     flex: 1,
@@ -99,16 +99,16 @@ export const MainStyles = StyleSheet.create({
     color: '#fff',
     paddingVertical: 8,
   },
-  onGameMenu: { flexDirection: 'row', alignItems: 'center' },
+  onGameMenu: {flexDirection: 'row', alignItems: 'center'},
   onGameMenuBody: {
     backgroundColor: '#F5FF82',
     height: heightScale * 2,
     width: heightScale * 86,
   },
   onGameMenuEdge: {
-    transform: [{ rotate: '45deg' }],
-    width: heightScale * 4,
-    height: heightScale * 4,
+    transform: [{rotate: '45deg'}],
+    width: heightScale * 5,
+    height: heightScale * 5,
     backgroundColor: '#F5FF82',
   },
   gameBoxImg: {
@@ -119,7 +119,7 @@ export const MainStyles = StyleSheet.create({
     borderColor: '#FEFFD7',
     borderRadius: 5,
   },
-  noGameBoxContainer : {
+  noGameBoxContainer: {
     width: heightScale * 390,
     height: heightScale * 230,
     justifyContent: 'center',
@@ -135,7 +135,7 @@ export const MainStyles = StyleSheet.create({
     height: heightScale * 230,
     padding: heightScale * 20,
   },
-  gameText : {
+  gameText: {
     color: '#fff',
     fontSize: heightScale * 14,
     fontWeight: 'bold',
@@ -145,8 +145,8 @@ export const MainStyles = StyleSheet.create({
     alignItems: 'center',
   },
   gameStateStyle: {
-    width: heightScale*60,
-    height: heightScale*20,
+    width: heightScale * 60,
+    height: heightScale * 20,
     backgroundColor: '#5F9A31',
     justifyContent: 'center',
     alignItems: 'center',
@@ -158,10 +158,8 @@ export const MainStyles = StyleSheet.create({
     fontWeight: '500',
   },
   gamePlayersContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      flex: 1,
-      justifyContent: 'flex-end',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
   },
   gamePlayerIcon: {
     borderWidth: 1,
@@ -170,8 +168,14 @@ export const MainStyles = StyleSheet.create({
     height: heightScale * 30,
     backgroundColor: 'gray',
     borderRadius: 15,
+    justifyContent:'center',
+    alignItems:'center'
   },
-
+  gamePlayerIconImg: {
+    width: heightScale * 30,
+    height: heightScale * 30,
+    borderRadius: heightScale * 30,
+  },
 
   tableNumText: {
     color: 'white',
@@ -246,7 +250,7 @@ export const MainStyles = StyleSheet.create({
     width: heightScale * 200,
     height: heightScale * 35,
     backgroundColor: '#F5FF82',
-    borderRadius: 4
+    borderRadius: 4,
     // marginBottom: heightScale * 16,
   },
 
@@ -350,7 +354,7 @@ export const MainStyles = StyleSheet.create({
     paddingHorizontal: 10 * heightScale,
     paddingTop: 12 * heightScale,
     marginTop: 8 * heightScale,
-    flexDirection:'row',
+    flexDirection: 'row',
   },
 
   contentsBox4: {
@@ -377,19 +381,19 @@ export const MainStyles = StyleSheet.create({
     height: 94 * heightScale,
     marginLeft: 60 * heightScale,
   },
-  contentImg4:{
+  contentImg4: {
     width: 98 * heightScale,
     height: 60 * heightScale,
     marginLeft: 15 * heightScale,
     marginTop: 10 * heightScale,
   },
-  contentImg5:{
+  contentImg5: {
     width: 70 * heightScale,
     height: 91 * heightScale,
-    position:'absolute',
+    position: 'absolute',
     right: -1,
     top: 10,
-    resizeMode:'contain',
+    resizeMode: 'contain',
     // marginLeft: 15 * heightScale,
     // marginTop: 10 * heightScale,
   },

@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import getProfileImage from '../../hooks/getProfileImage';
 import getTickets from '../../hooks/getTickets';
 import MainPageAdmin from './Compoents/MainPageAdmin';
 import {useSelector} from 'react-redux';
@@ -13,8 +12,6 @@ function MainPage() {
 
   // 현재 유저 보유 티켓 가져오기
   getTickets();
-  // 현재 유저 프로필 이미지 가져오기
-  getProfileImage();
 
   return (
     <>

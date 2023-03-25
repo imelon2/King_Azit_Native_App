@@ -15,50 +15,52 @@ import {heightData} from '../../../modules/globalStyles';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {HomeRootStackParamList} from '../../../../AppInner';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import ticketsList, {
   ticketsListType,
-  TicketType,
 } from '../../../modules/ticketsList';
-import {roomType} from '../Compoents/GameBox';
 import getTickets from '../../../hooks/getTickets';
 import useSocket from '../../../hooks/useSocket';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../../store/reducer';
+import { roomType } from '../../../hooks/getGameList';
+import { Alert } from 'react-native';
+import { Shadow } from 'react-native-shadow-2';
+import { MainStyles } from '../../../modules/MainStyles';
 const {width, height} = Dimensions.get('window');
 const heightScale = heightData;
 
 interface propsType {
   setModalStatus(id: boolean): void;
   item: roomType;
+  selectSeatNum:number;
 }
 
 function PayTicketForJoinGame(props: propsType) {
-  const navigation = useNavigation<NavigationProp<HomeRootStackParamList>>();
-  const nickName = useSelector((state: RootState) => state.user.nickName);
   const [socket, disconnect] = useSocket();
   const CARDS = ticketsList('basic').filter(
     keys => keys.type == 'Red' || keys.type == 'Black',
   );
+  const {uuid} = useSelector((state: RootState) => state.user);
   const [check, setcheck] = useState(false);
-  const [guestNickNameModal, setGuestNickNameModal] = useState(true);
+  const [guestNickNameModal, setGuestNickNameModal] = useState(false);
   const [change, setChange] = useState<number>(5);
   const [price, setPrice] = useState<number>(0);
-  const [isEnoughCard, setIsEnoughCard] = useState<boolean>(true);
+  const [isEnoughCard, setIsEnoughCard] = useState<boolean>(false);
 
-  let _gap = heightScale * 40;
-  let _offset = heightScale * 80;
+  let _gap = heightScale * 55;
+  let _offset = heightScale * 60;
   let _width = width - (_gap + _offset) * 2;
 
+  // Socket Msg
   useEffect(() => {
     const callback = (data: any) => {
-      console.log(data);
+      if(socket && data.type === 'enterGameRoom') {
+        Alert.alert("안내",data.msg + "다른 자리를 선택헤주세요.")
+      }
     };
 
     const userEnterRoom = (data: any) => {
-      if (socket && data === nickName + ' 게임 참가') {
-        socket.emit('getGameRoomList', 'init');
-      }
       console.log('userEnterRoom : ' + data);
     };
 
@@ -84,12 +86,12 @@ function PayTicketForJoinGame(props: propsType) {
 
   // GameId & Ticket 소모 필요
   const guJoinButton = () => {
-    if (check) {
-      return;
-    }
+    // if (!check) {
+    //   return;
+    // }
 
     if (socket) {
-      socket.emit('enterGameRoom', {gameId:props.item.game_id});
+      socket.emit('enterGameRoom', {gameId:props.item.game_id,chair:props.selectSeatNum});
       props.setModalStatus(false);
     }
   };
@@ -128,6 +130,31 @@ function PayTicketForJoinGame(props: propsType) {
     {viewabilityConfig, onViewableItemsChanged},
   ]);
 
+  const infoMsg = useCallback(() => {
+    let msg ="";
+    if(change !== 5) {
+      msg = `Red Ticekt ${change}장을 돌려드립니다!`
+    }
+    if(!isEnoughCard) {
+      msg = `티켓이 부족합니다.`
+    }
+    if(msg == "") {
+      return;
+    }
+    return (
+      <>
+      <View style={[MainStyles.onGameMenuEdge,{marginHorizontal:1}]}></View>
+              <View style={[MainStyles.onGameMenuEdge,{marginHorizontal:1}]}></View>
+              <View style={[MainStyles.onGameMenuEdge,{marginHorizontal:1}]}></View>
+              <Text style={{color: '#fff',fontSize:heightScale*16,paddingHorizontal:4}}>{msg}</Text>
+              <View style={[MainStyles.onGameMenuEdge,{marginHorizontal:1}]}></View>
+              <View style={[MainStyles.onGameMenuEdge,{marginHorizontal:1}]}></View>
+              <View style={[MainStyles.onGameMenuEdge,{marginHorizontal:1}]}></View>
+              </>
+    )
+  },[change,isEnoughCard])
+
+  
   return (
     <View style={styles.modalbox}>
       {/* Close Icon */}
@@ -135,8 +162,8 @@ function PayTicketForJoinGame(props: propsType) {
         <IconAntDesign
           onPress={() => props.setModalStatus(false)}
           name="close"
-          size={30}
-          color="#000"
+          size={heightScale*30}
+          color="#fff"
           style={styles.closeButton}
         />
       </View>
@@ -161,67 +188,71 @@ function PayTicketForJoinGame(props: propsType) {
             paddingHorizontal: _offset + _gap / 2,
           }}
           renderItem={({item}: {item: ticketsListType}) => (
-            <View style={{marginHorizontal: _gap / 2}}>
+            <View style={{marginHorizontal: _gap / 2,paddingVertical:heightScale*5}}>
               <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                <View style={{flexDirection: 'row'}}>
+                <View style={{flexDirection: 'row',marginBottom:heightScale*5}}>
                   <Text style={styles.cardText}>{item.type} Tickets</Text>
                   <Text style={styles.cardText2}> | 보유 {item.count} 개</Text>
                 </View>
+                <Shadow distance={6} startColor={'#616161'} endColor={'rgba(61, 61, 61, 0.6)'}>
                 <Image
                   style={{
                     resizeMode: 'stretch',
                     width: _width,
                     height: heightScale * 280,
-                    borderWidth: 2,
+                    borderWidth: 1,
                     borderColor: '#A1A1A1',
-                    borderRadius: 11,
+                    borderRadius: 14,
                   }}
                   source={item.image}
                 />
+                </Shadow>
               </View>
             </View>
           )}
         />
       </View>
+      
       <View style={{alignItems: 'center'}}>
-        <View style={styles.useTextWrapper}>
-          <Text style={styles.useText}>소모 : {price} 장</Text>
-        </View>
-          {change === 5 ? (
-            <Text> </Text>
-          ) : (
-            <Text style={{color: 'red'}}>Red Ticekt + {change} </Text>
-          )}
-        <TouchableOpacity
+        {/* 게스트 체크 박스 */}
+      <TouchableOpacity
           onPress={() => {
-            if (isEnoughCard) return;
+            if (!isEnoughCard) return;
             setGuestNickNameModal(true);
           }}
           activeOpacity={1}
           style={{
             flexDirection: 'row',
-            marginTop: heightScale * 29,
+            marginTop: heightScale * 15,
+            justifyContent:'center',
+            alignItems:'center'
           }}>
           <IconAntDesign
-            name="checksquareo"
-            size={30}
-            color={check ? '#000' : '#848484'}
+            name="checksquare"
+            size={22}
+            color={check ? '#F5FF82' : '#848484'}
           />
-          <Text style={styles.checkText}>For Guest Player</Text>
+          <Text style={[styles.checkText,{color:check ? '#F5FF82' : '#848484'}]}>For Guest Player</Text>
         </TouchableOpacity>
+
+        <View style={styles.useTextWrapper}>
+          <Text style={styles.useText}>소모 : {price} 장</Text>
+        </View>
+        <View style={{height:heightData*80,width,justifyContent:'center', flexDirection:'row',alignItems:'center'}}>
+          {infoMsg()}
+        </View>
       </View>
       <View
         style={{
           alignItems: 'center',
           justifyContent: 'flex-end',
-          marginTop: heightScale * 40,
         }}>
         <TouchableOpacity
           onPress={guJoinButton}
           activeOpacity={1}
           style={isEnoughCard ? styles.gujoinButton2 : styles.gujoinButton}>
           <Text style={[styles.gujoinButtonText]}>
-            {isEnoughCard ? '참가하기' : '티켓이 부족합니다'}{' '}
+            참가하기
           </Text>
         </TouchableOpacity>
       </View>
@@ -269,7 +300,7 @@ function PayTicketForJoinGame(props: propsType) {
 const styles = StyleSheet.create({
   modalbox: {
     height: heightScale * 680,
-    backgroundColor: '#C5C5C5',
+    backgroundColor: '#373737',
     borderTopRightRadius: heightScale * 30,
     borderTopLeftRadius: heightScale * 30,
     width: width,
@@ -283,14 +314,14 @@ const styles = StyleSheet.create({
   },
 
   cardText: {
-    color: '#000',
+    color: '#fff',
     textAlign: 'center',
     fontSize: heightScale * 18,
     fontWeight: '600',
     marginBottom: heightScale * 5,
   },
   cardText2: {
-    color: '#888',
+    color: '#fff',
     textAlign: 'center',
     fontSize: heightScale * 17,
     fontWeight: '400',
@@ -298,12 +329,13 @@ const styles = StyleSheet.create({
   },
   checkText: {
     marginLeft: 10,
-    color: '#000',
     fontSize: 17 * heightScale,
-    marginTop: 5,
+    fontWeight:'700',
   },
   useText: {
     fontSize:15,
+    color:'#fff',
+    fontWeight:'500',
     paddingHorizontal: heightScale * 10,
     paddingVertical: heightScale * 3,
   },
@@ -312,26 +344,28 @@ const styles = StyleSheet.create({
     paddingVertical: heightScale * 3,
     justifyContent: 'center',
     alignItems:'center',
-    marginTop: heightScale * 30,
+    marginTop: heightScale * 15,
     borderRadius: 20,
-    backgroundColor: '#D9D9D9',
+    backgroundColor: '#595959',
+    borderWidth:1,
+    borderColor:'#F5FF82'
   },
   gujoinButton: {
-    width: heightScale * 250,
+    width: heightScale * 390,
     height: heightScale * 60,
-    backgroundColor: '#FF3434',
+    backgroundColor: '#808080',
     borderRadius: 6,
   },
   gujoinButton2: {
-    width: heightScale * 250,
+    width: heightScale * 390,
     height: heightScale * 60,
-    backgroundColor: '#2C2A2A',
+    backgroundColor: '#F5FF82',
     borderRadius: 6,
   },
   gujoinButtonText: {
     textAlign: 'center',
     lineHeight: heightScale * 60,
-    color: 'white',
+    color: '#000',
     fontSize: heightScale * 20,
     fontWeight: '500',
   },

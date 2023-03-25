@@ -136,11 +136,15 @@ const styles = StyleSheet.create({
         backgroundColor: '#121212',
         paddingBottom: heightScale * 40
     },
-
     fontStyle: { 
         fontSize: heightScale * 18, 
         fontWeight: 'bold', 
         color: 'white' 
+    container2: {
+        width: width,
+        height: height-20,
+        left: - heightScale * 22,
+        backgroundColor: '#121212',
     },
     fontStyle2: {
         fontSize: 18 * heightScale,

@@ -189,8 +189,7 @@ function AppInner() {
         });
         const { access_token, refresh_token } = refreshResult.data;
         const { sub, roles, nickname, uuid } = decodeJWT(access_token);
-        console.log("uuid : " + uuid);
-        console.log("Config.IMG_URL : " + Config.IMG_URL);
+
         
 
         dispatch(
@@ -205,8 +204,7 @@ function AppInner() {
         await EncryptedStorage.setItem('refreshToken', refresh_token);
       } catch (error) {
         // refresh token 기간만료됬을 경우
-        console.log('refresh Result Error')
-        console.log((error as AxiosError).response?.status);
+        console.log('refresh Result Error',(error as AxiosError).response?.status);
         if (
           (error as AxiosError).response?.status === 400 ||
           (error as AxiosError).response?.status === 401

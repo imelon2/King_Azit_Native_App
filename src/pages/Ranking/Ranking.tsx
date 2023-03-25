@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Image, Dimensions, Animated } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Image, Dimensions, Animated, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { heightData } from '../../modules/globalStyles';
 import { useAppDispatch } from '../../store';
@@ -14,12 +14,14 @@ function Ranking() {
     type DataType = {
         nickname: String,
         ranking: String,
-        points: String
+        points: String,
+        uuid:String
     };
     const Data = {
         nickname: '',
         ranking: '',
-        points: ''
+        points: '',
+        uuid:''
     };
 
 
@@ -29,9 +31,6 @@ function Ranking() {
     const [weekData, setWeekData] = useState<[DataType, DataType, DataType]>([Data, Data, Data]);
 
     const access_token = useSelector((state: RootState) => state.user.access_token);
-
-    // const { nickName } = useSelector((state: RootState) => state.user);
-    // setNickName(nickName);
 
     useEffect(() => {
         let today = new Date();
@@ -101,8 +100,8 @@ function Ranking() {
                     <View style={{ flex: 1, alignItems: 'flex-end', flexDirection: 'row' }} >
                         <Image style={styles.playerCrown2} source={require('../../assets/2_crown.png')} />
                         <Image style={styles.playerRound2} source={require('../../assets/2_round.png')} />
-                        <Image style={styles.playerImg2} source={require('../../assets/2_img.png')} />
-                        <View style={{ flex: 1, alignItems: 'center', flexDirection: 'column', paddingBottom: 38 * heightScale }} >
+                        <Image style={styles.playerImg2} defaultSource={require('../../assets/UserIcon.png')} source={{uri:Config.IMG_URL!+monthData[1].uuid}} />
+                        <View style={{ flex: 1, alignItems: 'center', paddingBottom: 38 * heightScale }} >
                             <Text style={{ color: 'white', textAlign: 'center', fontSize: 14 * heightScale }} >
                                 {status == 'week' && weekData[1].nickname}{status == 'month' && monthData[1].nickname}
                             </Text>
@@ -116,7 +115,7 @@ function Ranking() {
                     <View style={{ flex: 1, alignItems: 'flex-end', flexDirection: 'row' }} >
                         <Image style={styles.playerCrown} source={require('../../assets/1_crown.png')} />
                         <Image style={styles.playerRound} source={require('../../assets/1_round.png')} />
-                        <Image style={styles.playerImg} source={require('../../assets/1_img.png')} />
+                        <Image style={styles.playerImg} defaultSource={require('../../assets/UserIcon.png')} source={{uri:Config.IMG_URL!+monthData[0].uuid}} />
                         <View style={{ flex: 1, alignItems: 'center', flexDirection: 'column', paddingBottom: 30 * heightScale }} >
                             <Image style={styles.nameWing1} source={require('../../assets/nameWing1.png')} />
                             <Text style={{ color: 'white', textAlign: 'center', fontSize: 14 * heightScale }} >
@@ -133,7 +132,7 @@ function Ranking() {
                     <View style={{ flex: 1, alignItems: 'flex-end', flexDirection: 'row' }} >
                         <Image style={styles.playerCrown2} source={require('../../assets/3_crown.png')} />
                         <Image style={styles.playerRound2} source={require('../../assets/3_round.png')} />
-                        <Image style={styles.playerImg2} source={require('../../assets/3_img.png')} />
+                        <Image style={styles.playerImg2} defaultSource={require('../../assets/UserIcon.png')} source={{uri:Config.IMG_URL!+monthData[2].uuid}} />
                         <View style={{ flex: 1, alignItems: 'center', flexDirection: 'column', paddingBottom: 38 * heightScale }} >
                             <Text style={{ color: 'white', textAlign: 'center', fontSize: 14 * heightScale }} >
                                 {status == 'week' && weekData[2].nickname}{status == 'month' && monthData[2].nickname}
@@ -158,7 +157,9 @@ function Ranking() {
                     </View>
                     <View style={{ flex: 10 }} >
                         <ScrollView
-                            showsHorizontalScrollIndicator={false} >
+                            showsHorizontalScrollIndicator={false}
+                            bounces={false}
+                            >
                             <View style={styles.RankingTop} >
                                 <View style={{ flex: 1, flexDirection: 'row' }} >
                                     <Text style={styles.menuText} >순위</Text>
@@ -293,6 +294,7 @@ const styles = StyleSheet.create({
     rankingBox: {
         width: 389 * heightScale,
         height: '100%',
+        marginTop:heightScale*10
     },
     marginRight: {
         marginRight: 53 * heightScale,
@@ -356,6 +358,8 @@ const styles = StyleSheet.create({
         width: 112 * heightScale,
         height: 112 * heightScale,
         resizeMode: 'contain',
+        aspectRatio:0.7,
+        borderRadius:60
     },
     playerRound: {
         position: 'absolute',
@@ -382,6 +386,7 @@ const styles = StyleSheet.create({
         width: 74 * heightScale,
         height: 74 * heightScale,
         resizeMode: 'contain',
+        borderRadius:50
     },
     playerRound2: {
         position: 'absolute',

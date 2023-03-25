@@ -1,16 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import useSocket from '../../../hooks/useSocket';
 import {heightScale, MainStyles} from '../../../modules/MainStyles';
-import GameBox, {roomType} from './GameBox';
+import GameBox from './GameBox';
 import {View, Text, Pressable} from 'react-native';
 import Modal from 'react-native-modal';
-import GuestJoin from '../MainPageModal/PayTicketForJoinGame';
 import MemberModal from '../MainPageModal/MemberModal';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/reducer';
-import { useAppDispatch } from '../../../store';
-import gamesSlice from '../../../slices/games';
-import getGameList, { getGameListArr } from '../../../hooks/getGameList';
+import getGameList, { getGameListArr, roomType } from '../../../hooks/getGameList';
 
 
 const GameList = () => {
@@ -21,9 +17,8 @@ const GameList = () => {
     {name: 'end', state: false},
   ]);
   const gameData:any = useSelector((state: RootState) => state.games);
-  const [selectGameItems, setSelectGameItems] = useState<roomType>();
   const [playMemberStatus, setPlayMemberStatus] = useState(false);
-  const [modalStatus, setModalStatus] = useState(false);
+  const [selectedGameId, setSelectedGameId] = useState<string>();
   
   // Socket
   getGameList();
@@ -71,7 +66,8 @@ const GameList = () => {
     setMenu(currentMunu);
   };
 
-  const onClickMember = () => {
+  const onClickMember = (gameId:string) => {
+    setSelectedGameId(gameId)
     setPlayMemberStatus(true);
   };
 
@@ -107,7 +103,7 @@ const GameList = () => {
       </View>
 
       <Modal isVisible={playMemberStatus}>
-        <MemberModal setPlayMemberStatus={setPlayMemberStatus} />
+        <MemberModal setPlayMemberStatus={setPlayMemberStatus} selectedGameId={selectedGameId!}/>
       </Modal>
     </View>
   );
