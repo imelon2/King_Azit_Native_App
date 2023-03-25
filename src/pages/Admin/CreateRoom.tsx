@@ -3,6 +3,7 @@ import React from 'react';
 import {
   Pressable,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -41,6 +42,7 @@ function CreateRoom() {
           onPress={() => navigation.navigate('Home')}
         />
       </View>
+      <ScrollView bounces={false}>
       {/* 방 만들기 */}
       <View style={{alignItems: 'center', marginTop: heightScale * 41}}>
         <TouchableOpacity
@@ -64,6 +66,7 @@ function CreateRoom() {
         {/* 게임 현재 리스트 */}
         <GameList />
       </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }

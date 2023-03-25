@@ -12,8 +12,6 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import Config from 'react-native-config';
-import Modal from "react-native-modal";
 import Swiper from 'react-native-swiper';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import {useSelector} from 'react-redux';
@@ -21,14 +19,9 @@ import {
   HomeRootStackParamList,
   MyPageRootStackParamList,
 } from '../../../../AppInner';
-import useSocket from '../../../hooks/useSocket';
-import BinaryToBase64 from '../../../modules/BinaryToBase64';
 import {MainStyles, heightScale} from '../../../modules/MainStyles';
 import ticketsList, {ticketsListType} from '../../../modules/ticketsList';
 import {RootState} from '../../../store/reducer';
-import GameBox, {roomType} from './GameBox';
-import GuestJoin from '../MainPageModal/PayTicketForJoinGame';
-import MemberModal from '../MainPageModal/MemberModal';
 import GameList from './GameList';
 const {width} = Dimensions.get('window');
 
@@ -50,7 +43,6 @@ function MainPageUser() {
     'https://source.unsplash.com/1024x768/?girl',
     'https://source.unsplash.com/1024x768/?tree',
   ];
-
 
   // MyTickets 네비게이터
   const onOpenMyTikets = (text: any) => {

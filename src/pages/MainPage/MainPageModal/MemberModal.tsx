@@ -2,16 +2,21 @@ import { Text, View, Image, StyleSheet, TouchableOpacity, Dimensions } from 'rea
 import { heightData } from '../../../modules/globalStyles';
 import { useState } from 'react';
 import Icon from 'react-native-vector-icons/AntDesign';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../store/reducer';
+import { roomType } from '../../../hooks/getGameList';
+import Config from 'react-native-config';
 const { width, height } = Dimensions.get('window');
 const heightScale = heightData;
 
 interface propsType {
     setPlayMemberStatus(id: boolean): void
+    selectedGameId:string;
 }
 
 function MemberModal(props: propsType) {
-    const [playMember, setPlayMember] = useState([1,2,3,4,5,6 , 7]);
-    const [outMember, setoutMember] = useState([1,2,3,4]);
+    const gameData:any = useSelector((state: RootState) => state.games);
+    const currentGameData: roomType = gameData['constructor'][props.selectedGameId];
 
     return (
         <View style={styles.container} >
@@ -25,10 +30,10 @@ function MemberModal(props: propsType) {
                     onPress={() => props.setPlayMemberStatus(false)}
                 />
                 <View style={  styles.playerBox } >
-                    {playMember.map((v, key) => (
+                    {Object.keys(currentGameData.playing_users).map((v, key) => (
                         <View key={key} >
-                            <Image  style={styles.player} source={ require('../../../assets/UserIcon2.png')} />
-                            <Text style={styles.playerText}> 플레이어 </Text>
+                            <Image style={styles.player} defaultSource={require('../../../assets/UserIcon.png')} source={{uri:Config.IMG_URL!+currentGameData.playing_users[v]}} />
+                            <Text style={styles.playerText}>{v}</Text>
                         </View>
                     ))}
                 </View>
@@ -38,13 +43,13 @@ function MemberModal(props: propsType) {
             </View>
 
             <View style={  styles.playerBox } >
-                    {outMember.map((v, key) => (
-                        <View key={key}>
-                            <Image  style={styles.player} source={ require('../../../assets/UserIcon2.png')} />
-                            <Text style={styles.playerText}> 플레이어 </Text>
+                    {Object.keys(currentGameData.sitout_users).map((v, key) => (
+                        <View key={key} >
+                            <Image style={styles.player} defaultSource={require('../../../assets/UserIcon.png')} source={{uri:Config.IMG_URL!+currentGameData.sitout_users[v]}} />
+                            <Text style={styles.playerText}>{v}</Text>
                         </View>
                     ))}
-            </View>
+                </View>
 
         </View>
     )
@@ -55,8 +60,8 @@ const styles = StyleSheet.create({
         width: width,
         height: height - 200 * heightScale,
         position: 'absolute',
-        left: -20,
-        bottom: -20,
+        left: -20 * heightScale,
+        bottom: -20* heightScale,
         borderTopRadius: 20,
         backgroundColor: '#353535',
         paddingHorizontal: 20 * heightScale,
@@ -78,6 +83,7 @@ const styles = StyleSheet.create({
         marginTop: 20 * heightScale,
         marginLeft: 15* heightScale,
         marginRight: 15* heightScale,
+        borderRadius:66 * heightScale
     },
     playerBox: {
         flexDirection: 'row' ,

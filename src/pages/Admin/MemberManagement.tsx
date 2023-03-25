@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     },
     container2: {
         width: width,
-        height: height,
+        height: height-20,
         left: - heightScale * 22,
         backgroundColor: '#121212',
     },

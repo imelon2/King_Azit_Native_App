@@ -22,23 +22,14 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../../store/reducer';
 import Config from 'react-native-config';
 import axios, {AxiosError} from 'axios';
-import BinaryToBase64 from '../../modules/BinaryToBase64';
 
 const heightScale = heightData;
 
 function MyPage() {
   const dispatch = useAppDispatch();
   const navigation = useNavigation<NavigationProp<MyPageRootStackParamList>>();
-  const nickname = useSelector((state: RootState) => state.user.nickName);
-  const name = useSelector((state: RootState) => state.user.name);
-  const uuid = useSelector((state: RootState) => state.user.uuid);
-  const profileImage = useSelector(
-    (state: RootState) => state.user.profileImage,
-  );
-  
-  const access_token = useSelector(
-    (state: RootState) => state.user.access_token,
-  );
+  const {nickName,name,uuid,access_token} = useSelector((state: RootState) => state.user);
+  const [cache,setCache] = useState<number>();
 
   const onChangeFile = useCallback(async () => {
     try {
@@ -73,7 +64,7 @@ function MyPage() {
       formData.append('file', image);
   
       await setProfileImageHttps(formData);
-      await getProfileImageHttps();
+      setCache(Date.now())
     } catch (error) {
       // [Error MSG : User cancelled image selection] :  ImagePicker.openPicker ERROR
       console.log((error as AxiosError));
@@ -98,30 +89,13 @@ function MyPage() {
     }
   };
 
-  const getProfileImageHttps = async () => {
-    try {
-      const refreshResult = await axios.get(`${Config.API_URL}/member/image?memberUuid=${uuid}`, {
-        responseType: 'arraybuffer',
-        headers: {
-          authorization: `Bearer ${access_token}`,
-        },
-      });
-      const base64ImageString = BinaryToBase64(refreshResult.data)
-
-      dispatch(
-        userSlice.actions.setProfileImage({
-          profileImage: base64ImageString ? `data:image/png;base64,${base64ImageString}`: "",
-        }),
-      );
-    } catch (error) {
-      // todo :
-    }
-  };
 
   const logout = async () => {
     await EncryptedStorage.removeItem('refreshToken');
     dispatch(userSlice.actions.setUser({access_token: ''}));
   };
+
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -132,21 +106,14 @@ function MyPage() {
         <View style={styles.myInfoStyle}>
           {/* icon */}
           <Pressable onPress={onChangeFile}>
-            <Image
-              source={
-                profileImage
-                  ? {uri: profileImage}
-                  : require('../../assets/UserIcon.png')
-              }
-              style={styles.userIcon}
-            />
+          <Image style={styles.userIcon} key={cache} defaultSource={require('../../assets/UserIcon.png')} source={{uri:Config.IMG_URL!+uuid}} />
           </Pressable>
           {/* info */}
           <View style={styles.infoWrapper}>
             <Pressable
               style={styles.userInfoWrapper}
               onPress={() => navigation.navigate('SetNickNameScreen')}>
-              <Text style={styles.fontStyle}>{nickname}</Text>
+              <Text style={styles.fontStyle}>{nickName}</Text>
               <IconSimpleLineIcons
                 name="pencil"
                 size={heightScale * 13}
