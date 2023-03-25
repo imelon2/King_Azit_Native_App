@@ -1,27 +1,20 @@
-import React, { useState, Fragment } from "react"
-import { SafeAreaView, StyleSheet, Text, View, Dimensions } from 'react-native';
+import React, { useState } from "react"
+import { SafeAreaView, StyleSheet, Text, View, Dimensions, Image, TextInput } from 'react-native';
 import { heightData } from '../../modules/globalStyles';
-import IconAntDesign from 'react-native-vector-icons/EvilIcons';
 import SwitchSelector from "react-native-switch-selector";
-import CardOne, { cardType } from './components/CardOne'
-import { Pattern } from "react-native-svg";
-
-const { width } = Dimensions.get("window");
+import BestHand from "./components/BestHand";
+import Bingo from './components/Bingo'
 const heightScale = heightData;
 
 
 
 
 function Game() {
-    const [tab, setTab] = useState('');
-
+    const [tab, setTab] = useState('bingo');
     const options = [
         { label: "BINGO", value: "bingo" },
         { label: "BEST HAND", value: "hand" }
     ];
-
-    const cardData : cardType[]  = [{ num: 'A', pattern: 'diamond' }, { num: 'A', pattern: 'spade' },
-    { num: 'A', pattern: 'clover' }, { num: '10', pattern: 'heart' }, { num: '10', pattern: 'spade' }];
 
     return (
         <SafeAreaView style={styles.container}>
@@ -42,26 +35,14 @@ function Game() {
                     height={48 * heightScale}
                 />
             </View>
-            <View style={{ flex: 2.6, alignItems: 'center', justifyContent: 'center' }}>
-                <View style={{ flex: 1, flexDirection: 'row' }} >
-                    <Text style={styles.fontStyle2} >Kings Azit
-                    </Text>
-                    <IconAntDesign
-                        name="pencil"
-                        size={heightScale * 17}
-                        color="white"
-                    // onPress={() => navigateFunc()}
-                    />
-                </View>
-                <View style={{ flex: 3, alignItems: 'center' }} >
-                    <View style={{ flexDirection: 'row', width: 390 * heightScale }} >
-                        {cardData.map((val, key) => (
-                            <CardOne key={key} num={val.num} pattern={val.pattern} />
-                        ))}
-                    </View>
-                </View>
-            </View>
-            <View style={{ flex: 4.2 }}></View>
+            {tab == 'hand' && (
+                <BestHand />
+            )}
+            {tab == 'bingo' && (
+                <Bingo />
+            )}
+
+
         </SafeAreaView >
     )
 }
@@ -83,11 +64,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: 'white',
         paddingVertical: heightScale * 4.5,
-    },
-    fontStyle2: {
-        color: 'white',
-        fontSize: 20 * heightScale,
-        fontWeight: '600',
     },
 });
 

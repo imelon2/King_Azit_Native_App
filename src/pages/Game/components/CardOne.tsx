@@ -18,14 +18,12 @@ function CardOne(props: cardType) {
     return (
         <View style={styles.card} >
             <View style={[styles.cardBorder, (pattern == 'diamond' || pattern == 'heart') && styles.cardBorder2]} >
-                <Text style={[{ color: color[pattern]  } , styles.fontStyle]} >A</Text>
+                <Text style={[{ color: color[pattern]  } , styles.fontStyle]} >{num}</Text>
                 <View style={{  alignItems: 'center' }} >
                     <IconAntDesign
                         name={cardName[pattern]}
                         size={heightScale * 35}
                         color={color[pattern]}
-                    // style={{ }}
-                    // onPress={() => navigateFunc()}
                     />
                 </View>
             </View>
@@ -39,7 +37,7 @@ const styles = StyleSheet.create({
         width: 62 * heightScale,
         height: 81 * heightScale,
         borderRadius: 4,
-        marginRight: 20 * heightScale,
+        // marginRight: 20 * heightScale,
         padding: 2 * heightScale,
     },
     cardBorder: {
