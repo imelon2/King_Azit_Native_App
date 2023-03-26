@@ -100,12 +100,15 @@ function GamePage({route, navigation}: GamePageScreenProps) {
   }, []);
 
   const onClickUser = (seatNum: number) => {
+    
     if (!!currentGameData.seat[seatNum]) return;
     let msg = '';
-    if (isPlaying(gameData, uuid))
+    if (isPlaying(gameData, uuid)) {
       msg = '다른 테이블 게임에 참여 중에는 게스트 초대만 가능합니다.';
-    if (isEnterRoom(currentGameData, uuid))
+    }
+    if (isEnterRoom(currentGameData, uuid)) {
       msg = '게임에 참여 중에는 게스트 초대만 가능합니다.';
+    }
     if (msg) {
       Alert.alert('알림', msg, [
         {
@@ -117,7 +120,12 @@ function GamePage({route, navigation}: GamePageScreenProps) {
         },
         {text: '취소'},
       ]);
+
+      return;
     }
+
+    setSelectSeatNum(seatNum);
+    setModalStatus(true);
   };
 
   const finishGame = () => {
@@ -193,8 +201,8 @@ function GamePage({route, navigation}: GamePageScreenProps) {
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
         <View
           style={styles.userProfileStyle}
-          onTouchEnd={() => onClickUser(seat)}>
-          {/* onTouchEnd={() => sitout(seat)}> */}
+          // onTouchEnd={() => onClickUser(seat)}>
+          onTouchEnd={() => sitout(seat)}>
           {currentGameData?.seat[seat] === null ? (
             <Text
               style={{
@@ -304,7 +312,7 @@ function GamePage({route, navigation}: GamePageScreenProps) {
               <View style={{flex: 1, alignItems: 'flex-end'}}>
                 <View style={styles.dealerWrapperStyle}>
                   <View style={styles.dealerStyle}>
-                    <Text style={styles.dealerText}>딜러</Text>
+                    <Text style={styles.dealerText}>DEALER</Text>
                   </View>
                 </View>
               </View>
@@ -380,7 +388,7 @@ function GamePage({route, navigation}: GamePageScreenProps) {
                 }
               </Text>
               <Text style={styles.blindTextStyle}>in 03:56</Text>
-              <View
+              {isAdmin ? (              <View
                 style={styles.stateButton}>
                 <IconFeather size={heightScale * 20} name="play" />
                 <Text
@@ -391,7 +399,7 @@ function GamePage({route, navigation}: GamePageScreenProps) {
                   }}>
                   Restart
                 </Text>
-              </View>
+              </View>) : <></>}
             </View>
           </View>
         </View>
@@ -482,16 +490,16 @@ const styles = StyleSheet.create({
   dealerStyle: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: heightScale * 50,
-    height: heightScale * 50,
+    width: heightScale * 60,
+    height: heightScale * 60,
     backgroundColor: '#35312A',
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: '#C9BEA2',
-    borderRadius: 25,
+    borderRadius: heightScale*60,
   },
   dealerText: {
     color: '#C9BEA2',
-    fontSize: heightScale * 16,
+    fontSize: heightScale * 12,
     fontWeight: 'bold',
   },
   blindTextStyle: {

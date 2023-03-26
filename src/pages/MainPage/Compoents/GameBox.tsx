@@ -69,7 +69,6 @@ const GameBox = ({item,onClickMember}: propsType) => {
             </View>
             {/* 플레이어 아이콘 */}
             <Pressable style={MainStyles.gamePlayersContainer} onPress={() => {
-              if(Object.keys(item.playing_users).length === 0) return;
               onClickMember(item.game_id)}
           }>
               <View style={{width:heightScale*75,alignItems:'center',justifyContent:'center',flexDirection:'row'}}>

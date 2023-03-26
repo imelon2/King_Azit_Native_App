@@ -42,7 +42,6 @@ function getGameList() {
       // Socket
   useEffect(() => {
     const getGameRoomList = (data: any) => {
-      console.log(data);
       dispatch(
         gamesSlice.actions.setGameData({
             gameData:data
