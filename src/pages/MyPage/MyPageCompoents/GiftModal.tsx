@@ -42,7 +42,7 @@ const GiftModal = ({...props}) => {
 
 
   const onChangeNicknane = useCallback((text: string) => {
-    setKeyword(text);
+    setKeyword(text.trim());
   }, []);
 
 

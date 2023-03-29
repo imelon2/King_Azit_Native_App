@@ -89,14 +89,11 @@ export type HomeRootStackParamList = {
   };
   UserDetail: {
     userData: {
-      name: string;
-      phone: string;
-      id: string;
-      nickname: string;
-      state: string;
-      date: string;
-      profileImage: string;
-      email: string;
+      memberId:string;
+      name:string;
+      nickname:string;
+      phone:string;
+      registerDate:string;
     },
   }
   MemberManagePage: undefined;
