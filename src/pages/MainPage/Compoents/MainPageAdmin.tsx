@@ -73,12 +73,12 @@ function MainPageAdmin() {
               <Image style={MainStyles.contentImg4} source={require('../../../assets/contents_img3.png')} />
             </TouchableOpacity>
           </View>
-          <View style={{ flex: 1 }} >
-            <View style={MainStyles.contentsBox4} >
-              <Text style={MainStyles.contentsText} >티켓 관리</Text>
+          <View style={{ flex: 1 }}    >
+            <TouchableOpacity  activeOpacity={1} onPress={() => navigation.navigate('CalculatePage')}  style={MainStyles.contentsBox4} >
+              <Text style={MainStyles.contentsText} >정산 관리</Text>
               <Text style={MainStyles.contentsText2}>티켓 기록 </Text>
               <Image style={MainStyles.contentImg5} source={require('../../../assets/contents_img4.png')} />
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
       </View>

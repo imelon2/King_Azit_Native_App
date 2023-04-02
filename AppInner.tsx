@@ -40,6 +40,7 @@ import Forbidden from './src/pages/Admin/Forbidden';
 import AdminTicketsHistory from './src/pages/Admin/AdminTicketsHistory';
 import QRCodeScanner from './src/pages/Admin/Components/QRCodeScanner';
 import CreateRoom from './src/pages/Admin/CreateRoom';
+import CalculatePage from './src/pages/Calculate/CalculatePage';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -103,6 +104,7 @@ export type HomeRootStackParamList = {
   AdminTicketsHistory: undefined;
   QRCodeScanner: undefined;
   CreateRoom: undefined;
+  CalculatePage:undefined;
 };
 
 export type MyPageRootStackParamList = {
@@ -328,6 +330,11 @@ function AppInner() {
           <HomeStack.Screen
             name="QRCodeScanner"
             component={QRCodeScanner}
+            options={{ animation: 'none' }}
+          />
+          <HomeStack.Screen
+            name="CalculatePage"
+            component={CalculatePage}
             options={{ animation: 'none' }}
           />
         </HomeStack.Navigator>
