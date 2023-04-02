@@ -6,7 +6,6 @@ import IconIonicons from 'react-native-vector-icons/Ionicons';
 import axios, { AxiosError } from 'axios';
 import Config from 'react-native-config';
 import { useSelector } from 'react-redux';
-import TimeFormat from '../../modules/TimeFormat';
 import { RootState } from '../../store/reducer';
 const {width, height} = Dimensions.get('window');
 const heightScale = heightData;
@@ -124,7 +123,8 @@ function SearchId(props: propsType) {
             value={keyword}
           />
         </View>
-        {loading ?<View style={{marginTop:heightScale*25, justifyContent:'center',alignItems:'center'}}><ActivityIndicator color={'#fff'}/></View> :        <FlatList
+        {loading ?<View style={{marginTop:heightScale*25, justifyContent:'center',alignItems:'center'}}><ActivityIndicator color={'#fff'}/></View> :        
+        <FlatList
           keyExtractor={item => item.uuid}
           data={keyItems}
           style={{marginBottom: 50 * heightScale, marginTop: 30 * heightScale}}

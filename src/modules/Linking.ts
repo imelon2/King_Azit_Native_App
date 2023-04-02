@@ -21,8 +21,9 @@ type Iconfig =
 const config: Iconfig = {
   screens: {
     Admin: {
-      path: 'admin/:memberId/:type/:max/:token',
+      path: 'admin/:uuid/:memberId/:type/:max/:token',
       parse: {
+        uuid: (uuid: any) => `${uuid}`,
         memberId: (memberId: any) => `${memberId}`,
         type: (type: any) => `${type}`,
         max: (max: any) => `${max}`,
@@ -76,20 +77,21 @@ export function deepLinkController(isLoggedIn: boolean) {
   }, [isLoggedIn]);
 
   // Check QR Access Token & QR Ticket Pay Navigiate
-  const navigateTicketPay = async(url: string) => {
+  const navigateTicketPay = async(url: any) => {
     try {
       const _params = url.split('/');
       const qrtoken = await axios.get(`${Config.API_URL}/admin/verifyqr`,{
         headers: {
           Authorization: `Bearer ${access_token}`,
-          qrToken:`Bearer ${_params[6]}`
+          qrToken:`Bearer ${_params[7]}`
         },
       });
       if(qrtoken.data) {
         navigation.navigate('TicketPay', {
-          memberId: _params[3],
-          type: _params[4],
-          max: Number(_params[5]),
+          uuid:_params[3],
+          memberId: _params[4],
+          type: _params[5],
+          max: Number(_params[6]),
         });
       }
     } catch (error) {

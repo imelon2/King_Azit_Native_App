@@ -2,12 +2,11 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../store/reducer';
 
 export type ticketsListType = {
-    key:number,
-    type:string,
+    type:TicketType,
     image:any,
     count:number
 }
-export type TicketType = 'Black' | 'Red' | 'Gold' | "";
+export type TicketType = 'black' | 'red' | 'gold' | "";
 type EventType = "basic" | "width";
 
 export const img = {
@@ -28,17 +27,17 @@ const ticketsList = (_type:EventType) => {
   const {red, black, gold} = useSelector((state: RootState) => state.ticket);
   const Cards = [
     {
-      type: 'Black',
+      type: 'black',
       image: img[_type].BlackCardImg,
       count: black,
     },
     {
-      type: 'Red',
+      type: 'red',
       image: img[_type].RedCardImg,
       count: red,
     },
     {
-      type: 'Gold',
+      type: 'gold',
       image: img[_type].GoldCardImg,
       count: gold,
     },
@@ -52,5 +51,11 @@ const ticketsList = (_type:EventType) => {
     };
   });
 };
+
+export const ConvertSummary = (_summary:string) => {
+  if(_summary == "qr") return "QR 결제"
+
+  return _summary;
+}
 
 export default ticketsList;

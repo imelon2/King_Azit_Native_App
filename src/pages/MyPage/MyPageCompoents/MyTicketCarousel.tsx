@@ -2,11 +2,12 @@ import React, {memo, useCallback, useRef} from 'react';
 import {Animated, Dimensions, StyleSheet, View} from 'react-native';
 const {width} = Dimensions.get('screen');
 import {heightData} from '../../../modules/globalStyles';
+import ticketsList from '../../../modules/ticketsList';
 const heightScale = heightData;
 
 const MyTicketCarousel = ({...props}) => {
   // render item
-  const DATA = props.data;
+  const DATA = props.CARDS;
 
   // Scale & CSS
   const offsetX = heightScale * props.width + props.gap;
@@ -70,7 +71,7 @@ const MyTicketCarousel = ({...props}) => {
         viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
         // initialScrollIndex={1}
         getItemLayout={getItemLayout}
-        keyExtractor={item => item.key}
+        keyExtractor={(_,index) => String(index)}
         renderItem={useCallback(({item, index}: {item: any; index: any}) => {
           const inputRange = [
             (index - 1) * offsetX, // next slide

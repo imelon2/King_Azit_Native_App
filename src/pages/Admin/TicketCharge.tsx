@@ -22,10 +22,8 @@ const { width, height } = Dimensions.get('window');
 
 function TicketCharge() {
     const navigation = useNavigation<NavigationProp<HomeRootStackParamList>>();
-    const access_token = useSelector(
-        (state: RootState) => state.user.access_token,
-      );
-      const [loading,setLoading ] = useState(false);
+    const {access_token,name} = useSelector((state: RootState) => state.user);
+    const [loading,setLoading ] = useState(false);
     const [ModalStatus, setModalStatus] = useState(false);
     const [SearchModalStatus, setSearchModalStatus] = useState(false);
     const [userInfo, setUserInfo] = useState({
@@ -69,7 +67,7 @@ function TicketCharge() {
                 "blackAmount": black,
                 "redAmount": red,
                 "goldAmount": gold,
-                "summary": "string"
+                "summary": "Admin:"+name
               },
             {
               headers: {
@@ -77,7 +75,12 @@ function TicketCharge() {
               },
             },
           );
-
+          let _tickets:any = []
+          blackState && _tickets.push({type:'black',counts:black})
+          redState && _tickets.push({type:'red',counts:red})
+          goldState && _tickets.push({type:'gold',counts:gold})
+          setModalStatus(false)
+          navigation.navigate('TicketsResult',{name:userInfo.nickname,type:'charge',tickets:_tickets})
         } catch (error) {
           Alert.alert('Error', '내부 문제로 티켓 충전이 취소됬습니다.\n' + error);
         } finally {
@@ -283,7 +286,7 @@ function TicketCharge() {
                         <TouchableOpacity onPress={() => setModalStatus(false)} activeOpacity={1} style={styles.buttonStyle4}>
                             <Text style={styles.fontStyle6} >아니요</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity  onPress={() => setModalStatus(false)}  activeOpacity={1} style={styles.buttonStyle5} >
+                        <TouchableOpacity  onPress={() => addtickets()}  activeOpacity={1} style={styles.buttonStyle5} >
                             <Text style={styles.fontStyle7} >네</Text>
                         </TouchableOpacity>
                     </View>
@@ -330,8 +333,8 @@ const styles = StyleSheet.create({
         paddingBottom: heightScale * 20,
     },
     fontStyle5: {
+        paddingLeft: heightScale * 15,
         fontSize: heightScale * 16,
-        marginLeft: 22 * heightScale,
         color: 'white',
     },
     fontStyle6: {

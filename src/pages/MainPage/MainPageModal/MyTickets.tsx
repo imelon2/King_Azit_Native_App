@@ -4,20 +4,16 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
-  Dimensions,
   Pressable,
 } from 'react-native';
+import { useState,useEffect } from 'react';
 import {heightData} from '../../../modules/globalStyles';
-import Video from 'react-native-video';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {Shadow} from 'react-native-shadow-2';
 import QrCode from '../../../components/QrCode';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {useCallback, useEffect, useState} from 'react';
-import IconEvilIcons from 'react-native-vector-icons/EvilIcons';
 import {
   HomeRootStackParamList,
-  MyPageRootStackParamList,
 } from '../../../../AppInner';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useSelector} from 'react-redux';
@@ -26,14 +22,6 @@ import {RootState} from '../../../store/reducer';
 import axios from 'axios';
 import { img } from '../../../modules/ticketsList';
 const heightScale = heightData;
-
-// interface propsType {
-//   setTicketModalStatus(id: boolean): void;
-//   card: String;
-//   black: number;
-//   red: number;
-//   gold: number;
-// }
 
 type MyTicketsScreenProps = NativeStackScreenProps<
   HomeRootStackParamList,
@@ -45,9 +33,7 @@ function MyTickets({route, navigation}: MyTicketsScreenProps) {
   const memberId = useSelector((state: RootState) => state.user.name);
   const [qrViewState, setQrViewState] = useState(false);
   // const [deepLinkUrl, setDeepLinkUrl] = useState('d');
-  const access_token = useSelector(
-    (state: RootState) => state.user.access_token,
-  );
+  const {access_token,uuid} = useSelector((state: RootState) => state.user,);
   let deepLinkUrl;
   useEffect(() => {
     getqrtoken();
@@ -61,8 +47,8 @@ function MyTickets({route, navigation}: MyTicketsScreenProps) {
         },
       });
       
-    deepLinkUrl = (`kingazit://admin/${memberId}/${card}/${count}/${qrtoken.data.qrToken}`)
-    console.log(`kingazit://admin/${memberId}/${card}/${count}/${qrtoken.data.qrToken}`);
+    deepLinkUrl = (`kingazit://admin/${uuid}/${memberId}/${card}/${count}/${qrtoken.data.qrToken}`)
+    console.log(`kingazit://admin/${uuid}/${memberId}/${card}/${count}/${qrtoken.data.qrToken}`);
     } catch (error) {
       // todo :
       console.log(error);
@@ -70,21 +56,21 @@ function MyTickets({route, navigation}: MyTicketsScreenProps) {
   }
 
   const ticketType = () => {
-    if (card == 'Black') {
+    if (card == 'black') {
       return (
         <Image
           style={styles.ticketImg}
           source={img['basic'].BlackCardImg}
         />
       );
-    } else if (card == 'Red') {
+    } else if (card == 'red') {
       return (
         <Image
           style={styles.ticketImg}
           source={img['basic'].RedCardImg}
         />
       );
-    } else if (card == 'Gold') {
+    } else if (card == 'gold') {
       return (
         <Image
           style={styles.ticketImg}
@@ -133,7 +119,7 @@ function MyTickets({route, navigation}: MyTicketsScreenProps) {
                   fontWeight: '600',
                   fontSize: 18 * heightScale,
                 }}>
-                {card} Card
+                {card.charAt(0).toUpperCase() + card.slice(1)} Card
               </Text>
               <Text
                 style={{

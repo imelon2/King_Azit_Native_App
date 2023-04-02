@@ -33,13 +33,13 @@ import MemberManagePage from './src/pages/Admin/MemberManagePage';
 import MemberManagement from './src/pages/Admin/MemberManagement';
 import UserDetail from './src/pages/Admin/UserDetail';
 import MyTickets from './src/pages/MainPage/MainPageModal/MyTickets';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
 import TicketsResult, { ticketsResultType } from './src/pages/Admin/TicketsResult';
 import { deepLinkController } from './src/modules/Linking';
 import Forbidden from './src/pages/Admin/Forbidden';
 import AdminTicketsHistory from './src/pages/Admin/AdminTicketsHistory';
 import QRCodeScanner from './src/pages/Admin/Components/QRCodeScanner';
 import CreateRoom from './src/pages/Admin/CreateRoom';
+import { TicketType } from './src/modules/ticketsList';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -64,19 +64,20 @@ export type HomeRootStackParamList = {
   };
   RoomMake: undefined;
   MyTickets: {
-    card: string;
+    card: TicketType;
     count: number;
   };
   TicketPay: {
+    uuid:string;
     memberId: string;
-    type: string;
+    type: TicketType;
     max: number;
   };
   TicketsResult: {
     name: string;
     type : ticketsResultType;
     tickets: [{
-      type: string;
+      type: TicketType;
       counts: number;
     }]
   },
@@ -210,6 +211,7 @@ function AppInner() {
             '알림',
             '자동로그인 기간이 만료되었습니다. 다시 로그인 해주세요.',
           );
+          dispatch(userSlice.actions.setUser({access_token: ''}));
           await EncryptedStorage.removeItem('refreshToken');
         } else {
           Alert.alert('Error', '죄송합니다. 잠시후에 다시 시도해주세요.');

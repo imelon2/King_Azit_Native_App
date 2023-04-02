@@ -40,6 +40,7 @@ function MyRanking() {
                     size={heightScale * 28}
                     color="white"
                     style={styles.beforeIcon}
+                    suppressHighlighting={false}
                     onPress={() => navigation.goBack()}
                 />
             </View>
@@ -96,7 +97,7 @@ function MyRanking() {
                     </View>
                     <View style={{ flex: 10 }} >
                         <ScrollView
-                            // horizontal
+                        bounces={false}
                             showsHorizontalScrollIndicator={false}>
                             <View style={styles.RankingTop} >
                                 <View style={{ flex: 1, flexDirection: 'row' }} >

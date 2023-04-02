@@ -169,22 +169,20 @@ function MemberManagement({route,navigation}: AdminScreenProps) {
                   style={{
                     flex: 1,
                     alignItems: 'center',
-                    justifyContent: 'center',
+                    justifyContent: 'center'
                   }}>
                   <Image
                     style={styles.playerIcon}
                     source={require('../../assets/UserIcon.png')}
                   />
                 </View>
-                <View style={{flex: 4, paddingLeft: 20 * heightScale}}>
+                <View style={{flex: 4, paddingLeft: 20 * heightScale,justifyContent:'center'}}>
                   <View style={{flexDirection: 'row'}}>
                     {renderText(item.nickname)}
                   </View>
-                  <View>
                     <Text style={styles.fontStyle3}>
                       신청일: {TimeFormat(item.registerDate)}
                     </Text>
-                  </View>
                 </View>
                 <View style={{justifyContent: 'center'}}>
                   <IconAntDesign
@@ -231,7 +229,6 @@ const styles = StyleSheet.create({
   fontStyle2: {
     fontSize: 18 * heightScale,
     color: 'white',
-    marginTop: 15 * heightScale,
     fontWeight: '600',
   },
   fontStyle3: {
@@ -302,7 +299,6 @@ const styles = StyleSheet.create({
     height: 44 * heightScale,
     borderRadius: 50,
     backgroundColor: '#D9D9D9',
-    marginLeft: 9 * heightScale,
   },
   Approved: {
     width: 63 * heightScale,

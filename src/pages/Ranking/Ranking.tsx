@@ -8,6 +8,7 @@ import { RootState } from '../../store/reducer';
 import Config from 'react-native-config';
 const { width, height } = Dimensions.get('window');
 import axios from 'axios';
+import ProfileImg from '../../components/ProfileImg';
 const heightScale = heightData;
 
 function Ranking() {
@@ -26,19 +27,21 @@ function Ranking() {
 
 
     const [status, setStatus] = useState('month');
-    const [myName, setNickName] = useState('');
     const [monthData, setMonthData] = useState<[DataType, DataType, DataType]>([Data, Data, Data]);
     const [weekData, setWeekData] = useState<[DataType, DataType, DataType]>([Data, Data, Data]);
 
-    const access_token = useSelector((state: RootState) => state.user.access_token);
-
+    const {access_token,nickName} = useSelector((state: RootState) => state.user);
+    
     useEffect(() => {
         let today = new Date();
         let year = today.getFullYear();
         let month = today.getMonth() + 1;
         let date = today.getDate();
         let day = year + '-' + month + '-' + date;
-        getMonth(day);
+        
+        // getMonth(day);
+        // getWeek(day);
+        getMonth("2023-3-20");
         getWeek(day);
 
     }, []);
@@ -96,53 +99,49 @@ function Ranking() {
             </View>
             <View style={{ flex: 2.3, alignItems: 'center', paddingVertical: 10 * heightScale, flexDirection: 'row' }} >
                 <Image style={{ position: 'absolute', width: '100%', height: '100%', resizeMode: 'stretch' }} source={require('../../assets/ranking_bg.png')} />
-                <View style={{ flex: 1 }} >
-                    <View style={{ flex: 1, alignItems: 'flex-end', flexDirection: 'row' }} >
+                <View style={{ flex: 1 ,alignItems:'center',marginTop:heightScale* 46}} >
                         <Image style={styles.playerCrown2} source={require('../../assets/2_crown.png')} />
                         <Image style={styles.playerRound2} source={require('../../assets/2_round.png')} />
-                        <Image style={styles.playerImg2} defaultSource={require('../../assets/UserIcon.png')} source={{uri:Config.IMG_URL!+monthData[1].uuid}} />
-                        <View style={{ flex: 1, alignItems: 'center', paddingBottom: 38 * heightScale }} >
+                        {status == 'week' && <ProfileImg style={styles.playerImg2} source={Config.IMG_URL!+weekData[1]?.uuid}  />}{status == 'month' && <ProfileImg style={styles.playerImg2} source={Config.IMG_URL!+monthData[1]?.uuid}  />}
+                        <View style={{ flex: 1, marginTop: 16 * heightScale ,alignItems: 'center', paddingBottom: 38 * heightScale }} >
                             <Text style={{ color: 'white', textAlign: 'center', fontSize: 14 * heightScale }} >
-                                {status == 'week' && weekData[1].nickname}{status == 'month' && monthData[1].nickname}
+                                {status == 'week' && weekData[1]?.nickname}{status == 'month' && monthData[1]?.nickname}
                             </Text>
                             <Text style={{ color: 'white', textAlign: 'center', fontSize: 14 * heightScale, marginTop: 2 * heightScale, fontWeight: '600' }}>
-                                {status == 'week' && weekData[1].points}{status == 'month' && monthData[1].points} pts
+                                {status == 'week' && weekData[1]?.points}{status == 'month' && monthData[1]?.points} pts
                             </Text>
                         </View>
-                    </View>
                 </View>
-                <View style={{ flex: 1 }}>
-                    <View style={{ flex: 1, alignItems: 'flex-end', flexDirection: 'row' }} >
+                <View style={{ flex: 1 ,alignItems:'center',marginTop:heightScale* 5}}>
                         <Image style={styles.playerCrown} source={require('../../assets/1_crown.png')} />
                         <Image style={styles.playerRound} source={require('../../assets/1_round.png')} />
-                        <Image style={styles.playerImg} defaultSource={require('../../assets/UserIcon.png')} source={{uri:Config.IMG_URL!+monthData[0].uuid}} />
-                        <View style={{ flex: 1, alignItems: 'center', flexDirection: 'column', paddingBottom: 30 * heightScale }} >
+                        {status == 'week' && <ProfileImg style={styles.playerImg} source={Config.IMG_URL!+weekData[0]?.uuid}  />}{status == 'month' && <ProfileImg style={styles.playerImg} source={Config.IMG_URL!+monthData[0]?.uuid}  />}
+                        <View style={{ flex: 1,marginTop: 14 * heightScale, alignItems: 'center', flexDirection: 'row', paddingBottom: 30 * heightScale }} >
                             <Image style={styles.nameWing1} source={require('../../assets/nameWing1.png')} />
+                            <View>
                             <Text style={{ color: 'white', textAlign: 'center', fontSize: 14 * heightScale }} >
-                                {status == 'week' && weekData[0].nickname}{status == 'month' && monthData[0].nickname}
+                                {status == 'week' && weekData[0]?.nickname}{status == 'month' && monthData[0]?.nickname}
                             </Text>
                             <Text style={{ color: 'white', textAlign: 'center', fontSize: 14 * heightScale, marginTop: 2 * heightScale, fontWeight: '600' }}>
-                                {status == 'week' && weekData[0].points}{status == 'month' && monthData[0].points} pts
+                                {status == 'week' && weekData[0]?.points}{status == 'month' && monthData[0]?.points} pts
                             </Text>
+                            </View>
                             <Image style={styles.nameWing2} source={require('../../assets/nameWing2.png')} />
                         </View>
-                    </View>
                 </View>
-                <View style={{ flex: 1 }}>
-                    <View style={{ flex: 1, alignItems: 'flex-end', flexDirection: 'row' }} >
+                    <View style={{ flex: 1 ,alignItems:'center',marginTop:heightScale* 46}} >
                         <Image style={styles.playerCrown2} source={require('../../assets/3_crown.png')} />
                         <Image style={styles.playerRound2} source={require('../../assets/3_round.png')} />
-                        <Image style={styles.playerImg2} defaultSource={require('../../assets/UserIcon.png')} source={{uri:Config.IMG_URL!+monthData[2].uuid}} />
-                        <View style={{ flex: 1, alignItems: 'center', flexDirection: 'column', paddingBottom: 38 * heightScale }} >
+                        {status == 'week' && <ProfileImg style={styles.playerImg2} source={Config.IMG_URL!+weekData[2]?.uuid}  />}{status == 'month' && <ProfileImg style={styles.playerImg2} source={Config.IMG_URL!+monthData[2]?.uuid}  />}
+                        <View style={{ flex: 1,marginTop: 16 * heightScale, alignItems: 'center', flexDirection: 'column', paddingBottom: 38 * heightScale }} >
                             <Text style={{ color: 'white', textAlign: 'center', fontSize: 14 * heightScale }} >
-                                {status == 'week' && weekData[2].nickname}{status == 'month' && monthData[2].nickname}
+                                {status == 'week' && weekData[2]?.nickname}{status == 'month' && monthData[2]?.nickname}
                             </Text>
                             <Text style={{ color: 'white', textAlign: 'center', fontSize: 14 * heightScale, marginTop: 2 * heightScale, fontWeight: '600' }}>
-                                {status == 'week' && weekData[2].points}{status == 'month' && monthData[2].points} pts
+                                {status == 'week' && weekData[2]?.points}{status == 'month' && monthData[2]?.points} pts
                             </Text>
                         </View>
                     </View>
-                </View>
 
             </View>
             <View style={{ flex: 3.7, alignItems: 'center' }} >
@@ -171,15 +170,15 @@ function Ranking() {
                             </View>
 
                             {status == "month" && monthData.map((v: any, key) => (
-                                <View style={[styles.rankingLineOne, myName == v.nickName && styles.rankingLineOne2]} key={key} >
+                                <View style={[styles.rankingLineOne, nickName == v.nickname && styles.rankingLineOne2]} key={key} >
                                     <View style={styles.lineRankingImg} ></View>
-                                    <View style={styles.RankingTextBox} ><Text style={[styles.lineText, myName == v.nickName && styles.lineText2]} >{v.ranking}</Text></View>
+                                    <View style={styles.RankingTextBox} ><Text style={[styles.lineText, nickName == v.nickname && styles.lineText2]} >{v.ranking}</Text></View>
                                     <View style={styles.imgBox} >
-                                        <Image style={styles.userIcon} source={require('../../assets/UserIcon.png')} />
+                                        <ProfileImg style={styles.userIcon} source={Config.IMG_URL!+v.uuid}  />
                                     </View>
-                                    <View style={{ marginLeft: 20 * heightScale }} ><Text style={[styles.lineText, myName == v.nickName && styles.lineText2]} >{v.nickname}</Text></View>
+                                    <View style={{ marginLeft: 20 * heightScale }} ><Text style={[styles.lineText, nickName == v.nickname && styles.lineText2]} >{v.nickname}</Text></View>
                                     <View style={{ flex: 1, alignItems: 'flex-end' }} >
-                                        <Text style={[styles.menuText, styles.marginRight, styles.lineText, myName == v.nickName && styles.lineText2]}>{v.points}</Text>
+                                        <Text style={[styles.menuText, styles.marginRight, styles.lineText, nickName == v.nickname && styles.lineText2]}>{v.points}</Text>
                                     </View>
 
                                 </View>
@@ -187,15 +186,15 @@ function Ranking() {
 
 
                             {status == "week" && weekData.map((v: any, key) => (
-                                <View style={[styles.rankingLineOne, myName == v.nickName && styles.rankingLineOne2]} key={key} >
+                                <View style={[styles.rankingLineOne, nickName == v.nickname && styles.rankingLineOne2]} key={key} >
                                     <View style={styles.lineRankingImg} ></View>
-                                    <View style={styles.RankingTextBox} ><Text style={[styles.lineText, myName == v.nickName && styles.lineText2]} >{v.ranking}</Text></View>
+                                    <View style={styles.RankingTextBox} ><Text style={[styles.lineText, nickName == v.nickname && styles.lineText2]} >{v.ranking}</Text></View>
                                     <View style={styles.imgBox} >
-                                        <Image style={styles.userIcon} source={require('../../assets/UserIcon.png')} />
+                                        <ProfileImg style={styles.userIcon} source={Config.IMG_URL!+v.uuid}  />
                                     </View>
-                                    <View style={{ marginLeft: 20 * heightScale }} ><Text style={[styles.lineText, myName == v.nickName && styles.lineText2]} >{v.nickname}</Text></View>
+                                    <View style={{ marginLeft: 20 * heightScale }} ><Text style={[styles.lineText, nickName == v.nickname && styles.lineText2]} >{v.nickname}</Text></View>
                                     <View style={{ flex: 1, alignItems: 'flex-end' }} >
-                                        <Text style={[styles.menuText, styles.marginRight, styles.lineText, myName == v.nickName && styles.lineText2]}>{v.points}</Text>
+                                        <Text style={[styles.menuText, styles.marginRight, styles.lineText, nickName == v.nickname && styles.lineText2]}>{v.points}</Text>
                                     </View>
 
                                 </View>
@@ -352,27 +351,19 @@ const styles = StyleSheet.create({
         paddingBottom: 10 * heightScale,
     },
     playerImg: {
-        position: 'absolute',
-        top: 34,
-        left: (width / 3 - 112) / 2,
         width: 112 * heightScale,
         height: 112 * heightScale,
-        resizeMode: 'contain',
-        aspectRatio:0.7,
-        borderRadius:60
+        marginTop: 12 * heightScale,
+        borderRadius:60,
     },
     playerRound: {
         position: 'absolute',
-        top: 27,
-        left: (width / 3 - 128) / 2 + 1,
+        marginTop: 33 * heightScale,
         width: 128 * heightScale,
         height: 128 * heightScale,
-        resizeMode: 'contain',
     },
     playerCrown: {
-        position: 'absolute',
-        top: 5,
-        left: (width / 3 - 29) / 2,
+        marginTop: 6 * heightScale,
         width: 29 * heightScale,
         height: 23 * heightScale,
         resizeMode: 'contain',
@@ -380,29 +371,22 @@ const styles = StyleSheet.create({
 
 
     playerImg2: {
-        position: 'absolute',
-        top: 64,
-        left: (width / 3 - 74) / 2,
         width: 74 * heightScale,
         height: 74 * heightScale,
+        marginTop: 13 * heightScale,
         resizeMode: 'contain',
         borderRadius:50
     },
     playerRound2: {
         position: 'absolute',
-        top: 56,
-        left: (width / 3 - 90) / 2,
+        marginTop: 20 * heightScale,
         width: 90 * heightScale,
         height: 90 * heightScale,
         resizeMode: 'contain',
     },
     playerCrown2: {
-        position: 'absolute',
-        top: 35,
-        left: (width / 3 - 18) / 2,
         width: 18 * heightScale,
         height: 14 * heightScale,
-        resizeMode: 'contain',
     },
 
 
@@ -416,15 +400,13 @@ const styles = StyleSheet.create({
     },
 
     nameWing1: {
-        position: 'absolute',
-        right: 110 * heightScale,
-        width: 30 * heightScale,
+        right: 10 * heightScale,
+        width: 20 * heightScale,
         height: 49 * heightScale,
     },
     nameWing2: {
-        position: 'absolute',
-        left: 110 * heightScale,
-        width: 30 * heightScale,
+        left: 10 * heightScale,
+        width: 20 * heightScale,
         height: 49 * heightScale,
     },
 });

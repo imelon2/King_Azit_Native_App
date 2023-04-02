@@ -1,12 +1,13 @@
 import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {heightData} from '../../../modules/globalStyles';
-import {img} from '../../../modules/ticketsList';
+import {ConvertSummary, img} from '../../../modules/ticketsList';
+import TimeFormat from '../../../modules/TimeFormat';
 
 const heightScale = heightData;
 
 const TicketHistoryViewDetail = ({...props}) => {
-  const {type, count, content, date} = props.data;
+  const {type, amount, summary, date} = props.data;
 
   const _img = () => {
     if (type === 'red') {
@@ -40,16 +41,17 @@ const TicketHistoryViewDetail = ({...props}) => {
           source={_img()}
         />
       </View>
-      <View style={{marginLeft: heightScale * 30}}>
-        <Text style={styles.fontStyle}>{content}</Text>
-        <Text style={[styles.fontStyle, {fontSize: 14}]}>{date}</Text>
+      <View style={{marginLeft: heightScale * 30,paddingVertical: heightScale * 10}}>
+        <Text style={styles.fontStyle}>{ConvertSummary(summary)}</Text>
+        <Text style={[styles.fontStyle, {fontSize: 14}]}>{TimeFormat(date)}</Text>
       </View>
       <View
         style={{
           flex: 1,
           alignItems: 'flex-end',
+          paddingVertical: heightScale * 10
         }}>
-        <Text style={styles.fontStyle}>{count} 개</Text>
+        <Text style={styles.fontStyle}>{amount} 개</Text>
       </View>
     </View>
   );

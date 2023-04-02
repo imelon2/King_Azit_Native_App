@@ -20,7 +20,7 @@ import {
   MyPageRootStackParamList,
 } from '../../../../AppInner';
 import {MainStyles, heightScale} from '../../../modules/MainStyles';
-import ticketsList, {ticketsListType} from '../../../modules/ticketsList';
+import ticketsList, {ticketsListType, TicketType} from '../../../modules/ticketsList';
 import {RootState} from '../../../store/reducer';
 import GameList from './GameList';
 const {width} = Dimensions.get('window');
@@ -45,13 +45,13 @@ function MainPageUser() {
   ];
 
   // MyTickets 네비게이터
-  const onOpenMyTikets = (text: any) => {
+  const onOpenMyTikets = (text: TicketType) => {
     let _count: number = 0;
-    if (text === 'Black') {
+    if (text === 'black') {
       _count = black;
-    } else if (text === 'Red') {
+    } else if (text === 'red') {
       _count = red;
-    } else if (text === 'Gold') {
+    } else if (text === 'gold') {
       _count = gold;
     }
 
@@ -122,11 +122,11 @@ function MainPageUser() {
             decelerationRate="fast"
             bounces={false}
             data={CARDS}
-            keyExtractor={item => item.key.toString()}
+            keyExtractor={(_,index) => String(index) }
             contentContainerStyle={{
               paddingHorizontal: _offset + _gap / 2,
             }}
-            renderItem={({item}: {item: ticketsListType}) => (
+            renderItem={({item}: {item: any}) => (
               <Pressable
                 key={item.key}
                 onPress={() => onOpenMyTikets(item.type)}
@@ -151,7 +151,7 @@ function MainPageUser() {
                       fontSize: heightScale * 16,
                       fontWeight: '500',
                     }}>
-                    {item.type} Ticket
+                    {item.type.charAt(0).toUpperCase() + item.type.slice(1)} Ticket
                   </Text>
                   <Text
                     style={{
