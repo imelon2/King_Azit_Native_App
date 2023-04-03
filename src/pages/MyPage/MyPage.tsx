@@ -22,6 +22,7 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../../store/reducer';
 import Config from 'react-native-config';
 import axios, {AxiosError} from 'axios';
+import ProfileImg from '../../components/ProfileImg';
 
 const heightScale = heightData;
 
@@ -106,7 +107,7 @@ function MyPage() {
         <View style={styles.myInfoStyle}>
           {/* icon */}
           <Pressable onPress={onChangeFile}>
-          <Image style={styles.userIcon} key={cache} defaultSource={require('../../assets/UserIcon.png')} source={{uri:Config.IMG_URL!+uuid}} />
+            <ProfileImg cache={cache} style={styles.userIcon} source={Config.IMG_URL+uuid}/>
           </Pressable>
           {/* info */}
           <View style={styles.infoWrapper}>

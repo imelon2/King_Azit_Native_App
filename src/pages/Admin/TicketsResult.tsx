@@ -11,6 +11,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { HomeRootStackParamList } from '../../../AppInner';
 import {heightData} from '../../modules/globalStyles';
+import { TicketType } from '../../modules/ticketsList';
 const heightScale = heightData;
 
 type TicketsResultScreenProps = NativeStackScreenProps<
@@ -37,13 +38,13 @@ function TicketsResult({route,navigation}:TicketsResultScreenProps) {
     }
   },[navigation])
 
-  const ticketsType = (type:string) => {
-    if(type == 'Black') {
+  const ticketsType = (type:TicketType) => {
+    if(type == 'black') {
       return '블랙티켓'
-    } else if (type === 'Red') {
-      return '레드카드'
-    } else if (type === 'Gold') {
-      return '골드카드'
+    } else if (type === 'red') {
+      return '레드티켓'
+    } else if (type === 'gold') {
+      return '골드티켓'
     }
   }
 

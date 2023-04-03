@@ -1,15 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {
-  TextInput,
+  ActivityIndicator,
   SafeAreaView,
-  Dimensions,
   FlatList,
   Image,
   StyleSheet,
   Text,
   View,
   Pressable,
-  Alert,
 } from 'react-native';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import MyTicketCarousel from './MyPageCompoents/MyTicketCarousel';
@@ -22,110 +20,77 @@ import {
 } from '../../../AppInner';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import GiftModal from './MyPageCompoents/GiftModal';
-import ticketsList, {ticketsListType} from '../../modules/ticketsList';
+import ticketsList, {img, ticketsListType} from '../../modules/ticketsList';
+import axios from 'axios';
+import Config from 'react-native-config';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/reducer';
 const heightScale = heightData;
 
-const ContentsList = [
-  {
-    type: 'black',
-    count: '3',
-    content: 'Main Game',
-    date: '2022.02.15',
-  },
-  {
-    type: 'black',
-    count: '3',
-    content: 'Main Game',
-    date: '2022.02.15',
-  },
-  {
-    type: 'red',
-    count: '3',
-    content: 'Main Game',
-    date: '2022.02.15',
-  },
-  {
-    type: 'gold',
-    count: '3',
-    content: 'Main Game',
-    date: '2022.02.15',
-  },
-  {
-    type: 'gold',
-    count: '3',
-    content: 'Main Game',
-    date: '2022.02.15',
-  },
-  {
-    type: 'gold',
-    count: '3',
-    content: 'Main Game',
-    date: '2022.02.15',
-  },
-  {
-    type: 'gold',
-    count: '3',
-    content: 'Main Game',
-    date: '2022.02.15',
-  },
-  {
-    type: 'black',
-    count: '3',
-    content: 'Main Game',
-    date: '2022.02.15',
-  },
-  {
-    type: 'red',
-    count: '3',
-    content: 'Main Game',
-    date: '2022.02.15',
-  },
-  {
-    type: 'gold',
-    count: '3',
-    content: 'Main Game',
-    date: '2022.02.15',
-  },
-  {
-    type: 'black',
-    count: '3',
-    content: 'Main Game',
-    date: '2022.02.15',
-  },
-  {
-    type: 'red',
-    count: '3',
-    content: 'Main Game',
-    date: '2022.02.15',
-  },
-  {
-    type: 'gold',
-    count: '3',
-    content: 'Main Game',
-    date: '2022.02.15',
-  },
-];
-
-const LISTS = [...Array(ContentsList.length).keys()].map((_, i) => {
-  return {
-    key: i,
-    data: ContentsList[i],
-  };
-});
+export type ticketHistory = {
+  amount:number;
+  date:string;
+  summary:string;
+  type:string;
+}
 
 function MyTicket(): JSX.Element {
   const navigation =
     useNavigation<
       NavigationProp<MyPageRootStackParamList & HomeRootStackParamList>
     >();
+    const {red, black, gold} = useSelector((state: RootState) => state.ticket);
+    const {access_token} = useSelector((state: RootState) => state.user);
+  const [loading, setLoading] = useState(false);
   const [giftModalState, setGiftModalState] = useState(false);
   const [selectCard, setSelectCard] = useState<ticketsListType>({
-    key: 0,
     type: '',
     image: '',
     count: 0,
   });
-  const CARDS = ticketsList('basic');
+
+  const [LISTS, setLISTS] = useState<ticketHistory[]>([]);
+  const [CARDS, setCARDS] = useState<ticketsListType[]>([
+    {
+      type: 'black',
+      image: img['basic'].BlackCardImg,
+      count: black,
+    },
+    {
+      type: 'red',
+      image: img['basic'].RedCardImg,
+      count: red,
+    },
+    {
+      type: 'gold',
+      image: img['basic'].GoldCardImg,
+      count: gold,
+    },
+  ]);
+
+  useEffect(() => {
+    const getTicketsUseHistory = async () => {
+      try {
+        setLoading(true)
+          const getTicketsUseHistory = await axios.get(
+              `${Config.API_URL}/member/ticket/history/use`,
+              {
+                  headers: {
+                      authorization: `Bearer ${access_token}`,
+                  },
+              },
+          );
+          setLISTS(getTicketsUseHistory.data)
+      } catch (error) {
+          console.error(error);
+      } finally {
+        setLoading(false)
+      }
+  };
+  getTicketsUseHistory();
+  },[])
+
+
   return (
     <SafeAreaView style={styles.container}>
       <View>
@@ -151,13 +116,13 @@ function MyTicket(): JSX.Element {
         />
       </View>
       {/* 티켓 Carousel */}
-      <View style={{marginTop: heightScale * 16}}>
+      <View style={{marginTop: heightScale * 45}}>
         <MyTicketCarousel
           setSelectCard={setSelectCard}
-          data={CARDS}
-          width={200}
-          height={296}
-          gap={40}
+          CARDS={CARDS}
+          width={heightScale*200}
+          height={heightScale*296}
+          gap={heightScale*40}
         />
       </View>
       {/* 티켓 보유 개수 */}
@@ -203,16 +168,16 @@ function MyTicket(): JSX.Element {
           </View>
         </View>
         {/* 구매/결제 내역 리스트 */}
-        {LISTS.length === 0 ? (
+        {LISTS.length == 0 ? (
           <View style={{justifyContent:'center',alignItems:'center',marginTop:30}}>
-            <Text style={{fontSize:16,color:'#929292',fontWeight:'100'}}>티켓 사용 내역이 없습니다.</Text>
+            {loading ? <ActivityIndicator /> :<Text style={{fontSize:16,color:'#929292',fontWeight:'100'}}>티켓 없습니다.</Text>}
           </View>
         ) : (
           <FlatList
             data={LISTS}
-            keyExtractor={item => String(item.key)}
+            keyExtractor={(_,index) => String(index)}
             bounces={false}
-            renderItem={({item}) => <TicketHistoryView data={item.data} />}
+            renderItem={({item}) => <TicketHistoryView data={item} />}
           />
         )}
       </View>
@@ -221,6 +186,7 @@ function MyTicket(): JSX.Element {
       {giftModalState ? (
         <GiftModal
           selectCard={selectCard}
+          setSelectCard={setSelectCard}
           setGiftModalState={setGiftModalState}
         />
       ) : (

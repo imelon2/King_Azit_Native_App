@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Alert, Image, StyleSheet, Text, TextInput, ScrollView, View, Keyboard, Dimensions, TouchableOpacity } from 'react-native';
+import { Alert, Image, StyleSheet, Text, TextInput, ScrollView, View, Keyboard, Dimensions, TouchableOpacity, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { HomeRootStackParamList, } from '../../../AppInner';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
@@ -10,6 +10,11 @@ import CountBox from './Components/CountBox'
 import IconIonicons from 'react-native-vector-icons/Ionicons';
 import IconAntDesign2 from 'react-native-vector-icons/Feather';
 import Modal from 'react-native-modal';
+import SearchId from './SearchId';
+import Config from 'react-native-config';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/reducer';
 
 const heightScale = heightData;
 const { width, height } = Dimensions.get('window');
@@ -17,8 +22,14 @@ const { width, height } = Dimensions.get('window');
 
 function TicketCharge() {
     const navigation = useNavigation<NavigationProp<HomeRootStackParamList>>();
-    const [ModalStatus, setModalStatus] = useState(true);
-    const [nickname, setNickname] = useState<string>('');
+    const {access_token,name} = useSelector((state: RootState) => state.user);
+    const [loading,setLoading ] = useState(false);
+    const [ModalStatus, setModalStatus] = useState(false);
+    const [SearchModalStatus, setSearchModalStatus] = useState(false);
+    const [userInfo, setUserInfo] = useState({
+        nickname:'닉네임 검색',
+        uuid:'',
+    });
     const [black, setBlack] = useState(0);
     const [red, setRed] = useState(0);
     const [gold, setGold] = useState(0);
@@ -45,16 +56,43 @@ function TicketCharge() {
         }
     };
 
-
-    const onChangeNicknane = useCallback((text: string) => {
-        setNickname(text);
-    }, []);
+    const addtickets = async () => {
+        if(loading) return;
+        try {
+            setLoading(true);
+          await axios.put(
+            `${Config.API_URL}/admin/addtickets`,
+            {
+                "uuid": userInfo.uuid,
+                "blackAmount": black,
+                "redAmount": red,
+                "goldAmount": gold,
+                "summary": "Admin:"+name
+              },
+            {
+              headers: {
+                Authorization: `Bearer ${access_token}`,
+              },
+            },
+          );
+          let _tickets:any = []
+          blackState && _tickets.push({type:'black',counts:black})
+          redState && _tickets.push({type:'red',counts:red})
+          goldState && _tickets.push({type:'gold',counts:gold})
+          setModalStatus(false)
+          navigation.navigate('TicketsResult',{name:userInfo.nickname,type:'charge',tickets:_tickets})
+        } catch (error) {
+          Alert.alert('Error', '내부 문제로 티켓 충전이 취소됬습니다.\n' + error);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     return (
         <SafeAreaView style={styles.container}>
             <View>
                 <View style={styles.headerStyle}>
-                    <Text style={styles.fontStyle}>티켓결제</Text>
+                    <Text style={styles.fontStyle}>티켓충전</Text>
                 </View>
                 <IconAntDesign
                     name="close"
@@ -72,24 +110,15 @@ function TicketCharge() {
                 <View style={{ flex: 1 }} >
                     <View style={styles.container1} >
                         <Text style={styles.fontStyle2} >티켓 충전 유저</Text>
-
-                        <View style={styles.giftModalTextInput}>
+                        <Pressable onPress={() => setSearchModalStatus(true)} style={styles.giftModalTextInput}>
                             <IconIonicons
                                 name="search"
-                                color={'#929292'}
+                                color={'#fff'}
                                 size={heightScale * 24}
                             />
-                            <TextInput
-                                autoCapitalize="none"
-                                autoCorrect={false}
-                                clearButtonMode="always"
-                                onChangeText={onChangeNicknane}
-                                placeholderTextColor={'#929292'}
-                                style={styles.textInput}
-                                placeholder="닉네임 검색"
-                                value={nickname}
-                            />
-                        </View>
+                            {userInfo.uuid ?<Image style={styles.userIconImg} defaultSource={require('../../assets/UserIcon.png')} source={{uri:Config.IMG_URL!+userInfo.uuid}}/> : <></>}
+                            <Text style={styles.textInput}>{userInfo.nickname}</Text>
+                        </Pressable>
                     </View>
                 </View>
                 <View style={{ flex: 3.2 }} >
@@ -235,8 +264,8 @@ function TicketCharge() {
                 </View>
             </ScrollView>
             <View style={{ alignItems: 'center' }}  >
-                <TouchableOpacity onPress={() => setModalStatus(true)}   activeOpacity={1} style={[styles.buttonStyle, (blackState || redState || goldState) && styles.buttonStyle2]} >
-                    <Text style={[styles.fontStyle5, (blackState || redState || goldState) && styles.fontStyle7]} >충전하기</Text>
+                <TouchableOpacity onPress={() => setModalStatus(true)}   activeOpacity={1} style={[styles.buttonStyle, (userInfo.nickname !== "닉네임 검색") && ( blackState || redState || goldState) && styles.buttonStyle2]} >
+                    <Text style={[styles.fontStyle5, (userInfo.nickname !== "닉네임 검색")  && ( blackState || redState || goldState) && styles.fontStyle7]} >충전하기</Text>
                 </TouchableOpacity>
             </View>
 
@@ -244,7 +273,7 @@ function TicketCharge() {
                 <View style={styles.popUpComponent}>
                     <View style={{ flex: 1.5 }} >
                         <Text style={[styles.fontStyle4, { paddingBottom: heightScale * 15, marginTop: 8 * heightScale }]}>
-                            한나피쉬님에게
+                            {userInfo.nickname}님에게
                         </Text>
                         <Text style={[{}, styles.fontStyle4]}>
                             {blackState && `[Black Ticket ${black}장 ],`} {'\n'}
@@ -257,13 +286,15 @@ function TicketCharge() {
                         <TouchableOpacity onPress={() => setModalStatus(false)} activeOpacity={1} style={styles.buttonStyle4}>
                             <Text style={styles.fontStyle6} >아니요</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity  onPress={() => setModalStatus(false)}  activeOpacity={1} style={styles.buttonStyle5} >
+                        <TouchableOpacity  onPress={() => addtickets()}  activeOpacity={1} style={styles.buttonStyle5} >
                             <Text style={styles.fontStyle7} >네</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
             </Modal>
-
+            <Modal isVisible={SearchModalStatus}>
+                <SearchId setSearchModalStatus={setSearchModalStatus} setUserInfo={setUserInfo}/>
+            </Modal>
         </SafeAreaView >
     );
 }
@@ -302,8 +333,8 @@ const styles = StyleSheet.create({
         paddingBottom: heightScale * 20,
     },
     fontStyle5: {
+        paddingLeft: heightScale * 15,
         fontSize: heightScale * 16,
-        marginLeft: 22 * heightScale,
         color: 'white',
     },
     fontStyle6: {
@@ -314,6 +345,12 @@ const styles = StyleSheet.create({
         fontSize: heightScale * 20,
         color: 'black',
     },
+    userIconImg : {
+        marginLeft:heightScale*10,
+        width:heightScale*30,
+        height:heightScale*30,
+        borderRadius:50
+      },
     giftModalTextInput: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -325,7 +362,8 @@ const styles = StyleSheet.create({
         borderRadius: 19,
     },
     textInput: {
-        color: '#ffffff',
+        color: '#fff',
+        fontWeight:'bold',
         fontSize: heightScale * 16,
         marginLeft: 8 * heightScale,
         padding: 0,

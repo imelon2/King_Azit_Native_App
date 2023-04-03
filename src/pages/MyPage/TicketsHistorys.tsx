@@ -1,6 +1,6 @@
 import { NavigationProp, useNavigation, } from '@react-navigation/native';
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Pressable, Image, FlatList, Dimensions, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Pressable, Image, FlatList, Dimensions, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   MyPageRootStackParamList,
@@ -11,107 +11,52 @@ import Modal from 'react-native-modal';
 
 import { heightData } from '../../modules/globalStyles';
 import TicketHistoryViewDetail from './MyPageCompoents/TicketHistoryViewDetail';
+import { ticketHistory } from './MyTicket';
+import axios from 'axios';
+import Config from 'react-native-config';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/reducer';
 const heightScale = heightData;
 const { width, height } = Dimensions.get('window');
 
 
-const ContentsList = [
-  {
-    type: 'black',
-    count: '3',
-    content: 'Main Game',
-    date: '2022.02.15',
-  },
-  {
-    type: 'black',
-    count: '3',
-    content: 'Main Game',
-    date: '2022.02.15',
-  },
-  {
-    type: 'red',
-    count: '3',
-    content: 'Main Game',
-    date: '2022.02.15',
-  },
-  {
-    type: 'gold',
-    count: '3',
-    content: 'Main Game',
-    date: '2022.02.15',
-  },
-  {
-    type: 'gold',
-    count: '3',
-    content: 'Main Game',
-    date: '2022.02.15',
-  },
-  {
-    type: 'gold',
-    count: '3',
-    content: 'Main Game',
-    date: '2022.02.15',
-  },
-  {
-    type: 'gold',
-    count: '3',
-    content: 'Main Game',
-    date: '2022.02.15',
-  },
-  {
-    type: 'black',
-    count: '3',
-    content: 'Main Game',
-    date: '2022.02.15',
-  },
-  {
-    type: 'red',
-    count: '3',
-    content: 'Main Game',
-    date: '2022.02.15',
-  },
-  {
-    type: 'gold',
-    count: '3',
-    content: 'Main Game',
-    date: '2022.02.15',
-  },
-  {
-    type: 'black',
-    count: '3',
-    content: 'Main Game',
-    date: '2022.02.15',
-  },
-  {
-    type: 'red',
-    count: '3',
-    content: 'Main Game',
-    date: '2022.02.15',
-  },
-  {
-    type: 'gold',
-    count: '3',
-    content: 'Main Game',
-    date: '2022.02.15',
-  },
-];
 
-const LISTS = [...Array(ContentsList.length).keys()].map((_, i) => {
-  return {
-    key: i,
-    data: ContentsList[i],
-  };
-});
 
 function TicketsHistorys() {
   const navigation =
     useNavigation<
       NavigationProp<MyPageRootStackParamList & HomeRootStackParamList>
     >();
+  const {access_token} = useSelector((state: RootState) => state.user);
+  const [loading, setLoading] = useState(false);
   const [modalStatus, setModalStatus] = useState(false);
   const [sort, setSort] = useState('recent');
-  const [type, setType] = useState('');
-  const [ticket, setTicket] = useState('');
+  const [type, setType] = useState('all');
+  const [ticket, setTicket] = useState('all');
+  
+  const [LISTS, setLISTS] = useState<ticketHistory[]>([]);
+
+  useEffect(() => {
+    const getTicketsHistory = async () => {
+      try {
+        setLoading(true)
+          const getTicketsHistory = await axios.get(
+              `${Config.API_URL}/member/ticket/history`,
+              {
+                  headers: {
+                      authorization: `Bearer ${access_token}`,
+                  },
+              },
+          );
+          setLISTS(getTicketsHistory.data)
+      } catch (error) {
+          console.error(error);
+      } finally {
+        setLoading(false)
+      }
+  };
+  getTicketsHistory();
+  },[])
 
   return (
     <SafeAreaView style={styles.container}>
@@ -129,7 +74,6 @@ function TicketsHistorys() {
         />
         <Pressable
           style={styles.FadersBox}
-        // onPress={() => setModalStatus(true)}
         >
           <TouchableOpacity onPress={() => setModalStatus(true)}>
             <Image
@@ -141,7 +85,7 @@ function TicketsHistorys() {
       </View>
       {/* 리스트 */}
       <View>
-        {LISTS.length === 0 ? (
+        {loading ? <ActivityIndicator style={{marginTop: heightScale * 30}}/>  : LISTS.length === 0 ? (
           <View
             style={{
               justifyContent: 'center',
@@ -156,10 +100,10 @@ function TicketsHistorys() {
           <FlatList
             data={LISTS}
             style={{ marginBottom: heightScale * 30 }}
-            keyExtractor={item => String(item.key)}
+            keyExtractor={(_,index) => String(index)}
             bounces={false}
             renderItem={({ item }) => (
-              <TicketHistoryViewDetail data={item.data} />
+              <TicketHistoryViewDetail data={item} />
             )}
           />
         )}
@@ -329,6 +273,7 @@ const styles = StyleSheet.create({
   },
   modalButton: {
     backgroundColor: '#F5FF82',
+    borderRadius:10,
     height: 64 * heightScale,
     marginTop: 30 * heightScale,
     justifyContent: 'center',

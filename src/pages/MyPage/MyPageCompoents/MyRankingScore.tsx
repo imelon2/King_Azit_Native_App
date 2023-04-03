@@ -59,7 +59,6 @@ const MyRankingScore = ({ ...props }) => {
 
                     <View style={{ flex: 1 , flexDirection: 'row' ,marginLeft: 50 * heightScale }} >
                         <Text style={styles.scoreText}>{RankingData['2nd'].number}회</Text>
-                        <Text style={styles.scoreText}>{RankingData['2nd'].pts} pts</Text>
                     </View>
                 </View>
 
@@ -71,7 +70,6 @@ const MyRankingScore = ({ ...props }) => {
 
                     <View style={{ flex: 1 , flexDirection: 'row' ,marginLeft: 50 * heightScale }} >
                         <Text style={styles.scoreText}>{RankingData['3rd'].number}회</Text>
-                        <Text style={styles.scoreText}>{RankingData['3rd'].pts} pts</Text>
                     </View>
                 </View>
 

@@ -1,36 +1,38 @@
 import React, {ReactElement, useCallback, useEffect, useState} from 'react';
-import {FlatList, Image, Pressable, StyleSheet} from 'react-native';
-import {View, Text, Alert, TextInput, Keyboard} from 'react-native';
+import {View, Text, Alert, TextInput, Keyboard,ActivityIndicator,FlatList, Pressable, StyleSheet} from 'react-native';
 import IconEvilIcons from 'react-native-vector-icons/EvilIcons';
 import IconIonicons from 'react-native-vector-icons/Ionicons';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import {Shadow} from 'react-native-shadow-2';
 
 import {heightData} from '../../../modules/globalStyles';
+import axios, { AxiosError } from 'axios';
+import Config from 'react-native-config';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../store/reducer';
+import ProfileImg from '../../../components/ProfileImg';
+import getTickets from '../../../hooks/getTickets';
 const heightScale = heightData;
 
-const LIST = [
-  {id: '1', nickname: '최원혁'},
-  {id: '2', nickname: '안징깅'},
-  {id: '3', nickname: '차원'},
-  {id: '4', nickname: '윤지'},
-  {id: '5', nickname: '김태우'},
-  {id: '6', nickname: 'choiwonhyeok'},
-  {id: '7', nickname: 'anjingi'},
-  {id: '8', nickname: 'chawon'},
-  {id: '9', nickname: 'yun'},
-  {id: '9', nickname: 'kim'},
-];
+
 
 const GiftModal = ({...props}) => {
+  const {access_token,uuid} = useSelector((state: RootState) => state.user);
+  const [loading,setLoading ] = useState(false);
   const [counts, setCount] = useState(0);
   const [onKeyboard, setOnKeyboard] = useState(false);
   const [keyword, setKeyword] = useState<string>('');
-  const [keyItems, setKeyItems] = useState([]);
+  const [keyItems, setKeyItems] = useState<{nickname : string,uuid:string}[]>([]);
+  const [userInfo, setUserInfo] = useState({
+    nickname:'닉네임 검색',
+    uuid:'',
+  });
+  // 현재 유저 보유 티켓 새로고침
+  const [refreshTickets] = getTickets();
   const canAdd = counts === 0 ? true : false;
   const canMius = counts === props.selectCard.count ? true : false;
   const canGift = counts !== 0 &&  keyword ? true : false
-
+  
   useEffect(() => {
     const didShow = Keyboard.addListener('keyboardDidShow', () => {
       setOnKeyboard(true)
@@ -42,43 +44,78 @@ const GiftModal = ({...props}) => {
 
 
   const onChangeNicknane = useCallback((text: string) => {
-    setKeyword(text);
+    setKeyword(text.trim());
   }, []);
 
 
-  // Todo : 선물하기 API 연동
-  const transferTicket = useCallback(() => {
-    Alert.alert('Todo:', '선물하기 기능 구현');
-  }, []);
-
-  // todo : 회원 닉네임 & 프로필사진 요청 API
-  const callData = () => {
+  // 선물하기 API 연동
+  const giftTicket = useCallback(async() => {
     try {
-    } catch (error) {}
-  };
+      if(loading) return;
+      setLoading(true)
+      console.log(userInfo.uuid);
+      
+      await axios.put(
+        `${Config.API_URL}/member/ticket/gift`,
+        {
+            "to":userInfo.uuid,
+            "type": props.selectCard.type,
+            "amount": counts,
+          },
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        },
+      );
+      refreshTickets();
+      
+      let preData = props.selectCard;
+      preData.count -= counts;
+      props.setSelectCard(preData)
+      props.setGiftModalState(false)
+    } catch (error) {
+      Alert.alert('Error', '내부 문제로 티켓 선물이 취소됬습니다.\n' + error);
+    } finally {
+      setLoading(false)
+    }
+  }, [userInfo,counts,loading]);
 
 
-  // 자동 검색 데이터 생성
-  const updateData = async () => {
-    // const res = await callData();
-    const res = LIST;
-    let searchResult: any = res.filter(
-      list => list.nickname.includes(keyword) === true,
-    ).slice(0, 10); // 10개만 보여지기
 
-    setKeyItems(searchResult);
-  };
+    //키워드가 변경되면 api를 호출
+    useEffect(() => {
+      const getNewUserList = async () => {
+        try {
+          const newUserList = await axios.get(`${Config.API_URL}/member/search?nickname=${keyword}`, {
+            headers: {
+              authorization: `Bearer ${access_token}`,
+            },
+          })
 
-  //키워드가 변경되면 api를 호출
-  useEffect(() => {
-    const debounce = setTimeout(() => {
-      if (keyword) {updateData()}
-      else {setKeyItems([])}
-    }, 200);
-    return () => {
-      clearTimeout(debounce);
-    };
-  }, [keyword]);
+          let _ketItems:{nickname : string,uuid:string}[] = [];
+          newUserList.data.map((value:{nickname : string,uuid:string}) => {
+            if(value.uuid !== uuid) _ketItems.push(value);
+            if(_ketItems.length == 10) return;
+          });
+           // 10개만 보여지기
+          setKeyItems(_ketItems);
+        } catch (error) {
+          console.log(
+            (error as AxiosError).response?.status,
+            'error from Mypage/Components/GiftMOdal.tsx',
+          );
+        } 
+      };
+
+      const debounce = setTimeout(() => {
+        if (keyword) {getNewUserList()}
+      }, 200);
+
+      return () => {
+        clearTimeout(debounce);
+      };
+    }, [keyword]);
 
   const replaceStringWithJSX = (str:string, find:string, replace:ReactElement) => {
     const parts = str.split(find);
@@ -96,12 +133,17 @@ const GiftModal = ({...props}) => {
         {replaceStringWithJSX(
           nickname,
           keyword,
-          <Text style={{ color: '#F5FF82',fontSize: 16,fontWeight:'500', paddingLeft: 10 }}>{keyword}</Text>
+          <Text key={nickname} style={{ color: '#F5FF82',fontSize: 16,fontWeight:'500', paddingLeft: 10 }}>{keyword}</Text>
         )}
       </Text>
     );
   };
   
+  const _setUserInfo = (index:number) => {
+    const {nickname,uuid} = keyItems[index];
+    setUserInfo({nickname,uuid});
+  }
+
   return (
     <View style={styles.giftModalContainer}>
       <View style={styles.giftModalComponent}>
@@ -156,10 +198,11 @@ const GiftModal = ({...props}) => {
               display:
                 keyItems.length > 0 && keyword && onKeyboard? 'flex' : 'none',
             }}
-            keyExtractor={item => item.id}
+            keyExtractor={(_,index) => String(index)}
             data={keyItems}
             disableScrollViewPanResponder={true} //onPress 클릭 시, 선택 안되는 이슈 해결
-            renderItem={({item}: {item: any}) => {
+            renderItem={(items) => {
+              const {item} = items;
               return (
                 <Pressable
                   style={{
@@ -172,15 +215,12 @@ const GiftModal = ({...props}) => {
                   }}
                   onPress={() => {
                     setKeyword(item.nickname);
+                    _setUserInfo(items.index)
                     Keyboard.dismiss();
                     setOnKeyboard(false)
                   }}
-                  key={item.id}
                   >
-                  <Image
-                    source={require('../../../assets/UserIcon.png')}
-                    style={styles.userIcon}
-                  />
+                    <ProfileImg style={styles.userIcon} source={Config.IMG_URL!+item.uuid}  />
                     {renderText(item.nickname)}
                 </Pressable>
               );
@@ -250,10 +290,10 @@ const GiftModal = ({...props}) => {
           <Shadow distance={5} startColor={canGift ? '#FCFF72' : "#414141"}>
             <Pressable
               style={[styles.giftButtonStyle,{backgroundColor: canGift ? '#F5FF82' : "#414141"}]}
-              onPress={() => transferTicket()}
-              disabled={canGift?  false: true}
+              onPress={() => giftTicket()}
+              disabled={!canGift }
               >
-              <Text style={styles.giftFontStyle}>선물하기</Text>
+                {loading ? <ActivityIndicator/> : <Text style={styles.giftFontStyle}>선물하기</Text> }
             </Pressable>
           </Shadow>
           </View>

@@ -1,10 +1,12 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 import {heightData} from '../../../modules/globalStyles'
+import { ConvertSummary } from '../../../modules/ticketsList';
+import TimeFormat from '../../../modules/TimeFormat';
 const heightScale = heightData;
 
 const TicketHistoryView = ({...props}) => {
-  const {type, count, content, date} = props.data;
+  const {type, amount, summary, date} = props.data;
 
   const typeColor = () => {
     if(type === 'red') {
@@ -34,10 +36,10 @@ const TicketHistoryView = ({...props}) => {
           borderLeftColor: typeColor(),
         }}>
         <Text style={{color: 'white', fontSize: heightScale * 16}}>
-          {content}
+          {ConvertSummary(summary)}
         </Text>
         <Text style={{color: 'white', fontSize: heightScale * 12}}>
-          {date}
+          {TimeFormat(date)}
         </Text>
       </View>
       <View
@@ -47,7 +49,7 @@ const TicketHistoryView = ({...props}) => {
           alignItems: 'flex-end',
           marginRight: heightScale * 10,
         }}>
-        <Text style={{color: 'white'}}>{count}개</Text>
+        <Text style={{color: 'white'}}>{amount}개</Text>
       </View>
     </View>
   );

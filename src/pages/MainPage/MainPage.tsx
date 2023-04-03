@@ -11,8 +11,9 @@ function MainPage() {
   const isAdmin = roles.find((e: string) => e == 'ROLE_ADMIN');
 
   // 현재 유저 보유 티켓 가져오기
-  getTickets();
-
+  const [refreshTickets] = getTickets();
+  refreshTickets();
+  
   return (
     <>
       {isAdmin && <MainPageAdmin />}

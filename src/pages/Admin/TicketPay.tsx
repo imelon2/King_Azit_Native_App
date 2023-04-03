@@ -10,10 +10,8 @@ import {
   TextInput,
   View,
   Keyboard,
-  Dimensions,
   Platform,
-  ImageSourcePropType,
-  ImageProps,
+  ActivityIndicator,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {
@@ -25,6 +23,10 @@ import {heightData} from '../../modules/globalStyles';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
 import {useHeaderHeight} from '@react-navigation/elements';
 import { img } from '../../modules/ticketsList';
+import axios from 'axios';
+import Config from 'react-native-config';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/reducer';
 const heightScale = heightData;
 type AdminScreenProps = NativeStackScreenProps<
   HomeRootStackParamList,
@@ -32,13 +34,15 @@ type AdminScreenProps = NativeStackScreenProps<
 >;
 
 function TicketPay({route}: AdminScreenProps) {
+  const {access_token} = useSelector((state: RootState) => state.user);
+  const [loading,setLoading ] = useState(false);
   const [isOver, setIsOver] = useState(false);
   const [count, setCount] = useState("");
   const [ticketName, setTicketName] = useState('');
   const [ticketImgUrl, setTicketImgUrl] = useState<any>();
   const [popUpState, setPopUpState] = useState(false);
   const headerHeight = useHeaderHeight();
-  const {memberId,type,max} = route.params;
+  const {uuid,memberId,type,max} = route.params;
   const state = !!count && !isOver;
 
 
@@ -48,13 +52,13 @@ function TicketPay({route}: AdminScreenProps) {
     >();
 
   useEffect(() => {
-    if (type == 'Black') {
+    if (type == 'black') {
       setTicketName('블랙티켓')
       setTicketImgUrl(img['basic'].BlackCardImg)
-    } else if (type == 'Red') {
+    } else if (type == 'red') {
       setTicketName('레드티켓')
       setTicketImgUrl(img['basic'].RedCardImg)
-    } else if (type == 'Gold') {
+    } else if (type == 'gold') {
       setTicketName('골드티켓')
       setTicketImgUrl(img['basic'].GoldCardImg)
     }
@@ -69,12 +73,29 @@ function TicketPay({route}: AdminScreenProps) {
     setCount(text.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1'));
   }, []);
 
-  // todo : 티켓 차감 API 연동
-  const useTickets = useCallback(() => {
+  const useTickets = useCallback(async() => {
     try {
-      Alert.alert('todo:', '티켓 차감 연동');
+      setLoading(true)
+      await axios.put(
+        `${Config.API_URL}/admin/usetickets`,
+        {
+            "uuid": uuid,
+            "type": type,
+            "amount": count,
+            "usage":"qr"
+          },
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        },
+      );
       navigation.navigate('TicketsResult',{name:memberId,type:'pay',tickets:[{type:type,counts:Number(count)}]})
-    } catch (error) {}
+    } catch (error) {
+      Alert.alert('Error', '내부 문제로 티켓 충전이 취소됬습니다.\n' + error);
+    } finally {
+        setLoading(false);
+    }
   }, [state]);
 
   const onPopUp = useCallback(() => {
@@ -84,7 +105,6 @@ function TicketPay({route}: AdminScreenProps) {
     Keyboard.dismiss();
     setPopUpState(true);
   }, [state]);
-
 
 
   return (
@@ -206,10 +226,12 @@ function TicketPay({route}: AdminScreenProps) {
                     backgroundColor: '#F5FF82',
                   },
                 ]}
-                onPress={useTickets}>
-                <Text style={{color: '#000', fontSize: heightScale * 20}}>
+                onPress={useTickets}
+                disabled={loading}
+                >
+                  {loading ? <ActivityIndicator /> : <Text style={{color: '#000', fontSize: heightScale * 20}}>
                   네
-                </Text>
+                </Text>}
               </Pressable>
             </View>
           </View>
