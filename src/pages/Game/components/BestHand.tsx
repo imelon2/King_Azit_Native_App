@@ -1,17 +1,26 @@
 import React, { useState, useCallback } from "react"
-import { StyleSheet, Text, View, Image, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native';
 import { heightData } from '../../../modules/globalStyles';
 import IconAntDesign from 'react-native-vector-icons/EvilIcons';
 import CardOne, { cardType } from './CardOne'
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../store/reducer';
+import IconIonicons from 'react-native-vector-icons/Ionicons';
 import Modal from 'react-native-modal';
+import MakeHand from "./MakeHand";
 const heightScale = heightData;
 
 
 function BestHand() {
+    const { roles } = useSelector((state: RootState) => state.user);
+    const isAdmin = roles.find((e: string) => e == 'ROLE_ADMIN');
+
     const [modalStatus, setModalStatus] = useState(false);
     const [ncikModalStatus, setncikModalStatus] = useState(false);
+    const [handModalStatus, setHandModalStatus] = useState(false);
     const [nickName, setNickName] = useState('');
     const [bestHand, setBestHand] = useState('');
+
 
     const onChangeBestHand = useCallback((text: any) => {
         setBestHand(text.trim());
@@ -20,6 +29,8 @@ function BestHand() {
     const onChangeNickName = useCallback((text: any) => {
         setNickName(text.trim());
     }, []);
+
+
 
     const cardData: cardType[] = [{ num: 'A', pattern: 'diamond' }, { num: 'A', pattern: 'spade' },
     { num: 'A', pattern: 'clover' }, { num: '10', pattern: 'heart' }, { num: '10', pattern: 'spade' }];
@@ -30,12 +41,14 @@ function BestHand() {
                 <View style={{ flex: 1, flexDirection: 'row' }} >
                     <Text style={styles.fontStyle2} >Kings Azit
                     </Text>
-                    <IconAntDesign
-                        name="pencil"
-                        size={heightScale * 17}
-                        color="white"
-                        onPress={() => setModalStatus(true)}
-                    />
+                    {isAdmin && (
+                        <IconAntDesign
+                            name="pencil"
+                            size={heightScale * 17}
+                            color="white"
+                            onPress={() => setModalStatus(true)}
+                        />
+                    )}
                 </View>
                 <View style={{ flex: 3 }} >
                     <View style={{ alignItems: 'center' }} >
@@ -63,22 +76,25 @@ function BestHand() {
                         <View style={styles.ImgView} ></View>
                         <View style={{ flexDirection: 'row' }} >
                             <Text style={styles.fontStyle4} >닉네임</Text>
-                            <IconAntDesign
-                                name="pencil"
-                                size={heightScale * 20}
-                                color="white"
-                                style={{}}
-                                onPress={() => setncikModalStatus(true)}
-                            />
+                            {isAdmin && (
+                                <IconAntDesign
+                                    name="pencil"
+                                    size={heightScale * 20}
+                                    color="white"
+                                    style={{}}
+                                    onPress={() => setncikModalStatus(true)}
+                                />
+                            )}
                         </View>
                     </View>
                 </View>
-
-                <View style={{ alignItems: 'center' }} >
-                    <View style={styles.buttonStyles} >
-                        <Text style={styles.fontStyle5} >채우기</Text>
+                {isAdmin && (
+                    <View style={{ alignItems: 'center' }} >
+                        <TouchableOpacity activeOpacity={1} style={styles.buttonStyles} onPress={() => setHandModalStatus(true)} >
+                            <Text style={styles.fontStyle5} >채우기</Text>
+                        </TouchableOpacity>
                     </View>
-                </View>
+                )}
             </View>
 
             <Modal isVisible={modalStatus} >
@@ -124,13 +140,25 @@ function BestHand() {
                         }}
                         onPress={() => setncikModalStatus(false)}
                     />
-                    <TextInput
-                        style={styles.textInput}
-                        placeholder="텍스트를 입력해 주세요"
-                        onChangeText={onChangeNickName}
-                        value={nickName}
-                        placeholderTextColor="#6F6F6F"
-                    />
+
+                    <View style={styles.giftModalTextInput}>
+                        <IconIonicons
+                            name="search"
+                            color={'#929292'}
+                            size={heightScale * 24}
+                            style={styles.iconStyle}
+                        />
+                        <TextInput
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            clearButtonMode="always"
+                            onChangeText={onChangeNickName}
+                            placeholderTextColor={'#6F6F6F'}
+                            style={styles.textInput}
+                            placeholder="닉네임 검색"
+                            value={nickName}
+                        />
+                    </View>
                     <View style={{ alignItems: 'center', marginTop: 190 * heightScale }} >
                         <View style={styles.buttonStyles} >
                             <Text style={styles.fontStyle5} >바꾸기</Text>
@@ -138,6 +166,10 @@ function BestHand() {
                     </View>
                 </View>
             </Modal>
+
+            {/* <Modal  isVisible={handModalStatus} >
+                <MakeHand />
+            </Modal> */}
         </>
     )
 }
@@ -197,7 +229,7 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         backgroundColor: '#414141',
         marginTop: 40 * heightScale,
-        paddingHorizontal: 30 * heightScale,
+        paddingHorizontal: 40 * heightScale,
     },
     container3: {
         width: 380 * heightScale,
@@ -207,7 +239,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingVertical: 25 * heightScale,
     },
-
     container2: {
         width: 380 * heightScale,
         height: 300 * heightScale,
@@ -216,6 +247,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingVertical: 25 * heightScale,
     },
+    giftModalTextInput: {
+        flexDirection: 'row',
+        alignItems: 'center',
+      },
+      iconStyle:{
+        position:'absolute',
+        zIndex:3,
+        top: 50 * heightScale,
+        left:10 * heightScale,
+      }
 });
 
 export default BestHand
