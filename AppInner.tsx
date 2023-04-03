@@ -41,6 +41,9 @@ import AdminTicketsHistory from './src/pages/Admin/AdminTicketsHistory';
 import QRCodeScanner from './src/pages/Admin/Components/QRCodeScanner';
 import CreateRoom from './src/pages/Admin/CreateRoom';
 import CalculatePage from './src/pages/Calculate/CalculatePage';
+import MonthCirculation from './src/pages/Calculate/components/MonthCirculation'
+import TotalPublish from './src/pages/Calculate/components/TotalPublish'
+import UserConsumption from './src/pages/Calculate/components/UserConsumption'
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -61,7 +64,7 @@ export type RootStackParamList = {
 export type HomeRootStackParamList = {
   Home: undefined; // Tab Navigator
   GamePage: {
-    gameId:string;
+    gameId: string;
   };
   RoomMake: undefined;
   MyTickets: {
@@ -75,7 +78,7 @@ export type HomeRootStackParamList = {
   };
   TicketsResult: {
     name: string;
-    type : ticketsResultType;
+    type: ticketsResultType;
     tickets: [{
       type: string;
       counts: number;
@@ -104,7 +107,10 @@ export type HomeRootStackParamList = {
   AdminTicketsHistory: undefined;
   QRCodeScanner: undefined;
   CreateRoom: undefined;
-  CalculatePage:undefined;
+  CalculatePage: undefined;
+  TotalPublish: undefined;
+  UserConsumption: undefined;
+  MonthCirculation: undefined;
 };
 
 export type MyPageRootStackParamList = {
@@ -192,7 +198,7 @@ function AppInner() {
         const { access_token, refresh_token } = refreshResult.data;
         const { sub, roles, nickname, uuid } = decodeJWT(access_token);
 
-        
+
 
         dispatch(
           userSlice.actions.setUser({
@@ -206,7 +212,7 @@ function AppInner() {
         await EncryptedStorage.setItem('refreshToken', refresh_token);
       } catch (error) {
         // refresh token 기간만료됬을 경우
-        console.log('refresh Result Error',(error as AxiosError).response?.status);
+        console.log('refresh Result Error', (error as AxiosError).response?.status);
         if (
           (error as AxiosError).response?.status === 400 ||
           (error as AxiosError).response?.status === 401
@@ -335,6 +341,21 @@ function AppInner() {
           <HomeStack.Screen
             name="CalculatePage"
             component={CalculatePage}
+            options={{ animation: 'none' }}
+          />
+          <HomeStack.Screen
+            name="MonthCirculation"
+            component={MonthCirculation}
+            options={{ animation: 'none' }}
+          />
+          <HomeStack.Screen
+            name="TotalPublish"
+            component={TotalPublish}
+            options={{ animation: 'none' }}
+          />
+          <HomeStack.Screen
+            name="UserConsumption"
+            component={UserConsumption}
             options={{ animation: 'none' }}
           />
         </HomeStack.Navigator>

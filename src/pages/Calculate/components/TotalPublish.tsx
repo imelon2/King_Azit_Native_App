@@ -6,13 +6,12 @@ const { width, height } = Dimensions.get("window");
 const heightScale = heightData;
 import { Calendar } from 'react-native-calendars';
 import IconAntDesign2 from 'react-native-vector-icons/Entypo';
-
-interface propsType {
-    setModalStatus(id: boolean): void
-}
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { HomeRootStackParamList, } from '../../../../AppInner';
 
 
-function Total(props: propsType) {
+function TotalPublish() {
+    const navigation = useNavigation<NavigationProp<HomeRootStackParamList>>();
     const [selectedDate, setSelectedDate] = useState<any>(null);
 
     const handleDayPress = (day: any) => {
@@ -30,7 +29,7 @@ function Total(props: propsType) {
                     size={heightScale * 28}
                     color="white"
                     style={styles.beforeIcon}
-                    onPress={() => props.setModalStatus(false)}
+                    onPress={() => navigation.goBack()}
                 />
             </View>
             <View >
@@ -96,11 +95,8 @@ function Total(props: propsType) {
 
 const styles = StyleSheet.create({
     container: {
-        width: width,
-        height: height,
-        backgroundColor: '#121212',
-        position: 'absolute',
-        left: -20,
+        height: '100%',
+        backgroundColor: 'black',
     },
     container2: {
         width: 390 * heightScale,
@@ -149,4 +145,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Total
+export default TotalPublish

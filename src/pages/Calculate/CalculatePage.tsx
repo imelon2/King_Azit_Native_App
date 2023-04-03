@@ -5,10 +5,6 @@ import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { HomeRootStackParamList, } from '../../../AppInner';
 import { PieChart, PieData, ChartDescription } from 'react-native-charts-wrapper';
-import Modal from 'react-native-modal';
-import Total from './components/Total';
-import UserConsumption from './components/UserConsumption'
-import MonthCirculation from './components/MonthCirculation'
 
 const heightScale = heightData;
 
@@ -47,9 +43,6 @@ const data3: PieData = {
 
 function CalculatePage() {
     const navigation = useNavigation<NavigationProp<HomeRootStackParamList>>();
-    const [modalStatus, setModalStatus] = useState(false)
-    const [modalStatus2, setModalStatus2] = useState(false)
-    const [modalStatus3, setModalStatus3] = useState(false)
 
     return (
         <SafeAreaView style={styles.container}>
@@ -81,7 +74,7 @@ function CalculatePage() {
                                     size={heightScale * 14}
                                     color="white"
                                     style={styles.detailIcon}
-                                    onPress={() => setModalStatus(true)}
+                                    onPress={() => navigation.navigate('TotalPublish')}
                                 />
                             </View>
                         </View>
@@ -137,7 +130,7 @@ function CalculatePage() {
                                     size={heightScale * 14}
                                     color="white"
                                     style={styles.detailIcon}
-                                    onPress={() => setModalStatus2(true)}
+                                    onPress={() => navigation.navigate('UserConsumption')}
                                 />
                             </View>
                         </View>
@@ -166,7 +159,7 @@ function CalculatePage() {
                                     size={heightScale * 14}
                                     color="white"
                                     style={styles.detailIcon}
-                                    onPress={() => setModalStatus2(true)}
+                                    onPress={() => navigation.navigate('MonthCirculation')}
                                 />
                             </View>
                         </View>
@@ -222,16 +215,6 @@ function CalculatePage() {
                     <View style={{ marginBottom: 50 * heightScale }}></View>
                 </View>
             </ScrollView>
-
-            <Modal isVisible={modalStatus}>
-                <Total setModalStatus={setModalStatus} />
-            </Modal>
-            <Modal isVisible={modalStatus2}>
-                <UserConsumption setModalStatus={setModalStatus2} />
-            </Modal>
-            <Modal isVisible={modalStatus3}>
-                <MonthCirculation setModalStatus={setModalStatus3} />
-            </Modal>
 
         </SafeAreaView >
     )
@@ -331,9 +314,6 @@ const styles = StyleSheet.create({
     },
     marginLeft: {
         marginLeft: 26 * heightScale,
-    },
-    marginLeft2: {
-
     },
     rod: {
         width: 40 * heightScale,
