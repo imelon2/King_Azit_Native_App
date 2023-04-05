@@ -1,6 +1,5 @@
 import {useNavigation, NavigationProp} from '@react-navigation/native';
-import axios, { AxiosError } from 'axios';
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -24,6 +23,7 @@ import ticketsList, {ticketsListType, TicketType} from '../../../modules/tickets
 import {RootState} from '../../../store/reducer';
 import GameList from './GameList';
 const {width} = Dimensions.get('window');
+console.log(width);
 
 function MainPageUser() {
   const navigation =
@@ -33,15 +33,14 @@ function MainPageUser() {
   const {black, red, gold} = useSelector((state: RootState) => state.ticket);
   const CARDS = ticketsList('width');
 
+  
   let _gap = 40;
   let _offset = 22;
   let _width = width - (_gap + _offset) * 2;
 
   const images = [
-    `https://source.unsplash.com/1024x768/?nature`,
-    'https://source.unsplash.com/1024x768/?water',
-    'https://source.unsplash.com/1024x768/?girl',
-    'https://source.unsplash.com/1024x768/?tree',
+    require('../../../assets/MainBanner.png'),
+    require('../../../assets/MainBanner.png'),
   ];
 
   // MyTickets 네비게이터
@@ -99,10 +98,10 @@ function MainPageUser() {
             }>
             {images.map((uri, index) => (
               <Image
-                key={index}
-                style={MainStyles.imgSlideBox2}
-                source={{uri: uri}}
-              />
+              key={index}
+              style={MainStyles.imgSlideBox2}
+              source={uri}
+            />
             ))}
           </Swiper>
         </View>

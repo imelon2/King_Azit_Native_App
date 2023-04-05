@@ -25,6 +25,7 @@ import axios from 'axios';
 import Config from 'react-native-config';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/reducer';
+import GiftAlert from './MyPageCompoents/GiftAlert';
 const heightScale = heightData;
 
 export type ticketHistory = {
@@ -43,6 +44,9 @@ function MyTicket(): JSX.Element {
     const {access_token} = useSelector((state: RootState) => state.user);
   const [loading, setLoading] = useState(false);
   const [giftModalState, setGiftModalState] = useState(false);
+  const [alertModalState, setAlertModalState] = useState(false);
+  const [cache, setCache] = useState();
+
   const [selectCard, setSelectCard] = useState<ticketsListType>({
     type: '',
     image: '',
@@ -88,7 +92,7 @@ function MyTicket(): JSX.Element {
       }
   };
   getTicketsUseHistory();
-  },[])
+  },[cache])
 
 
   return (
@@ -188,10 +192,13 @@ function MyTicket(): JSX.Element {
           selectCard={selectCard}
           setSelectCard={setSelectCard}
           setGiftModalState={setGiftModalState}
+          setAlertModalState={setAlertModalState}
+          setCache={setCache}
         />
       ) : (
         <></>
       )}
+      {alertModalState ? <GiftAlert/> : <></>}
     </SafeAreaView>
   );
 }

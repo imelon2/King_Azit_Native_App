@@ -52,9 +52,7 @@ const GiftModal = ({...props}) => {
   const giftTicket = useCallback(async() => {
     try {
       if(loading) return;
-      setLoading(true)
-      console.log(userInfo.uuid);
-      
+      setLoading(true)      
       await axios.put(
         `${Config.API_URL}/member/ticket/gift`,
         {
@@ -74,6 +72,8 @@ const GiftModal = ({...props}) => {
       preData.count -= counts;
       props.setSelectCard(preData)
       props.setGiftModalState(false)
+      props.setAlertModalState(true)
+      props.setCache(new Date())
     } catch (error) {
       Alert.alert('Error', '내부 문제로 티켓 선물이 취소됬습니다.\n' + error);
     } finally {

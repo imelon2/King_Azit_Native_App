@@ -5,13 +5,14 @@ import {
   StyleSheet,
   TouchableOpacity,
   Pressable,
+  SafeAreaView
 } from 'react-native';
 import { useState,useEffect } from 'react';
 import {heightData} from '../../../modules/globalStyles';
-import Icon from 'react-native-vector-icons/AntDesign';
+import AntDesignIcon from 'react-native-vector-icons/AntDesign';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import {Shadow} from 'react-native-shadow-2';
 import QrCode from '../../../components/QrCode';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {
   HomeRootStackParamList,
 } from '../../../../AppInner';
@@ -32,7 +33,6 @@ function MyTickets({route, navigation}: MyTicketsScreenProps) {
   const {card, count} = route.params;
   const memberId = useSelector((state: RootState) => state.user.name);
   const [qrViewState, setQrViewState] = useState(false);
-  // const [deepLinkUrl, setDeepLinkUrl] = useState('d');
   const {access_token,uuid} = useSelector((state: RootState) => state.user,);
   let deepLinkUrl;
   useEffect(() => {
@@ -48,7 +48,7 @@ function MyTickets({route, navigation}: MyTicketsScreenProps) {
       });
       
     deepLinkUrl = (`kingazit://admin/${uuid}/${memberId}/${card}/${count}/${qrtoken.data.qrToken}`)
-    console.log(`kingazit://admin/${uuid}/${memberId}/${card}/${count}/${qrtoken.data.qrToken}`);
+    // console.log(`kingazit://admin/${uuid}/${memberId}/${card}/${count}/${qrtoken.data.qrToken}`);
     } catch (error) {
       // todo :
       console.log(error);
@@ -83,7 +83,7 @@ function MyTickets({route, navigation}: MyTicketsScreenProps) {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <View style={{flex: 1, alignItems: 'center'}}>
-          <Icon
+          <AntDesignIcon
             name="close"
             style={styles.closeIcon}
             size={20}
@@ -144,9 +144,12 @@ function MyTickets({route, navigation}: MyTicketsScreenProps) {
           onPress={() => setQrViewState(true)}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text style={styles.plusText}>QR 크게보기</Text>
-            <Image
-              source={require('../../../assets/MagnifyingGlassPlus.png')}
-              style={styles.plusIcon}
+            <FontAwesome5Icon
+              name='search-plus'
+              suppressHighlighting={false}
+              size={heightScale*20}
+              color={'#fff'}
+              style={{marginTop:heightScale* 10,paddingLeft:heightScale*5}}
             />
           </View>
         </Pressable>
@@ -156,7 +159,7 @@ function MyTickets({route, navigation}: MyTicketsScreenProps) {
             <Shadow distance={6} startColor={'#FCFF72'}>
               <TouchableOpacity activeOpacity={1} style={styles.giftButton}>
                 <View style={styles.textCenter}>
-                  <Icon name="gift" size={16} style={styles.iconStyle} />
+                  <AntDesignIcon name="gift" size={16} style={styles.iconStyle} />
                   <Text style={styles.giftButtonText}>선물하기</Text>
                 </View>
               </TouchableOpacity>
@@ -169,6 +172,13 @@ function MyTickets({route, navigation}: MyTicketsScreenProps) {
         <Pressable style={styles.qrViewContainer} onPress={() => setQrViewState(false)}>
           <View>
             <QrCode value={deepLinkUrl} size={heightScale * 320} />
+          </View>
+          <View style={{justifyContent:'center',alignItems:'center', width:heightScale*50,height:heightScale*50, backgroundColor:'#D7D7D7',borderRadius:50,top:heightScale*50}}>
+          <AntDesignIcon
+            name="close"
+            size={heightScale*40}
+            color={"#000"}
+          />
           </View>
           </Pressable>
       ) : (
@@ -207,7 +217,8 @@ const styles = StyleSheet.create({
   plusText: {
     color: 'white',
     marginTop: 10,
-    fontSize: 14 * heightScale,
+    fontWeight:'500',
+    fontSize: 16 * heightScale,
   },
   plusTextBox: {
     alignItems: 'center',
@@ -251,12 +262,6 @@ const styles = StyleSheet.create({
     // backgroundColor: 'white',
     flexDirection: 'row',
   },
-  plusIcon: {
-    height: heightScale * 20,
-    width: heightScale * 20,
-    marginTop: heightScale * 10,
-    marginLeft: heightScale * 5,
-  },
   ticketBox: {
     width: 327 * heightScale,
     height: 518 * heightScale,
@@ -272,7 +277,7 @@ const styles = StyleSheet.create({
   },
   qrViewContainer: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(12, 12, 12, 0.8)',
+    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent:'center',
   }
