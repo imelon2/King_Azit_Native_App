@@ -2,6 +2,7 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../store/reducer';
 
 export type ticketsListType = {
+    key?:number,
     type:TicketType,
     image:any,
     count:number

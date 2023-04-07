@@ -10,13 +10,15 @@ import {
   TextInput,
   Pressable,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {HomeRootStackParamList} from '../../../AppInner';
 import React, {useState, useCallback, useEffect} from 'react';
-import {heightData} from '../../modules/globalStyles';
+import {heightData, StringUpperCase} from '../../modules/globalStyles';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import RNPickerSelect from 'react-native-picker-select';
 import useSocket from '../../hooks/useSocket';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../store/reducer';
@@ -34,9 +36,6 @@ function RoomMake() {
   const {nickName} = useSelector((state: RootState) => state.user);
   const [socket, disconnect] = useSocket();
 
-  const [selectDrop, setSelectDrop] = useState(false);
-  const [ticketSelectDrop, setTicketSelectDrop] = useState(false);
-
   const [loading, setLoading] = useState(false);
 
   const [table, setTable] = useState();
@@ -51,22 +50,26 @@ function RoomMake() {
   const [table_Num, setTable_Num] = useState([1, 2, 3, 4]);
 
   const game_type: GameType[] = ['Main', 'Nft', 'Custom'];
-  const ticket_type: TicketType[] = ['Black', 'Red', 'Gold'];
+  const ticket_type: TicketType[] = ['black', 'red', 'gold'];
   const Blind_Duration: DurationType[] = ['8', '9'];
   const statusList: StatusType[] = ['playing', 'waiting'];
+  const canCreate = !!table && !!gameType && !!ticket && !!buyin && !!enteyLimit;
 
   const onChangeBuyin = useCallback((text: any) => {
+    if (text.trim() == 0) {
+      setBuyin('');
+      return;
+    }
     setBuyin(text.trim());
   }, []);
 
-  const onClickTicket = useCallback((text: any) => {
-    setTicket(text.trim());
-    setTicketSelectDrop(false);
-  }, []);
-
   const onChangeEntryLimit = useCallback((text: any) => {
-    if(text.trim() >= 25) {
-      setEntryLimit("25")
+    if (text.trim() >= 25) {
+      setEntryLimit('25');
+      return;
+    }
+    if (text.trim() == 0) {
+      setEntryLimit('');
       return;
     }
     setEntryLimit(text.trim());
@@ -78,30 +81,28 @@ function RoomMake() {
 
   const onChnageGameType = useCallback((text: any) => {
     setGameType(text.trim());
-    setTicketSelectDrop(false);
   }, []);
 
   useEffect(() => {
-    const callback = (data: any) => {
-      console.log(data);
+    const createGameRoomError = (data: any) => {
+      Alert.alert('알림', `Table No. ${table}은 이미 사용중입니다.`);
+      setLoading(false);
     };
 
     const enterNewRoom = (gameId: string) => {
-      setLoading(false);
-      console.log(gameId);
       navigation.navigate('GamePage', {gameId});
+      setLoading(false);
     };
 
     if (socket) {
       socket.on('newRoom', enterNewRoom);
-      socket.on('error', callback);
-      // socket.on('getMessage', callback);
+      socket.on('createGameRoomError', createGameRoomError);
     }
 
     return () => {
       if (socket) {
         socket.off('newRoom', enterNewRoom);
-        socket.off('error', callback);
+        socket.off('createGameRoomError', createGameRoomError);
       }
     };
   }, []);
@@ -118,11 +119,11 @@ function RoomMake() {
   useEffect(() => {
     if (gameType == 'Main') {
       setBuyin('1');
-      setTicket('Black');
+      setTicket('black');
       setDuration('8');
     } else if (gameType == 'Nft') {
       setBuyin('1');
-      setTicket('Black');
+      setTicket('black');
       setDuration('9');
     } else {
       setBuyin('');
@@ -132,7 +133,9 @@ function RoomMake() {
   }, [gameType]);
 
   const createRoom = () => {
-    setLoading(true)
+    if(!canCreate) return;
+    setLoading(true);
+
     console.log('table :' + table);
     console.log('dealer id :' + nickName);
     console.log('game name :' + gameType);
@@ -142,20 +145,19 @@ function RoomMake() {
     console.log('blind :' + blind);
     console.log('ante :' + '0');
     console.log('status :' + status);
+    console.log('duration :' + duration);
 
     if (socket) {
       socket.emit('createGameRoom', {
         table_no: table,
-        dealer_id: nickName,
-        game_name: gameType,
+        game_name: gameType + " Game",
         entry_limit: enteyLimit,
         ticket_amount: buyin,
         ticket_type: ticket,
         blind: blind,
         ante: 0,
-        // playing_users: [],
-        // sitout_users: [],
-        status: status, // default 삭제 필요
+        status: status, 
+        duration:duration
       });
     }
   };
@@ -180,47 +182,45 @@ function RoomMake() {
         />
       </View>
       <KeyboardAwareScrollView
+        bounces={false}
         keyboardShouldPersistTaps={'handled'}
         showsVerticalScrollIndicator={false}>
         {/* Table Selects */}
-        {selectDrop && (
-          <View
-            style={[
-              styles.selectBox,
-              {marginTop: 110 * heightScale,marginLeft:18 * heightScale,flex: 1},
-            ]}>
-            {table_Num.map((item: any, i) => (
-              <TouchableOpacity
-                key={i}
-                onPress={() => {
-                  setSelectDrop(false);
-                  setTable(item);
-                }}
-                activeOpacity={1}
-                style={{flex: 1, zIndex: 2}}>
-                <Text style={styles.tableSelectText}>Table NO.{item}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        )}
         <View style={{flex: 1, paddingHorizontal: 18 * heightScale}}>
-          {/* Table Title */}
           <View style={{flex: 1}}>
             <Text style={styles.mainText}>Table No</Text>
-            <TouchableOpacity
-              onPress={() => setSelectDrop(!selectDrop)}
-              activeOpacity={1}
-              style={styles.tableSelect}>
-              <Text style={styles.tableSelectText}>
-                {table ? 'Table No. ' + table : 'Select Table'}
-              </Text>
-              <IconAntDesign
-                name="down"
-                size={heightScale * 25}
-                color="#F5FF82"
-                style={styles.downIcon}
+            <View style={styles.tableSelect}>
+              <View style={styles.downIcon}>
+                <IconAntDesign
+                  name="down"
+                  size={heightScale * 25}
+                  color="#F5FF82"
+                />
+              </View>
+              <RNPickerSelect
+                onValueChange={value => setTable(value)}
+                placeholder={{
+                  label: 'Select Table No',
+                  inputLabel: 'Select Table No',
+                }}
+                items={table_Num.map(item => {
+                  return {
+                    label: `Table No. ${item}`,
+                    inputLabel: `Table No. ${item}`,
+                    value: item,
+                  };
+                })}
+                style={{
+                  viewContainer: {
+                    justifyContent: 'center',
+                    paddingLeft: heightScale * 10,
+                    flex: 1,
+                  },
+                  inputIOS: {color: '#fff'},
+                  inputAndroid:{color: '#fff'}
+                }}
               />
-            </TouchableOpacity>
+            </View>
           </View>
 
           {/* Game Type Titlt */}
@@ -267,41 +267,46 @@ function RoomMake() {
                       placeholder="Enter"
                       onChangeText={onChangeBuyin}
                       value={buyin}
-                      keyboardType={'decimal-pad'}
+                      keyboardType={'number-pad'}
                       placeholderTextColor="#6F6F6F"
                     />
                   </View>
-                  <TouchableOpacity
-                    onPress={() => setTicketSelectDrop(!selectDrop)}
-                    activeOpacity={1}
-                    style={styles.tableSelect2}>
-                    <Text style={styles.tableSelectText}>{ticket} Ticket</Text>
-                    <IconAntDesign
-                      name="down"
-                      size={heightScale * 25}
-                      color="#F5FF82"
-                      style={styles.downIcon}
-                    />
-                  </TouchableOpacity>
+                  <View style={styles.tableSelect2}>
+              <View style={styles.downIcon}>
+                <IconAntDesign
+                  name="down"
+                  size={heightScale * 25}
+                  color="#F5FF82"
+                />
+              </View>
+              <RNPickerSelect
+                onValueChange={value => setTicket(value)}
+                placeholder={{
+                  label: 'Select Ticket',
+                  inputLabel: 'Select Ticket',
+                }}
+                items={ticket_type.map(item => {
+                  return {
+                    label: `${StringUpperCase(item)} Ticket`,
+                    inputLabel: `${StringUpperCase(item)} Ticket`,
+                    value: item,
+                  };
+                })}
+                style={{
+                  viewContainer: {
+                    justifyContent: 'center',
+                    paddingLeft: heightScale * 10,
+                    flex: 1,
+                  },
+                  inputIOS: {color: '#fff'},
+                  inputAndroid:{color: '#fff'}
+                }}
+              />
+            </View>
                 </>
               )}
             </View>
           </View>
-
-          {/* Tickets Select Box */}
-          {ticketSelectDrop && (
-            <View style={styles.selectBox2}>
-              {ticket_type.map(item => (
-                <TouchableOpacity
-                  key={item}
-                  onPress={() => onClickTicket(item)}
-                  activeOpacity={1}
-                  style={{flex: 1, zIndex: 2}}>
-                  <Text style={styles.tableSelectText}>{item} Ticket</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          )}
 
           {/* Entry Title */}
           <View style={{flex: 1}}>
@@ -386,8 +391,11 @@ function RoomMake() {
           </View>
           {/* 방만들기 Button */}
           <View style={{justifyContent: 'center', alignItems: 'center'}}>
-            <TouchableOpacity style={styles.buttonStyle} onPress={createRoom}>
-              <Text style={styles.buttonTextStyle}> {loading ?<ActivityIndicator />: "방만들기" } </Text>
+            <TouchableOpacity style={canCreate ? styles.buttonStyle : [styles.buttonStyle,{backgroundColor:'#222'}]} onPress={createRoom}>
+              <Text style={canCreate ? styles.buttonTextStyle : [styles.buttonTextStyle,{color:'#8A8A8A'}]}>
+                {' '}
+                {loading ? <ActivityIndicator /> : '방만들기'}{' '}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -422,14 +430,8 @@ const styles = StyleSheet.create({
     borderColor: '#F5FF82',
     borderWidth: 1,
     borderRadius: 4,
-    // lineHeight: 44 * heightScale,
     marginTop: 20 * heightScale,
-  },
-  tableSelectText: {
-    lineHeight: 42 * heightScale,
-    color: 'white',
-    paddingLeft: 14 * heightScale,
-    // fontWeight:'600',
+    justifyContent: 'center',
   },
   tableSelectText2: {
     lineHeight: 42 * heightScale,
@@ -442,20 +444,8 @@ const styles = StyleSheet.create({
   },
   downIcon: {
     position: 'absolute',
-    right: 12 * heightScale,
-    top: (44 * heightScale - 25) / 2,
-  },
-  selectBox: {
-    position: 'absolute',
-    // top: 176 * heightScale,
-    // left: 18 * heightScale,
-    width: 208 * heightScale,
-    height: 177 * heightScale,
-    borderColor: '#F5FF82',
-    borderWidth: 1,
-    borderRadius: 4,
-    backgroundColor: '#222',
-    zIndex: 5,
+    alignItems: 'center',
+    right: heightScale * 10,
   },
   touchBox: {
     width: 110 * heightScale,
@@ -499,23 +489,12 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     marginTop: 20 * heightScale,
     marginLeft: 20 * heightScale,
-  },
-  selectBox2: {
-    position: 'absolute',
-    top: 341 * heightScale,
-    left: 167 * heightScale,
-    width: 154 * heightScale,
-    height: 133 * heightScale,
-    borderColor: '#F5FF82',
-    borderWidth: 1,
-    borderRadius: 4,
-    backgroundColor: '#222',
-    zIndex: 5,
+    justifyContent: 'center',
   },
   buttonStyle: {
     backgroundColor: '#F5FF82',
-    justifyContent:'center',
-    alignItems:'center',
+    justifyContent: 'center',
+    alignItems: 'center',
     width: 370 * heightScale,
     height: 64 * heightScale,
     borderColor: '#F5FF82',

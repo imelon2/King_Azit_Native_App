@@ -14,7 +14,7 @@ const GameList = () => {
   const [menu, setMenu] = useState([
     {name: 'playing', state: true},
     {name: 'waiting', state: false},
-    {name: 'end', state: false},
+    {name: 'closed', state: false},
   ]);
   const gameData:any = useSelector((state: RootState) => state.games);
   const [playMemberStatus, setPlayMemberStatus] = useState(false);
@@ -36,7 +36,7 @@ const GameList = () => {
       let _name;
       if (curr?.name == 'playing') _name = '진행중인';
       else if (curr?.name == 'waiting') _name = '대기중인';
-      else if (curr?.name == 'end') _name = '마감된';
+      else if (curr?.name == 'closed') _name = '마감된';
       return (
         <View style={MainStyles.noGameBoxContainer}>
           <Text style={{color: '#A1A1A1', fontSize: heightScale * 18}}>
@@ -79,7 +79,7 @@ const GameList = () => {
           let _name;
           if (text.name == 'playing') _name = '진행중';
           else if (text.name == 'waiting') _name = '대기중';
-          else if (text.name == 'end') _name = '마감';
+          else if (text.name == 'closed') _name = '마감';
           return (
             <Pressable
               style={MainStyles.gameMenuComponent}
