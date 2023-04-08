@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { processColor, SafeAreaView, StyleSheet, Text, View, Dimensions, Image, TextInput, ScrollView } from 'react-native';
+import { processColor, SafeAreaView, StyleSheet, Text, View, Dimensions, Image, TextInput, ScrollView, TouchableOpacity } from 'react-native';
 import { heightData } from '../../modules/globalStyles';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
@@ -43,6 +43,12 @@ const data3: PieData = {
 
 function CalculatePage() {
     const navigation = useNavigation<NavigationProp<HomeRootStackParamList>>();
+    const [selectIndex, setSelectIndex] = useState(-1);
+
+    const onClickLine = (key: any) => {
+        setSelectIndex(key);
+    }
+
 
     return (
         <SafeAreaView style={styles.container}>
@@ -137,10 +143,13 @@ function CalculatePage() {
                         <View style={{ alignItems: 'center' }} >
                             <View style={styles.rodBox} >
                                 {data2.map((val, key) =>
-                                    <View key={key} >
-                                        <View style={[styles.rod, { height: val.data * heightScale }]} ></View>
-                                        <Text style={[styles.fontStyle3, { marginTop: 10 * heightScale }]} >{val.month}월</Text>
-                                    </View>
+                                    <>
+                                        <TouchableOpacity key={key} onPress={() => onClickLine(key)} activeOpacity={1} style={{ marginRight: 20 * heightScale , alignItems:'center' }} >
+                                            {key == selectIndex && <Text style={{color:'#FFF48D'}} >{val.data}</Text>}
+                                            <View style={[styles.rod, { height: val.data * heightScale }]} ></View>
+                                            <Text style={[styles.fontStyle3, { marginTop: 10 * heightScale }]} >{val.month}월</Text>
+                                        </TouchableOpacity>
+                                    </>
                                 )}
                             </View>
                         </View>
@@ -319,11 +328,13 @@ const styles = StyleSheet.create({
         width: 40 * heightScale,
         backgroundColor: '#F5FF82',
         borderRadius: 23 * heightScale,
-        marginRight: 20 * heightScale
+        marginTop: 10 * heightScale,
+        // marginRight: 20 * heightScale
     },
     rodBox: {
         width: 280 * heightScale,
         alignItems: 'flex-end',
+        justifyContent:'center',
         flexDirection: 'row',
         // paddingHorizontal: 20 * heightScale,
         paddingBottom: 40 * heightScale,

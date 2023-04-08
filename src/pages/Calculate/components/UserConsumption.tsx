@@ -1,8 +1,7 @@
-import React, { useState } from "react"
-import { SafeAreaView, StyleSheet, Text, View, Dimensions, Image, ScrollView } from 'react-native';
+import React, { useState, useEffect } from "react"
+import { SafeAreaView, StyleSheet, Text, View, Dimensions, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { heightData } from '../../../modules/globalStyles';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
-const { width, height } = Dimensions.get("window");
 const heightScale = heightData;
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { HomeRootStackParamList, } from '../../../../AppInner';
@@ -11,6 +10,7 @@ import { HomeRootStackParamList, } from '../../../../AppInner';
 
 function UserConsumption() {
     const navigation = useNavigation<NavigationProp<HomeRootStackParamList>>();
+    const [month, setMonth] = useState<any>(0);
 
     const data = [{ month: 'Jan', ticket: 0 }, { month: 'Feb', ticket: 0 }, { month: 'Mar', ticket: 80 },
     { month: 'Apr', ticket: 20 }, { month: 'May', ticket: 30 }, { month: 'Jun', ticket: 35 },
@@ -20,8 +20,16 @@ function UserConsumption() {
     const data2 = [{ name: 'Black Ticket', data: 60, len: 70 }, { name: 'Red Ticket', data: 60, len: 70 },
     { name: 'Gold  Ticket', data: 60, len: 70 }]
 
-    let today = new Date();
-    let month = today.getMonth();
+
+    const onClickLine = (month: any) => {
+        setMonth(month);
+    }
+
+    useEffect(() => {
+        let today = new Date();
+        let month = today.getMonth();
+        setMonth(month);
+    }, [])
 
 
     return (
@@ -41,14 +49,14 @@ function UserConsumption() {
             <ScrollView horizontal style={{ flex: 1 }} >
                 <View style={styles.scrollView}>
                     {data.map((val, key) => (
-                        <View key={key} style={styles.viewOne} >
+                        <TouchableOpacity onPress={() => onClickLine(key)} activeOpacity={1} key={key} style={styles.viewOne} >
                             {val.ticket == 0 ? (
                                 <View style={styles.circle} ></View>
                             ) : (
                                 <View style={[styles.lineOne, { height: val.ticket * 2 * heightScale }, month == key && { backgroundColor: '#FFF48D' }]} ></View>
                             )}
-                            <Text style={{ color: 'white' }} >{val.month}</Text>
-                        </View>
+                            <Text style={[{ color: 'white' }, month == key && { color: '#FFF48D' }]} >{val.month}</Text>
+                        </TouchableOpacity>
                     ))}
                 </View>
             </ScrollView>
@@ -60,7 +68,7 @@ function UserConsumption() {
                         size={heightScale * 14}
                         color="white"
                         style={styles.detailIcon}
-                    // onPress={() => navigation.goBack()}
+                        onPress={() => navigation.navigate('UserConsumptionDetail')}
                     />
                 </View>
 
@@ -75,8 +83,8 @@ function UserConsumption() {
                                 <View style={[styles.lineOne2, { width: val.len * 2.3 * heightScale }]} ></View>
                             </View>
                             <View style={{ flex: 2.5, alignItems: 'flex-end' }} >
-                                <Text style={[styles.fontStyle2, { marginTop: 6 * heightScale , fontWeight: '600' , marginRight:20 * heightScale }]} >{val.data}장</Text>
-                                <Text style={[styles.fontStyle2, { marginTop: 17 * heightScale  , marginRight:20 * heightScale }]}>{val.len}%</Text>
+                                <Text style={[styles.fontStyle2, { marginTop: 6 * heightScale, fontWeight: '600', marginRight: 20 * heightScale }]} >{val.data}장</Text>
+                                <Text style={[styles.fontStyle2, { marginTop: 17 * heightScale, marginRight: 20 * heightScale }]}>{val.len}%</Text>
                             </View>
                         </View>
                     ))}

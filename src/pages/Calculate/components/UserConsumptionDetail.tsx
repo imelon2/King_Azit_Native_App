@@ -1,28 +1,17 @@
-import React, { useState } from "react"
-import { SafeAreaView, StyleSheet, Text, View, Dimensions, Image, FlatList, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState, useEffect } from "react"
+import { SafeAreaView, StyleSheet, Text, View, Dimensions, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { heightData } from '../../../modules/globalStyles';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 const { width, height } = Dimensions.get("window");
 const heightScale = heightData;
-import { Calendar } from 'react-native-calendars';
-import IconAntDesign2 from 'react-native-vector-icons/Entypo';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { HomeRootStackParamList, } from '../../../../AppInner';
 import TicketHistoryViewDetail from '../../Admin/Components/TicketHistoryViewDetail'
 
 
-function TotalPublish() {
+
+function UserConsumptionDetail() {
     const navigation = useNavigation<NavigationProp<HomeRootStackParamList>>();
-    const [selectedDate, setSelectedDate] = useState<any>(null);
-    const [dayString, setDayString] = useState(0);
-
-    const handleDayPress = (day: any) => {
-        setSelectedDate(day.dateString);
-        let date = new Date(day.dateString);
-        setDayString(date.getDay());
-    };
-
-    const day: any = { 0: '월', 1: '화', 2: '수', 3: '목', 4: '금', 5: '토', 6: '일' };
 
     const ContentsList = [
         {
@@ -78,18 +67,13 @@ function TotalPublish() {
 
     ]
 
-    const LISTS = [...Array(ContentsList.length).keys()].map((_, i) => {
-        return {
-            key: i,
-            data: ContentsList[i],
-        };
-    });
+
 
     return (
         <SafeAreaView style={styles.container} >
             <View>
                 <View style={styles.headerStyle}>
-                    <Text style={styles.fontStyle}>총발행</Text>
+                    <Text style={styles.fontStyle}>월 전체</Text>
                 </View>
                 <IconAntDesign
                     name="left"
@@ -100,46 +84,10 @@ function TotalPublish() {
                 />
             </View>
             <ScrollView>
-                <View >
-                    <Calendar
-                        onDayPress={handleDayPress}
-                        markedDates={{
-                            [selectedDate]: {
-                                selected: true,
-                                selectedColor: '#F5FF82',
-                                selectedTextColor: 'black',
-                                // selectedBackgroundColor: 'white',
-                            },
-                        }}
-                        theme={{
-                            calendarBackground: '#121212',
-                            monthTextColor: '#fff',
-                            textMonthFontSize: 16,
-                            arrowColor: '#121212',
-                            dayTextColor: '#fff',
-                            todayTextColor: '#fff',
-                            textDisabledColor: '#5C5C5C',
-                            textDayFontSize: 14,
-                        }}
-
-                        hideExtraDays
-                    />
-
-                    <IconAntDesign2
-                        name="calendar"
-                        size={heightScale * 22}
-                        color="white"
-                        style={{ position: 'absolute', right: 15, top: 15 }}
-                    // onPress={() => setModalStatus(true)}
-                    />
-                </View>
                 <View style={{ alignItems: 'center', marginTop: 20 * heightScale }}  >
                     <View style={styles.container2} >
-                        {selectedDate == null ? (
                             <Text style={[styles.fontStyle2, { marginBottom: 10 * heightScale }]} >2023년 4월</Text>
-                        ) : (
-                            <Text style={[styles.fontStyle2, { marginBottom: 10 * heightScale }]} >{selectedDate.substr(0, 4)}년 {selectedDate.substr(5, 2)}월 {selectedDate.substr(8, 2)}일 ({day[dayString]}) </Text>
-                        )}
+
 
                         <View style={{ flexDirection: 'row' }} >
                             <Text style={styles.fontStyle3}>총발행</Text>
@@ -160,7 +108,7 @@ function TotalPublish() {
                     </View>
                 </View>
 
-                {selectedDate !== null && (
+           
                     <View>
                         <View style={{ marginTop: 40 * heightScale, flexDirection: 'row' }} >
                             <Text style={[styles.fontStyle2, { marginLeft: 30 * heightScale }]} >전체 내역</Text>
@@ -188,9 +136,8 @@ function TotalPublish() {
                         </View>
 
                     </View>
-                )}
+             
             </ScrollView>
-
         </SafeAreaView>
     )
 }
@@ -263,6 +210,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginBottom: 30 * heightScale,
     }
+
 });
 
-export default TotalPublish
+export default UserConsumptionDetail
