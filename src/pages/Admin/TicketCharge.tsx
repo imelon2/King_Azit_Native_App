@@ -15,6 +15,7 @@ import Config from 'react-native-config';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/reducer';
+import ProfileImg from '../../components/ProfileImg';
 
 const heightScale = heightData;
 const { width, height } = Dimensions.get('window');
@@ -106,18 +107,20 @@ function TicketCharge() {
                     onPress={() => navigation.goBack()}
                 />
             </View>
-            <ScrollView style={{ marginBottom: 90 * heightScale }} >
+            <ScrollView bounces={false}>
                 <View style={{ flex: 1 }} >
                     <View style={styles.container1} >
                         <Text style={styles.fontStyle2} >티켓 충전 유저</Text>
                         <Pressable onPress={() => setSearchModalStatus(true)} style={styles.giftModalTextInput}>
+                            {userInfo.uuid ?<ProfileImg style={styles.userIconImg} source={Config.IMG_URL!+userInfo.uuid}/>: <></>}
+                            <Text style={styles.textInput}>{userInfo.nickname}</Text>
+                            <View style={{alignItems:'flex-end',flex:1}}>
                             <IconIonicons
                                 name="search"
                                 color={'#fff'}
                                 size={heightScale * 24}
-                            />
-                            {userInfo.uuid ?<Image style={styles.userIconImg} defaultSource={require('../../assets/UserIcon.png')} source={{uri:Config.IMG_URL!+userInfo.uuid}}/> : <></>}
-                            <Text style={styles.textInput}>{userInfo.nickname}</Text>
+                                />
+                                </View>
                         </Pressable>
                     </View>
                 </View>
@@ -194,7 +197,6 @@ function TicketCharge() {
                     <View style={styles.boxBorder} >
                     </View>
                 </View>
-                <View style={{ flex: 1.5 }} >
                     <View style={styles.container1} >
                         <Text style={styles.fontStyle4} >장바구니</Text>
                         {/* <ScrollView style={{ marginBottom: 50 * heightScale }} bounces={false}> */}
@@ -258,12 +260,12 @@ function TicketCharge() {
                                 </View>
                             </View>
                         )}
-
-                        {/* </ScrollView> */}
                     </View>
-                </View>
             </ScrollView>
-            <View style={{ alignItems: 'center' }}  >
+            <View style={{flexDirection:'row' ,height:heightScale * 75,backgroundColor:'#3B3B3B'}}  >
+                <View style={{flex:1,alignItems:'center',justifyContent:'center',borderRightColor:'#fff',borderRightWidth:1}}>
+                    <Text style={{fontSize:heightScale*18,color:'#fff',fontWeight:'400'}}>총 {(blackState?black:0) + (redState?red:0) + (goldState?gold:0)}장</Text>
+                </View>
                 <TouchableOpacity onPress={() => setModalStatus(true)}   activeOpacity={1} style={[styles.buttonStyle, (userInfo.nickname !== "닉네임 검색") && ( blackState || redState || goldState) && styles.buttonStyle2]} >
                     <Text style={[styles.fontStyle5, (userInfo.nickname !== "닉네임 검색")  && ( blackState || redState || goldState) && styles.fontStyle7]} >충전하기</Text>
                 </TouchableOpacity>
@@ -276,9 +278,9 @@ function TicketCharge() {
                             {userInfo.nickname}님에게
                         </Text>
                         <Text style={[{}, styles.fontStyle4]}>
-                            {blackState && `[Black Ticket ${black}장 ],`} {'\n'}
-                            {redState && `[Red Ticket ${red}장 ],`}
-                            {goldState && `[Gold Ticket ${gold}장 ]`}{'\n'}
+                            {blackState && `[Black Ticket ${black}장]`} {'\n'}
+                            {redState && `[Red Ticket ${red}장]`}
+                            {goldState && `[Gold Ticket ${gold}장]`}{'\n'}
                             을 충전 하시겠습니까?
                         </Text>
                     </View>
@@ -349,25 +351,23 @@ const styles = StyleSheet.create({
         marginLeft:heightScale*10,
         width:heightScale*30,
         height:heightScale*30,
-        borderRadius:50
+        borderRadius:50,
       },
     giftModalTextInput: {
         flexDirection: 'row',
         alignItems: 'center',
         width: heightScale * 379,
-        height: heightScale * 40,
-        lineHeight: heightScale * 40,
-        paddingHorizontal: 14 * heightScale,
-        backgroundColor: '#414141',
-        borderRadius: 19,
+        height: heightScale * 45,
+        paddingHorizontal: 8 * heightScale,
+        backgroundColor: '#121212',
+        borderBottomColor:'#3D3D3D',
+        borderBottomWidth:1,
     },
     textInput: {
         color: '#fff',
         fontWeight:'bold',
         fontSize: heightScale * 16,
         marginLeft: 8 * heightScale,
-        padding: 0,
-        margin: 0,
     },
     ticketBox: {
         width: 380 * heightScale,
@@ -415,15 +415,11 @@ const styles = StyleSheet.create({
         borderColor: '#aaa',
         borderWidth: 1,
         flexDirection: 'row',
-        marginBottom: 20 * heightScale,
+        marginBottom: 15 * heightScale,
     },
     buttonStyle: {
-        width: 390 * heightScale,
-        height: 64 * heightScale,
-        borderRadius: 4,
+        flex:2,
         backgroundColor: '#3B3B3B',
-        position: 'absolute',
-        bottom: 20 * heightScale,
         alignItems: 'center',
         justifyContent: 'center',
     },

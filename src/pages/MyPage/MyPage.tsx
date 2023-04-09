@@ -1,6 +1,6 @@
 import React, {useCallback, useState} from 'react';
 import {
-  Image,
+  Alert,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -29,8 +29,11 @@ const heightScale = heightData;
 function MyPage() {
   const dispatch = useAppDispatch();
   const navigation = useNavigation<NavigationProp<MyPageRootStackParamList>>();
-  const {nickName,name,uuid,access_token} = useSelector((state: RootState) => state.user);
-  const [cache,setCache] = useState<number>();
+  const {nickName, name, uuid, access_token, roles} = useSelector(
+    (state: RootState) => state.user,
+  );
+  const isAdmin = roles.find((e: string) => e == 'ROLE_ADMIN');
+  const [cache, setCache] = useState<number>();
 
   const onChangeFile = useCallback(async () => {
     try {
@@ -42,7 +45,7 @@ function MyPage() {
       });
       // console.log(response.width, response.height, response.exif);
       // setPreview({uri: `data:${response.mime};base64,${response.data}`});
-  
+
       // exif Orientation 걸릴 경우
       // const orientation = (response.exif as any)?.Orientation; // exif Orientation
       // console.log('orientation', orientation);
@@ -54,21 +57,21 @@ function MyPage() {
         100, // quality
         0, // rotation
       );
-  
+
       const image = {
         uri: r.uri,
         name: r.name,
         type: response.mime,
       };
-  
+
       const formData = new FormData();
       formData.append('file', image);
-  
+
       await setProfileImageHttps(formData);
-      setCache(Date.now())
+      setCache(Date.now());
     } catch (error) {
       // [Error MSG : User cancelled image selection] :  ImagePicker.openPicker ERROR
-      console.log((error as AxiosError));
+      console.log(error as AxiosError);
     }
   }, [dispatch]);
 
@@ -90,13 +93,10 @@ function MyPage() {
     }
   };
 
-
   const logout = async () => {
     await EncryptedStorage.removeItem('refreshToken');
     dispatch(userSlice.actions.setUser({access_token: ''}));
   };
-
-
 
   return (
     <SafeAreaView style={styles.container}>
@@ -107,7 +107,11 @@ function MyPage() {
         <View style={styles.myInfoStyle}>
           {/* icon */}
           <Pressable onPress={onChangeFile}>
-            <ProfileImg cache={cache} style={styles.userIcon} source={Config.IMG_URL+uuid}/>
+            <ProfileImg
+              cache={cache}
+              style={styles.userIcon}
+              source={Config.IMG_URL + uuid}
+            />
           </Pressable>
           {/* info */}
           <View style={styles.infoWrapper}>
@@ -133,50 +137,78 @@ function MyPage() {
         </View>
 
         <View style={styles.contentStyle}>
-          <Text style={[styles.contentTitleText, {}]}>티켓</Text>
-          <Pressable
-            style={[styles.contentWrapper, {marginTop: heightScale * 13}]}
-            onPress={() => navigation.navigate('MyTicket')}>
-            <View style={{flex: 1}}>
-              <Text style={styles.contentText}>마이티켓</Text>
-            </View>
-            <View>
-              <IconAntDesign
-                name="right"
-                size={heightScale * 28}
-                color="white"
-              />
-            </View>
-          </Pressable>
+          {isAdmin ? (
+            <>
+              <Text style={[styles.contentTitleText, {}]}>게임</Text>
+              <Pressable
+                style={[styles.contentWrapper, {marginTop: heightScale * 13}]}
+                onPress={() => Alert.alert('todo :',"Admin 게임 기록 구현 예정")}>
+                <View style={{flex: 1}}>
+                  <Text style={styles.contentText}>게임기록</Text>
+                </View>
+                <View>
+                  <IconAntDesign
+                    name="right"
+                    size={heightScale * 28}
+                    color="white"
+                  />
+                </View>
+              </Pressable>
+            </>
+          ) : (
+            <>
+              <Text style={[styles.contentTitleText, {}]}>티켓</Text>
+              <Pressable
+                style={[styles.contentWrapper, {marginTop: heightScale * 13}]}
+                onPress={() => navigation.navigate('MyTicket')}>
+                <View style={{flex: 1}}>
+                  <Text style={styles.contentText}>마이티켓</Text>
+                </View>
+                <View>
+                  <IconAntDesign
+                    name="right"
+                    size={heightScale * 28}
+                    color="white"
+                  />
+                </View>
+              </Pressable>
 
-          <Text style={[styles.contentTitleText, {marginTop: 28}]}>게임</Text>
-          <Pressable
-            style={[styles.contentWrapper, {marginTop: heightScale * 13}]}
-            onPress={() => navigation.navigate('GameHostory')}>
-            <View style={{flex: 1}}>
-              <Text style={styles.contentText}>게임 참여 기록</Text>
-            </View>
-            <View>
-              <IconAntDesign
-                name="right"
-                size={heightScale * 28}
-                color="white"
-              />
-            </View>
-          </Pressable>
-          <Text style={[styles.contentTitleText, {marginTop: 28}]}>랭킹</Text>
-          <Pressable onPress={() => navigation.navigate('MyRanking')} style={[styles.contentWrapper, {marginTop: heightScale * 13}]}>
-            <View style={{flex: 1}}>
-              <Text style={styles.contentText}>마이 랭킹</Text>
-            </View>
-            <View>
-              <IconAntDesign
-                name="right"
-                size={heightScale * 28}
-                color="white"
-              />
-            </View>
-          </Pressable>
+              <Text style={[styles.contentTitleText, {marginTop: 28}]}>
+                게임
+              </Text>
+              <Pressable
+                style={[styles.contentWrapper, {marginTop: heightScale * 13}]}
+                onPress={() => navigation.navigate('GameHostory')}>
+                <View style={{flex: 1}}>
+                  <Text style={styles.contentText}>게임 참여 기록</Text>
+                </View>
+                <View>
+                  <IconAntDesign
+                    name="right"
+                    size={heightScale * 28}
+                    color="white"
+                  />
+                </View>
+              </Pressable>
+              <Text style={[styles.contentTitleText, {marginTop: 28}]}>
+                랭킹
+              </Text>
+              <Pressable
+                onPress={() => navigation.navigate('MyRanking')}
+                style={[styles.contentWrapper, {marginTop: heightScale * 13}]}>
+                <View style={{flex: 1}}>
+                  <Text style={styles.contentText}>마이 랭킹</Text>
+                </View>
+                <View>
+                  <IconAntDesign
+                    name="right"
+                    size={heightScale * 28}
+                    color="white"
+                  />
+                </View>
+              </Pressable>
+            </>
+          )}
           <Pressable onPress={logout}>
             <Text style={[styles.contentTitleText, {marginVertical: 28}]}>
               로그아웃

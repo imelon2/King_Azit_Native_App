@@ -5,6 +5,7 @@ import Config from 'react-native-config';
 import {Shadow} from 'react-native-shadow-2';
 import { HomeRootStackParamList } from '../../../../AppInner';
 import { roomType } from '../../../hooks/getGameList';
+import { StringUpperCase } from '../../../modules/globalStyles';
 import {heightScale, MainStyles} from '../../../modules/MainStyles';
 import { TicketType } from '../../../modules/ticketsList';
 
@@ -20,9 +21,10 @@ const GameBox = ({item,onClickMember}: propsType) => {
 
   const statusText = () => {
     if(item.status == 'playing') return "진행중"
-    if(item.status == 'waiting') return "대기중"
-    if(item.status == 'end') return "마감"
+    if(item.status == 'waiting' || item.status == 'break') return "대기중"
+    if(item.status == 'closed') return "마감"
   }
+  
   return (
     <>
       <View style={{marginBottom: heightScale * 30}}>
@@ -38,7 +40,7 @@ const GameBox = ({item,onClickMember}: propsType) => {
             <View>
               <Text style={MainStyles.gameText}>Table No. {item.table_no}</Text>
               <Text style={[MainStyles.gameText, {fontSize: heightScale * 20}]}>
-                {item.game_name} Game
+                {item.game_name}
               </Text>
             </View>
             <View style={{flex: 1, alignItems: 'flex-end'}}>
@@ -61,10 +63,10 @@ const GameBox = ({item,onClickMember}: propsType) => {
             }}>
             <View style={{flex:1}}>
               <Text style={MainStyles.gameText}>
-                {item.ticket_amount} {item.ticket_type} Ticket
+                {item.ticket_amount} {StringUpperCase(item.ticket_type)} Ticket
               </Text>
               <Text style={MainStyles.gameText}>
-                Blind {item.blind} Ante:{item.ante}
+                Blind {item.blind}  Ante:{item.ante}
               </Text>
             </View>
             {/* 플레이어 아이콘 */}

@@ -98,7 +98,7 @@ export function deepLinkController(isLoggedIn: boolean) {
       if(((error as AxiosError).response?.data as any).errorMessage === "유효하지 않은 qr 코드") {
         return navigation.navigate('Forbidden',{message:'해당 QR코드는 유효하지 않은 QR 코드입니다.'});
       } else if (((error as AxiosError).response?.data as any).errorMessage ==="만료된 qr 코드") {
-        return navigation.navigate('Forbidden',{message:'해당 QR코드는 유효기간이 만료된 qr 코드입니다. \n다시 발급 받은 QR코드로 진행해주세요.'});
+        return navigation.navigate('Forbidden',{message:'해당 QR코드는 유효기간이 만료된 qr 코드입니다.'});
       }
     }
   };

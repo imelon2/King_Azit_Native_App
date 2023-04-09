@@ -4,6 +4,7 @@ import { TicketType } from "../modules/ticketsList";
 import gamesSlice from "../slices/games";
 import { useAppDispatch } from "../store";
 import { RootState } from "../store/reducer";
+import useRefreshToken from "./useRefreshToken";
 import useSocket from "./useSocket";
 
 
@@ -39,9 +40,13 @@ export type roomDataType = {
 function getGameList() {
     const dispatch = useAppDispatch();
     const [socket, disconnect] = useSocket();
+    const [refreshToken] = useRefreshToken();
       // Socket
   useEffect(() => {
+    
+    
     const getGameRoomList = (data: any) => {
+      console.log(data);
       dispatch(
         gamesSlice.actions.setGameData({
             gameData:data
@@ -51,12 +56,16 @@ function getGameList() {
 
     const callback = (data: any) => {
       console.log('Error From getGameList.ts',data);
+
+      if(data.name === "TokenExpiredError") {
+        refreshToken().then(() => socket!.on('getGameRoomList', getGameRoomList))
+      }
     };
 
     if (socket) {
+      socket.on('error', callback);
       socket.on('getGameRoomList', getGameRoomList);
       socket.emit('getGameRoomList', 'init');
-      socket.on('error', callback);
     }
     return () => {
       console.log('off getGameRoomList');

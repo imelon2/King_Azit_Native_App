@@ -14,3 +14,7 @@ export const widthData:number = Number(( // 가로 변환 작업
   Dimensions.get('screen').width *
   (1 / basicDimensions.width)
 ).toFixed(2));
+
+export const StringUpperCase = (_string:string) => {
+  return _string.charAt(0).toUpperCase() + _string.slice(1)
+}

@@ -8,7 +8,7 @@ import { PieChart, PieData, ChartDescription } from 'react-native-charts-wrapper
 
 const heightScale = heightData;
 
-const data: PieData = {
+const data = {
     dataSets: [{
         values: [{ value: 70 }, { value: 30 }],
         label: '',

@@ -8,6 +8,7 @@ import {
   Dimensions,
   TextInput,
   Alert,
+  Pressable,
 } from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {HomeRootStackParamList} from '../../../AppInner';
@@ -16,6 +17,7 @@ import Modal from 'react-native-modal';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import IconFeather from 'react-native-vector-icons/Feather';
 import IconIonicons from 'react-native-vector-icons/Ionicons';
+import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
 import {heightData} from '../../modules/globalStyles';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useSelector} from 'react-redux';
@@ -24,6 +26,7 @@ import PayTicketForJoinGame from './MainPageModal/PayTicketForJoinGame';
 import useSocket from '../../hooks/useSocket';
 import {isEnterRoom, isPlaying, roomType} from '../../hooks/getGameList';
 import Config from 'react-native-config';
+import ProfileImg from '../../components/ProfileImg';
 const heightScale = heightData;
 const {width, height} = Dimensions.get('screen');
 
@@ -32,13 +35,8 @@ type GamePageScreenProps = NativeStackScreenProps<
   'GamePage'
 >;
 
-type blindInfoType = {
-  level: number;
-  ante: number;
-};
-
 type blindType = {
-  [key: string]: blindInfoType;
+  [key: string]: string;
 };
 
 function GamePage({route, navigation}: GamePageScreenProps) {
@@ -50,17 +48,27 @@ function GamePage({route, navigation}: GamePageScreenProps) {
   const [socket, disconnect] = useSocket();
   const [modalStatus, setModalStatus] = useState(false);
   const [selectSeatNum, setSelectSeatNum] = useState<number>();
-  // const [currentGameData, setCurrentGameData] = useState<any>();
+  const [isGuest, setIsGuest] = useState({is: false, isFixed: false});
+  const [timer, setTimer] = useState('...');
+
+  const [isStart, setIsStart] = useState(false);
+  const [isReStart, setIsReStart] = useState(false);
+  const [isBreak, setIsBreak] = useState(false);
+
+  useEffect(() => {
+    if(currentGameData?.status === "waiting") setIsStart(true);
+    if(currentGameData?.status === "playing") setIsBreak(true);
+    if(currentGameData?.status === "break") setIsReStart(true);
+    if(currentGameData?.status === "closed") setIsReStart(true);
+  },[currentGameData])
 
   // 소켓 메세지 관리 및 어드민 게임 참여
   useEffect(() => {
     console.log('Enter Room ID : ' + route.params.gameId);
-    // admin이면 바로 입장
-    if (isAdmin && socket && route.params.gameId) {
-      socket.emit('enterGameRoom', {gameId: route.params.gameId});
-    }
 
     const callbackError = (data: any) => {
+      console.log(data);
+      
       if (data.type === 'finishGame') {
         if (
           data.msg.includes(
@@ -70,12 +78,12 @@ function GamePage({route, navigation}: GamePageScreenProps) {
           Alert.alert('Error', data.msg);
         }
       }
-
-      if (data.type === 'sitout') {
-        Alert.alert('Sitout Error', data.msg);
-      }
     };
 
+    const sitoutError = (data: any) => {
+      console.log(data);
+    };
+    
     const getMessage = (data: any) => {
       // 게임 종료 성공 시
       if (socket && data === '게임 기록 성공!') {
@@ -86,22 +94,58 @@ function GamePage({route, navigation}: GamePageScreenProps) {
       }
     };
 
+    const getTimer = (data: any) => {
+      console.log(data);
+      
+      setTimer(data);
+    };
+
+    const acessError = (data: any) => {
+      Alert.alert('알림', '해당 게임의 딜러만 조작이 가능합니다.');
+    };
+
+
+    const recordSuccess = () => {
+      // 권한 별 네비게이트
+      navigateFunc();
+    }
+
     if (socket) {
+      // 방에 참여
+      socket.on('timer', getTimer).emit('enterGameRoom', {gameId: route.params.gameId});
       socket.on('error', callbackError);
+      socket.on('finishGameError', callbackError);
+      socket.on('sitoutGameError', sitoutError);
       socket.on('getMessage', getMessage);
+      socket.on('resetTimerError', acessError);
+      socket.on('pauseTimerError', acessError);
+      socket.on('closeGameError', acessError);
+      socket.on('recordSuccess', recordSuccess);
     }
 
     return () => {
       if (socket) {
         socket.off('error', callbackError);
+        socket.off('finishGameError', callbackError);
+        socket.off('sitoutGameError', sitoutError);
         socket.off('getMessage', getMessage);
+        socket.off('timer', getTimer);
+        socket.off('resetTimerError', acessError);
+        socket.off('pauseTimerError', acessError);
+        socket.off('closeGameError', acessError);
       }
     };
   }, []);
 
-  const onClickUser = (seatNum: number) => {
-    
-    if (!!currentGameData.seat[seatNum]) return;
+  const joinGame = (seatNum: number) => {
+    if (currentGameData.status === 'closed') return;
+    if (!!currentGameData.seat[seatNum]) {
+      if (isAdmin) {
+        sitout(seatNum);
+      }
+      return;
+    }
+
     let msg = '';
     if (isPlaying(gameData, uuid)) {
       msg = '다른 테이블 게임에 참여 중에는 게스트 초대만 가능합니다.';
@@ -109,7 +153,12 @@ function GamePage({route, navigation}: GamePageScreenProps) {
     if (isEnterRoom(currentGameData, uuid)) {
       msg = '게임에 참여 중에는 게스트 초대만 가능합니다.';
     }
+    if (isAdmin) {
+      msg = '관리자는 게스트 초대만 가능합니다.';
+    }
+
     if (msg) {
+      setIsGuest({is: true, isFixed: true});
       Alert.alert('알림', msg, [
         {
           text: '확인',
@@ -126,6 +175,37 @@ function GamePage({route, navigation}: GamePageScreenProps) {
 
     setSelectSeatNum(seatNum);
     setModalStatus(true);
+  };
+
+  const breakTimer = () => {
+    setIsBreak(false);
+    if (socket) {
+      socket.emit('pauseTimer');
+    }
+    setIsReStart(true);
+  };
+
+  const StartTimer = () => {
+    setIsStart(false);
+    if (socket) {
+      socket.emit('startTimer');
+    }
+    setIsBreak(true);
+  };
+
+  const reStartTimer = () => {
+    setIsReStart(false);
+    if (socket) {
+      socket.emit('startTimer');
+    }
+    setIsBreak(true);
+  };
+
+  const CloseGame = () => {
+    console.log('try Close Room');
+    if (socket) {
+      socket.emit('closeGame');
+    }
   };
 
   const finishGame = () => {
@@ -171,23 +251,22 @@ function GamePage({route, navigation}: GamePageScreenProps) {
   };
 
   const _blindInfo: blindType = {
-    '100/200': {level: 1, ante: 0},
-    '200/400': {level: 2, ante: 0},
-    '400/800': {level: 3, ante: 0},
-    '500/1000': {level: 4, ante: 0},
-    '1000/2000': {level: 5, ante: 0},
-    '1500/3000': {level: 6, ante: 1500},
-    '2000/4000': {level: 7, ante: 2000},
-    '2500/5000': {level: 8, ante: 2500},
-    '3000/6000': {level: 9, ante: 3000},
-    '4000/8000': {level: 10, ante: 4000},
-    '5000/10000': {level: 11, ante: 5000},
-    '6000/12000': {level: 12, ante: 6000},
-    '8000/16000': {level: 13, ante: 8000},
-    '10000/20000': {level: 14, ante: 10000},
-    '15000/30000': {level: 15, ante: 15000},
-    '20000/40000': {level: 16, ante: 20000},
-    '30000/60000': {level: 17, ante: 60000},
+    'Level 1': '200/400',
+    'Level 2': '400/800',
+    'Level 3': '500/1000',
+    'Level 4': '1000/2000',
+    'Level 5': '1500/3000',
+    'Level 6': '2000/4000',
+    'Level 7': '2500/5000',
+    'Level 8': '3000/6000',
+    'Level 9': '4000/8000',
+    'Level 10': '5000/10000',
+    'Level 11': '6000/12000',
+    'Level 12': '8000/16000',
+    'Level 13': '10000/20000',
+    'Level 14': '15000/30000',
+    'Level 15': '20000/40000',
+    'Level 16': '30000/60000',
   };
 
   const userSeat = (seat: number) => {
@@ -199,24 +278,26 @@ function GamePage({route, navigation}: GamePageScreenProps) {
     };
     return (
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
-        <View
-          style={styles.userProfileStyle}
-          // onTouchEnd={() => onClickUser(seat)}>
-          onTouchEnd={() => sitout(seat)}>
+        <View style={styles.userProfileStyle} onTouchEnd={() => joinGame(seat)}>
           {currentGameData?.seat[seat] === null ? (
             <Text
-              style={{
-                color: '#000',
-                fontSize: heightScale * 25,
-                fontWeight: '400',
-              }}>
+              style={[
+                {
+                  color: '#000',
+                  fontSize: heightScale * 25,
+                  fontWeight: '400',
+                },
+                {
+                  display:
+                    currentGameData.status === 'closed' ? 'none' : 'flex',
+                },
+              ]}>
               +
             </Text>
           ) : (
-            <Image
+            <ProfileImg
               style={styles.playerImg}
-              defaultSource={require('../../assets/UserIcon.png')}
-              source={{uri: Config.IMG_URL! + currentGameData?.seat[seat].uuid}}
+              source={Config.IMG_URL! + currentGameData?.seat[seat].uuid}
             />
           )}
         </View>
@@ -238,6 +319,7 @@ function GamePage({route, navigation}: GamePageScreenProps) {
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Header */}
       <View>
         <View style={styles.headerStyle}>
           <Text style={styles.fontStyle}>
@@ -252,6 +334,7 @@ function GamePage({route, navigation}: GamePageScreenProps) {
           onPress={() => navigateFunc()}
         />
       </View>
+
       <View style={styles.contents}>
         <View>
           <Image
@@ -362,64 +445,110 @@ function GamePage({route, navigation}: GamePageScreenProps) {
             {/* Current Blind Info */}
             <View style={styles.blindStyle}>
               <Text style={styles.blindTextStyle}>
-                Blinds: Level{' '}
-                {currentGameData?.blind
-                  ? _blindInfo[currentGameData.blind].level
-                  : ''}
+                Blinds: {currentGameData?.blind.split(':')[0]}
               </Text>
               <Text style={styles.blindTextStyle}>
-                {currentGameData?.blind} Ante:
-                {currentGameData?.blind
-                  ? _blindInfo[currentGameData.blind].ante
-                  : ''}
+                {currentGameData?.blind.split(':')[1]} Ante:{' '}
+                {currentGameData?.ante}
               </Text>
             </View>
 
             {/* Next Blind Info */}
             <View style={[styles.blindStyle, {top: heightScale * 461}]}>
               <Text style={styles.blindTextStyle}>
-                Next Blinds:{' '}
-                {
-                  Object.keys(_blindInfo)[
-                    Object.keys(_blindInfo).findIndex(
-                      value => value === currentGameData?.blind,
-                    ) + 1
-                  ]
-                }
+                Next Blinds : {_blindInfo[currentGameData?.blind.split(':')[0]]}
               </Text>
-              <Text style={styles.blindTextStyle}>in 03:56</Text>
-              {isAdmin ? (              <View
-                style={styles.stateButton}>
-                <IconFeather size={heightScale * 20} name="play" />
-                <Text
-                  style={{
-                    paddingLeft: heightScale * 3,
-                    fontSize: heightScale * 16,
-                    fontWeight: 'bold',
-                  }}>
-                  Restart
-                </Text>
-              </View>) : <></>}
+              <Text style={styles.blindTextStyle}>in {timer}</Text>
+              {isAdmin ? (
+                <>
+                  {isStart && (
+                    <Pressable
+                      style={styles.stateButton}
+                      onPress={StartTimer}>
+                      <Text
+                        style={{
+                          paddingLeft: heightScale * 3,
+                          fontSize: heightScale * 16,
+                          fontWeight: 'bold',
+                        }}>
+                        Start
+                      </Text>
+                    </Pressable>
+                  )}
+                  {isReStart && (
+                    <Pressable
+                      style={styles.stateButton}
+                      onPress={reStartTimer}>
+                      <IconFeather size={heightScale * 20} name="play" />
+                      <Text
+                        style={{
+                          paddingLeft: heightScale * 3,
+                          fontSize: heightScale * 16,
+                          fontWeight: 'bold',
+                        }}>
+                        Re Start
+                      </Text>
+                    </Pressable>
+                  )}
+                  {isBreak && (
+                    <Pressable
+                      onPress={breakTimer}
+                      style={[
+                        styles.stateButton,
+                        {backgroundColor: '#35312A', borderColor: '#DACFB1'},
+                      ]}>
+                      <IconFontAwesome
+                        size={heightScale * 15}
+                        name="pause"
+                        color={'#C9BEA2'}
+                      />
+                      <Text
+                        style={{
+                          paddingLeft: heightScale * 6,
+                          fontSize: heightScale * 16,
+                          fontWeight: 'bold',
+                          color: '#C9BEA2',
+                        }}>
+                        Break
+                      </Text>
+                    </Pressable>
+                  )}
+                </>
+              ) : (
+                <></>
+              )}
             </View>
           </View>
         </View>
 
         {/* 게임 종료 버튼 */}
         <View style={styles.endButtonWrapper}>
-          {isAdmin ? (
-            <TouchableOpacity
-              onPress={() => finishGame()}
-              activeOpacity={1}
-              style={{alignItems: 'center'}}>
-              <View style={styles.gameOutButton}>
-                <IconIonicons
-                  name="power"
-                  color={'white'}
-                  size={heightScale * 18}
-                />
-                <Text style={styles.endButtonText}>게임 종료</Text>
-              </View>
-            </TouchableOpacity>
+          {isAdmin && isStart || isReStart ? (
+            <View style={{alignItems: 'center'}}>
+              {currentGameData?.status === 'closed' ? (
+                <TouchableOpacity style={styles.gameOutButton}
+                onPress={() => finishGame()}>
+                  <IconIonicons
+                    name="power"
+                    color={'white'}
+                    size={heightScale * 18}
+                  />
+                  <Text style={styles.endButtonText}>방 지우기</Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  style={styles.gameOutButton}
+                  onPress={() => CloseGame()}
+                  activeOpacity={1}>
+                  <IconIonicons
+                    name="power"
+                    color={'white'}
+                    size={heightScale * 18}
+                  />
+                  <Text style={styles.endButtonText}>게임 마감</Text>
+                </TouchableOpacity>
+              )}
+            </View>
           ) : (
             <></>
           )}
@@ -431,6 +560,8 @@ function GamePage({route, navigation}: GamePageScreenProps) {
           setModalStatus={setModalStatus}
           item={currentGameData!}
           selectSeatNum={selectSeatNum!}
+          isGuest={isGuest}
+          setIsGuest={setIsGuest}
         />
       </Modal>
     </SafeAreaView>
@@ -495,7 +626,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#35312A',
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: '#C9BEA2',
-    borderRadius: heightScale*60,
+    borderRadius: heightScale * 60,
   },
   dealerText: {
     color: '#C9BEA2',

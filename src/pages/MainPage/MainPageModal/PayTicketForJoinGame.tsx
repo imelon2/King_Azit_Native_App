@@ -3,22 +3,15 @@ import {
   View,
   Image,
   StyleSheet,
-  ScrollView,
-  SafeAreaView,
   TouchableOpacity,
   Dimensions,
   FlatList,
-  Pressable,
   TextInput,
 } from 'react-native';
-import {heightData} from '../../../modules/globalStyles';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {HomeRootStackParamList} from '../../../../AppInner';
+import {heightData, StringUpperCase} from '../../../modules/globalStyles';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import ticketsList, {
-  ticketsListType,
-} from '../../../modules/ticketsList';
+import ticketsList from '../../../modules/ticketsList';
 import getTickets from '../../../hooks/getTickets';
 import useSocket from '../../../hooks/useSocket';
 import {useSelector} from 'react-redux';
@@ -34,20 +27,25 @@ interface propsType {
   setModalStatus(id: boolean): void;
   item: roomType;
   selectSeatNum:number;
+  setIsGuest({ is, isFixed }:{ is: boolean, isFixed: boolean }): void;
+  isGuest:{is:boolean,isFixed:boolean};
 }
 
 function PayTicketForJoinGame(props: propsType) {
   const [socket, disconnect] = useSocket();
+  // 현재 유저 보유 티켓 가져오기
+  const [refreshTickets] = getTickets();
   const CARDS = ticketsList('basic').filter(
-    keys => keys.type == 'Red' || keys.type == 'Black',
+    keys => keys.type == 'red' || keys.type == 'black',
   );
   const {uuid} = useSelector((state: RootState) => state.user);
-  const [check, setcheck] = useState(false);
   const [guestNickNameModal, setGuestNickNameModal] = useState(false);
   const [change, setChange] = useState<number>(5);
   const [price, setPrice] = useState<number>(0);
   const [isEnoughCard, setIsEnoughCard] = useState<boolean>(false);
+  const {isGuest,setIsGuest} = props;
 
+  
   let _gap = heightScale * 55;
   let _offset = heightScale * 60;
   let _width = width - (_gap + _offset) * 2;
@@ -77,22 +75,22 @@ function PayTicketForJoinGame(props: propsType) {
     };
   }, []);
 
-  // 현재 유저 보유 티켓 가져오기
-  getTickets();
 
   const onClickCheckBox = () => {
-    setcheck(!check);
+    if(isGuest.isFixed) return;
+    setIsGuest({is: !isGuest.is,isFixed: false})
   };
 
   // GameId & Ticket 소모 필요
-  const guJoinButton = () => {
-    // if (!check) {
-    //   return;
-    // }
+  const joinButton = () => {
+    if (!isEnoughCard) {
+      return;
+    }
 
     if (socket) {
-      socket.emit('enterGameRoom', {gameId:props.item.game_id,chair:props.selectSeatNum});
+      socket.emit('seat', {gameId:props.item.game_id,chair:props.selectSeatNum,isGuest:props.isGuest.is});
       props.setModalStatus(false);
+      refreshTickets();
     }
   };
 
@@ -100,28 +98,28 @@ function PayTicketForJoinGame(props: propsType) {
   const onViewableItemsChanged = ({viewableItems}: any) => {
     // 현재 Focus된 page index 전달
     let price: any;
-    if (props.item.ticket_type === 'Black') {
-      if (viewableItems[0].item.type === 'Red') {
+    if (props.item.ticket_type === 'black') {
+      if (viewableItems[0]?.item.type === 'red') {
         price = props.item.ticket_amount * 5;
         setChange(5);
       }
-      if (viewableItems[0].item.type === 'Black') {
+      if (viewableItems[0]?.item.type === 'black') {
         price = props.item.ticket_amount;
         setChange(5);
       }
     }
-    if (props.item.ticket_type === 'Red') {
-      if (viewableItems[0].item.type === 'Red') {
+    if (props.item.ticket_type === 'red') {
+      if (viewableItems[0]?.item.type === 'red') {
         price = props.item.ticket_amount;
         setChange(5);
       }
-      if (viewableItems[0].item.type === 'Black') {
+      if (viewableItems[0]?.item.type === 'black') {
         price = Math.ceil(props.item.ticket_amount / 5);
         setChange(5 - (props.item.ticket_amount % 5));
       }
     }
     setPrice(price);
-    setIsEnoughCard(price <= viewableItems[0].item.count ? true : false);
+    setIsEnoughCard(price <= viewableItems[0]?.item.count ? true : false);
   };
   const viewabilityConfig = {
     itemVisiblePercentThreshold: 50, // View에 50% 이상 노출될 경우 실행
@@ -178,8 +176,8 @@ function PayTicketForJoinGame(props: propsType) {
           snapToAlignment="start"
           decelerationRate="fast"
           bounces={false}
+          keyExtractor={item => item.key?.toString()}
           data={CARDS}
-          keyExtractor={item => item.key.toString()}
           viewabilityConfigCallbackPairs={
             viewabilityConfigCallbackPairs.current
           }
@@ -187,12 +185,12 @@ function PayTicketForJoinGame(props: propsType) {
           contentContainerStyle={{
             paddingHorizontal: _offset + _gap / 2,
           }}
-          renderItem={({item}: {item: ticketsListType}) => (
+          renderItem={(item) => (
             <View style={{marginHorizontal: _gap / 2,paddingVertical:heightScale*5}}>
               <View style={{justifyContent: 'center', alignItems: 'center'}}>
                 <View style={{flexDirection: 'row',marginBottom:heightScale*5}}>
-                  <Text style={styles.cardText}>{item.type} Tickets</Text>
-                  <Text style={styles.cardText2}> | 보유 {item.count} 개</Text>
+                  <Text style={styles.cardText}>{StringUpperCase(item.item.type)} Tickets</Text>
+                  <Text style={styles.cardText2}> | 보유 {item.item.count} 개</Text>
                 </View>
                 <Shadow distance={6} startColor={'#616161'} endColor={'rgba(61, 61, 61, 0.6)'}>
                 <Image
@@ -204,7 +202,7 @@ function PayTicketForJoinGame(props: propsType) {
                     borderColor: '#A1A1A1',
                     borderRadius: 14,
                   }}
-                  source={item.image}
+                  source={item.item.image}
                 />
                 </Shadow>
               </View>
@@ -216,23 +214,20 @@ function PayTicketForJoinGame(props: propsType) {
       <View style={{alignItems: 'center'}}>
         {/* 게스트 체크 박스 */}
       <TouchableOpacity
-          onPress={() => {
-            if (!isEnoughCard) return;
-            setGuestNickNameModal(true);
-          }}
+          onPress={() => onClickCheckBox()}
           activeOpacity={1}
           style={{
             flexDirection: 'row',
             marginTop: heightScale * 15,
             justifyContent:'center',
-            alignItems:'center'
+            alignItems:'center',
           }}>
           <IconAntDesign
             name="checksquare"
             size={22}
-            color={check ? '#F5FF82' : '#848484'}
+            color={isGuest.is ? '#F5FF82' : '#848484'}
           />
-          <Text style={[styles.checkText,{color:check ? '#F5FF82' : '#848484'}]}>For Guest Player</Text>
+          <Text style={[styles.checkText,{color:isGuest.is ? '#F5FF82' : '#848484'}]}>For Guest Player</Text>
         </TouchableOpacity>
 
         <View style={styles.useTextWrapper}>
@@ -248,51 +243,14 @@ function PayTicketForJoinGame(props: propsType) {
           justifyContent: 'flex-end',
         }}>
         <TouchableOpacity
-          onPress={guJoinButton}
+          onPress={joinButton}
           activeOpacity={1}
           style={isEnoughCard ? styles.gujoinButton2 : styles.gujoinButton}>
           <Text style={[styles.gujoinButtonText]}>
-            참가하기
+            {isGuest.is && "Guest"} 참가하기
           </Text>
         </TouchableOpacity>
       </View>
-
-      {/* 게스트 초대 시, 닉네임 설정 모달 */}
-      {guestNickNameModal ? (
-        <View style={styles.nickNameBoxWrapper}>
-          <View style={styles.modalBox}>
-            <IconAntDesign
-              onPress={() => setGuestNickNameModal(false)}
-              name="close"
-              size={25}
-              color="#000"
-              style={{
-                position: 'absolute',
-                right: heightData * 10,
-                marginTop: heightData * 10,
-              }}
-            />
-            <Text style={styles.mainText}>임시 닉네임 설정</Text>
-            <TextInput style={styles.textInput} placeholder="입력" />
-            <Text style={styles.textsub}>
-              설정할 닉네임을 입력해 주세요. (한글, 숫자, 영문2~8자)
-            </Text>
-
-            <View style={{alignItems: 'center'}}>
-              <View style={styles.buttonBox}>
-                <TouchableOpacity activeOpacity={1} style={styles.button}>
-                  <Text style={styles.buttonText}> 중복확인 </Text>
-                </TouchableOpacity>
-                <TouchableOpacity activeOpacity={1} style={styles.button}>
-                  <Text style={styles.buttonText}> 확인 </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </View>
-      ) : (
-        <></>
-      )}
     </View>
   );
 }

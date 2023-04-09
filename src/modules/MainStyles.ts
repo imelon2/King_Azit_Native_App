@@ -39,7 +39,7 @@ export const MainStyles = StyleSheet.create({
     height: heightScale * 300,
   },
   imgSlideBox2: {
-    width: width,
+    width:heightScale * 429,
     height: heightScale * 300,
     resizeMode: 'stretch',
   },
