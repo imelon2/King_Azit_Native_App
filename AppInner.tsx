@@ -43,6 +43,7 @@ import CalculatePage from './src/pages/Calculate/CalculatePage';
 import MonthCirculation from './src/pages/Calculate/components/MonthCirculation'
 import TotalPublish from './src/pages/Calculate/components/TotalPublish'
 import UserConsumption from './src/pages/Calculate/components/UserConsumption'
+import UserConsumptionDetail from './src/pages/Calculate/components/UserConsumptionDetail'
 import { TicketType } from './src/modules/ticketsList';
 
 export type RootStackParamList = {
@@ -109,6 +110,7 @@ export type HomeRootStackParamList = {
   TotalPublish: undefined;
   UserConsumption: undefined;
   MonthCirculation: undefined;
+  UserConsumptionDetail:undefined;
 };
 
 export type MyPageRootStackParamList = {
@@ -355,6 +357,11 @@ function AppInner() {
           <HomeStack.Screen
             name="UserConsumption"
             component={UserConsumption}
+            options={{ animation: 'none' }}
+          />
+          <HomeStack.Screen
+            name="UserConsumptionDetail"
+            component={UserConsumptionDetail}
             options={{ animation: 'none' }}
           />
         </HomeStack.Navigator>

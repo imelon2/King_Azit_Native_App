@@ -4,20 +4,20 @@ import {
     StyleSheet,
     TouchableOpacity,
     SafeAreaView,
-  } from 'react-native';
-  import {
+} from 'react-native';
+import {
     createNativeStackNavigator,
     NativeStackScreenProps,
-  } from '@react-navigation/native-stack';
-  import {useState} from 'react';
-  import Icon from 'react-native-vector-icons/AntDesign';
-  import {RootStackParamList} from '../../../AppInner';
+} from '@react-navigation/native-stack';
+import { useState } from 'react';
+import Icon from 'react-native-vector-icons/AntDesign';
+import { RootStackParamList } from '../../../AppInner';
 import { SignUpstyles } from '../../modules/SignUpstyles';
 import { heightData } from '../../modules/globalStyles'
 const Stack = createNativeStackNavigator<RootStackParamList>();
 type SignInScreenProps = NativeStackScreenProps<
-  RootStackParamList,
-  'SignUpHome'
+    RootStackParamList,
+    'SignUpHome'
 >;
 
 function SignUpHome({ navigation }: SignInScreenProps) {
@@ -33,10 +33,24 @@ function SignUpHome({ navigation }: SignInScreenProps) {
 
     const onClickPrivacy = () => {
         setCheckPrivacy(!checkPrivacy);
+        if (checkPrivacy) {
+            setcheckAll(false);
+        }
+
+        if (checkTerms && !checkPrivacy) {
+            setcheckAll(true);
+        }
     };
 
     const onClickTerms = () => {
         setcheckTerms(!checkTerms);
+        if (checkTerms) {
+            setcheckAll(false);
+        }
+
+        if (!checkTerms && checkPrivacy) {
+            setcheckAll(true);
+        }
     };
 
     return (
@@ -55,7 +69,7 @@ function SignUpHome({ navigation }: SignInScreenProps) {
                 <Text style={SignUpstyles.terms}>서비스 이용약관에 동의해주세요.</Text>
             </View>
 
-            <View  style={{marginBottom:heightData*25}}>
+            <View style={{ marginBottom: heightData * 25 }}>
                 <TouchableOpacity
                     activeOpacity={1}
                     style={SignUpstyles.termsBox}
@@ -94,7 +108,7 @@ function SignUpHome({ navigation }: SignInScreenProps) {
                     <Text style={{ color: '#fff' }}>이용약관 </Text>
                 </TouchableOpacity>
             </View>
-            <View style={{ alignItems:'center' }} >
+            <View style={{ alignItems: 'center' }} >
                 <Text
                     style={
                         checkPrivacy && checkTerms
@@ -114,24 +128,24 @@ function SignUpHome({ navigation }: SignInScreenProps) {
 
 const styles = StyleSheet.create({
     bottomBar: {
-      width: '92%',
-      borderBottomWidth: 2,
-      borderBottomColor: '#D9D9D9',
-      marginLeft: '4%',
-      height: 0,
+        width: '92%',
+        borderBottomWidth: 2,
+        borderBottomColor: '#D9D9D9',
+        marginLeft: '4%',
+        height: 0,
     },
     checkBox: {
-      marginLeft: 20,
+        marginLeft: 20,
     },
     agreeText: {
-      marginTop: 2,
-      marginLeft: 12,
-      color: '#fff',
+        marginTop: 2,
+        marginLeft: 12,
+        color: '#fff',
     },
     check: {
-      marginRight: 15,
-      marginLeft: 25,
+        marginRight: 15,
+        marginLeft: 25,
     },
-  });
+});
 
-  export default SignUpHome;
+export default SignUpHome;

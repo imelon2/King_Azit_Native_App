@@ -129,7 +129,7 @@ function Login({navigation}:LoginScreenProps) {
               <TextInput
                 style={styles.textInput}
                 ref={emailRef}
-                placeholder="아이디 (이메일)"
+                placeholder="아이디"
                 placeholderTextColor={'#6F6F6F'}
                 onChangeText={onChangeEmail}
                 importantForAutofill="yes" // 자동완성 불러오기

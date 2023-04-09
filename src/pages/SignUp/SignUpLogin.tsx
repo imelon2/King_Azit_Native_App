@@ -77,7 +77,7 @@ function SignUpLogin({navigation}: SignInScreenProps) {
           <View style={SignUpstyles.textInputWrapper}>
             <TextInput
               style={SignUpstyles.textInput}
-              placeholder="아이디 (이메일) 입력"
+              placeholder="아이디 입력"
               onChangeText={onChangeEmail}
               importantForAutofill="yes" // 자동완성 불러오기
               autoComplete="email" // 자동완성 허용
