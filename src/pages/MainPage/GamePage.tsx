@@ -49,16 +49,26 @@ function GamePage({route, navigation}: GamePageScreenProps) {
   const [modalStatus, setModalStatus] = useState(false);
   const [selectSeatNum, setSelectSeatNum] = useState<number>();
   const [isGuest, setIsGuest] = useState({is: false, isFixed: false});
-  const [timer, setTimer] = useState();
-  // const [isStart, setIsStart] = useState(true);
-  const [isStart, setIsStart] = useState(true);
+  const [timer, setTimer] = useState('...');
+
+  const [isStart, setIsStart] = useState(false);
+  const [isReStart, setIsReStart] = useState(false);
   const [isBreak, setIsBreak] = useState(false);
+
+  useEffect(() => {
+    if(currentGameData?.status === "waiting") setIsStart(true);
+    if(currentGameData?.status === "playing") setIsBreak(true);
+    if(currentGameData?.status === "break") setIsReStart(true);
+    if(currentGameData?.status === "closed") setIsReStart(true);
+  },[currentGameData])
 
   // 소켓 메세지 관리 및 어드민 게임 참여
   useEffect(() => {
     console.log('Enter Room ID : ' + route.params.gameId);
 
     const callbackError = (data: any) => {
+      console.log(data);
+      
       if (data.type === 'finishGame') {
         if (
           data.msg.includes(
@@ -73,6 +83,7 @@ function GamePage({route, navigation}: GamePageScreenProps) {
     const sitoutError = (data: any) => {
       console.log(data);
     };
+    
     const getMessage = (data: any) => {
       // 게임 종료 성공 시
       if (socket && data === '게임 기록 성공!') {
@@ -84,6 +95,8 @@ function GamePage({route, navigation}: GamePageScreenProps) {
     };
 
     const getTimer = (data: any) => {
+      console.log(data);
+      
       setTimer(data);
     };
 
@@ -91,21 +104,29 @@ function GamePage({route, navigation}: GamePageScreenProps) {
       Alert.alert('알림', '해당 게임의 딜러만 조작이 가능합니다.');
     };
 
+
+    const recordSuccess = () => {
+      // 권한 별 네비게이트
+      navigateFunc();
+    }
+
     if (socket) {
       // 방에 참여
-      socket.emit('enterGameRoom', {gameId: route.params.gameId});
-      socket.on('timer', getTimer);
+      socket.on('timer', getTimer).emit('enterGameRoom', {gameId: route.params.gameId});
       socket.on('error', callbackError);
+      socket.on('finishGameError', callbackError);
       socket.on('sitoutGameError', sitoutError);
       socket.on('getMessage', getMessage);
       socket.on('resetTimerError', acessError);
       socket.on('pauseTimerError', acessError);
       socket.on('closeGameError', acessError);
+      socket.on('recordSuccess', recordSuccess);
     }
 
     return () => {
       if (socket) {
         socket.off('error', callbackError);
+        socket.off('finishGameError', callbackError);
         socket.off('sitoutGameError', sitoutError);
         socket.off('getMessage', getMessage);
         socket.off('timer', getTimer);
@@ -161,10 +182,10 @@ function GamePage({route, navigation}: GamePageScreenProps) {
     if (socket) {
       socket.emit('pauseTimer');
     }
-    setIsStart(true);
+    setIsReStart(true);
   };
 
-  const reStartTimer = () => {
+  const StartTimer = () => {
     setIsStart(false);
     if (socket) {
       socket.emit('startTimer');
@@ -172,21 +193,35 @@ function GamePage({route, navigation}: GamePageScreenProps) {
     setIsBreak(true);
   };
 
+  const reStartTimer = () => {
+    setIsReStart(false);
+    if (socket) {
+      socket.emit('startTimer');
+    }
+    setIsBreak(true);
+  };
+
   const CloseGame = () => {
+    console.log('try Close Room');
     if (socket) {
       socket.emit('closeGame');
-      // console.log('try delete Room');
-      // socket.emit(
-      //   'finishGame',
-      //   '',
-      //   // {
-      //   //   user_1st: user_1st,
-      //   //   user_2nd: user_2nd,
-      //   //   user_3rd: user_3rd,
-      //   //   prize_type: prize_type,
-      //   //   prize_amount: prize_amount,
-      //   // }
-      // );
+    }
+  };
+
+  const finishGame = () => {
+    if (socket) {
+      console.log('try delete Room');
+      socket.emit(
+        'finishGame',
+        '',
+        // {
+        //   user_1st: user_1st,
+        //   user_2nd: user_2nd,
+        //   user_3rd: user_3rd,
+        //   prize_type: prize_type,
+        //   prize_amount: prize_amount,
+        // }
+      );
     }
   };
 
@@ -429,6 +464,20 @@ function GamePage({route, navigation}: GamePageScreenProps) {
                   {isStart && (
                     <Pressable
                       style={styles.stateButton}
+                      onPress={StartTimer}>
+                      <Text
+                        style={{
+                          paddingLeft: heightScale * 3,
+                          fontSize: heightScale * 16,
+                          fontWeight: 'bold',
+                        }}>
+                        Start
+                      </Text>
+                    </Pressable>
+                  )}
+                  {isReStart && (
+                    <Pressable
+                      style={styles.stateButton}
                       onPress={reStartTimer}>
                       <IconFeather size={heightScale * 20} name="play" />
                       <Text
@@ -437,7 +486,7 @@ function GamePage({route, navigation}: GamePageScreenProps) {
                           fontSize: heightScale * 16,
                           fontWeight: 'bold',
                         }}>
-                        Start
+                        Re Start
                       </Text>
                     </Pressable>
                   )}
@@ -474,10 +523,11 @@ function GamePage({route, navigation}: GamePageScreenProps) {
 
         {/* 게임 종료 버튼 */}
         <View style={styles.endButtonWrapper}>
-          {isAdmin && isStart ? (
+          {isAdmin && isStart || isReStart ? (
             <View style={{alignItems: 'center'}}>
-              {currentGameData.status === 'closed' ? (
-                <TouchableOpacity style={styles.gameOutButton}>
+              {currentGameData?.status === 'closed' ? (
+                <TouchableOpacity style={styles.gameOutButton}
+                onPress={() => finishGame()}>
                   <IconIonicons
                     name="power"
                     color={'white'}

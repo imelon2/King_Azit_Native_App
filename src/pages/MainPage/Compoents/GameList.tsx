@@ -31,7 +31,12 @@ const GameList = () => {
   // Game List 분류작업
   const setGameBoxArr = () => {
     const curr = menu.find(i => i.state);
-    const sort = gameBox!.filter(i => i.status == curr?.name);
+    const sort = gameBox!.filter(i => {
+      if(curr?.name == "waiting") {
+        return i.status == curr?.name || i.status == "break"
+      }
+       return i.status == curr?.name
+    });
     if (sort.length == 0) {
       let _name;
       if (curr?.name == 'playing') _name = '진행중인';

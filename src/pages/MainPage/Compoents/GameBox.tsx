@@ -21,7 +21,7 @@ const GameBox = ({item,onClickMember}: propsType) => {
 
   const statusText = () => {
     if(item.status == 'playing') return "진행중"
-    if(item.status == 'waiting') return "대기중"
+    if(item.status == 'waiting' || item.status == 'break') return "대기중"
     if(item.status == 'closed') return "마감"
   }
   

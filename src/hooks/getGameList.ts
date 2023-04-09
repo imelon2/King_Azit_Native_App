@@ -46,7 +46,6 @@ function getGameList() {
     
     
     const getGameRoomList = (data: any) => {
-      console.log(data["room:7e0adbc9-08d6-41b9-a264-6ec847256694"].seat[5]);
       console.log(data);
       dispatch(
         gamesSlice.actions.setGameData({

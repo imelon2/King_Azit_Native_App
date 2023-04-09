@@ -43,7 +43,7 @@ function RoomMake() {
   const [buyin, setBuyin] = useState<any>();
   const [ticket, setTicket] = useState<TicketType>();
   const [enteyLimit, setEntryLimit] = useState<string>();
-  const [blind, setBlind] = useState('100/200');
+  const [blind, setBlind] = useState("Level 1: 100/200");
   const [duration, setDuration] = useState<DurationType>();
   const [status, setStatus] = useState<StatusType>('playing');
 
