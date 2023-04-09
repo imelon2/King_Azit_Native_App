@@ -20,6 +20,7 @@ function BestHand() {
     const [handModalStatus, setHandModalStatus] = useState(false);
     const [nickName, setNickName] = useState('');
     const [bestHand, setBestHand] = useState('');
+    const [bestHandData, setBestHandData] = useState<cardType[]>([]);
 
 
     const onChangeBestHand = useCallback((text: any) => {
@@ -30,10 +31,14 @@ function BestHand() {
         setNickName(text.trim());
     }, []);
 
+    const onOpenBestHand = () => {
+        setHandModalStatus(true);
+        setBestHandData([]);
+    }
 
 
-    const cardData: cardType[] = [{ num: 'A', pattern: 'diamond' }, { num: 'A', pattern: 'spade' },
-    { num: 'A', pattern: 'clover' }, { num: '10', pattern: 'heart' }, { num: '10', pattern: 'spade' }];
+    // const cardData: cardType[] = [{ num: 'A', pattern: 'diamond' }, { num: 'A', pattern: 'spade' },
+    // { num: 'A', pattern: 'clover' }, { num: '10', pattern: 'heart' }, { num: '10', pattern: 'spade' }];
 
     return (
         <>
@@ -52,18 +57,28 @@ function BestHand() {
                 </View>
                 <View style={{ flex: 3 }} >
                     <View style={{ alignItems: 'center' }} >
-                        <View style={{ flexDirection: 'row', width: 390 * heightScale }} >
-                            {cardData.map((val, key) => (
-                                <View style={{ marginRight: 20 * heightScale }} >
-                                    <CardOne key={key} num={val.num} pattern={val.pattern} />
+                        <View  >
+                            {bestHandData.length != 0 ? (
+                                <View style={{ flexDirection: 'row', width: 390 * heightScale, justifyContent: 'center', alignItems: 'center' }}>
+                                    {bestHandData.map((val, key) => (
+                                        <View style={[key != 4 && { marginRight: 20 * heightScale }]} >
+                                            <CardOne key={key} num={val.num} pattern={val.pattern} size='big' />
+                                        </View>
+                                    ))}
                                 </View>
-                            ))}
+                            ) : (
+                                <View  >
+                                    <Text style={styles.fontStyle2} >현재 등록된 Best Hand가 없습니다.</Text>
+                                </View>
+                            )}
                         </View>
                     </View>
-                    <View style={{ marginTop: 10 * heightScale }} >
-                        <Text style={styles.fontStyle3} >*Show-down 시 핸드만 기록 됩니다.</Text>
-                        <Text style={styles.fontStyle3} >*매월 1일 12:00 정각 Prize 증정 및 초기화</Text>
-                    </View>
+                    {bestHandData.length != 0 && (
+                        <View style={{ marginTop: 10 * heightScale }} >
+                            <Text style={styles.fontStyle3} >*Show-down 시 핸드만 기록 됩니다.</Text>
+                            <Text style={styles.fontStyle3} >*매월 1일 12:00 정각 Prize 증정 및 초기화</Text>
+                        </View>
+                    )}
                 </View>
             </View>
             <View style={{ flex: 4.2 }}>
@@ -90,7 +105,7 @@ function BestHand() {
                 </View>
                 {isAdmin && (
                     <View style={{ alignItems: 'center' }} >
-                        <TouchableOpacity activeOpacity={1} style={styles.buttonStyles} onPress={() => setHandModalStatus(true)} >
+                        <TouchableOpacity activeOpacity={1} style={styles.buttonStyles} onPress={() => onOpenBestHand()} >
                             <Text style={styles.fontStyle5} >채우기</Text>
                         </TouchableOpacity>
                     </View>
@@ -167,9 +182,9 @@ function BestHand() {
                 </View>
             </Modal>
 
-            {/* <Modal  isVisible={handModalStatus} >
-                <MakeHand />
-            </Modal> */}
+            <Modal isVisible={handModalStatus} style={{ alignItems: 'center' }} >
+                <MakeHand setBestHandData={setBestHandData} bestHandData={bestHandData} setHandModalStatus={setHandModalStatus} />
+            </Modal>
         </>
     )
 }
@@ -250,13 +265,13 @@ const styles = StyleSheet.create({
     giftModalTextInput: {
         flexDirection: 'row',
         alignItems: 'center',
-      },
-      iconStyle:{
-        position:'absolute',
-        zIndex:3,
+    },
+    iconStyle: {
+        position: 'absolute',
+        zIndex: 3,
         top: 50 * heightScale,
-        left:10 * heightScale,
-      }
+        left: 10 * heightScale,
+    }
 });
 
 export default BestHand
