@@ -11,6 +11,8 @@ const getTickets =() => {
     const access_token = useSelector((state: RootState) => state.user.access_token);
     const refreshTickets = async () => {
       try {
+        console.log('refresh ticket');
+        
         const getTicketsResult = await axios.get(
           `${Config.API_URL}/member/tickets`,
           {
@@ -29,7 +31,9 @@ const getTickets =() => {
           })
         );
       } catch (error) {
+
           console.log((error as AxiosError).response?.status,'error from hooks/getTickets.ts');
+          console.log((error as any).response.data.errorMessage);
       }
     };
 

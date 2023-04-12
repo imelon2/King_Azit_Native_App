@@ -1,30 +1,36 @@
-import { NavigationProp, useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react';
-import {View, Image, Text, TouchableOpacity, Pressable, Modal} from 'react-native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import React, {useState} from 'react';
+import {
+  View,
+  Image,
+  Text,
+  TouchableOpacity,
+  Pressable,
+  Modal,
+} from 'react-native';
 import Config from 'react-native-config';
 import {Shadow} from 'react-native-shadow-2';
-import { HomeRootStackParamList } from '../../../../AppInner';
-import { roomType } from '../../../hooks/getGameList';
-import { StringUpperCase } from '../../../modules/globalStyles';
+import {HomeRootStackParamList} from '../../../../AppInner';
+import ProfileImg from '../../../components/ProfileImg';
+import {roomType} from '../../../hooks/getGameList';
+import {StringUpperCase} from '../../../modules/globalStyles';
 import {heightScale, MainStyles} from '../../../modules/MainStyles';
-import { TicketType } from '../../../modules/ticketsList';
-
+import {TicketType} from '../../../modules/ticketsList';
 
 interface propsType {
   item: roomType;
-  onClickMember(gameId:string):void;
+  onClickMember(gameId: string): void;
 }
 
-const GameBox = ({item,onClickMember}: propsType) => {
+const GameBox = ({item, onClickMember}: propsType) => {
   const navigation = useNavigation<NavigationProp<HomeRootStackParamList>>();
 
-
   const statusText = () => {
-    if(item.status == 'playing') return "진행중"
-    if(item.status == 'waiting' || item.status == 'break') return "대기중"
-    if(item.status == 'closed') return "마감"
-  }
-  
+    if (item.status == 'playing') return '진행중';
+    if (item.status == 'waiting' || item.status == 'break') return '대기중';
+    if (item.status == 'closed') return '마감';
+  };
+
   return (
     <>
       <View style={{marginBottom: heightScale * 30}}>
@@ -59,38 +65,58 @@ const GameBox = ({item,onClickMember}: propsType) => {
             style={{
               flexDirection: 'row',
               marginTop: heightScale * 25,
-              flex:1
+              flex: 1,
             }}>
-            <View style={{flex:1}}>
+            <View style={{flex: 1}}>
               <Text style={MainStyles.gameText}>
                 {item.ticket_amount} {StringUpperCase(item.ticket_type)} Ticket
               </Text>
               <Text style={MainStyles.gameText}>
-                Blind {item.blind}  Ante:{item.ante}
+                Blind {item.blind} Ante:{item.ante}
               </Text>
             </View>
             {/* 플레이어 아이콘 */}
-            <Pressable style={MainStyles.gamePlayersContainer} onPress={() => {
-              onClickMember(item.game_id)}
-          }>
-              <View style={{width:heightScale*75,alignItems:'center',justifyContent:'center',flexDirection:'row'}}>
-                {Object.keys(item.playing_users).length !== 0 ? (
-                  <>
-                    <View
-                      style={[
-                        MainStyles.gamePlayerIcon,
-                        {left: 10},
-                        Object.keys(item.playing_users)[1] ? {} : {display: 'none'},
-                      ]}>
-                        <Image style={MainStyles.gamePlayerIconImg} defaultSource={require('../../../assets/UserIcon.png')} source={{uri:Config.IMG_URL!+item.playing_users[Object.keys(item.playing_users)[1]]}} />
-                    </View>
-                    <View style={[MainStyles.gamePlayerIcon,{left: 5}]}>
-                      <Image style={MainStyles.gamePlayerIconImg} defaultSource={require('../../../assets/UserIcon.png')} source={{uri:Config.IMG_URL!+item.playing_users[Object.keys(item.playing_users)[0]]}} />
-                    </View>
-                  </>
+            <Pressable
+              style={MainStyles.gamePlayersContainer}
+              onPress={() => {
+                onClickMember(item.game_id);
+              }}>
+              <View
+                style={{
+                  width: heightScale * 75,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexDirection: 'row',
+                }}>
+                {item.seat.filter(v => v !== undefined && v !== null)[1] ? (
+                  <View style={[MainStyles.gamePlayerIcon, {left: 10}]}>
+                    <ProfileImg
+                      style={MainStyles.gamePlayerIconImg}
+                      source={
+                        Config.IMG_URL! +
+                        item.seat.filter(v => v !== undefined && v !== null)[1]
+                          .uuid
+                      }
+                    />
+                  </View>
                 ) : (
                   <></>
                 )}
+                {item.seat.filter(v => v !== undefined && v !== null)[0] ? (
+                  <View style={[MainStyles.gamePlayerIcon, {left: 5}]}>
+                    <ProfileImg
+                      style={MainStyles.gamePlayerIconImg}
+                      source={
+                        Config.IMG_URL! +
+                        item.seat.filter(v => v !== undefined && v !== null)[0]
+                          .uuid
+                      }
+                    />
+                  </View>
+                ) : (
+                  <></>
+                )}
+
                 <View
                   style={[
                     MainStyles.gamePlayerIcon,
@@ -100,7 +126,11 @@ const GameBox = ({item,onClickMember}: propsType) => {
                     },
                   ]}>
                   <Text style={{color: '#fff', fontWeight: 'bold'}}>
-                    +{Object.keys(item.playing_users).length}
+                    +
+                    {
+                      item.seat.filter(v => v !== undefined && v !== null)
+                        .length
+                    }
                   </Text>
                 </View>
               </View>
@@ -115,7 +145,9 @@ const GameBox = ({item,onClickMember}: propsType) => {
             }}>
             <Shadow distance={5} offset={[0, 1]} startColor={'#FCFF72'}>
               <TouchableOpacity
-                onPress={() => navigation.navigate('GamePage',{gameId:item.game_id})}
+                onPress={() =>
+                  navigation.navigate('GamePage', {gameId: item.game_id})
+                }
                 activeOpacity={1}
                 style={MainStyles.joinButton}>
                 <Text style={MainStyles.joinButtonText}>참가하기</Text>

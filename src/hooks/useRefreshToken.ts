@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useCallback } from "react"
 import Config from "react-native-config";
 import EncryptedStorage from "react-native-encrypted-storage";
@@ -9,6 +9,7 @@ const useRefreshToken = () => {
     const dispatch = useAppDispatch()
 
     const refreshToken = useCallback(async () => {
+      try {
         const token = await EncryptedStorage.getItem('refreshToken');
 
         // token refresh 요청
@@ -23,6 +24,11 @@ const useRefreshToken = () => {
         await EncryptedStorage.setItem('refreshToken', refresh_token);
         return access_token;
         
+      } catch (error) {
+        console.log((error as AxiosError).response?.status,'error from hooks/useRefreshToken.ts');
+        console.log((error as any).response.data.errorMessage);
+      }
+      
     },[])
 
     return [refreshToken];

@@ -8,20 +8,20 @@ import {
   SafeAreaView
 } from 'react-native';
 import { useState,useEffect } from 'react';
-import {heightData} from '../../../modules/globalStyles';
+import {heightData} from '../../modules/globalStyles';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import {Shadow} from 'react-native-shadow-2';
-import QrCode from '../../../components/QrCode';
+import QrCode from '../../components/QrCode';
 import {
   HomeRootStackParamList,
-} from '../../../../AppInner';
+} from '../../../AppInner';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useSelector} from 'react-redux';
 import Config from 'react-native-config';
-import {RootState} from '../../../store/reducer';
+import {RootState} from '../../store/reducer';
 import axios from 'axios';
-import { img } from '../../../modules/ticketsList';
+import { img } from '../../modules/ticketsList';
 const heightScale = heightData;
 
 type MyTicketsScreenProps = NativeStackScreenProps<
@@ -157,7 +157,7 @@ function MyTickets({route, navigation}: MyTicketsScreenProps) {
         <View style={styles.buttonContaner}>
           <View style={styles.buttonBox}>
             <Shadow distance={6} startColor={'#FCFF72'}>
-              <TouchableOpacity activeOpacity={1} style={styles.giftButton}>
+              <TouchableOpacity activeOpacity={1} style={styles.giftButton} onPress={() => navigation.navigate('GiftTicket')}>
                 <View style={styles.textCenter}>
                   <AntDesignIcon name="gift" size={16} style={styles.iconStyle} />
                   <Text style={styles.giftButtonText}>선물하기</Text>
@@ -170,16 +170,15 @@ function MyTickets({route, navigation}: MyTicketsScreenProps) {
       {/* QR확대 팝업창 */}
       {qrViewState ? (
         <Pressable style={styles.qrViewContainer} onPress={() => setQrViewState(false)}>
-          <View>
-            <QrCode value={deepLinkUrl} size={heightScale * 320} />
+          <View style={{justifyContent:'center',alignItems:'center',width:heightScale * 320,height:heightScale * 320,backgroundColor:'#fff'}}>
+            <QrCode value={deepLinkUrl} size={heightScale * 280} />
           </View>
-          <View style={{justifyContent:'center',alignItems:'center', width:heightScale*50,height:heightScale*50, backgroundColor:'#D7D7D7',borderRadius:50,top:heightScale*50}}>
           <AntDesignIcon
             name="close"
             size={heightScale*40}
-            color={"#000"}
+            color={"#fff"}
+            style={{marginTop:heightScale*30}}
           />
-          </View>
           </Pressable>
       ) : (
         <></>
@@ -277,7 +276,7 @@ const styles = StyleSheet.create({
   },
   qrViewContainer: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: '#fff',
+    backgroundColor: 'rgba(18, 18, 18, 0.9)',
     alignItems: 'center',
     justifyContent:'center',
   }

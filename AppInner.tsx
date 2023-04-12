@@ -32,7 +32,7 @@ import TicketCharge from './src/pages/Admin/TicketCharge';
 import MemberManagePage from './src/pages/Admin/MemberManagePage';
 import MemberManagement from './src/pages/Admin/MemberManagement';
 import UserDetail from './src/pages/Admin/UserDetail';
-import MyTickets from './src/pages/MainPage/MainPageModal/MyTickets';
+import MyTickets from './src/pages/MainPage/MyTickets';
 import TicketsResult, { ticketsResultType } from './src/pages/Admin/TicketsResult';
 import { deepLinkController } from './src/modules/Linking';
 import Forbidden from './src/pages/Admin/Forbidden';
@@ -45,6 +45,8 @@ import TotalPublish from './src/pages/Calculate/components/TotalPublish'
 import UserConsumption from './src/pages/Calculate/components/UserConsumption'
 import UserConsumptionDetail from './src/pages/Calculate/components/UserConsumptionDetail'
 import { TicketType } from './src/modules/ticketsList';
+import GiftTicket from './src/pages/MainPage/GiftTicket';
+import Prize from './src/pages/Admin/Prize';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -90,6 +92,7 @@ export type HomeRootStackParamList = {
     message: string;
   };
   TicketCharge: undefined;
+  GiftTicket:undefined;
   MemberManagement: {
     status: string;
   };
@@ -111,6 +114,7 @@ export type HomeRootStackParamList = {
   UserConsumption: undefined;
   MonthCirculation: undefined;
   UserConsumptionDetail:undefined;
+  Prize:undefined;
 };
 
 export type MyPageRootStackParamList = {
@@ -173,6 +177,8 @@ function AppInner() {
   //         await messaging().registerDeviceForRemoteMessages();
   //       }
   //       const token = await messaging().getToken();
+  //       console.log(token);
+        
   //       dispatch(userSlice.actions.setphoneToken({phoneToken: token}));
   //     } catch (error) {
   //       console.error(error);
@@ -213,6 +219,7 @@ function AppInner() {
       } catch (error) {
         // refresh token 기간만료됬을 경우
         console.log('refresh Result Error', (error as AxiosError).response?.status);
+        console.log('refresh Result Error Msg', (error as any).response?.data.errorMessage);
         if (
           (error as AxiosError).response?.status === 400 ||
           (error as AxiosError).response?.status === 401
@@ -290,6 +297,11 @@ function AppInner() {
             options={{ animation: 'none' }}
           />
           <HomeStack.Screen
+            name="GiftTicket"
+            component={GiftTicket}
+            options={{ animation: 'none' }}
+          />
+          <HomeStack.Screen
             name="AdminTicketsHistory"
             component={AdminTicketsHistory}
             options={{ animation: 'none' }}
@@ -362,6 +374,11 @@ function AppInner() {
           <HomeStack.Screen
             name="UserConsumptionDetail"
             component={UserConsumptionDetail}
+            options={{ animation: 'none' }}
+          />
+          <HomeStack.Screen
+            name="Prize"
+            component={Prize}
             options={{ animation: 'none' }}
           />
         </HomeStack.Navigator>
