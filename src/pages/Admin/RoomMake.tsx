@@ -25,7 +25,6 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../../store/reducer';
 import {TicketType} from '../../modules/ticketsList';
 import {getGameListArr} from '../../hooks/getGameList';
-const {width, height} = Dimensions.get('screen');
 const heightScale = heightData;
 
 type GameType = 'Main' | 'Nft' | 'Custom';

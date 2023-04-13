@@ -88,13 +88,7 @@ function GamePage({route, navigation}: GamePageScreenProps) {
 
 
     const getMessage = (data: any) => {
-      // 게임 종료 성공 시
-      if (socket && data === '게임 기록 성공!') {
-        // 삭제 후, 새로운 데이터 리턴
-        socket.emit('getGameRoomList', 'init');
-        // 권한 별 네비게이트
-        navigateFunc();
-      }
+      console.log(data);
     };
 
     const getTimer = (data: any) => {
@@ -208,19 +202,7 @@ function GamePage({route, navigation}: GamePageScreenProps) {
 
   const finishGame = () => {
     if (socket) {
-      console.log('try delete Room');
       navigation.navigate('Prize')
-      // socket.emit(
-      //   'finishGame',
-      //   '',
-      //   // {
-      //   //   user_1st: user_1st,
-      //   //   user_2nd: user_2nd,
-      //   //   user_3rd: user_3rd,
-      //   //   prize_type: prize_type,
-      //   //   prize_amount: prize_amount,
-      //   // }
-      // );
     }
   };
 
@@ -535,7 +517,7 @@ function GamePage({route, navigation}: GamePageScreenProps) {
                     color={'white'}
                     size={heightScale * 18}
                   />
-                  <Text style={styles.endButtonText}>게임 마감</Text>
+                  <Text style={styles.endButtonText}>게임 종료</Text>
                 </TouchableOpacity>
                   </>
                 ) : (
