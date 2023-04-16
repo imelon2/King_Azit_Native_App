@@ -24,7 +24,7 @@ const TicketHistoryViewDetail = ({...props}) => {
         />
       </View>
       <View style={{marginLeft:heightScale*30 , justifyContent:'center'}}>
-        <Text style={styles.fontStyle}>Admin: {id}</Text>
+        <Text style={styles.fontStyle}> {id}</Text>
         <Text style={[styles.fontStyle,{fontSize:14, fontWeight:'400'}]}>{date}</Text>
       </View>
       <View
