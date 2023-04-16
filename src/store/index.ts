@@ -3,7 +3,8 @@ import { useDispatch } from 'react-redux';
 import rootReducer from './reducer';
 
 const store = configureStore({
-    reducer:rootReducer
+    reducer:rootReducer,
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({serializableCheck:false})
 })
 
 export default store;

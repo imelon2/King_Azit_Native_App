@@ -38,8 +38,7 @@ function PayTicketForJoinGame(props: propsType) {
   const CARDS = ticketsList('basic').filter(
     keys => keys.type == 'red' || keys.type == 'black',
   );
-  const {uuid} = useSelector((state: RootState) => state.user);
-  const [guestNickNameModal, setGuestNickNameModal] = useState(false);
+
   const [change, setChange] = useState<number>(5);
   const [price, setPrice] = useState<number>(0);
   const [isEnoughCard, setIsEnoughCard] = useState<boolean>(false);
@@ -52,10 +51,21 @@ function PayTicketForJoinGame(props: propsType) {
 
   // Socket Msg
   useEffect(() => {
+    refreshTickets();
+
     const callback = (data: any) => {
       if(socket && data.type === 'enterGameRoom') {
         Alert.alert("안내",data.msg + "다른 자리를 선택헤주세요.")
       }
+    };
+    const seatError = (data: any) => {
+      if(data == "엔트리 꽉참") {
+        Alert.alert("안내","현재 게임 방의 Entry가 꽉찼습니다.")
+      } else if(data == "이미 사용중인 자리입니다.") {
+        Alert.alert("안내","이미 사용중인 자리입니다. 다른 자리를 선택헤주세요.")
+      } else if (data.type == "티켓 부족") {
+        Alert.alert("안내","티켓이 부족합니다.")
+      } else {console.log(data);}
     };
 
     const userEnterRoom = (data: any) => {
@@ -64,12 +74,14 @@ function PayTicketForJoinGame(props: propsType) {
 
     if (socket) {
       socket.on('error', callback);
+      socket.on('seatError', seatError);
       socket.on('getMessage', userEnterRoom);
     }
 
     return () => {
       if (socket) {
         socket.off('error', callback);
+        socket.off('seatError', seatError);
         socket.off('getMessage', userEnterRoom);
       }
     };
@@ -86,11 +98,10 @@ function PayTicketForJoinGame(props: propsType) {
     if (!isEnoughCard) {
       return;
     }
-
+    
     if (socket) {
       socket.emit('seat', {gameId:props.item.game_id,chair:props.selectSeatNum,isGuest:props.isGuest.is});
       props.setModalStatus(false);
-      refreshTickets();
     }
   };
 

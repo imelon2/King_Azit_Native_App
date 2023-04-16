@@ -139,10 +139,18 @@ function MyPage() {
         <View style={styles.contentStyle}>
           {isAdmin ? (
             <>
-              <Text style={[styles.contentTitleText, {}]}>게임</Text>
+              <View
+                style={{
+                  borderBottomWidth: heightScale * 1,
+                  borderBottomColor: '#484848',
+                }}>
+                <Text style={[styles.contentTitleText, {}]}>게임</Text>
+              </View>
               <Pressable
                 style={[styles.contentWrapper, {marginTop: heightScale * 13}]}
-                onPress={() => Alert.alert('todo :',"Admin 게임 기록 구현 예정")}>
+                onPress={() =>
+                  Alert.alert('todo :', 'Admin 게임 기록 구현 예정')
+                }>
                 <View style={{flex: 1}}>
                   <Text style={styles.contentText}>게임기록</Text>
                 </View>
@@ -157,7 +165,13 @@ function MyPage() {
             </>
           ) : (
             <>
-              <Text style={[styles.contentTitleText, {}]}>티켓</Text>
+              <View
+                style={{
+                  borderBottomWidth: heightScale * 1,
+                  borderBottomColor: '#484848',
+                }}>
+                <Text style={[styles.contentTitleText, {}]}>티켓</Text>
+              </View>
               <Pressable
                 style={[styles.contentWrapper, {marginTop: heightScale * 13}]}
                 onPress={() => navigation.navigate('MyTicket')}>
@@ -173,9 +187,15 @@ function MyPage() {
                 </View>
               </Pressable>
 
+              <View
+                style={{
+                  borderBottomWidth: heightScale * 1,
+                  borderBottomColor: '#484848',
+                }}>
               <Text style={[styles.contentTitleText, {marginTop: 28}]}>
                 게임
               </Text>
+              </View>
               <Pressable
                 style={[styles.contentWrapper, {marginTop: heightScale * 13}]}
                 onPress={() => navigation.navigate('GameHostory')}>
@@ -190,9 +210,15 @@ function MyPage() {
                   />
                 </View>
               </Pressable>
+              <View
+                style={{
+                  borderBottomWidth: heightScale * 1,
+                  borderBottomColor: '#484848',
+                }}>
               <Text style={[styles.contentTitleText, {marginTop: 28}]}>
                 랭킹
               </Text>
+              </View>
               <Pressable
                 onPress={() => navigation.navigate('MyRanking')}
                 style={[styles.contentWrapper, {marginTop: heightScale * 13}]}>
@@ -209,12 +235,12 @@ function MyPage() {
               </Pressable>
             </>
           )}
-          <Pressable onPress={logout}>
-            <Text style={[styles.contentTitleText, {marginVertical: 28}]}>
+        </View>
+          <Pressable style={{borderTopColor:'#909090',borderTopWidth:heightScale*4,marginTop:heightScale*20}} onPress={logout}>
+            <Text style={[styles.contentTitleText,{paddingHorizontal: heightScale * 29,paddingVertical: heightScale * 22}]}>
               로그아웃
             </Text>
           </Pressable>
-        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -225,11 +251,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
   },
   headerStyle: {
-    height: heightScale * 61,
+    height: heightScale * 63,
     justifyContent: 'center',
     alignItems: 'center',
-    borderBottomWidth: 2,
-    borderBottomColor: '#484848',
+    borderBottomWidth: 1,
+    borderBottomColor: '#323232',
   },
   contentStyle: {paddingHorizontal: 24},
   myInfoStyle: {
@@ -253,22 +279,28 @@ const styles = StyleSheet.create({
     // aspectRatio: 1.5
   },
   fontStyle: {
-    fontSize: heightScale * 18,
+    fontSize: heightScale * 17,
     fontWeight: 'bold',
     color: 'white',
     paddingVertical: heightScale * 4.5,
   },
   contentTitleText: {
+    fontWeight:'bold',
     fontSize: heightScale * 20,
     color: 'white',
+    paddingVertical: heightScale * 8,
+  },
+  contentTitleWrapper : {
+    borderBottomWidth: heightScale * 1,
+    borderBottomColor: '#484848',
+    backgroundColor: 'red',
   },
   contentText: {
     fontSize: heightScale * 16,
+    fontWeight:'bold',
     color: 'white',
   },
   contentWrapper: {
-    borderBottomWidth: heightScale * 1,
-    borderBottomColor: '#484848',
     paddingVertical: heightScale * 13,
     alignItems: 'center',
     flexDirection: 'row',

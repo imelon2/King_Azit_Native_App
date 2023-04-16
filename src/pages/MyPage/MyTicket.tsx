@@ -19,13 +19,12 @@ import {
   MyPageRootStackParamList,
 } from '../../../AppInner';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import GiftModal from './MyPageCompoents/GiftModal';
 import ticketsList, {img, ticketsListType} from '../../modules/ticketsList';
 import axios from 'axios';
 import Config from 'react-native-config';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/reducer';
-import GiftAlert from './MyPageCompoents/GiftAlert';
+
 const heightScale = heightData;
 
 export type ticketHistory = {
@@ -43,8 +42,6 @@ function MyTicket(): JSX.Element {
     const {red, black, gold} = useSelector((state: RootState) => state.ticket);
     const {access_token} = useSelector((state: RootState) => state.user);
   const [loading, setLoading] = useState(false);
-  const [giftModalState, setGiftModalState] = useState(false);
-  const [alertModalState, setAlertModalState] = useState(false);
   const [cache, setCache] = useState();
 
   const [selectCard, setSelectCard] = useState<ticketsListType>({
@@ -139,16 +136,10 @@ function MyTicket(): JSX.Element {
       <View style={styles.giftWrapperStyle}>
         <Shadow
           distance={5}
-          startColor={selectCard.count === 0 ? '#828282' : '#FCFF72'}>
+          startColor={"#FCFF72"}>
           <Pressable
-            style={
-              selectCard.count === 0
-                ? [styles.giftButtonStyle, {backgroundColor: '#828282'}]
-                : styles.giftButtonStyle
-            }
-            onPress={() => {
-              if (selectCard.count !== 0) setGiftModalState(true);
-            }}>
+            style={styles.giftButtonStyle}
+            onPress={() => {navigation.navigate('GiftTicket')}}>
             <Text style={styles.giftFontStyle}>선물하기</Text>
           </Pressable>
         </Shadow>
@@ -185,20 +176,6 @@ function MyTicket(): JSX.Element {
           />
         )}
       </View>
-      <View style={{height: heightScale * 15}}></View>
-      {/* 선물하기 팝업창 */}
-      {giftModalState ? (
-        <GiftModal
-          selectCard={selectCard}
-          setSelectCard={setSelectCard}
-          setGiftModalState={setGiftModalState}
-          setAlertModalState={setAlertModalState}
-          setCache={setCache}
-        />
-      ) : (
-        <></>
-      )}
-      {alertModalState ? <GiftAlert/> : <></>}
     </SafeAreaView>
   );
 }

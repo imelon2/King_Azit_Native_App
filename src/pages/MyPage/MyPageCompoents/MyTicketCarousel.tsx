@@ -2,7 +2,6 @@ import React, {memo, useCallback, useRef} from 'react';
 import {Animated, Dimensions, StyleSheet, View} from 'react-native';
 const {width} = Dimensions.get('screen');
 import {heightData} from '../../../modules/globalStyles';
-import ticketsList from '../../../modules/ticketsList';
 const heightScale = heightData;
 
 const MyTicketCarousel = ({...props}) => {

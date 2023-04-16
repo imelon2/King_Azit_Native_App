@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/reducer';
 import { roomType } from '../../../hooks/getGameList';
 import Config from 'react-native-config';
+import ProfileImg from '../../../components/ProfileImg';
 const { width, height } = Dimensions.get('window');
 const heightScale = heightData;
 
@@ -30,12 +31,14 @@ function MemberModal(props: propsType) {
                     onPress={() => props.setPlayMemberStatus(false)}
                 />
                 <View style={  styles.playerBox } >
-                    {Object.keys(currentGameData.playing_users).map((v, key) => (
+                    {currentGameData.seat.map((v,key) => {
+                        if(v?.nickname == null) return;
+                        return (
                         <View key={key} >
-                            <Image style={styles.player} defaultSource={require('../../../assets/UserIcon.png')} source={{uri:Config.IMG_URL!+currentGameData.playing_users[v]}} />
-                            <Text style={styles.playerText}>{v}</Text>
-                        </View>
-                    ))}
+                            <ProfileImg style={styles.player} source={Config.IMG_URL! + v?.uuid}/>
+                        <Text style={styles.playerText}>{v?.nickname}</Text>
+                    </View>
+                    )})}
                 </View>
             </View>
             <View>
@@ -45,7 +48,7 @@ function MemberModal(props: propsType) {
             <View style={  styles.playerBox } >
                     {Object.keys(currentGameData.sitout_users).map((v, key) => (
                         <View key={key} >
-                            <Image style={styles.player} defaultSource={require('../../../assets/UserIcon.png')} source={{uri:Config.IMG_URL!+currentGameData.sitout_users[v]}} />
+                            <ProfileImg style={styles.player} source={Config.IMG_URL! + currentGameData.sitout_users[v]}/>
                             <Text style={styles.playerText}>{v}</Text>
                         </View>
                     ))}

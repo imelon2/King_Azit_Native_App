@@ -39,7 +39,7 @@ export type roomDataType = {
 
 function getGameList() {
     const dispatch = useAppDispatch();
-    const [socket, disconnect] = useSocket();
+    const [socket, disconnect,reconnect] = useSocket();
     const [refreshToken] = useRefreshToken();
       // Socket
   useEffect(() => {
@@ -58,7 +58,10 @@ function getGameList() {
       console.log('Error From getGameList.ts',data);
 
       if(data.name === "TokenExpiredError") {
-        refreshToken().then(() => socket!.on('getGameRoomList', getGameRoomList))
+        refreshToken().then(() => {
+          reconnect()
+          socket!.on('getGameRoomList', getGameRoomList)
+        })
       }
     };
 

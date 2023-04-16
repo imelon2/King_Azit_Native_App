@@ -10,7 +10,6 @@ import {
   Alert,
   Pressable,
 } from 'react-native';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {HomeRootStackParamList} from '../../../AppInner';
 import React, {useEffect, useState} from 'react';
 import Modal from 'react-native-modal';
@@ -27,6 +26,7 @@ import useSocket from '../../hooks/useSocket';
 import {isEnterRoom, isPlaying, roomType} from '../../hooks/getGameList';
 import Config from 'react-native-config';
 import ProfileImg from '../../components/ProfileImg';
+import SitoutPopup, { ISitoutInfo } from './Compoents/SitoutPopup';
 const heightScale = heightData;
 const {width, height} = Dimensions.get('screen');
 
@@ -47,6 +47,8 @@ function GamePage({route, navigation}: GamePageScreenProps) {
   const isAdmin = roles.find((e: string) => e == 'ROLE_ADMIN');
   const [socket, disconnect] = useSocket();
   const [modalStatus, setModalStatus] = useState(false);
+  const [isSeatOut, setIsSeatOut] = useState(false);
+  const [sitOutInfo, setSitOutInfo] = useState<ISitoutInfo>({nickname:'',uuid:'',seatNum:0});
   const [selectSeatNum, setSelectSeatNum] = useState<number>();
   const [isGuest, setIsGuest] = useState({is: false, isFixed: false});
   const [timer, setTimer] = useState('...');
@@ -56,11 +58,15 @@ function GamePage({route, navigation}: GamePageScreenProps) {
   const [isBreak, setIsBreak] = useState(false);
 
   useEffect(() => {
-    if(currentGameData?.status === "waiting") setIsStart(true);
-    if(currentGameData?.status === "playing") setIsBreak(true);
-    if(currentGameData?.status === "break") setIsReStart(true);
-    if(currentGameData?.status === "closed") setIsReStart(true);
-  },[currentGameData])
+    if (currentGameData?.status === 'waiting') setIsStart(true);
+    if (currentGameData?.status === 'playing') setIsBreak(true);
+    if (currentGameData?.status === 'break') setIsReStart(true);
+    if (currentGameData?.status === 'closed') {
+      setIsStart(false);
+      setIsReStart(false);
+      setIsReStart(false);
+    }
+  }, [currentGameData]);
 
   // 소켓 메세지 관리 및 어드민 게임 참여
   useEffect(() => {
@@ -68,7 +74,7 @@ function GamePage({route, navigation}: GamePageScreenProps) {
 
     const callbackError = (data: any) => {
       console.log(data);
-      
+
       if (data.type === 'finishGame') {
         if (
           data.msg.includes(
@@ -80,23 +86,12 @@ function GamePage({route, navigation}: GamePageScreenProps) {
       }
     };
 
-    const sitoutError = (data: any) => {
-      console.log(data);
-    };
-    
+
     const getMessage = (data: any) => {
-      // 게임 종료 성공 시
-      if (socket && data === '게임 기록 성공!') {
-        // 삭제 후, 새로운 데이터 리턴
-        socket.emit('getGameRoomList', 'init');
-        // 권한 별 네비게이트
-        navigateFunc();
-      }
+      console.log(data);
     };
 
     const getTimer = (data: any) => {
-      console.log(data);
-      
       setTimer(data);
     };
 
@@ -104,18 +99,17 @@ function GamePage({route, navigation}: GamePageScreenProps) {
       Alert.alert('알림', '해당 게임의 딜러만 조작이 가능합니다.');
     };
 
-
     const recordSuccess = () => {
       // 권한 별 네비게이트
       navigateFunc();
-    }
+    };
 
     if (socket) {
       // 방에 참여
-      socket.on('timer', getTimer).emit('enterGameRoom', {gameId: route.params.gameId});
+      socket.on('timer', getTimer);
+      socket.emit('enterGameRoom', {gameId: route.params.gameId});
       socket.on('error', callbackError);
       socket.on('finishGameError', callbackError);
-      socket.on('sitoutGameError', sitoutError);
       socket.on('getMessage', getMessage);
       socket.on('resetTimerError', acessError);
       socket.on('pauseTimerError', acessError);
@@ -127,7 +121,6 @@ function GamePage({route, navigation}: GamePageScreenProps) {
       if (socket) {
         socket.off('error', callbackError);
         socket.off('finishGameError', callbackError);
-        socket.off('sitoutGameError', sitoutError);
         socket.off('getMessage', getMessage);
         socket.off('timer', getTimer);
         socket.off('resetTimerError', acessError);
@@ -202,7 +195,6 @@ function GamePage({route, navigation}: GamePageScreenProps) {
   };
 
   const CloseGame = () => {
-    console.log('try Close Room');
     if (socket) {
       socket.emit('closeGame');
     }
@@ -210,36 +202,13 @@ function GamePage({route, navigation}: GamePageScreenProps) {
 
   const finishGame = () => {
     if (socket) {
-      console.log('try delete Room');
-      socket.emit(
-        'finishGame',
-        '',
-        // {
-        //   user_1st: user_1st,
-        //   user_2nd: user_2nd,
-        //   user_3rd: user_3rd,
-        //   prize_type: prize_type,
-        //   prize_amount: prize_amount,
-        // }
-      );
+      navigation.navigate('Prize')
     }
   };
 
   const sitout = (seatNum: number) => {
-    if (socket) {
-      Alert.alert(
-        '알림',
-        `${currentGameData.seat[seatNum].nickname}플레이어를 싯아웃 하겠습니까?`,
-        [
-          {
-            text: '예',
-            onPress: () =>
-              socket.emit('sitout', currentGameData.seat[seatNum].nickname),
-          },
-          {text: '아니오'},
-        ],
-      );
-    }
+    setSitOutInfo({nickname:currentGameData.seat[seatNum].nickname,uuid:currentGameData.seat[seatNum].uuid,seatNum})
+    setIsSeatOut(true);
   };
 
   const navigateFunc = () => {
@@ -462,9 +431,7 @@ function GamePage({route, navigation}: GamePageScreenProps) {
               {isAdmin ? (
                 <>
                   {isStart && (
-                    <Pressable
-                      style={styles.stateButton}
-                      onPress={StartTimer}>
+                    <Pressable style={styles.stateButton} onPress={StartTimer}>
                       <Text
                         style={{
                           paddingLeft: heightScale * 3,
@@ -486,7 +453,7 @@ function GamePage({route, navigation}: GamePageScreenProps) {
                           fontSize: heightScale * 16,
                           fontWeight: 'bold',
                         }}>
-                        Re Start
+                        Restart
                       </Text>
                     </Pressable>
                   )}
@@ -523,20 +490,25 @@ function GamePage({route, navigation}: GamePageScreenProps) {
 
         {/* 게임 종료 버튼 */}
         <View style={styles.endButtonWrapper}>
-          {isAdmin && isStart || isReStart ? (
-            <View style={{alignItems: 'center'}}>
-              {currentGameData?.status === 'closed' ? (
-                <TouchableOpacity style={styles.gameOutButton}
-                onPress={() => finishGame()}>
-                  <IconIonicons
-                    name="power"
-                    color={'white'}
-                    size={heightScale * 18}
-                  />
-                  <Text style={styles.endButtonText}>방 지우기</Text>
-                </TouchableOpacity>
-              ) : (
+          <View style={{alignItems: 'center'}}>
+            {isAdmin && currentGameData?.status === 'closed' ? (
+              <>
                 <TouchableOpacity
+                      style={styles.gameOutButton}
+                      onPress={() => finishGame()}>
+                      <IconIonicons
+                        name="power"
+                        color={'white'}
+                        size={heightScale * 18}
+                      />
+                      <Text style={styles.endButtonText}>방 지우기</Text>
+                    </TouchableOpacity>
+              </>
+            ) : (
+              <>
+                {isStart || isReStart ? (
+                  <>
+                    <TouchableOpacity
                   style={styles.gameOutButton}
                   onPress={() => CloseGame()}
                   activeOpacity={1}>
@@ -545,15 +517,21 @@ function GamePage({route, navigation}: GamePageScreenProps) {
                     color={'white'}
                     size={heightScale * 18}
                   />
-                  <Text style={styles.endButtonText}>게임 마감</Text>
+                  <Text style={styles.endButtonText}>게임 종료</Text>
                 </TouchableOpacity>
-              )}
-            </View>
-          ) : (
-            <></>
-          )}
+                  </>
+                ) : (
+                  <></>
+                )}
+              </>
+            )}
+          </View>
         </View>
       </View>
+
+      {isSeatOut && (
+        <SitoutPopup setIsSeatOut={setIsSeatOut} sitOutInfo={sitOutInfo} />
+      )}
 
       <Modal isVisible={modalStatus} style={{flex: 1}}>
         <PayTicketForJoinGame

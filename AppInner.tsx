@@ -1,16 +1,16 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Alert } from 'react-native';
-import { useSelector } from 'react-redux';
-import { useEffect } from 'react';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {Alert} from 'react-native';
+import {useSelector} from 'react-redux';
+import {useEffect} from 'react';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import Config from 'react-native-config';
-import axios, { AxiosError } from 'axios';
-import { useAppDispatch } from './src/store';
+import axios, {AxiosError} from 'axios';
+import {useAppDispatch} from './src/store';
 import userSlice from './src/slices/user';
 import decodeJWT from './src/modules/decodeJWT';
 import messaging from '@react-native-firebase/messaging';
-import { RootState } from './src/store/reducer';
+import {RootState} from './src/store/reducer';
 import SignIn from './src/pages/SignIn/SignIn';
 import SignUp from './src/pages/SignUp/SignUp';
 import MainPage from './src/pages/MainPage/MainPage';
@@ -32,19 +32,23 @@ import TicketCharge from './src/pages/Admin/TicketCharge';
 import MemberManagePage from './src/pages/Admin/MemberManagePage';
 import MemberManagement from './src/pages/Admin/MemberManagement';
 import UserDetail from './src/pages/Admin/UserDetail';
-import MyTickets from './src/pages/MainPage/MainPageModal/MyTickets';
-import TicketsResult, { ticketsResultType } from './src/pages/Admin/TicketsResult';
-import { deepLinkController } from './src/modules/Linking';
+import MyTickets from './src/pages/MainPage/MyTickets';
+import TicketsResult, {
+  ticketsResultType,
+} from './src/pages/Admin/TicketsResult';
+import {deepLinkController} from './src/modules/Linking';
 import Forbidden from './src/pages/Admin/Forbidden';
 import AdminTicketsHistory from './src/pages/Admin/AdminTicketsHistory';
 import QRCodeScanner from './src/pages/Admin/Components/QRCodeScanner';
 import CreateRoom from './src/pages/Admin/CreateRoom';
 import CalculatePage from './src/pages/Calculate/CalculatePage';
-import MonthCirculation from './src/pages/Calculate/components/MonthCirculation'
-import TotalPublish from './src/pages/Calculate/components/TotalPublish'
-import UserConsumption from './src/pages/Calculate/components/UserConsumption'
-import UserConsumptionDetail from './src/pages/Calculate/components/UserConsumptionDetail'
-import { TicketType } from './src/modules/ticketsList';
+import MonthCirculation from './src/pages/Calculate/components/MonthCirculation';
+import TotalPublish from './src/pages/Calculate/components/TotalPublish';
+import UserConsumption from './src/pages/Calculate/components/UserConsumption';
+import UserConsumptionDetail from './src/pages/Calculate/components/UserConsumptionDetail';
+import {TicketType} from './src/modules/ticketsList';
+import GiftTicket from './src/pages/MainPage/GiftTicket';
+import Prize from './src/pages/Admin/Prize';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -73,7 +77,7 @@ export type HomeRootStackParamList = {
     count: number;
   };
   TicketPay: {
-    uuid:string;
+    uuid: string;
     memberId: string;
     type: TicketType;
     max: number;
@@ -81,27 +85,30 @@ export type HomeRootStackParamList = {
   TicketsResult: {
     name: string;
     type: ticketsResultType;
-    tickets: [{
-      type: TicketType;
-      counts: number;
-    }]
-  },
+    tickets: [
+      {
+        type: TicketType;
+        counts: number;
+      },
+    ];
+  };
   Forbidden: {
     message: string;
   };
   TicketCharge: undefined;
+  GiftTicket: undefined;
   MemberManagement: {
     status: string;
   };
   UserDetail: {
     userData: {
-      memberId:string;
-      name:string;
-      nickname:string;
-      phone:string;
-      registerDate:string;
-    },
-  }
+      memberId: string;
+      name: string;
+      nickname: string;
+      phone: string;
+      registerDate: string;
+    };
+  };
   MemberManagePage: undefined;
   AdminTicketsHistory: undefined;
   QRCodeScanner: undefined;
@@ -113,6 +120,7 @@ export type HomeRootStackParamList = {
   UserConsumptionDetail: {
     month: number;
   }
+  Prize: undefined;
 };
 
 export type MyPageRootStackParamList = {
@@ -140,22 +148,22 @@ function TabNavigator() {
       <Tab.Screen
         name="MainPage"
         component={MainPage}
-        options={{ title: 'MainPage', headerShown: false }}
+        options={{title: 'MainPage', headerShown: false}}
       />
       <Tab.Screen
         name="Ranking"
         component={Ranking}
-        options={{ title: 'Ranking', headerShown: false }}
+        options={{title: 'Ranking', headerShown: false}}
       />
       <Tab.Screen
         name="Game"
         component={Game}
-        options={{ title: 'Game', headerShown: false }}
+        options={{title: 'Game', headerShown: false}}
       />
       <Tab.Screen
         name="MyPage"
         component={MyPage}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
     </Tab.Navigator>
   );
@@ -175,6 +183,8 @@ function AppInner() {
   //         await messaging().registerDeviceForRemoteMessages();
   //       }
   //       const token = await messaging().getToken();
+  //       console.log(token);
+
   //       dispatch(userSlice.actions.setphoneToken({phoneToken: token}));
   //     } catch (error) {
   //       console.error(error);
@@ -197,10 +207,8 @@ function AppInner() {
             authorization: `Bearer ${token}`,
           },
         });
-        const { access_token, refresh_token } = refreshResult.data;
-        const { sub, roles, nickname, uuid } = decodeJWT(access_token);
-
-
+        const {access_token, refresh_token} = refreshResult.data;
+        const {sub, roles, nickname, uuid} = decodeJWT(access_token);
 
         dispatch(
           userSlice.actions.setUser({
@@ -208,20 +216,31 @@ function AppInner() {
             roles: roles,
             access_token: access_token,
             nickName: nickname,
-            uuid: uuid
+            uuid: uuid,
           }),
         );
         await EncryptedStorage.setItem('refreshToken', refresh_token);
       } catch (error) {
         // refresh token 기간만료됬을 경우
-        console.log('refresh Result Error', (error as AxiosError).response?.status);
-        if (
-          (error as AxiosError).response?.status === 400 ||
-          (error as AxiosError).response?.status === 401
-        ) {
+        console.log(
+          'Appinner refresh Result Error',
+          (error as AxiosError).response?.status,
+        );
+        console.log(
+          'Appinner refresh Result Error Msg',
+          (error as any).response?.data.errorMessage,
+        );
+        if ((error as AxiosError).response?.status === 400) {
           Alert.alert(
             '알림',
             '자동로그인 기간이 만료되었습니다. 다시 로그인 해주세요.',
+          );
+          dispatch(userSlice.actions.setUser({access_token: ''}));
+          await EncryptedStorage.removeItem('refreshToken');
+        } else if ((error as AxiosError).response?.status === 401) {
+          Alert.alert(
+            '알림',
+            '다른곳에서 로그인되었습니다. 다시 로그인해주세요.',
           );
           dispatch(userSlice.actions.setUser({access_token: ''}));
           await EncryptedStorage.removeItem('refreshToken');
@@ -237,134 +256,144 @@ function AppInner() {
   interceptors();
 
   // DeepLink Controller
-  deepLinkController(isLoggedIn)
+  deepLinkController(isLoggedIn);
 
   return (
     <>
       {isLoggedIn ? (
         <HomeStack.Navigator
           initialRouteName="Home"
-          screenOptions={{ headerShown: false }}>
+          screenOptions={{headerShown: false}}>
           <HomeStack.Screen name="Home" component={TabNavigator} />
           <HomeStack.Screen
             name="SetNickNameScreen"
             component={SetNickNameScreen}
-            options={{ animation: 'none' }}
+            options={{animation: 'none'}}
           />
           <HomeStack.Screen
             name="MyTicket"
             component={MyTicket}
-            options={{ animation: 'none' }}
+            options={{animation: 'none'}}
           />
           <HomeStack.Screen
             name="MyTickets"
             component={MyTickets}
-            options={{ animation: 'none' }}
+            options={{animation: 'none'}}
           />
           <HomeStack.Screen
             name="TicketsHistorys"
             component={TicketsHistorys}
-            options={{ animation: 'none' }}
+            options={{animation: 'none'}}
           />
           <HomeStack.Screen
             name="GameHostory"
             component={GameHostory}
-            options={{ animation: 'none' }}
+            options={{animation: 'none'}}
           />
           <HomeStack.Screen
             name="MyRanking"
             component={MyRanking}
-            options={{ animation: 'none' }}
+            options={{animation: 'none'}}
           />
           <HomeStack.Screen
             name="MyRankingScore"
             component={MyRankingScore}
-            options={{ animation: 'none' }}
+            options={{animation: 'none'}}
           />
           <HomeStack.Screen
             name="TicketPay"
             component={TicketPay}
-            options={{ animation: 'none' }}
+            options={{animation: 'none'}}
           />
           <HomeStack.Screen
             name="TicketCharge"
             component={TicketCharge}
-            options={{ animation: 'none' }}
+            options={{animation: 'none'}}
+          />
+          <HomeStack.Screen
+            name="GiftTicket"
+            component={GiftTicket}
+            options={{animation: 'none'}}
           />
           <HomeStack.Screen
             name="AdminTicketsHistory"
             component={AdminTicketsHistory}
-            options={{ animation: 'none' }}
+            options={{animation: 'none'}}
           />
           <HomeStack.Screen
             name="MemberManagement"
             component={MemberManagement}
-            options={{ animation: 'none' }}
+            options={{animation: 'none'}}
           />
           <HomeStack.Screen
             name="MemberManagePage"
             component={MemberManagePage}
-            options={{ animation: 'none' }}
+            options={{animation: 'none'}}
           />
           <HomeStack.Screen
             name="UserDetail"
             component={UserDetail}
-            options={{ animation: 'none' }}
+            options={{animation: 'none'}}
           />
           <HomeStack.Screen
             name="TicketsResult"
             component={TicketsResult}
-            options={{ animation: 'none' }}
+            options={{animation: 'none'}}
           />
           <HomeStack.Screen
             name="GamePage"
             component={GamePage}
-            options={{ animation: 'none' }}
+            options={{animation: 'none'}}
           />
           <HomeStack.Screen
             name="RoomMake"
             component={RoomMake}
-            options={{ animation: 'none' }}
+            options={{animation: 'none'}}
           />
           <HomeStack.Screen
             name="CreateRoom"
             component={CreateRoom}
-            options={{ animation: 'none' }}
+            options={{animation: 'none'}}
           />
           <HomeStack.Screen
             name="Forbidden"
             component={Forbidden}
-            options={{ animation: 'none' }}
+            options={{animation: 'none'}}
           />
           <HomeStack.Screen
             name="QRCodeScanner"
             component={QRCodeScanner}
-            options={{ animation: 'none' }}
+            options={{animation: 'none'}}
           />
           <HomeStack.Screen
             name="CalculatePage"
             component={CalculatePage}
-            options={{ animation: 'none' }}
+            options={{animation: 'none'}}
           />
           <HomeStack.Screen
             name="MonthCirculation"
             component={MonthCirculation}
-            options={{ animation: 'none' }}
+            options={{animation: 'none'}}
           />
           <HomeStack.Screen
             name="TotalPublish"
             component={TotalPublish}
-            options={{ animation: 'none' }}
+            options={{animation: 'none'}}
           />
           <HomeStack.Screen
             name="UserConsumption"
             component={UserConsumption}
-            options={{ animation: 'none' }}
+            options={{animation: 'none'}}
           />
           <HomeStack.Screen
             name="UserConsumptionDetail"
             component={UserConsumptionDetail}
-            options={{ animation: 'none' }}
+            options={{animation: 'none'}}
+          />
+          <HomeStack.Screen
+            name="Prize"
+            component={Prize}
+            options={{animation: 'none'}}
           />
         </HomeStack.Navigator>
       ) : (
@@ -376,12 +405,12 @@ function AppInner() {
           <Stack.Screen
             name="SignIn"
             component={SignIn}
-            options={{ title: 'Login', headerShown: false }}
+            options={{title: 'Login', headerShown: false}}
           />
           <Stack.Screen
             name="SignUp"
             component={SignUp}
-            options={{ title: 'SignUp', headerShown: false }}
+            options={{title: 'SignUp', headerShown: false}}
           />
         </Stack.Navigator>
       )}

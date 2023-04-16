@@ -14,7 +14,7 @@ import {
   HomeRootStackParamList,
 } from '../../../AppInner';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
-import {heightData} from '../../modules/globalStyles';
+import {HeaderStyle, heightData} from '../../modules/globalStyles';
 import {MainStyles} from '../../modules/MainStyles';
 import GameList from '../MainPage/Compoents/GameList';
 const heightScale = heightData;
@@ -27,8 +27,8 @@ function CreateRoom() {
     <SafeAreaView style={styles.container}>
       {/* header */}
       <View>
-        <View style={styles.headerStyle}>
-          <Text style={styles.fontStyle}>방만들기</Text>
+        <View style={HeaderStyle.headerStyle}>
+          <Text style={HeaderStyle.headerFontStyle}>방만들기</Text>
         </View>
         <IconAntDesign
           name="left"
@@ -75,14 +75,6 @@ const styles = StyleSheet.create({
   container: {
     height: '100%',
     backgroundColor: '#121212',
-  },
-  fontStyle: {fontSize: heightScale * 18, fontWeight: 'bold', color: 'white'},
-  headerStyle: {
-    height: heightScale * 61,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderBottomWidth: 2,
-    borderBottomColor: '#484848',
   },
   createRoomBtnWrapper: {
     alignItems: 'center',
