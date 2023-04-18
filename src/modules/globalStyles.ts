@@ -39,12 +39,12 @@ export const HeaderStyle = StyleSheet.create({
   },
   headerLeftIcon: {
     position: 'absolute',
-    left: heightData*12,
-    top: heightData * 12,
+    marginTop: (heightData * (61 - 28)) / 2,
+    marginLeft: heightData * 15,
   },
   headerRightIcon: {
     position: 'absolute',
-    right: heightData*12,
-    top: heightData * 12,
+    right: heightData * 15,
+    top: (heightData * (61 - 28)) / 2,
   }
 });

@@ -197,6 +197,7 @@ const styles = StyleSheet.create({
     width: heightScale * 330,
     marginLeft: 8 * heightScale,
     paddingHorizontal: heightScale * 7,
+    paddingVertical:0
   },
   applicationBox: {
     width: 390 * heightScale,

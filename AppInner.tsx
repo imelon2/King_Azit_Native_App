@@ -49,6 +49,7 @@ import UserConsumptionDetail from './src/pages/Calculate/components/UserConsumpt
 import {TicketType} from './src/modules/ticketsList';
 import GiftTicket from './src/pages/MainPage/GiftTicket';
 import Prize from './src/pages/Admin/Prize';
+import SetBanner from './src/pages/Admin/SetBanner';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -119,6 +120,7 @@ export type HomeRootStackParamList = {
   MonthCirculation: undefined;
   UserConsumptionDetail: undefined;
   Prize: undefined;
+  SetBanner:undefined;
 };
 
 export type MyPageRootStackParamList = {
@@ -391,6 +393,11 @@ function AppInner() {
           <HomeStack.Screen
             name="Prize"
             component={Prize}
+            options={{animation: 'none'}}
+          />
+          <HomeStack.Screen
+            name="SetBanner"
+            component={SetBanner}
             options={{animation: 'none'}}
           />
         </HomeStack.Navigator>

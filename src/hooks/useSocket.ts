@@ -37,14 +37,14 @@ const useSocket = (): [Socket | undefined, () => void, () => void] => {
   }, []);
 
   if (!socket) {
-    console.log('connect Socket : ' + nickName);
     socket = SocketIOClient(`${Config.SOCKET_URL}`, {
       transports: ['websocket'],
       extraHeaders: {
         Authorization: `Bearer ${access_token}`,
       },
     });
-
+    
+    console.log('connect Socket : ' + access_token);
     socket.on('connect', function () {
       console.log('is connect socket : ' + socket?.connected);
     });

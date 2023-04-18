@@ -9,7 +9,7 @@ import {
   Alert,
   Pressable,
 } from 'react-native';
-import {heightData} from '../../../modules/globalStyles';
+import {HeaderStyle, heightData} from '../../../modules/globalStyles';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import {userInfoType} from '../MemberManagement';
 import TimeFormat from '../../../modules/TimeFormat';
@@ -25,21 +25,22 @@ interface propsType {
   setModalStatus(id: boolean): void;
   data: userInfoType;
   state: string;
-  setRefresh(data:any):void;
+  setRefresh(data: any): void;
 }
 
 function UserInformation(props: propsType) {
-const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const {data, setModalStatus, state} = props;
   const access_token = useSelector(
     (state: RootState) => state.user.access_token,
   );
 
+  
   // 가입 승인
   const approve = useCallback(async () => {
-    if(loading) return;
+    if (loading) return;
     try {
-        setLoading(true);
+      setLoading(true);
       await axios.put(
         `${Config.API_URL}/admin/permit`,
         {uuid: data.uuid},
@@ -49,23 +50,87 @@ const [loading, setLoading] = useState(false);
           },
         },
       );
-      props.setRefresh(Date.now())
+      props.setRefresh(Date.now());
+      setModalStatus(false);
+    } catch (error) {
+      console.log((error as any).response.data.errorMessage);
+      Alert.alert('Error', '내부 문제로 해당 기능이 취소됬습니다.\n' + error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // 가입 거절
+  const unapprove = useCallback(async () => {
+    if (loading) return;
+    try {
+      setLoading(true);
+      await axios.put(
+        `${Config.API_URL}/admin/reject`,
+        {uuid: data.uuid},
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        },
+      );
+      props.setRefresh(Date.now());
       setModalStatus(false);
     } catch (error) {
       Alert.alert('Error', '내부 문제로 해당 기능이 취소됬습니다.\n' + error);
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   }, []);
 
-  // Todo : 가입 거절
-  const unapprove = useCallback(() => {
-    if(loading) return;
-    Alert.alert('Todo:',"가입 거절 기능 구현")
-  },[])
+  const deleteAdmin = useCallback(async () => {
+    if (loading) return;
+    try {
+      setLoading(true);
+      Alert.alert('Todo :','어드민 권한 삭제')
+      // await axios.put(
+      //   `${Config.API_URL}/admin/reject`,
+      //   {uuid: data.uuid},
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${access_token}`,
+      //     },
+      //   },
+      // );
+      props.setRefresh(Date.now());
+      setModalStatus(false);
+    } catch (error) {
+      Alert.alert('Error', '내부 문제로 해당 기능이 취소됬습니다.\n' + error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const addAdmin = useCallback(async () => {
+    if (loading) return;
+    try {
+      setLoading(true);
+      Alert.alert('Todo :','어드민 권한 추가')
+      // await axios.put(
+      //   `${Config.API_URL}/admin/reject`,
+      //   {uuid: data.uuid},
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${access_token}`,
+      //     },
+      //   },
+      // );
+      props.setRefresh(Date.now());
+      setModalStatus(false);
+    } catch (error) {
+      Alert.alert('Error', '내부 문제로 해당 기능이 취소됬습니다.\n' + error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   return (
-    <SafeAreaView style={styles.container2}>
+    <SafeAreaView style={[HeaderStyle.container,styles.container2]}>
       <View>
         <View style={styles.headerStyle}>
           <Text style={styles.fontStyle}>사용자</Text>
@@ -82,6 +147,7 @@ const [loading, setLoading] = useState(false);
         style={{
           paddingHorizontal: 24 * heightScale,
           paddingTop: 40 * heightScale,
+          flex:1
         }}>
         <View>
           <View
@@ -100,7 +166,7 @@ const [loading, setLoading] = useState(false);
               marginTop: 8 * heightScale,
             }}>
             <Image source={require('../../../assets/Rectangle2.png')} />
-            <Text style={styles.fontStyle6}>{data.name}</Text>
+            <Text style={styles.fontStyle6}>{data?.name}</Text>
           </View>
         </View>
 
@@ -121,7 +187,7 @@ const [loading, setLoading] = useState(false);
               marginTop: 8 * heightScale,
             }}>
             <Image source={require('../../../assets/Rectangle2.png')} />
-            <Text style={styles.fontStyle6}>{data.phone}</Text>
+            <Text style={styles.fontStyle6}>{data?.phone}</Text>
           </View>
         </View>
 
@@ -142,7 +208,7 @@ const [loading, setLoading] = useState(false);
               marginTop: 8 * heightScale,
             }}>
             <Image source={require('../../../assets/Rectangle2.png')} />
-            <Text style={styles.fontStyle6}>{data.memberId}</Text>
+            <Text style={styles.fontStyle6}>{data?.memberId}</Text>
           </View>
         </View>
 
@@ -163,7 +229,7 @@ const [loading, setLoading] = useState(false);
               marginTop: 8 * heightScale,
             }}>
             <Image source={require('../../../assets/Rectangle2.png')} />
-            <Text style={styles.fontStyle6}>{data.nickname}</Text>
+            <Text style={styles.fontStyle6}>{data?.nickname}</Text>
           </View>
         </View>
         <View style={{marginTop: 28 * heightScale}}>
@@ -184,29 +250,46 @@ const [loading, setLoading] = useState(false);
             }}>
             <Image source={require('../../../assets/Rectangle2.png')} />
             <Text style={styles.fontStyle6}>
-              {TimeFormat(data.registerDate)}
+              {TimeFormat(data?.registerDate)}
             </Text>
           </View>
         </View>
 
-        {state == 'new' && 
+        {state == 'new' && (
           <View style={{marginTop: heightScale * 150, flexDirection: 'row'}}>
-            {loading ? <View style={{flex:1, justifyContent:'center',alignItems:'center'}}><ActivityIndicator color={'#fff'}/></View> :<><Pressable onPress={() => unapprove()} style={{flex: 1, alignItems: 'flex-start'}}>
-              <View style={styles.buttonStyle}>
-                <Text style={{fontSize: 20 * heightScale, color: 'white'}}>
-                  거절
-                </Text>
+            {loading ? (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <ActivityIndicator color={'#fff'} />
               </View>
-            </Pressable>
-            <Pressable onPress={() => approve()} style={{flex: 1, alignItems: 'flex-end'}}>
-              <View style={styles.buttonStyle2}>
-                <Text style={{fontSize: 20 * heightScale, color: 'black'}}>
-                  승인
-                </Text>
-              </View>
-            </Pressable></> }
+            ) : (
+              <>
+                <Pressable
+                  onPress={() => unapprove()}
+                  style={{flex: 1, alignItems: 'flex-start'}}>
+                  <View style={styles.buttonStyle}>
+                    <Text style={{fontSize: 20 * heightScale, color: 'white'}}>
+                      거절
+                    </Text>
+                  </View>
+                </Pressable>
+                <Pressable
+                  onPress={() => approve()}
+                  style={{flex: 1, alignItems: 'flex-end'}}>
+                  <View style={[styles.buttonStyle,{backgroundColor:'#F5FF82'}]}>
+                    <Text style={{fontSize: 20 * heightScale, color: 'black'}}>
+                      승인
+                    </Text>
+                  </View>
+                </Pressable>
+              </>
+            )}
           </View>
-        }
+        )}
 
         {state == 'exist' && (
           <View
@@ -220,6 +303,34 @@ const [loading, setLoading] = useState(false);
             </View>
           </View>
         )}
+
+        {state == 'admin' && (
+          <Pressable
+            onPress={() => deleteAdmin()}
+            style={{
+              flex:1,
+              justifyContent:'flex-end',
+              marginBottom:heightScale*30
+            }}>
+            <View style={styles.buttonStyle2}>
+              <Text style={styles.fontStyle2}>어드민 삭제</Text>
+            </View>
+          </Pressable>
+        )}
+
+        {state == 'newAdmin' && (
+          <Pressable
+            onPress={() => addAdmin()}
+            style={{
+              flex:1,
+              justifyContent:'flex-end',
+              marginBottom:heightScale*30
+            }}>
+            <View style={styles.buttonStyle2}>
+              <Text style={styles.fontStyle2}>어드민 추가</Text>
+            </View>
+          </Pressable>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -227,13 +338,10 @@ const [loading, setLoading] = useState(false);
 
 const styles = StyleSheet.create({
   container2: {
-    width: width,
-    height: height,
     left: -heightScale * 22,
-    backgroundColor: '#121212',
   },
   headerStyle: {
-    height: heightScale * 61,
+    height: heightScale * 63,
     justifyContent: 'center',
     alignItems: 'center',
     borderBottomWidth: 2,
@@ -274,7 +382,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   buttonStyle2: {
-    width: 166 * heightScale,
     height: 60 * heightScale,
     backgroundColor: '#F5FF82',
     borderRadius: 6,

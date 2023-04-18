@@ -587,6 +587,8 @@ PODS:
     - FirebaseCoreExtension (= 10.4.0)
     - React-Core
     - RNFBApp
+  - RNGestureHandler (2.9.0):
+    - React-Core
   - RNImageCropPicker (0.39.0):
     - React-Core
     - React-RCTImage
@@ -598,6 +600,33 @@ PODS:
     - TOCropViewController
   - RNPermissions (3.6.1):
     - React-Core
+  - RNReanimated (3.0.2):
+    - DoubleConversion
+    - FBLazyVector
+    - FBReactNativeSpec
+    - glog
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-callinvoker
+    - React-Core
+    - React-Core/DevSupport
+    - React-Core/RCTWebSocket
+    - React-CoreModules
+    - React-cxxreact
+    - React-jsi
+    - React-jsiexecutor
+    - React-jsinspector
+    - React-RCTActionSheet
+    - React-RCTAnimation
+    - React-RCTBlob
+    - React-RCTImage
+    - React-RCTLinking
+    - React-RCTNetwork
+    - React-RCTSettings
+    - React-RCTText
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNScreens (3.19.0):
     - React-Core
     - React-RCTImage
@@ -693,8 +722,10 @@ DEPENDENCIES:
   - "RNFBAnalytics (from `../node_modules/@react-native-firebase/analytics`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
+  - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
+  - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
@@ -835,10 +866,14 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBMessaging:
     :path: "../node_modules/@react-native-firebase/messaging"
+  RNGestureHandler:
+    :path: "../node_modules/react-native-gesture-handler"
   RNImageCropPicker:
     :path: "../node_modules/react-native-image-crop-picker"
   RNPermissions:
     :path: "../node_modules/react-native-permissions"
+  RNReanimated:
+    :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
   RNSVG:
@@ -925,8 +960,10 @@ SPEC CHECKSUMS:
   RNFBAnalytics: 5ed12bdd61762124e66e9f4a8469f3f725c847bf
   RNFBApp: 339ca238581a4c97d391fa077902e0e0117dddda
   RNFBMessaging: aff7baf1b0c7c70a0fd60d5dbfbe6d1e59f3985c
+  RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
   RNImageCropPicker: 14fe1c29298fb4018f3186f455c475ab107da332
   RNPermissions: dcdb7b99796bbeda6975a6e79ad519c41b251b1c
+  RNReanimated: f0dd6b881808e635ef0673f89642937d6c141314
   RNScreens: ea4cd3a853063cda19a4e3c28d2e52180c80f4eb
   RNSVG: c1e76b81c76cdcd34b4e1188852892dc280eb902
   RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8

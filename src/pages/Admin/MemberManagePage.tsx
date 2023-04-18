@@ -5,7 +5,7 @@ import { Image, StyleSheet, Text, View, Pressable , TouchableOpacity } from 'rea
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { HomeRootStackParamList } from '../../../AppInner';
-import { heightData } from '../../modules/globalStyles';
+import { HeaderStyle, heightData } from '../../modules/globalStyles';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 const heightScale = heightData;
 
@@ -20,16 +20,16 @@ function MemberManagePage() {
     }
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={HeaderStyle.container}>
             <View>
-                <View style={styles.headerStyle}>
-                    <Text style={styles.fontStyle}>멤버 관리</Text>
+                <View style={HeaderStyle.headerStyle}>
+                    <Text style={HeaderStyle.headerFontStyle}>멤버 관리</Text>
                 </View>
                 <IconAntDesign
                     name="left"
                     size={heightScale * 28}
                     color="white"
-                    style={styles.beforeIcon}
+                    style={HeaderStyle.headerLeftIcon}
                     onPress={() => navigation.goBack()}
                 />
             </View>
