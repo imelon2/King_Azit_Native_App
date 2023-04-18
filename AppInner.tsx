@@ -118,7 +118,9 @@ export type HomeRootStackParamList = {
   TotalPublish: undefined;
   UserConsumption: undefined;
   MonthCirculation: undefined;
-  UserConsumptionDetail: undefined;
+  UserConsumptionDetail: {
+    month: number;
+  }
   Prize: undefined;
   SetBanner:undefined;
 };

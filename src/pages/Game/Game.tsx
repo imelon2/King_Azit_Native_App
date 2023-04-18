@@ -33,6 +33,7 @@ function Game() {
                     backgroundColor={'#A8A7A7'}
                     hasPadding
                     height={48 * heightScale}
+                    borderRadius={3}
                 />
             </View>
             {tab == 'hand' && (

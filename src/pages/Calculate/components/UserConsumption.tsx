@@ -5,30 +5,100 @@ import IconAntDesign from 'react-native-vector-icons/AntDesign';
 const heightScale = heightData;
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { HomeRootStackParamList, } from '../../../../AppInner';
+import Config from 'react-native-config';
+import axios from 'axios';
 
 
 
 function UserConsumption() {
     const navigation = useNavigation<NavigationProp<HomeRootStackParamList>>();
     const [month, setMonth] = useState<any>(0);
+    const [ticketData , setTicketData ] = useState<any>([]);
 
-    const data = [{ month: 'Jan', ticket: 0 }, { month: 'Feb', ticket: 0 }, { month: 'Mar', ticket: 80 },
-    { month: 'Apr', ticket: 20 }, { month: 'May', ticket: 30 }, { month: 'Jun', ticket: 35 },
-    { month: 'Jul', ticket: 0 }, { month: 'Aug', ticket: 0 }, { month: 'Sep', ticket: 0 },
-    { month: 'Oct', ticket: 0 }, { month: 'Nov', ticket: 0 }, { month: 'Dec', ticket: 0 },]
-
-    const data2 = [{ name: 'Black Ticket', data: 60, len: 70 }, { name: 'Red Ticket', data: 60, len: 70 },
-    { name: 'Gold  Ticket', data: 60, len: 70 }]
+    const [chartData, setChartData] = useState([{ month: 'Jan', ticket: 0, monNum: 1 }, { month: 'Feb', ticket: 0, monNum: 2 }, { month: 'Mar', ticket: 80, monNum: 3 },
+    { month: 'Apr', ticket: 20, monNum: 4 }, { month: 'May', ticket: 30, monNum: 5 }, { month: 'Jun', ticket: 35, monNum: 6 },
+    { month: 'Jul', ticket: 0, monNum: 7 }, { month: 'Aug', ticket: 0, monNum: 8 }, { month: 'Sep', ticket: 0, monNum: 9 },
+    { month: 'Oct', ticket: 0, monNum: 10 }, { month: 'Nov', ticket: 0, monNum: 11 }, { month: 'Dec', ticket: 0, monNum: 12 },]);
 
 
     const onClickLine = (month: any) => {
         setMonth(month);
+        getOneMonthData(month + 1);
+    }
+
+    const getData = async () => {
+
+        try {
+            const getData = await axios.get(`${Config.API_URL}/account/consumption`);
+            let data = getData.data;
+            let result = [];
+            for (let i = 0; i < chartData.length; i++) {
+                let map = { month: '', monNum: 0, ticket: 0 };
+
+                for (let j = 0; j < data.length; j++) {
+                    let one = data[j];
+                    if (chartData[i].monNum == one.month) {
+                        map['month'] = chartData[i].month;
+                        map['monNum'] = chartData[i].monNum;
+                        map['ticket'] = Math.abs(one.amount);
+                        result.push(map);
+                    }
+
+                }
+
+            }
+            setChartData(result);
+
+
+        } catch (error) {
+            console.error(error);
+        }
+
+    }
+
+    const getOneMonthData = async (month : Number) => {
+
+        let today = new Date();
+        let year = today.getFullYear();
+        let day = year + '-' + month + '-' + '01';
+
+        try {
+            const monthData = await axios.get(`${Config.API_URL}/account/consumption/details?date=${day}`);
+
+            let result = [];
+            for ( let i = 0; i < monthData.data.length; i++ ) {
+                let one = monthData.data[i];
+                let map = { name: '' , data:0 , len: 70};
+                if ( one.type == 'black' ) {
+                    map.name = 'Black Ticket'
+                    map.data = Math.abs(one.amount);
+                }
+
+                if ( one.type == 'red' ) {
+                    map.name = 'Red Ticket'
+                    map.data = Math.abs(one.amount);
+                }
+
+                if ( one.type == 'gold' ) {
+                    map.name = 'Gold Ticket'
+                    map.data = Math.abs(one.amount);
+                }
+                result.push(map);
+            }
+            setTicketData(result);
+
+        } catch (error) {
+            console.error(error);
+        }
+
     }
 
     useEffect(() => {
         let today = new Date();
         let month = today.getMonth();
         setMonth(month);
+        getData();
+        getOneMonthData(month + 1);
     }, [])
 
 
@@ -48,7 +118,7 @@ function UserConsumption() {
             </View>
             <ScrollView horizontal style={{ flex: 1 }} >
                 <View style={styles.scrollView}>
-                    {data.map((val, key) => (
+                    {chartData.map((val, key) => (
                         <TouchableOpacity onPress={() => onClickLine(key)} activeOpacity={1} key={key} style={styles.viewOne} >
                             {val.ticket == 0 ? (
                                 <View style={styles.circle} ></View>
@@ -61,19 +131,18 @@ function UserConsumption() {
                 </View>
             </ScrollView>
             <View style={{ flex: 1.73 }}>
-                <View style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingRight: 10 * heightScale }} >
+                <TouchableOpacity activeOpacity={1}  onPress={() => navigation.navigate('UserConsumptionDetail' ,{month:month + 1})} style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingRight: 10 * heightScale }} >
                     <Text style={styles.fontStyle2} >자세히 보기</Text>
                     <IconAntDesign
                         name="right"
                         size={heightScale * 14}
                         color="white"
                         style={styles.detailIcon}
-                        onPress={() => navigation.navigate('UserConsumptionDetail')}
                     />
-                </View>
+                </TouchableOpacity>
 
                 <View style={{ marginTop: 40 * heightScale, alignItems: 'center' }} >
-                    {data2.map((val, key) => (
+                    {ticketData.map((val : any, key : any) => (
                         <View key={key} style={styles.ticketBox} >
                             <View style={{ flex: 1 }} >
                                 <Image source={require('../../../assets/black_ticket.png')} />
