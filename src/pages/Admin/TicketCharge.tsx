@@ -4,7 +4,7 @@ import { Alert, Image, StyleSheet, Text, TextInput, ScrollView, View, Keyboard, 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { HomeRootStackParamList, } from '../../../AppInner';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
-import { heightData } from '../../modules/globalStyles';
+import { HeaderStyle, heightData } from '../../modules/globalStyles';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import CountBox from './Components/CountBox'
 import IconIonicons from 'react-native-vector-icons/Ionicons';
@@ -90,20 +90,16 @@ function TicketCharge() {
     }
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={HeaderStyle.container}>
             <View>
-                <View style={styles.headerStyle}>
-                    <Text style={styles.fontStyle}>티켓충전</Text>
+                <View style={HeaderStyle.headerStyle}>
+                    <Text style={HeaderStyle.headerFontStyle}>티켓충전</Text>
                 </View>
                 <IconAntDesign
-                    name="close"
+                    name="left"
                     size={heightScale * 32}
                     color="white"
-                    style={{
-                        position: 'absolute',
-                        right: 12,
-                        top: heightScale * 12,
-                    }}
+                    style={HeaderStyle.headerLeftIcon}
                     onPress={() => navigation.goBack()}
                 />
             </View>
@@ -301,26 +297,14 @@ function TicketCharge() {
     );
 }
 const styles = StyleSheet.create({
-    container: {
-        height: '100%',
-        backgroundColor: '#121212',
-    },
     container1: {
         paddingHorizontal: 24 * heightScale,
         paddingTop: 25 * heightScale,
     },
-    fontStyle: { fontSize: heightScale * 18, fontWeight: 'bold', color: 'white' },
     fontStyle3: {
         fontSize: heightScale * 16,
         fontWeight: '400',
         color: 'white',
-    },
-    headerStyle: {
-        height: heightScale * 61,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderBottomWidth: 2,
-        borderBottomColor: '#999999',
     },
     fontStyle2: {
         fontSize: heightScale * 18,
@@ -359,7 +343,6 @@ const styles = StyleSheet.create({
         width: heightScale * 379,
         height: heightScale * 45,
         paddingHorizontal: 8 * heightScale,
-        backgroundColor: '#121212',
         borderBottomColor:'#3D3D3D',
         borderBottomWidth:1,
     },

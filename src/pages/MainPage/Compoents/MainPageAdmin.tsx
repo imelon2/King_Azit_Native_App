@@ -27,6 +27,7 @@ function MainPageAdmin() {
             name="pluscircleo"
             size={heightScale * 30}
             color="white"
+            onPress={() => navigation.navigate('SetBanner')}
           />
           <Swiper
             horizontal={true}

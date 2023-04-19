@@ -81,7 +81,7 @@ function AdminTicketsHistory() {
     useNavigation<
       NavigationProp<MyPageRootStackParamList & HomeRootStackParamList>
     >();
-  const [modalStatus, setModalStatus] = useState(true);
+  const [modalStatus, setModalStatus] = useState(false);
   const [sort, setSort] = useState('recent');
   const [type, setType] = useState('');
   const [ticket, setTicket] = useState('');

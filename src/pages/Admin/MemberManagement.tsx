@@ -17,13 +17,13 @@ import {HomeRootStackParamList} from '../../../AppInner';
 import {HeaderStyle, heightData} from '../../modules/globalStyles';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import IconIonicons from 'react-native-vector-icons/Ionicons';
-import Modal from 'react-native-modal';
-import UserInformation from './Components/UserInformation';
 import axios, {AxiosError} from 'axios';
 import Config from 'react-native-config';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../store/reducer';
 import TimeFormat from '../../modules/TimeFormat';
+import ProfileImg from '../../components/ProfileImg';
+import { UserInformationType } from './UserInformation';
 const {width, height} = Dimensions.get('window');
 const heightScale = heightData;
 
@@ -39,6 +39,7 @@ export type userInfoType = {
   registerDate: string;
   uuid: string;
 };
+
 function MemberManagement({route, navigation}: AdminScreenProps) {
   // let {status} = route.params;
   const access_token = useSelector(
@@ -48,9 +49,6 @@ function MemberManagement({route, navigation}: AdminScreenProps) {
   const [status, setStatus] = useState(route.params.status);
   const [userList, setUserList] = useState<userInfoType[]>([]);
   const [keyword, setKeyword] = useState<string>('');
-  const [modalStatus, setModalStatus] = useState(false);
-  const [refresh, setRefresh] = useState();
-  const [selectIndex, setSelectIndex] = useState<number>(0);
   const onChangeKeyword = useCallback((text: string) => {
     setKeyword(text.trim());
   }, []);
@@ -82,7 +80,7 @@ function MemberManagement({route, navigation}: AdminScreenProps) {
       try {
         setLoading(true);
         const userList = await axios.get(
-          `${Config.API_URL}/admin/search?nickname=${keyword}`,
+          `${Config.API_URL}/admin/members?nickname=${keyword}`,
           {
             headers: {
               authorization: `Bearer ${access_token}`,
@@ -144,11 +142,15 @@ function MemberManagement({route, navigation}: AdminScreenProps) {
         clearTimeout(debounce);
       };
     }
-  }, [keyword, refresh, status]);
+  }, [keyword, status]);
 
-  const onClickUser = (key: number) => {
-    setSelectIndex(key);
-    setModalStatus(true);
+  const onClickUser = (item:userInfoType) => {
+    const userInfo:UserInformationType = Object.assign(item,{status})
+    // 기존 맴버 관리 :
+    if(status === "exist") return navigation.navigate('UserDetail',userInfo);
+
+    // 그 외 :
+    navigation.navigate('UserInformation',userInfo)
   };
 
   const replaceStringWithJSX = (
@@ -156,6 +158,7 @@ function MemberManagement({route, navigation}: AdminScreenProps) {
     find: string,
     replace: ReactElement,
   ) => {
+    if(find =="") return str;
     const parts = str.split(find);
     const result = [];
     for (let i = 0; i < parts.length; i++) {
@@ -165,13 +168,13 @@ function MemberManagement({route, navigation}: AdminScreenProps) {
     return result;
   };
 
-  const renderText = (nickname: string) => {
+  const renderText = (nickname: string,index:number) => {
     return (
       <Text style={styles.fontStyle2}>
         {replaceStringWithJSX(
           nickname,
           keyword,
-          <Text style={[styles.fontStyle2, {color: '#F5FF82'}]}>
+          <Text style={[styles.fontStyle2, {color: '#F5FF82'}]} key={index}>
             {keyword}
           </Text>,
         )}
@@ -265,20 +268,17 @@ function MemberManagement({route, navigation}: AdminScreenProps) {
               return (
                 <TouchableOpacity
                   onPressIn={() => Keyboard.dismiss()}
-                  onPress={() => onClickUser(items?.index)}
+                  onPress={() => onClickUser(item)}
                   activeOpacity={1}
                   style={styles.applicationBox}
-                  key={items?.index}>
+                  key={items.index}>
                   <View
                     style={{
                       flex: 1,
                       alignItems: 'center',
                       justifyContent: 'center',
                     }}>
-                    <Image
-                      style={styles.playerIcon}
-                      source={require('../../assets/UserIcon.png')}
-                    />
+                    <ProfileImg style={styles.playerIcon} source={Config.IMG_URL! + item.uuid} />
                   </View>
                   <View
                     style={{
@@ -287,9 +287,9 @@ function MemberManagement({route, navigation}: AdminScreenProps) {
                       justifyContent: 'center',
                     }}>
                     <View style={{flexDirection: 'row'}}>
-                      {renderText(item?.nickname)}
+                      {renderText(item?.nickname,items.index)}
                     </View>
-                    <Text style={styles.fontStyle3}>
+                    <Text style={styles.fontStyle3}> 
                       신청일: {TimeFormat(item?.registerDate)}
                     </Text>
                   </View>
@@ -307,15 +307,6 @@ function MemberManagement({route, navigation}: AdminScreenProps) {
           />
         )}
       </View>
-
-      <Modal isVisible={modalStatus}>
-        <UserInformation
-          data={userList[selectIndex]}
-          setModalStatus={setModalStatus}
-          setRefresh={setRefresh}
-          state={status}
-        />
-      </Modal>
     </SafeAreaView>
   );
 }

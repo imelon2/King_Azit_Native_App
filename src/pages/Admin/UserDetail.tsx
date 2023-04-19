@@ -4,70 +4,62 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, Pressable, Image, Dimensions, TouchableOpacity } from 'react-native';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { heightData } from '../../modules/globalStyles';
-import IconSimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import { HeaderStyle, heightData } from '../../modules/globalStyles';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import TicketManagement from './Components/TicketManagement'
 import TicketHistory from './Components/TicketHistory'
-import TicketCharge from './Components/TicketCharge'
-import Modal from 'react-native-modal';
-import UserInformation from './Components/UserInformation';
-
+import ProfileImg from '../../components/ProfileImg';
+import Config from 'react-native-config';
 
 
 const heightScale = heightData;
 const { width } = Dimensions.get('window');
-type AdminScreenProps = NativeStackScreenProps<HomeRootStackParamList, 'UserDetail'>;
+type UserDetailScreenProps = NativeStackScreenProps<HomeRootStackParamList, 'UserDetail'>;
 
 
 
-function UserDetail({ route }: AdminScreenProps) {
+function UserDetail({ route }: UserDetailScreenProps) {
     const navigation = useNavigation<NavigationProp<HomeRootStackParamList>>();
-    const { profileImage, name, email } = route.params.userData;
+    const { uuid, name,memberId,nickname } = route.params
     const [menu, setMenu] = useState(['charge', 'history', 'management']);
     const [status, setStatus] = useState('charge');
     const [modalStatus , setModalStatus] = useState(false);
 
     return (
-        <SafeAreaView style={styles.container} >
+        <SafeAreaView style={HeaderStyle.container} >
             <View>
-                <View style={styles.headerStyle}>
-                    <Text style={styles.fontStyle}>사용자</Text>
+                <View style={HeaderStyle.headerStyle}>
+                    <Text style={HeaderStyle.headerFontStyle}>사용자</Text>
                 </View>
                 <IconAntDesign
                     name="left"
                     size={heightScale * 28}
                     color="white"
-                    style={styles.beforeIcon}
+                    style={HeaderStyle.headerLeftIcon}
                     onPress={() => navigation.goBack()}
                 />
             </View>
 
             <View style={{ flex: 1 }} >
                 <Pressable style={styles.myInfoStyle} onPress={() => setModalStatus(true)}>
-                    <Pressable  >
-                        <Image source={
-                            profileImage
-                                ? { uri: profileImage }
-                                : require('../../assets/UserIcon.png')}
-                            style={styles.userIcon}
-                        />
-                    </Pressable>
+                        <ProfileImg style={styles.userIcon} source={Config.IMG_URL! + uuid} />
                     <View style={styles.infoWrapper}>
-                        <Text style={[styles.fontStyle, { fontWeight: 'normal', fontSize: heightScale * 16 },]}>
-                            {name}
+                        <Text style={[styles.fontStyle, { fontWeight: 'normal', fontSize: heightScale * 18 },]}>
+                            {nickname}
                         </Text>
-                        <Text style={[styles.fontStyle, { fontWeight: 'normal', fontSize: heightScale * 16, marginTop: 10 * heightScale },]}>
-                            {email}
+                        <Text style={[styles.fontStyle, { fontWeight: 'normal', fontSize: heightScale * 18, marginTop: 10 * heightScale },]}>
+                            {memberId}
                         </Text>
+                    </View>
+                    <View style={{flex:1,justifyContent:'center',alignItems:'flex-end'}}>
+
                         <IconAntDesign
                             name="right"
                             size={heightScale * 28}
                             color="white"
-                            style={{ position: 'absolute', right: -30, }}
-                        // onPress={() => navigation.goBack()}
-                        />
-                    </View>
+                            onPress={() => navigation.navigate('UserInformation',route.params)}
+                            />
+                            </View>
                 </Pressable>
             </View>
             <View style={{ flex: 3.6 }} >
@@ -84,39 +76,27 @@ function UserDetail({ route }: AdminScreenProps) {
                 </View>
 
                 {status == "charge" && (
-                    // <TicketCharge />
-                    <TicketHistory />
+                    <TicketHistory status={status} uuid={route.params.uuid}/>
                 )}
                 
                 {status == "history" && (
-                    <TicketHistory />
+                    <TicketHistory status={status} uuid={route.params.uuid}/>
                 )}
 
                 {status == "management" && (
-                    <TicketManagement />
+                    <TicketManagement userInfo={route.params}/>
                 )}
             </View>
-
+        {/* 
             <Modal isVisible={modalStatus} >
                 <UserInformation setModalStatus={setModalStatus} data = {route.params.userData} state = 'exist' />
-            </Modal>
+            </Modal> */}
 
         </SafeAreaView>
     )
 }
 const styles = StyleSheet.create({
-    container: {
-        height: '100%',
-        backgroundColor: '#121212',
-        paddingBottom: heightScale * 40
-    },
-    headerStyle: {
-        height: heightScale * 61,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderBottomWidth: 2,
-        borderBottomColor: '#999999',
-    },
+
     fontStyle: {
         fontSize: heightScale * 18,
         fontWeight: 'bold',
@@ -136,19 +116,14 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'flex-end',
     },
-    beforeIcon: {
-        position: 'absolute',
-        marginTop: (heightScale * (61 - 28)) / 2,
-        marginLeft: heightScale * 15,
-    },
     myInfoStyle: {
         flexDirection: 'row',
         paddingHorizontal: heightScale * 25,
         marginVertical: heightScale * 42,
     },
     userIcon: {
-        height: heightScale * 115,
-        width: heightScale * 115,
+        height: heightScale * 86,
+        width: heightScale * 86,
         borderRadius: 100,
     },
     infoWrapper: {
