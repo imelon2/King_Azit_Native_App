@@ -10,7 +10,7 @@ const heightScale = heightData;
 
 export type cardType = {
     num: String,
-    pattern: 'diamond' | 'heart' | 'spade' | 'clover' | '',
+    pattern: 'D' | 'H' | 'S' | 'C' | '',
 }
 interface propsType {
     setHandModalStatus(bool: boolean): void;
@@ -20,16 +20,16 @@ interface propsType {
 
 
 function MakeHand(props: propsType) {
-    const { setBestHandData, bestHandData , setHandModalStatus } = props;
+    const { setBestHandData, bestHandData, setHandModalStatus } = props;
 
-    const [cardMap, setCardMap] = useState<cardType[]>([{ num: '', pattern: 'spade' }, { num: '2', pattern: 'spade' }, { num: '3', pattern: 'spade' }, { num: '4', pattern: 'spade' }, { num: '5', pattern: 'spade' },
-    { num: '', pattern: 'heart' }, { num: '6', pattern: 'spade' }, { num: '7', pattern: 'spade' }, { num: '8', pattern: 'spade' }, { num: '9', pattern: 'spade' },
-    { num: '', pattern: 'diamond' }, { num: '10', pattern: 'spade' }, { num: 'J', pattern: 'spade' }, { num: 'Q', pattern: 'spade' }, { num: 'K', pattern: 'spade' },
-    { num: '', pattern: 'clover' }, { num: 'A', pattern: 'spade' }, { num: '', pattern: '' }, { num: '', pattern: '' }, { num: '', pattern: '' }]
+    const [cardMap, setCardMap] = useState<cardType[]>([{ num: '', pattern: 'S' }, { num: '2', pattern: 'S' }, { num: '3', pattern: 'S' }, { num: '4', pattern: 'S' }, { num: '5', pattern: 'S' },
+    { num: '', pattern: 'H' }, { num: '6', pattern: 'S' }, { num: '7', pattern: 'S' }, { num: '8', pattern: 'S' }, { num: '9', pattern: 'S' },
+    { num: '', pattern: 'D' }, { num: '10', pattern: 'S' }, { num: 'J', pattern: 'S' }, { num: 'Q', pattern: 'S' }, { num: 'K', pattern: 'S' },
+    { num: '', pattern: 'C' }, { num: 'A', pattern: 'S' }, { num: '', pattern: '' }, { num: '', pattern: '' }, { num: '', pattern: '' }]
     );
 
-    const cardName = { diamond: 'cards-diamond', heart: 'cards-heart', spade: 'cards-spade', clover: 'cards-club' };
-    const color = { diamond: '#EF473C', heart: '#EF473C', spade: '#373737', clover: '#373737' }
+    const cardName = { D: 'cards-diamond', H: 'cards-heart', S: 'cards-spade', C: 'cards-club', '': '' };
+    const color = { D: '#EF473C', H: '#EF473C', S: '#373737', C: '#373737' }
 
     const line = [{}, {}, {}, {}];
 
@@ -48,21 +48,44 @@ function MakeHand(props: propsType) {
     }
 
     const onClickCard = (num: any, pattern: any) => {
-        if (bestHandData.length == 5) {
-            return;
-        }
 
         let result = [];
+        let push = false;
 
         for (let i = 0; i < bestHandData.length; i++) {
             let one = bestHandData[i];
-            result.push(one);
+            if (push == false && one.size == '') {
+                result.push({ num: num, pattern: pattern, size: 'big' })
+                push = true;
+            } else {
+                result.push(one);
+            }
         }
-
-        result.push({ num: num, pattern: pattern })
 
         setBestHandData(result);
 
+    }
+
+    const onclickDelete = () => {
+
+        let card = 0;
+        let result = [];
+        for (let i = 0; i < bestHandData.length; i++) {
+            let one = bestHandData[i];
+            
+            if ( one.size != '') {
+                card++;
+            }
+            result.push(one);
+        }
+
+        if ( card == 0 ) { 
+            return;
+        }
+
+        result[card - 1] = { num: '', pattern: '', size: ''   }        
+
+        setBestHandData(result);
     }
 
     return (
@@ -91,6 +114,12 @@ function MakeHand(props: propsType) {
                             {key == 19 && (
                                 <TouchableOpacity onPress={() => setHandModalStatus(false)} >
                                     <Text>[close]</Text>
+                                </TouchableOpacity>
+                            )}
+
+                            {key == 18 && (
+                                <TouchableOpacity onPress={() => onclickDelete()} >
+                                    <Text>[delete]</Text>
                                 </TouchableOpacity>
                             )}
 
