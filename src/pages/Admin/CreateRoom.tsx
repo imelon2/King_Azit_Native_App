@@ -18,6 +18,7 @@ import {HeaderStyle, heightData} from '../../modules/globalStyles';
 import {MainStyles} from '../../modules/MainStyles';
 import GameList from '../MainPage/Compoents/GameList';
 const heightScale = heightData;
+
 function CreateRoom() {
   const navigation =
     useNavigation<

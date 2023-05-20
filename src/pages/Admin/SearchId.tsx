@@ -34,6 +34,8 @@ function SearchId(props: propsType) {
 
         try {
           setLoading(true)
+          console.log(keyword);
+          
           const newUserList = await axios.get(`${Config.API_URL}/member/search?nickname=${keyword}`, {
             headers: {
               authorization: `Bearer ${access_token}`,
@@ -45,7 +47,7 @@ function SearchId(props: propsType) {
         } catch (error) {
           console.log(
             (error as AxiosError).response?.status,
-            'error from Admin/Components/MemberManagement.tsx',
+            'error from Admin/Components/SearchId.tsx',
           );
         } finally {
           setLoading(false)
