@@ -35,7 +35,7 @@ function RoomMake() {
   const navigation = useNavigation<NavigationProp<HomeRootStackParamList>>();
   const gameData: any = useSelector((state: RootState) => state.games);
   const {nickName} = useSelector((state: RootState) => state.user);
-  const [socket, disconnect] = useSocket();
+  const [socket] = useSocket();
 
   const [loading, setLoading] = useState(false);
 

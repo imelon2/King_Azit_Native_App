@@ -31,6 +31,7 @@ function SignUpCertification({ navigation }: SignInScreenProps) {
       phone: phoneNum,
       birth: user.birth,
       gender: user.gender,
+      fcmToken:user.phoneToken
     }
     axios.post(`${Config.API_URL}/join`, data)
       .then(function (res) {

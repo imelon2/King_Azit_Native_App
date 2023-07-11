@@ -30,7 +30,7 @@ import RoomMake from './src/pages/Admin/RoomMake';
 import TicketPay from './src/pages/Admin/TicketPay';
 import TicketCharge from './src/pages/Admin/TicketCharge';
 import MemberManagePage from './src/pages/Admin/MemberManagePage';
-import MemberManagement from './src/pages/Admin/MemberManagement';
+import MemberManagement, { userInfoType } from './src/pages/Admin/MemberManagement';
 import UserDetail from './src/pages/Admin/UserDetail';
 import MyTickets from './src/pages/MainPage/MyTickets';
 import TicketsResult, {
@@ -49,6 +49,8 @@ import UserConsumptionDetail from './src/pages/Calculate/components/UserConsumpt
 import {TicketType} from './src/modules/ticketsList';
 import GiftTicket from './src/pages/MainPage/GiftTicket';
 import Prize from './src/pages/Admin/Prize';
+import SetBanner from './src/pages/Admin/SetBanner';
+import UserInformation, { UserInformationType } from './src/pages/Admin/UserInformation';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -100,16 +102,9 @@ export type HomeRootStackParamList = {
   MemberManagement: {
     status: string;
   };
-  UserDetail: {
-    userData: {
-      memberId: string;
-      name: string;
-      nickname: string;
-      phone: string;
-      registerDate: string;
-    };
-  };
+  UserDetail: UserInformationType;
   MemberManagePage: undefined;
+  UserInformation:UserInformationType;
   AdminTicketsHistory: undefined;
   QRCodeScanner: undefined;
   CreateRoom: undefined;
@@ -121,6 +116,7 @@ export type HomeRootStackParamList = {
     month: number;
   }
   Prize: undefined;
+  SetBanner:undefined;
 };
 
 export type MyPageRootStackParamList = {
@@ -333,7 +329,7 @@ function AppInner() {
           <HomeStack.Screen
             name="UserDetail"
             component={UserDetail}
-            options={{animation: 'none'}}
+            options={{animation: 'slide_from_left'}}
           />
           <HomeStack.Screen
             name="TicketsResult"
@@ -394,6 +390,16 @@ function AppInner() {
             name="Prize"
             component={Prize}
             options={{animation: 'none'}}
+          />
+          <HomeStack.Screen
+            name="SetBanner"
+            component={SetBanner}
+            options={{animation: 'none'}}
+          />
+          <HomeStack.Screen
+            name="UserInformation"
+            component={UserInformation}
+            options={{animation: 'slide_from_right'}}
           />
         </HomeStack.Navigator>
       ) : (

@@ -57,6 +57,8 @@ function PayTicketForJoinGame(props: propsType) {
       if(socket && data.type === 'enterGameRoom') {
         Alert.alert("안내",data.msg + "다른 자리를 선택헤주세요.")
       }
+      console.log(data);
+      
     };
     const seatError = (data: any) => {
       if(data == "엔트리 꽉참") {
@@ -66,6 +68,8 @@ function PayTicketForJoinGame(props: propsType) {
       } else if (data.type == "티켓 부족") {
         Alert.alert("안내","티켓이 부족합니다.")
       } else {console.log(data);}
+      
+      console.log(data);
     };
 
     const userEnterRoom = (data: any) => {
@@ -98,10 +102,13 @@ function PayTicketForJoinGame(props: propsType) {
     if (!isEnoughCard) {
       return;
     }
+    console.log(props.item.game_id);
+    console.log(props.selectSeatNum);
+    console.log(props.isGuest.is);
     
     if (socket) {
       socket.emit('seat', {gameId:props.item.game_id,chair:props.selectSeatNum,isGuest:props.isGuest.is});
-      props.setModalStatus(false);
+      // props.setModalStatus(false);
     }
   };
 

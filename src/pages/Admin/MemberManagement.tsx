@@ -1,4 +1,4 @@
-import {useEffect, useState, useCallback, ReactElement} from 'react';
+import React, {useEffect, useState, useCallback, ReactElement} from 'react';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
   Image,
@@ -11,18 +11,19 @@ import {
   SafeAreaView,
   FlatList,
   Keyboard,
+  ActivityIndicator,
 } from 'react-native';
 import {HomeRootStackParamList} from '../../../AppInner';
-import {heightData} from '../../modules/globalStyles';
+import {HeaderStyle, heightData} from '../../modules/globalStyles';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import IconIonicons from 'react-native-vector-icons/Ionicons';
-import Modal from 'react-native-modal';
-import UserInformation from './Components/UserInformation';
 import axios, {AxiosError} from 'axios';
 import Config from 'react-native-config';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../store/reducer';
 import TimeFormat from '../../modules/TimeFormat';
+import ProfileImg from '../../components/ProfileImg';
+import { UserInformationType } from './UserInformation';
 const {width, height} = Dimensions.get('window');
 const heightScale = heightData;
 
@@ -36,19 +37,18 @@ export type userInfoType = {
   nickname: string;
   phone: string;
   registerDate: string;
-  uuid:string;
+  uuid: string;
 };
-function MemberManagement({route,navigation}: AdminScreenProps) {
-  const {status} = route.params;
 
+function MemberManagement({route, navigation}: AdminScreenProps) {
+  // let {status} = route.params;
   const access_token = useSelector(
     (state: RootState) => state.user.access_token,
   );
+  const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState(route.params.status);
   const [userList, setUserList] = useState<userInfoType[]>([]);
   const [keyword, setKeyword] = useState<string>('');
-  const [modalStatus, setModalStatus] = useState(false);
-  const [refresh,setRefresh] = useState();
-  const [selectIndex, setSelectIndex] = useState<number>(0);
   const onChangeKeyword = useCallback((text: string) => {
     setKeyword(text.trim());
   }, []);
@@ -56,36 +56,109 @@ function MemberManagement({route,navigation}: AdminScreenProps) {
   useEffect(() => {
     const getNewUserList = async () => {
       try {
-        const newUserList = await axios.get(`${Config.API_URL}/admin/waiting?nickname=${keyword}`, {
-          headers: {
-            authorization: `Bearer ${access_token}`,
+        setLoading(true);
+        const newUserList = await axios.get(
+          `${Config.API_URL}/admin/waiting?nickname=${keyword}`,
+          {
+            headers: {
+              authorization: `Bearer ${access_token}`,
+            },
           },
-        })
+        );
         setUserList(newUserList.data);
       } catch (error) {
         console.log(
           (error as AxiosError).response?.status,
           'error from Admin/Components/MemberManagement.tsx',
         );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const getUserList = async () => {
+      try {
+        setLoading(true);
+        const userList = await axios.get(
+          `${Config.API_URL}/admin/members?nickname=${keyword}`,
+          {
+            headers: {
+              authorization: `Bearer ${access_token}`,
+            },
+          },
+        );
+        setUserList(userList.data);
+      } catch (error) {
+        console.log(
+          (error as AxiosError).response?.status,
+          'error from Admin/Components/MemberManagement.tsx',
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const getAdminList = async () => {
+      try {
+        setLoading(true);
+        const adminList = await axios.get(
+          `${Config.API_URL}/admin/list?nickname=${keyword}`,
+          {
+            headers: {
+              authorization: `Bearer ${access_token}`,
+            },
+          },
+        );
+        setUserList(adminList.data);
+      } catch (error) {
+        console.log(
+          (error as AxiosError).response?.status,
+          'error from Admin/Components/MemberManagement.tsx',
+        );
+      } finally {
+        setLoading(false);
       }
     };
 
     if (status == 'new') {
-        const debounce = setTimeout(async() => {
-          getNewUserList();
-        }, 200);
-        return () => {
-          clearTimeout(debounce);
-        };
+      const debounce = setTimeout(async () => {
+        getNewUserList();
+      }, 200);
+      return () => {
+        clearTimeout(debounce);
+      };
+    } else if (status == 'exist' || status == 'newAdmin') {
+      const debounce = setTimeout(async () => {
+        getUserList();
+      }, 200);
+      return () => {
+        clearTimeout(debounce);
+      };
+    } else if (status == 'admin') {
+      const debounce = setTimeout(async () => {
+        getAdminList();
+      }, 200);
+      return () => {
+        clearTimeout(debounce);
+      };
     }
-  }, [keyword,refresh]);
+  }, [keyword, status]);
 
-  const onClickUser = (key: number) => {
-    setSelectIndex(key);
-    setModalStatus(true);
+  const onClickUser = (item:userInfoType) => {
+    const userInfo:UserInformationType = Object.assign(item,{status})
+    // 기존 맴버 관리 :
+    if(status === "exist") return navigation.navigate('UserDetail',userInfo);
+
+    // 그 외 :
+    navigation.navigate('UserInformation',userInfo)
   };
 
-  const replaceStringWithJSX = (str:string, find:string, replace:ReactElement) => {
+  const replaceStringWithJSX = (
+    str: string,
+    find: string,
+    replace: ReactElement,
+  ) => {
+    if(find =="") return str;
     const parts = str.split(find);
     const result = [];
     for (let i = 0; i < parts.length; i++) {
@@ -93,43 +166,59 @@ function MemberManagement({route,navigation}: AdminScreenProps) {
       if (i < parts.length - 1) result.push(replace);
     }
     return result;
-  }
+  };
 
-  const renderText = (nickname: string) => {
+  const renderText = (nickname: string,index:number) => {
     return (
       <Text style={styles.fontStyle2}>
         {replaceStringWithJSX(
           nickname,
           keyword,
-          <Text style={[styles.fontStyle2,{color: '#F5FF82'}]}>{keyword}</Text>
+          <Text style={[styles.fontStyle2, {color: '#F5FF82'}]} key={index}>
+            {keyword}
+          </Text>,
         )}
       </Text>
     );
   };
+
+  const nevigationFunc = useCallback(() => {
+    if (status == 'newAdmin') {
+      setLoading(true)
+      setStatus('admin');
+      return;
+    }
+    navigation.goBack();
+  }, [status]);
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={HeaderStyle.container}>
       <View>
-        <View style={styles.headerStyle}>
-          <Text style={styles.fontStyle}>
+        <View style={HeaderStyle.headerStyle}>
+          <Text style={HeaderStyle.headerFontStyle}>
             {status == 'exist' && '기존 멤버 관리'}
             {status == 'new' && '신규 멤버 관리'}
             {status == 'admin' && '어드민 관리'}
+            {status == 'newAdmin' && '어드민 추가'}
           </Text>
         </View>
         <IconAntDesign
           name="left"
           size={heightScale * 28}
           color="white"
-          style={styles.beforeIcon}
-          onPress={() => navigation.goBack()}
+          style={HeaderStyle.headerLeftIcon}
+          onPress={() => nevigationFunc()}
         />
         {status == 'admin' && (
           <IconAntDesign
             name="plus"
             size={heightScale * 28}
             color="white"
-            style={styles.plusIcon}
-            // onPress={() => navigation.goBack()}
+            style={HeaderStyle.headerRightIcon}
+            onPress={() => {
+              setLoading(true)
+              setStatus('newAdmin')
+            }}
           />
         )}
       </View>
@@ -151,75 +240,77 @@ function MemberManagement({route,navigation}: AdminScreenProps) {
             value={keyword}
           />
         </View>
-        <FlatList
-          keyExtractor={item => item.memberId}
-          data={userList}
-          style={{marginBottom: 50 * heightScale, marginTop: 30 * heightScale}}
-          disableScrollViewPanResponder={true}
-          renderItem={items => {
-            const {item} = items;
-            return (
-              <TouchableOpacity
-                onPressIn={() => Keyboard.dismiss()}
-                onPress={() => onClickUser(items.index)}
-                activeOpacity={1}
-                style={styles.applicationBox}
-                key={items.index}>
-                <View
-                  style={{
-                    flex: 1,
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}>
-                  <Image
-                    style={styles.playerIcon}
-                    source={require('../../assets/UserIcon.png')}
-                  />
-                </View>
-                <View style={{flex: 4, paddingLeft: 20 * heightScale,justifyContent:'center'}}>
-                  <View style={{flexDirection: 'row'}}>
-                    {renderText(item.nickname)}
+        {loading ? (
+          <View
+            style={{
+              marginTop: heightScale * 25,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <ActivityIndicator color={'#fff'} />
+          </View>
+        ) : (
+          <FlatList
+            keyExtractor={item => item.memberId}
+            data={userList}
+            style={{
+              marginBottom: 50 * heightScale,
+              marginTop: 30 * heightScale,
+            }}
+            disableScrollViewPanResponder={true}
+            ListEmptyComponent={() => (
+              <Text style={{color: '#fff', display: loading ? 'none' : 'flex'}}>
+                신규가입 유저가 없습니다.
+              </Text>
+            )}
+            renderItem={items => {
+              const {item} = items;
+              return (
+                <TouchableOpacity
+                  onPressIn={() => Keyboard.dismiss()}
+                  onPress={() => onClickUser(item)}
+                  activeOpacity={1}
+                  style={styles.applicationBox}
+                  key={items.index}>
+                  <View
+                    style={{
+                      flex: 1,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <ProfileImg style={styles.playerIcon} source={Config.IMG_URL! + item.uuid} />
                   </View>
-                    <Text style={styles.fontStyle3}>
-                      신청일: {TimeFormat(item.registerDate)}
+                  <View
+                    style={{
+                      flex: 4,
+                      paddingLeft: 20 * heightScale,
+                      justifyContent: 'center',
+                    }}>
+                    <View style={{flexDirection: 'row'}}>
+                      {renderText(item?.nickname,items.index)}
+                    </View>
+                    <Text style={styles.fontStyle3}> 
+                      신청일: {TimeFormat(item?.registerDate)}
                     </Text>
-                </View>
-                <View style={{justifyContent: 'center'}}>
-                  <IconAntDesign
-                    name="right"
-                    size={heightScale * 25}
-                    color="white"
-                    style={{marginRight: 10 * heightScale}}
-                  />
-                </View>
-              </TouchableOpacity>
-            );
-          }}
-        />
+                  </View>
+                  <View style={{justifyContent: 'center'}}>
+                    <IconAntDesign
+                      name="right"
+                      size={heightScale * 25}
+                      color="white"
+                      style={{marginRight: 10 * heightScale}}
+                    />
+                  </View>
+                </TouchableOpacity>
+              );
+            }}
+          />
+        )}
       </View>
-
-      <Modal isVisible={modalStatus}>
-        <UserInformation
-          data={userList[selectIndex]}
-          setModalStatus={setModalStatus}
-          setRefresh={setRefresh}
-          state="new"
-        />
-      </Modal>
     </SafeAreaView>
   );
 }
 const styles = StyleSheet.create({
-  container: {
-    height: '100%',
-    backgroundColor: '#121212',
-    paddingBottom: heightScale * 40,
-  },
-  fontStyle: {
-    fontSize: heightScale * 18,
-    fontWeight: 'bold',
-    color: 'white',
-  },
   container2: {
     width: width,
     height: height - 20,
@@ -252,24 +343,6 @@ const styles = StyleSheet.create({
     fontSize: 16 * heightScale,
     marginLeft: 8 * heightScale,
   },
-  headerStyle: {
-    height: heightScale * 61,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderBottomWidth: 2,
-    borderBottomColor: '#999999',
-  },
-  beforeIcon: {
-    position: 'absolute',
-    marginTop: (heightScale * (61 - 28)) / 2,
-    marginLeft: heightScale * 15,
-  },
-  plusIcon: {
-    position: 'absolute',
-    right: 0,
-    marginTop: (heightScale * (61 - 28)) / 2,
-    marginRight: heightScale * 15,
-  },
   giftModalTextInput: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -286,6 +359,7 @@ const styles = StyleSheet.create({
     width: heightScale * 330,
     marginLeft: 8 * heightScale,
     paddingHorizontal: heightScale * 7,
+    paddingVertical:0
   },
   applicationBox: {
     width: 390 * heightScale,

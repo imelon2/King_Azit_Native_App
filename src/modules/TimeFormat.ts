@@ -1,5 +1,5 @@
 const TimeFormat = (data: string) => {
-if(data === "") return "";
+  if(data == "" || data == undefined || data == null) return "";
   const TIME_ZONE = 9 * 60 * 60 * 1000; // 9시간
   const d = new Date(data);
 

@@ -1,133 +1,153 @@
-import { useEffect } from 'react';
-import { Image, StyleSheet, Text, View, Pressable, FlatList, Dimensions, TouchableOpacity } from 'react-native';
-import { heightData } from '../../../modules/globalStyles';
+import React, {useEffect, useState} from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  Dimensions,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import TicketHistoryViewDetail from './TicketHistoryViewDetail';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
-import { HomeRootStackParamList } from '../../../../AppInner';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
-const heightScale = heightData;
+import {HomeRootStackParamList} from '../../../../AppInner';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import axios from 'axios';
+import Config from 'react-native-config';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../../store/reducer';
+import { heightScale } from '../../../modules/MainStyles';
+const {width} = Dimensions.get('window');
 
-const { width } = Dimensions.get('window');
 
-const ContentsList = [
-    {
-        date: '02.14.2023 06:35 PM',
-        id: 'KING123',
-        count: 20,
-    },
-    {
-        date: '02.14.2023 06:35 PM',
-        id: 'KING123',
-        count: 20,
-    },
-    {
-        date: '02.14.2023 06:35 PM',
-        id: 'KING123',
-        count: 20,
-    },
-    {
-        date: '02.14.2023 06:35 PM',
-        id: 'KING123',
-        count: 20,
-    },
-    {
-        date: '02.14.2023 06:35 PM',
-        id: 'KING123',
-        count: 20,
-    },
-    {
-        date: '02.14.2023 06:35 PM',
-        id: 'KING123',
-        count: 20,
-    },
-    {
-        date: '02.14.2023 06:35 PM',
-        id: 'KING123',
-        count: 20,
-    },
-    {
-        date: '02.14.2023 06:35 PM',
-        id: 'KING123',
-        count: 20,
-    },
-    {
-        date: '02.14.2023 06:35 PM',
-        id: 'KING123',
-        count: 20,
-    },
-    {
-        date: '02.14.2023 06:35 PM',
-        id: 'KING123',
-        count: 20,
-    },
+interface IticketHistory {
+  type: string;
+  date: string;
+  amount: number;
+  summary: string;
+}
 
-]
+interface IProps {
+  status: 'charge' | 'history';
+  uuid: string;
+}
+function TicketHistory({status, uuid}: IProps) {
+  const navigation = useNavigation<NavigationProp<HomeRootStackParamList>>();
+  const {access_token} = useSelector((state: RootState) => state.user);
+  const [loading, setLoading] = useState(false);
+  const [list, setList] = useState<IticketHistory[]>();
 
-const LISTS = [...Array(ContentsList.length).keys()].map((_, i) => {
-    return {
-        key: i,
-        data: ContentsList[i],
+  useEffect(() => {
+    const getTicketsUseHistory = async () => {
+      try {
+        setLoading(true);
+        const getTicketsUseHistory = await axios.get(
+          `${Config.API_URL}/admin/ticket/history/use?uuid=${uuid}`,
+          {
+            headers: {
+              authorization: `Bearer ${access_token}`,
+            },
+          },
+        );
+        setList(getTicketsUseHistory.data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
     };
-});
 
-function TicketHistory() {
-    const navigation = useNavigation<NavigationProp<HomeRootStackParamList>>();
+    const getTicketsChargeHistory = async () => {
+      try {
+        setLoading(true);
+        const getTicketsUseHistory = await axios.get(
+          `${Config.API_URL}/admin/ticket/history/charge?uuid=${uuid}`,
+          {
+            headers: {
+              authorization: `Bearer ${access_token}`,
+            },
+          },
+        );
+        setList(getTicketsUseHistory.data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    return (
-        <View>
-            <View >
-                <TouchableOpacity style={styles.moreLine}  activeOpacity={1} onPress={() => navigation.navigate('AdminTicketsHistory')}>
-                    <Text style={styles.fontStyle} >전체보기</Text>
-                    <IconAntDesign
-                        name="right"
-                        size={heightScale * 20}
-                        color="white"
-                        style={{ marginRight: 15 * heightScale }}
+    if (status === 'history') {
+      getTicketsUseHistory();
+    } else if (status === 'charge') {
+      getTicketsChargeHistory();
+    }
+  }, []);
 
-                    />
-                </TouchableOpacity>
-            </View>
-            <View>
-                {LISTS.length === 0 ? (
-                    <View
-                        style={{
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            marginTop: 30,
-                        }}>
-                        <Text style={{ fontSize: 16, color: '#929292', fontWeight: '100' }}>
-                            티켓 사용 내역이 없습니다.
-                        </Text>
-                    </View>
-                ) : (
-                    <FlatList
-                        data={LISTS}
-                        // style={{ paddingBottom: heightScale * 30 }}
-                        keyExtractor={item => String(item.key)}
-                        bounces={false}
-                        renderItem={({ item }) => (
-                            <TicketHistoryViewDetail data={item.data} />
-                        )}
-                    />
-                )}
-            </View>
-        </View>
-    )
+  return (
+    <View>
+      <View>
+        <TouchableOpacity
+          style={styles.moreLine}
+          activeOpacity={1}
+          onPress={() => navigation.navigate('AdminTicketsHistory')}>
+          <Text style={styles.fontStyle}>전체보기</Text>
+          <IconAntDesign
+            name="right"
+            size={heightScale * 20}
+            color="white"
+            style={{marginRight: 15 * heightScale}}
+          />
+        </TouchableOpacity>
+      </View>
+      <View>
+        {loading ? (
+          <View
+            style={{
+              marginTop: heightScale * 40,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <ActivityIndicator color={'#fff'} />
+          </View>
+        ) : (
+          <FlatList
+            data={list}
+            ListEmptyComponent={() => (
+              <View style={{alignItems: 'center'}}>
+                <Text
+                  style={{
+                    color: '#fff',
+                    display: loading ? 'none' : 'flex',
+                    paddingVertical: heightScale * 30,
+                    fontSize: heightScale * 18,
+                  }}>
+                  티켓 내역이 없습니다.
+                </Text>
+              </View>
+            )}
+            keyExtractor={(_, index) => String(index)}
+            bounces={false}
+            renderItem={({item}) => <TicketHistoryViewDetail data={item} />}
+          />
+        )}
+      </View>
+    </View>
+  );
 }
 const styles = StyleSheet.create({
-    moreLine: {
-        height: 45 * heightScale,
-        width: width,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'flex-end',
-        borderBottomColor: '#353535',
-        borderBottomWidth: 1,
-    },
-    fontStyle: {
-        color: '#fff',
-        fontSize: 14 * heightScale,
-        marginRight: 10 * heightScale,
-    },
-})
+  moreLine: {
+    height: 45 * heightScale,
+    width: width,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    borderBottomColor: '#353535',
+    borderBottomWidth: 1,
+  },
+  fontStyle: {
+    color: '#fff',
+    fontSize: 14 * heightScale,
+    marginRight: 10 * heightScale,
+  },
+});
 export default TicketHistory;
