@@ -1,8 +1,8 @@
 import { Dimensions, StyleSheet } from "react-native";
 const {height} = Dimensions.get('window')
 export const basicDimensions = { // 디자이너가 작업하고 있는 XD파일 스크린의 세로,가로
-    height: 926,
-    width: 428,
+    height: 800,
+    width: 360,
   };
 
 export const heightData = Number(( // 높이 변환 작업
@@ -48,3 +48,13 @@ export const HeaderStyle = StyleSheet.create({
     top: (heightData * (61 - 28)) / 2,
   }
 });
+
+export const FontStyle = StyleSheet.create({
+  fs12 : {
+    fontSize:12,
+  },
+  fwBold : {
+    fontWeight:'bold'
+  }
+})
+
