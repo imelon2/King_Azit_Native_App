@@ -22,6 +22,9 @@ function TabBar({state, descriptors, navigation}: BottomTabBarProps) {
           } else if (route.name === 'Game') {
             title='Game'
             return <IconIonicons color={isFocused ? '#F5FF82' : 'white'} name="game-controller-outline" size={heightScale*32} />;
+          } else if (route.name === 'Calendar') {
+            title='Calendar'
+            return <IconOcticons color={isFocused ? '#F5FF82' : 'white'} name="calendar" size={heightScale*32} />;
           } else if (route.name === 'Ranking') {
             title='Ranking'
             return <IconIonicons color={isFocused ? '#F5FF82' : 'white'} name="md-trophy-outline" size={heightScale*32} />;

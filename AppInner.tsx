@@ -51,6 +51,7 @@ import GiftTicket from './src/pages/MainPage/GiftTicket';
 import Prize from './src/pages/Admin/Prize';
 import SetBanner from './src/pages/Admin/SetBanner';
 import UserInformation, { UserInformationType } from './src/pages/Admin/UserInformation';
+import Calendar from './src/pages/Calendar/Calendar';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -150,6 +151,11 @@ function TabNavigator() {
         name="Ranking"
         component={Ranking}
         options={{title: 'Ranking', headerShown: false}}
+      />
+      <Tab.Screen
+        name="Calendar"
+        component={Calendar}
+        options={{title: 'Calendar', headerShown: false}}
       />
       <Tab.Screen
         name="Game"

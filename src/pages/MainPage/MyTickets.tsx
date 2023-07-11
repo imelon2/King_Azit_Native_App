@@ -96,14 +96,14 @@ function MyTickets({route, navigation}: MyTicketsScreenProps) {
       <View style={{alignItems: 'center', flex: 12}}>
         <View>
           {/* <Video
-                        source={{ uri: "https://uploads-ssl.webflow.com/624b2c0795c4aab84ebe3296/624c5f468ac8f85e6acd1a08_kings%20NFT%203-transcode.mp4" }}
-                        style={styles.ticket}
-                        paused={false} // 재생/중지 여부
-                        resizeMode={"cover"} // 프레임이 비디오 크기와 일치하지 않을 때 비디오 크기를 조정하는 방법을 결정합니다. cover : 비디오의 크기를 유지하면서 최대한 맞게
-                        // onLoad={e => console.log(e)} // 미디어가 로드되고 재생할 준비가 되면 호출되는 콜백 함수입니다.
-                        repeat={true} // video가 끝나면 다시 재생할 지 여부
-                    // onAnimatedValueUpdate={() => {}}
-                    /> */}
+              source={{ uri: "https://uploads-ssl.webflow.com/624b2c0795c4aab84ebe3296/624c5f468ac8f85e6acd1a08_kings%20NFT%203-transcode.mp4" }}
+              style={styles.ticket}
+              paused={false} // 재생/중지 여부
+              resizeMode={"cover"} // 프레임이 비디오 크기와 일치하지 않을 때 비디오 크기를 조정하는 방법을 결정합니다. cover : 비디오의 크기를 유지하면서 최대한 맞게
+              // onLoad={e => console.log(e)} // 미디어가 로드되고 재생할 준비가 되면 호출되는 콜백 함수입니다.
+              repeat={true} // video가 끝나면 다시 재생할 지 여부
+          // onAnimatedValueUpdate={() => {}}
+          /> */}
 
           <View style={styles.ticketBox}>
             <View
