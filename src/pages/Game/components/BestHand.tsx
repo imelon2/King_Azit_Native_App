@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react"
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { heightData } from '../../../modules/globalStyles';
 import IconAntDesign from 'react-native-vector-icons/EvilIcons';
 import CardOne, { cardType } from './CardOne'
@@ -15,6 +15,9 @@ import axios from 'axios';
 
 function BestHand() {
     const { roles } = useSelector((state: RootState) => state.user);
+    const access_token = useSelector(
+        (state: RootState) => state.user.access_token,
+    );
     const isAdmin = roles.find((e: string) => e == 'ROLE_ADMIN');
 
     const [modalStatus, setModalStatus] = useState(false);
@@ -39,11 +42,62 @@ function BestHand() {
         // setBestHandData([]);
     }
 
+    const onSaveData = async () => {
+
+        let result: any = {
+            card1: "",
+            card2: "",
+            card3: "",
+            card4: "",
+            card5: "",
+            nickname: ""
+        };
+
+        if (nickName == '닉네임') {
+            Alert.alert('닉네임을 입력해 주세요');
+            return;
+        }
+
+        result['nickname'] = nickName;
+
+        for (let i = 0; i < bestHandData.length; i++) {
+            let one = bestHandData[i];
+
+            if (one.size == '') {
+                Alert.alert('카드를 모두 입력해 주세요');
+                return;
+            }
+            let num = one.num.toString();
+            result["card" + (i + 1)] = one.pattern + numChage[num];
+        }
+        // console.log(result);
+
+        try {
+             axios.post(`${Config.API_URL}/admin/game/besthand`,result, {
+                headers: {
+                    Authorization: `Bearer ${access_token}`,
+                },
+            });
+            // bestHand
+        } catch (error) {
+            console.log(error);
+        }
+
+
+    }
 
     // const cardData: cardType[] = [{ num: 'A', pattern: 'diamond' }, { num: 'A', pattern: 'spade' },
     // { num: 'A', pattern: 'clover' }, { num: '10', pattern: 'heart' }, { num: '10', pattern: 'spade' }];
 
-    const numChage: any = { 1: 'A', 11: 'J', 12: 'Q', 13: 'K', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9', 10: '10' }
+    const numChage: any = {
+        1: 'A', 11: 'J', 12: 'Q', 13: 'K', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9', 10: '10',
+        A: '1', J: '11', Q: '12', K: '13'
+    }
+
+    // '1': 'A', '11': 'J', '12': 'Q', '13': 'K', '2': '2', '3': '3', '4': '4', '5': '5', '6': '6', '7': '7', '8': '8', '9': '9', '10': '10',
+    // 'A': '1', 'J': '11', 'Q': '12', 'K': '13'
+
+
 
     useEffect(() => {
         const getBestHand = async () => {
@@ -70,7 +124,7 @@ function BestHand() {
                     let card = BestHand.data['card' + i];
                     let map = { num: '', pattern: pattern_, size: '' };
                     let one = card.substr(0, 1);
-                    let two = card.substr(1, 1);
+                    let two = card.substr(1, 2);
                     map['pattern'] = one;
                     map['num'] = numChage[two];
                     map['size'] = 'big';
@@ -100,7 +154,7 @@ function BestHand() {
                         />
                     )}
                 </View>
-                <TouchableOpacity  activeOpacity={1}  onPress={() => onOpenBestHand()} style={{ flex: 3 }} >
+                <TouchableOpacity activeOpacity={1} onPress={() => onOpenBestHand()} style={{ flex: 3 }} >
                     <View style={{ alignItems: 'center' }} >
                         <View  >
                             <View style={{ flexDirection: 'row', width: 390 * heightScale, justifyContent: 'center', alignItems: 'center' }}>
@@ -112,10 +166,10 @@ function BestHand() {
                             </View>
                         </View>
                     </View>
-                        <View style={{ marginTop: 10 * heightScale }} >
-                            <Text style={styles.fontStyle3} >*Show-down 시 핸드만 기록 됩니다.</Text>
-                            <Text style={styles.fontStyle3} >*매월 1일 12:00 정각 Prize 증정 및 초기화</Text>
-                        </View>
+                    <View style={{ marginTop: 10 * heightScale }} >
+                        <Text style={styles.fontStyle3} >*Show-down 시 핸드만 기록 됩니다.</Text>
+                        <Text style={styles.fontStyle3} >*매월 1일 12:00 정각 Prize 증정 및 초기화</Text>
+                    </View>
                 </TouchableOpacity>
             </View>
             <View style={{ flex: 4.2 }}>
@@ -142,7 +196,7 @@ function BestHand() {
                 </View>
                 {isAdmin && (
                     <View style={{ alignItems: 'center' }} >
-                        <TouchableOpacity activeOpacity={1} style={styles.buttonStyles} onPress={() => onOpenBestHand()} >
+                        <TouchableOpacity activeOpacity={1} style={styles.buttonStyles} onPress={() => onSaveData()} >
                             <Text style={styles.fontStyle5} >변경하기</Text>
                         </TouchableOpacity>
                     </View>

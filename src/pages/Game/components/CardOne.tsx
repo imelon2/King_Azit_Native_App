@@ -14,7 +14,7 @@ export type cardType = {
 function CardOne(props: cardType) {
     const { num, pattern, size } = props
     const cardName = { D: 'cards-diamond', H: 'cards-heart', S: 'cards-spade', C: 'cards-club', '': '' };
-    const color = { D: '#EF473C', H: '#EF473C', S: '#373737', C: '#3737370', '': '#000' }
+    const color = { D: '#EF473C', H: '#EF473C', S: '#373737', C: '#373737', '': '#000' }
 
     return (
         <>
