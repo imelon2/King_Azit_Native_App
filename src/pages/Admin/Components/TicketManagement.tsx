@@ -15,7 +15,7 @@ function TicketManagement() {
     const [red, setRed] = useState(5);
     const [black, setBlack] = useState(20);
     const [modalStatus, setModalStatus] = useState(false);
-    const [alretModalStatus, setAlretModalStatus] = useState(false);
+    const [alertModalStatus, setAlertModalStatus] = useState(false);
     const [step, setStep] = useState(0);
     const [selectTicket, setSelectTicket] = useState('');
     const [count, setCount] = useState(0);
@@ -37,11 +37,11 @@ function TicketManagement() {
     const nextStep = () => {
         setStep(2);
         setModalStatus(false);
-        setAlretModalStatus(true);
+        setAlertModalStatus(true);
     }
 
     const onClickClose = () => {
-        setAlretModalStatus(false);
+        setAlertModalStatus(false);
         setModalStatus(false);
         setCount(0);
         setStep(0);
@@ -165,7 +165,7 @@ function TicketManagement() {
                     )}
                 </View>
             </Modal >
-            <Modal isVisible={alretModalStatus} style={{ alignItems: 'center', justifyContent: 'center' }} >
+            <Modal isVisible={alertModalStatus} style={{ alignItems: 'center', justifyContent: 'center' }} >
                 <View style={styles.popUpComponent}>
                     <Text style={[styles.fontStyle5, { paddingBottom: heightScale * 15 }]}>
                         한나피쉬님의
