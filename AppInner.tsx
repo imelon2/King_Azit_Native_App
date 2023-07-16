@@ -32,7 +32,7 @@ import TicketCharge from './src/pages/Admin/TicketCharge';
 import MemberManagePage from './src/pages/Admin/MemberManagePage';
 import MemberManagement, { userInfoType } from './src/pages/Admin/MemberManagement';
 import UserDetail from './src/pages/Admin/UserDetail';
-import MyTickets from './src/pages/MainPage/MyTickets';
+import MyTickets from './src/pages/MainPage/User/MyTickets';
 import TicketsResult, {
   ticketsResultType,
 } from './src/pages/Admin/TicketsResult';

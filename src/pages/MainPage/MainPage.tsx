@@ -3,7 +3,7 @@ import getTickets from '../../hooks/getTickets';
 import MainPageAdmin from './Compoents/MainPageAdmin';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../store/reducer';
-import MainPageUser from './Compoents/MainPageUser';
+import MainPageUser from './User/MainPageUser';
 
 function MainPage() {
   // Only ROLE_ADMIN

@@ -1,11 +1,10 @@
 import React from 'react';
 import {Pressable, Text, View} from 'react-native';
 import {BottomTabBarProps} from '@react-navigation/bottom-tabs';
-import IconOcticons from 'react-native-vector-icons/Octicons';
 import IconIonicons from 'react-native-vector-icons/Ionicons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import {StyleSheet} from 'react-native';
 import {heightData} from '../modules/globalStyles';
-const heightScale = heightData;
 
 function TabBar({state, descriptors, navigation}: BottomTabBarProps) {
   return (
@@ -18,19 +17,19 @@ function TabBar({state, descriptors, navigation}: BottomTabBarProps) {
         const icon = () => {
           if (route.name === 'MainPage') {
             title='Home'
-            return <IconOcticons name="home" color={isFocused ? '#F5FF82' : 'white'} size={heightScale*32} />;
+            return <IconIonicons name="md-home-outline" color={isFocused ? '#F5FF82' : 'white'} size={heightData*27} />;
           } else if (route.name === 'Game') {
             title='Game'
-            return <IconIonicons color={isFocused ? '#F5FF82' : 'white'} name="game-controller-outline" size={heightScale*32} />;
+            return <IconIonicons color={isFocused ? '#F5FF82' : 'white'} name="game-controller-outline" size={heightData*27} />;
           } else if (route.name === 'Calendar') {
             title='Calendar'
-            return <IconOcticons color={isFocused ? '#F5FF82' : 'white'} name="calendar" size={heightScale*32} />;
+            return <AntDesign color={isFocused ? '#F5FF82' : 'white'} name="calendar"  size={heightData*30} />;
           } else if (route.name === 'Ranking') {
             title='Ranking'
-            return <IconIonicons color={isFocused ? '#F5FF82' : 'white'} name="md-trophy-outline" size={heightScale*32} />;
+            return <IconIonicons color={isFocused ? '#F5FF82' : 'white'} name="md-trophy-outline" size={heightData*27} />;
           } else if (route.name === 'MyPage') {
             title='My Profile'
-            return <IconOcticons color={isFocused ? '#F5FF82' : 'white'} name="person" size={heightScale*32} />;
+            return <IconIonicons color={isFocused ? '#F5FF82' : 'white'} name="person-outline" size={heightData*27} />;
           }
         };
 
@@ -74,25 +73,21 @@ function TabBar({state, descriptors, navigation}: BottomTabBarProps) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    height:heightScale*80,
+    height:heightData*80,
     backgroundColor:'#121212',
-    // paddingVertical:5,
-    // borderTopColor:'#A4A4A4',
-    // borderTopWidth:StyleSheet.hairlineWidth,
-    // paddingTop:10
   },
   tabBarStyle: {
     flex: 1,
-    marginTop:heightScale*10,
+    marginTop:heightData*10,
     alignItems: 'center',
   },
   onButtonStyle: {
-    fontSize: heightScale*17,
+    fontSize: heightData*14,
     color: '#F5FF82',
 
   },
   offButtonStyle: {
-    fontSize: heightScale*17,
+    fontSize: heightData*14,
     color: 'white',
 
   },

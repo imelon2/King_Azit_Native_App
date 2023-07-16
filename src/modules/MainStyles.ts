@@ -34,20 +34,6 @@ export const MainStyles = StyleSheet.create({
     borderBottomWidth: 2,
     borderColor: '#C4C4C4',
   },
-  imgSlideBox: {
-    width: width,
-    height: heightScale * 300,
-  },
-  imgSlideBox2: {
-    width:heightScale * 429,
-    height: heightScale * 300,
-    resizeMode: 'stretch',
-  },
-  imgSlideBox3: {
-    width: width,
-    height: heightScale * 208,
-    // resizeMode:'center'
-  },
   ticketContainer: {
     flex: 10,
     paddingTop: heightScale * 14, // 12나와야함

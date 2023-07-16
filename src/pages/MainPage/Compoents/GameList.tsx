@@ -8,7 +8,10 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/reducer';
 import getGameList, { getGameListArr, roomType } from '../../../hooks/getGameList';
 
-
+/**
+ * DEPRECATED
+ * 게임 리스트 페이지
+ */
 const GameList = () => {
   const [gameBox, setGameBox] = useState<roomType[]>([]);
   const [menu, setMenu] = useState([

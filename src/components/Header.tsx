@@ -1,59 +1,61 @@
-import React from "react";
-import { Dimensions, StyleProp, StyleSheet, Text, View } from "react-native";
-import { heightScale } from "../modules/MainStyles";
-import { heightData } from "../modules/globalStyles";
+import React from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import {heightData, widthData} from '../modules/globalStyles';
 
-// const Header: React.FC<{
-//     title:string;
-//     rightIcon: any;
-//     leftIcon: any;
-//   }> = ({...props}) => {
-//     return (
-//         <View>
-//             <View style={HeaderStyle.headerStyle}>
-//             <Text style={HeaderStyle.headerFontStyle}>방만들기</Text>
-//             </View>
-//             <IconAntDesign
-//             name="left"
-//             size={heightScale * 28}
-//             color="white"
-//             style={{
-//                 position: 'absolute',
-//                 marginTop: (heightScale * (61 - 28)) / 2,
-//                 marginLeft: heightScale * 15,
-//             }}
-//             onPress={() => navigation.navigate('Home')}
-//             />
-//       </View>
-//     )
-// }
+const Header: React.FC<{
+  title: string;
+  rightIcon?: any;
+  leftIcon?: any;
+}> = ({...props}) => {
+  return (
+    <View style={HeaderStyle.headerContainer}>
+      <View style={HeaderStyle.headerLeftIcon}>
+        {props.leftIcon ? props.leftIcon() : null}
+      </View>
+      <View style={HeaderStyle.headerStyle}>
+        <Text style={HeaderStyle.headerFontStyle}>{props.title}</Text>
+      </View>
+      <View style={HeaderStyle.headerRightIcon}>
+        {props.rightIcon ? props.rightIcon() : null}
+      </View>
+    </View>
+  );
+};
 
-// export const HeaderStyle = StyleSheet.create({
-//     container : {
-//       height: height,
-//       backgroundColor: 'black',
-//     },
-//     headerStyle: {
-//       height: heightData * 63,
-//       justifyContent: 'center',
-//       alignItems: 'center',
-//       borderBottomWidth: 1,
-//       borderBottomColor: '#323232',
-//     },
-//     headerFontStyle: {
-//       fontSize: heightData * 17,
-//       fontWeight: 'bold',
-//       color: 'white',
-//       paddingVertical: heightData * 4.5,
-//     },
-//     headerLeftIcon: {
-//       position: 'absolute',
-//       marginTop: (heightData * (61 - 28)) / 2,
-//       marginLeft: heightData * 15,
-//     },
-//     headerRightIcon: {
-//       position: 'absolute',
-//       right: heightData * 15,
-//       top: (heightData * (61 - 28)) / 2,
-//     }
-//   });
+const HeaderStyle = StyleSheet.create({
+  headerContainer: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#323232',
+  },
+  headerStyle: {
+    flex: 1,
+    height: heightData * 63,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerFontStyle: {
+    fontSize: heightData * 17,
+    fontWeight: 'bold',
+    color: 'white',
+    paddingVertical: heightData * 4.5,
+  },
+  headerLeftIcon: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    left: widthData * 20,
+  },
+  headerRightIcon: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    right: widthData * 20,
+  },
+});
+
+export default Header;

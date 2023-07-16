@@ -1,5 +1,5 @@
 import { Dimensions, StyleSheet } from "react-native";
-const {height} = Dimensions.get('window')
+export const {height,width} = Dimensions.get('window')
 export const basicDimensions = { // 디자이너가 작업하고 있는 XD파일 스크린의 세로,가로
     height: 800,
     width: 360,
@@ -52,9 +52,33 @@ export const HeaderStyle = StyleSheet.create({
 export const FontStyle = StyleSheet.create({
   fs12 : {
     fontSize:12,
+    color: 'white'
+  },
+  fs14 : {
+    fontSize:14,
+    color: 'white'
+  },
+  fs16 : {
+    fontSize:16,
+    color: 'white'
+  },
+  fs22 : {
+    fontSize:22,
+    color: 'white'
   },
   fwBold : {
     fontWeight:'bold'
+  },
+  fw600 : {
+    fontWeight:'600'
+  },
+  fw400 : {
+    fontWeight:'400'
   }
 })
 
+export const GlobalStyles = StyleSheet.create({
+  container: {
+    backgroundColor: '#000'
+  }
+})

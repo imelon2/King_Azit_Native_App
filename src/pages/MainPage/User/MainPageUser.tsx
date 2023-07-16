@@ -9,7 +9,7 @@ import {
   FlatList,
   Pressable,
   TouchableOpacity,
-  Dimensions,
+  StyleSheet,
 } from 'react-native';
 import Swiper from 'react-native-swiper';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
@@ -18,12 +18,16 @@ import {
   HomeRootStackParamList,
   MyPageRootStackParamList,
 } from '../../../../AppInner';
-import {MainStyles, heightScale} from '../../../modules/MainStyles';
-import ticketsList, {ticketsListType, TicketType} from '../../../modules/ticketsList';
+import ticketsList, {TicketType, img} from '../../../modules/ticketsList';
 import {RootState} from '../../../store/reducer';
-import GameList from './GameList';
-const {width} = Dimensions.get('window');
-console.log(width);
+import {
+  FontStyle,
+  GlobalStyles,
+  heightData,
+  width,
+  widthData,
+} from '../../../modules/globalStyles';
+import UpperString from '../../../modules/UpperString';
 
 function MainPageUser() {
   const navigation =
@@ -31,11 +35,26 @@ function MainPageUser() {
       NavigationProp<HomeRootStackParamList & MyPageRootStackParamList>
     >();
   const {black, red, gold} = useSelector((state: RootState) => state.ticket);
-  const CARDS = ticketsList('width');
+  const CARDS = [
+    {
+      type: 'black',
+      image: img.width.BlackCardImg,
+      count: black,
+    },
+    {
+      type: 'red',
+      image: img.width.RedCardImg,
+      count: red,
+    },
+    {
+      type: 'gold',
+      image: img.width.GoldCardImg,
+      count: gold,
+    },
+  ];
 
-  
-  let _gap = 40;
-  let _offset = 22;
+  let _gap = 16;
+  let _offset = 50;
   let _width = width - (_gap + _offset) * 2;
 
   const images = [
@@ -59,57 +78,31 @@ function MainPageUser() {
     }
     navigation.navigate('MyTickets', {card: text, count: _count});
   };
+
   return (
-    <SafeAreaView style={MainStyles.container}>
+    <SafeAreaView style={GlobalStyles.container}>
       <ScrollView bounces={false}>
         {/* 배너 */}
-        <View style={MainStyles.imgSlideBox}>
+        <View style={BannerStyle.imgSlideBox}>
           <Swiper
             horizontal={true}
-            paginationStyle={{bottom: heightScale * 5}}
-            activeDot={
-              <View
-                style={{
-                  backgroundColor: '#484848',
-                  width: 27,
-                  height: 8,
-                  borderRadius: 4,
-                  marginLeft: 3,
-                  marginRight: 3,
-                  marginTop: 3,
-                  marginBottom: 3,
-                }}
-              />
-            }
-            dot={
-              <View
-                style={{
-                  backgroundColor: '#484848',
-                  opacity: 0.5,
-                  width: 8,
-                  height: 8,
-                  borderRadius: 4,
-                  marginLeft: 3,
-                  marginRight: 3,
-                  marginTop: 3,
-                  marginBottom: 3,
-                }}
-              />
-            }>
+            paginationStyle={{bottom: heightData * 5}}
+            activeDot={<View style={BannerStyle.activeDot} />}
+            dot={<View style={BannerStyle.dot} />}>
             {images.map((uri, index) => (
               <Image
-              key={index}
-              style={MainStyles.imgSlideBox2}
-              source={uri}
-            />
+                key={index}
+                style={BannerStyle.imgSlideBox2}
+                source={uri}
+              />
             ))}
           </Swiper>
         </View>
 
-        {/* My Tickets */}
-        <View style={{marginTop: heightScale * 60}}>
-          <View style={MainStyles.mainTextBox2}>
-            <Text style={MainStyles.mainText}>My Tikets</Text>
+        {/* 보유 티켓 */}
+        <View style={{marginTop: heightData * 60}}>
+          <View style={styles.TextBox}>
+            <Text style={[FontStyle.fs22, FontStyle.fwBold]}>보유 티켓</Text>
           </View>
           <FlatList
             horizontal
@@ -121,7 +114,7 @@ function MainPageUser() {
             decelerationRate="fast"
             bounces={false}
             data={CARDS}
-            keyExtractor={(_,index) => String(index) }
+            keyExtractor={(_, index) => String(index)}
             contentContainerStyle={{
               paddingHorizontal: _offset + _gap / 2,
             }}
@@ -134,7 +127,7 @@ function MainPageUser() {
                   style={{
                     resizeMode: 'stretch',
                     width: _width,
-                    height: heightScale * 165,
+                    height: heightData * 130,
                     marginHorizontal: _gap / 2,
                     borderWidth: 1,
                     borderColor: '#A1A1A1',
@@ -147,16 +140,16 @@ function MainPageUser() {
                     style={{
                       color: 'white',
                       letterSpacing: 2,
-                      fontSize: heightScale * 16,
+                      fontSize: heightData * 12,
                       fontWeight: '500',
                     }}>
-                    {item.type.charAt(0).toUpperCase() + item.type.slice(1)} Ticket
+                    {UpperString(item.type)} Ticket
                   </Text>
                   <Text
                     style={{
                       color: 'white',
-                      fontSize: heightScale * 14,
-                      fontWeight: '500',
+                      fontSize: heightData * 9,
+                      fontWeight: 'bold',
                     }}>
                     보유 : {item.count}
                   </Text>
@@ -164,12 +157,11 @@ function MainPageUser() {
                 <View
                   style={{
                     position: 'absolute',
-                    right: heightScale * (_gap / 2 + 10),
+                    right: heightData * (_gap / 2 + 10),
                   }}>
                   <IconAntDesign
-                    style={{flex: 1}}
                     name="right"
-                    size={heightScale * 18}
+                    size={heightData * 18}
                     color="white"
                   />
                 </View>
@@ -178,21 +170,55 @@ function MainPageUser() {
           />
         </View>
 
-        {/* Game */}
-        <View style={{marginTop: heightScale * 60}}>
-          {/* Header */}
-          <View style={MainStyles.mainTextBox2}>
+        {/* 토너먼트 */}
+        <View style={{marginTop: heightData * 60}}>
+          <View style={styles.TextBox}>
             <TouchableOpacity activeOpacity={1}>
-              <Text style={MainStyles.mainText}>Game</Text>
+              <Text style={[FontStyle.fs22, FontStyle.fwBold]}>토너먼트</Text>
             </TouchableOpacity>
           </View>
-
-          {/* 게임 현재 리스트 */}
-          <GameList />
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 }
 
+const BannerStyle = StyleSheet.create({
+  imgSlideBox: {
+    height: heightData * 300,
+  },
+  imgSlideBox2: {
+    width: width,
+    height: heightData * 300,
+    resizeMode: 'contain',
+  },
+  activeDot: {
+    backgroundColor: '#484848',
+    width: widthData * 27,
+    height: heightData * 8,
+    borderRadius: 4,
+    marginLeft: 3,
+    marginRight: 3,
+    marginTop: 3,
+    marginBottom: 3,
+  },
+  dot: {
+    backgroundColor: '#484848',
+    opacity: 0.5,
+    width: widthData * 8,
+    height: heightData * 8,
+    borderRadius: 4,
+    marginLeft: 3,
+    marginRight: 3,
+    marginTop: 3,
+    marginBottom: 3,
+  },
+});
+
+const styles = StyleSheet.create({
+  TextBox: {
+    marginLeft: widthData * 18,
+    marginBottom: heightData * 30,
+  },
+});
 export default MainPageUser;
