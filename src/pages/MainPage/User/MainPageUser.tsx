@@ -18,7 +18,7 @@ import {
   HomeRootStackParamList,
   MyPageRootStackParamList,
 } from '../../../../AppInner';
-import ticketsList, {TicketType, img} from '../../../modules/ticketsList';
+import {TicketType, img} from '../../../modules/ticketsList';
 import {RootState} from '../../../store/reducer';
 import {
   FontStyle,
@@ -28,6 +28,8 @@ import {
   widthData,
 } from '../../../modules/globalStyles';
 import UpperString from '../../../modules/UpperString';
+import Tournament, { TournamentInfoBoxDemo } from '../../../components/TournamentInfoBox';
+import TournamentInfoBox from '../../../components/TournamentInfoBox';
 
 function MainPageUser() {
   const navigation =
@@ -80,7 +82,7 @@ function MainPageUser() {
   };
 
   return (
-    <SafeAreaView style={GlobalStyles.container}>
+    <SafeAreaView style={[GlobalStyles.container, {flex: 1}]}>
       <ScrollView bounces={false}>
         {/* 배너 */}
         <View style={BannerStyle.imgSlideBox}>
@@ -173,9 +175,22 @@ function MainPageUser() {
         {/* 토너먼트 */}
         <View style={{marginTop: heightData * 60}}>
           <View style={styles.TextBox}>
-            <TouchableOpacity activeOpacity={1}>
-              <Text style={[FontStyle.fs22, FontStyle.fwBold]}>토너먼트</Text>
-            </TouchableOpacity>
+            <Text
+              style={[
+                FontStyle.fs22,
+                FontStyle.fwBold,
+                {marginBottom: heightData * 32},
+              ]}>
+              토너먼트
+            </Text>
+            {/* 토너먼트 Info Box todo : 파라미터 받을 예정 */}
+            {[1, 2, 3].map(() => {
+              return (
+                <View style={{marginBottom: heightData * 20}}>
+                  <TournamentInfoBox Info={TournamentInfoBoxDemo}/>
+                </View>
+              );
+            })}
           </View>
         </View>
       </ScrollView>
@@ -185,12 +200,12 @@ function MainPageUser() {
 
 const BannerStyle = StyleSheet.create({
   imgSlideBox: {
-    height: heightData * 300,
+    height: heightData * 265,
   },
   imgSlideBox2: {
     width: width,
-    height: heightData * 300,
-    resizeMode: 'contain',
+    height: heightData * 265,
+    resizeMode: 'cover',
   },
   activeDot: {
     backgroundColor: '#484848',

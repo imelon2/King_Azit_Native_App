@@ -3,15 +3,13 @@ import {
   View,
   Image,
   StyleSheet,
-  TouchableOpacity,
   Pressable,
   SafeAreaView,
 } from 'react-native';
 import {useState, useEffect} from 'react';
-import {FontStyle, GlobalStyles, heightData, widthData} from '../../../modules/globalStyles';
+import {FontStyle, GlobalStyles, headerIconSize, heightData, widthData} from '../../../modules/globalStyles';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
-import {Shadow} from 'react-native-shadow-2';
 import QrCode from '../../../components/QrCode';
 import {HomeRootStackParamList} from '../../../../AppInner';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -69,7 +67,7 @@ function MyTickets({route, navigation}: MyTicketsScreenProps) {
   // Black, Red Ticket UI
   const BlackRed = () => {
     return (
-      <View style={{alignItems: 'center'}}>
+      <View style={{alignItems: 'center',flex:1}}>
         <View style={styles.ticketBox}>
           <View
             style={{
@@ -120,14 +118,21 @@ function MyTickets({route, navigation}: MyTicketsScreenProps) {
         </Pressable>
 
         {/* 선물하기 버튼 */}
-          <BottomButton onPress={() => console.log('hi')} title='선물하기' backgroundColor="#FCFF72" color='#000'/>
+        <View style={{flex:1,justifyContent:'flex-end'}}>
+          <BottomButton onPress={() => navigation.navigate('GiftTicket')} title='선물하기' backgroundColor="#FCFF72" color='#000'/>
+        </View>
       </View>
     );
   };
 
+  // Gold Ticket UI
   const gold = () => {
     return (
-      <>
+      <View style={{alignItems:'center'}}>
+        <View style={{alignItems:'center',marginTop:65*heightData}}>
+          <Text style={[FontStyle.fs18,FontStyle.fw600]}>Kings` Azit Gold NFT</Text>
+          <Text style={[FontStyle.fs16]}>보유 {count} 장</Text>
+        </View>
         <Video
           source={{
             uri: 'https://uploads-ssl.webflow.com/624b2c0795c4aab84ebe3296/624c5f468ac8f85e6acd1a08_kings%20NFT%203-transcode.mp4',
@@ -139,7 +144,10 @@ function MyTickets({route, navigation}: MyTicketsScreenProps) {
           repeat={true} // video가 끝나면 다시 재생할 지 여부
           // onAnimatedValueUpdate={() => {}}
         />
-      </>
+        <View style={{alignItems:'center'}}>
+          <Text style={[FontStyle.fs18]}>Kings` Azit Gold NFT 획득 방법 및 혜택 :</Text>
+        </View>
+      </View>
     );
   };
 
@@ -150,7 +158,7 @@ function MyTickets({route, navigation}: MyTicketsScreenProps) {
         rightIcon={() => (
           <AntDesignIcon
             name="close"
-            size={26}
+            size={headerIconSize}
             color="#fff"
             onPress={() => navigation.goBack()}
           />
@@ -158,7 +166,7 @@ function MyTickets({route, navigation}: MyTicketsScreenProps) {
       />
 
       {/* 티켓 UI */}
-      <View style={{alignItems: 'center',backgroundColor:'gray'}}>{ticketUI()}</View>
+      {ticketUI()}
 
       {/* QR확대 팝업창 */}
       {qrViewState ? (
@@ -176,7 +184,7 @@ function MyTickets({route, navigation}: MyTicketsScreenProps) {
             <QrCode value={deepLinkUrl} size={heightData * 280} />
           </View>
           <AntDesignIcon
-            name="close"
+            name="closecircleo"
             size={heightData * 40}
             color={'#fff'}
             style={{marginTop: heightData * 30}}
@@ -191,9 +199,9 @@ function MyTickets({route, navigation}: MyTicketsScreenProps) {
 
 const styles = StyleSheet.create({
   ticket: {
-    marginTop: 50 * heightData,
-    width: 264 * heightData,
-    height: 419 * heightData,
+    marginTop: 20 * heightData,
+    width: 315 * widthData,
+    height: 420 * heightData,
   },
   plusTextBox: {
     alignItems: 'center',
@@ -207,7 +215,6 @@ const styles = StyleSheet.create({
   qrStyle: {marginTop: heightData * 11, marginRight: widthData * 17},
   buttonContaner: {
     flex:1,
-    backgroundColor:'gray'
   },
   ticketBox: {
     width: 263 * widthData,

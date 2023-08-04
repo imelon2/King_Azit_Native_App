@@ -40,7 +40,7 @@ import {deepLinkController} from './src/modules/Linking';
 import Forbidden from './src/pages/Admin/Forbidden';
 import AdminTicketsHistory from './src/pages/Admin/AdminTicketsHistory';
 import QRCodeScanner from './src/pages/Admin/Components/QRCodeScanner';
-import CreateRoom from './src/pages/Admin/CreateRoom';
+import CreateRoom from './src/pages/MainPage/Admin/CreateRoom';
 import CalculatePage from './src/pages/Calculate/CalculatePage';
 import MonthCirculation from './src/pages/Calculate/components/MonthCirculation';
 import TotalPublish from './src/pages/Calculate/components/TotalPublish';
@@ -51,7 +51,7 @@ import GiftTicket from './src/pages/MainPage/GiftTicket';
 import Prize from './src/pages/Admin/Prize';
 import SetBanner from './src/pages/Admin/SetBanner';
 import UserInformation, { UserInformationType } from './src/pages/Admin/UserInformation';
-import Calendar from './src/pages/Calendar/Calendar';
+import CalendarPage from './src/pages/Calendar/CalendarPage';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -154,7 +154,7 @@ function TabNavigator() {
       />
       <Tab.Screen
         name="Calendar"
-        component={Calendar}
+        component={CalendarPage}
         options={{title: 'Calendar', headerShown: false}}
       />
       <Tab.Screen

@@ -8,6 +8,7 @@ export type ticketsListType = {
     count:number
 }
 export type TicketType = 'black' | 'red' | 'gold' | "";
+export type TicketTypeKR = '블랙티켓' | '레드티켓' | '골드티켓';
 type EventType = "basic" | "width";
 
 export const img = {

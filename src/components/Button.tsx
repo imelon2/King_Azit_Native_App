@@ -10,7 +10,7 @@ export const BottomButton: React.FC<{
   leftIcon?: any;
 }> = ({...props}) => {
   return (
-    <Pressable onPress={() => props.onPress()} style={{flex:1,justifyContent:'flex-end'}}>
+    <Pressable onPress={() => props.onPress()}>
       <View
         style={[{backgroundColor: props.backgroundColor}, styles.container]}>
         <Text style={[FontStyle.fs16, FontStyle.fw600, {color: props.color}]}>
