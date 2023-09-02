@@ -1,5 +1,5 @@
 import {useNavigation, NavigationProp} from '@react-navigation/native';
-import React, { useState } from 'react';
+import React, {useCallback, useState} from 'react';
 import {
   Pressable,
   SafeAreaView,
@@ -22,28 +22,53 @@ import {
   widthData,
 } from '../../../modules/globalStyles';
 import Header from '../../../components/Header';
-import TournamentInfoBox, { TournamentInfoBoxDemo } from '../../../components/TournamentInfoBox';
-import { MarkedDates } from 'react-native-calendars/src/types';
-import getFormatDate from '../../../modules/CallendarStyles';
+import TournamentInfoBox, {
+  TournamentInfoBoxDemo,
+} from '../../../components/TournamentInfoBox';
+import {MarkedDates} from 'react-native-calendars/src/types';
+import {getFormatDate, MONTH, WEEK} from '../../../modules/CallendarStyles';
 
 function CreateRoom() {
-  const week = new Array('일', '월', '화', '수', '목', '금', '토');
-  const month = new Array("January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
-  );
   const today = new Date();
-  const [current,setCurrent] = useState(getFormatDate(new Date()))
+  const [current, setCurrent] = useState(getFormatDate());
+  const [markedDates, setMarkedDates] = useState<MarkedDates>({
+    [getFormatDate()]: {
+      marked: true,
+      selected: true,
+      dots: [{color: '#5C5C5C'}],
+    },
+    ['2023-08-09']: {
+      marked: true,
+      selected: false,
+      dots: [{color: '#5C5C5C'}, {color: '#F5FF82'}, {color: '#C9A978'}],
+    }
+  });
 
-  
   const navigation =
     useNavigation<
       NavigationProp<MyPageRootStackParamList & HomeRootStackParamList>
     >();
 
-    const markedDates:MarkedDates = {
-      '2023-07-30':{marked:true,dots:[{color:'red'},{color:'green'}]},
-      '2023-07-31':{marked:true,dots:[{color:'red',key:'0',selectedDotColor:'green'}]},
-    }
+  const onChangeDate = useCallback(
+    (day: string) => {
+        setMarkedDates(prev => {
+          // selected 초기화
+          Object.keys(prev).map(key => (prev[key].selected = false));
+
+          if (!!markedDates[day]) {
+            // 이미 존재하는 day면, 해당 object의 selected = true
+            return {...prev, [day]: {...prev[day], selected: true}};
+          } else {
+            // 존재하는 않은 day면, 해당 object에 값 추가 후, selected = true
+            prev[day] = {selected: true};
+            return {...prev};
+          }
+        });
+
+    },
+    [markedDates],
+  );
+
   return (
     <SafeAreaView style={[GlobalStyles.container, {flex: 1}]}>
       {/* header */}
@@ -60,21 +85,24 @@ function CreateRoom() {
       />
       <ScrollView bounces={false}>
         <Calendar
-        markingType='multi-dot'
-        current={current}
-        theme={{
-          calendarBackground: '#000',
-          // todayTextColor:'red',
-          textMonthFontSize:22,
-          monthTextColor:'#fff',// 달력 헤더 색상
-          textMonthFontWeight:'500',
-          dayTextColor:'#fff', // '일' 색상
-          textDisabledColor:'#5C5C5C' // 비활성화된 '일' 색상
-      }}
-        markedDates={markedDates}
-         />
+          markingType="multi-dot"
+          current={current}
+          onDayPress={day => onChangeDate(day.dateString)} // 날짜 변경 시 event
+          onMonthChange={month => console.log(month)} // 월 변경 시 event
+          theme={{
+            calendarBackground: '#000',
+            todayTextColor: '#5CCEFF', // 오늘 날짜 색상
+            textMonthFontSize: 22, // 헤더 글씨 크기
+            monthTextColor: '#fff', // 달력 헤더 색상
+            textMonthFontWeight: '500', // 달력 헤더 굵기
+            dayTextColor: '#fff', // '일' 색상
+            textDisabledColor: '#5C5C5C', // 비활성화된 '일' 색상
+            selectedDayBackgroundColor: 'gray', // 선택된 날짜 배경
+          }}
+          markedDates={markedDates}
+        />
         {/* 방 만들기 */}
-        <View style={[styles.gameContainer,styles.headerMarginTop]}>
+        <View style={[styles.gameContainer, styles.headerMarginTop]}>
           {/* Header */}
           <Text
             style={[
@@ -105,11 +133,11 @@ function CreateRoom() {
               FontStyle.fwBold,
               {paddingBottom: heightData * 28},
             ]}>
-            {week[today.getDay()]}요일 {month[today.getMonth()]} 15
+            {WEEK[today.getDay()]}요일 {MONTH[today.getMonth()]} 15
           </Text>
         </View>
         <View style={GlobalStyles.flexCenter}>
-          <TournamentInfoBox Info={TournamentInfoBoxDemo}/>
+          <TournamentInfoBox Info={TournamentInfoBoxDemo} />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -117,8 +145,8 @@ function CreateRoom() {
 }
 
 const styles = StyleSheet.create({
-  headerMarginTop : {marginTop: heightData * 15},
-  gameContainer : {
+  headerMarginTop: {marginTop: heightData * 15},
+  gameContainer: {
     paddingBottom: heightData * 40,
     borderBottomWidth: 2,
     borderBottomColor: '#323232',

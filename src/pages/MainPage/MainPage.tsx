@@ -16,7 +16,7 @@ function MainPage() {
   
   return (
     <>
-      {isAdmin && <MainPageAdmin />}
+      {!isAdmin && <MainPageAdmin />}
       {!isAdmin && (<MainPageUser />)}
     </>
   );

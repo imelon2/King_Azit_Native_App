@@ -26,7 +26,7 @@ import MyRanking from './src/pages/MyPage/MyRanking';
 import MyRankingScore from './src/pages/MyPage/MyPageCompoents/MyRankingScore';
 import interceptors from './src/hooks/interceptors';
 import TicketsHistorys from './src/pages/MyPage/TicketsHistorys';
-import RoomMake from './src/pages/Admin/RoomMake';
+import RoomMake from './src/pages/MainPage/Admin/NewTournament';
 import TicketPay from './src/pages/Admin/TicketPay';
 import TicketCharge from './src/pages/Admin/TicketCharge';
 import MemberManagePage from './src/pages/Admin/MemberManagePage';
@@ -40,7 +40,7 @@ import {deepLinkController} from './src/modules/Linking';
 import Forbidden from './src/pages/Admin/Forbidden';
 import AdminTicketsHistory from './src/pages/Admin/AdminTicketsHistory';
 import QRCodeScanner from './src/pages/Admin/Components/QRCodeScanner';
-import CreateRoom from './src/pages/MainPage/Admin/CreateRoom';
+import CreateRoom from './src/pages/MainPage/Admin/CreateTournament';
 import CalculatePage from './src/pages/Calculate/CalculatePage';
 import MonthCirculation from './src/pages/Calculate/components/MonthCirculation';
 import TotalPublish from './src/pages/Calculate/components/TotalPublish';
@@ -173,9 +173,10 @@ function TabNavigator() {
 
 function AppInner() {
   const dispatch = useAppDispatch();
-  const isLoggedIn = useSelector(
-    (state: RootState) => !!state.user.access_token,
-  );
+  const isLoggedIn = true
+  // const isLoggedIn = useSelector(
+  //   (state: RootState) => !!state.user.access_token,
+  // );
 
   // 디바이스 토큰 설정 및 redex 저장
   // useEffect(() => {

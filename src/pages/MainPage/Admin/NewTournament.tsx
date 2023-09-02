@@ -10,21 +10,24 @@ import {
   Alert,
 } from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {HomeRootStackParamList} from '../../../AppInner';
+import {HomeRootStackParamList} from '../../../../AppInner';
 import React, {useState, useCallback, useEffect} from 'react';
 import {
+  GlobalStyles,
+  headerIconSize,
   HeaderStyle,
   heightData,
   StringUpperCase,
-} from '../../modules/globalStyles';
+} from '../../../modules/globalStyles';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import RNPickerSelect from 'react-native-picker-select';
-import useSocket from '../../hooks/useSocket';
+import useSocket from '../../../hooks/useSocket';
 import {useSelector} from 'react-redux';
-import {RootState} from '../../store/reducer';
-import {TicketType} from '../../modules/ticketsList';
-import {getGameListArr} from '../../hooks/getGameList';
+import {RootState} from '../../../store/reducer';
+import {TicketType} from '../../../modules/ticketsList';
+import {getGameListArr} from '../../../hooks/getGameList';
+import Header from '../../../components/Header';
 const heightScale = heightData;
 
 type GameType = 'Main' | 'Nft' | 'Custom';
@@ -165,20 +168,19 @@ function RoomMake() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Header */}
-      <View>
-        <View style={HeaderStyle.headerStyle}>
-          <Text style={HeaderStyle.headerFontStyle}>방만들기</Text>
-        </View>
-        <IconAntDesign
-          name="left"
-          size={heightScale * 28}
-          color="white"
-          style={HeaderStyle.headerLeftIcon}
-          onPress={() => navigation.goBack()}
-        />
-      </View>
+    <SafeAreaView style={[GlobalStyles.container, {flex: 1}]}>
+      {/* header */}
+      <Header
+        title="토너먼트 생성"
+        leftIcon={() => (
+            <IconAntDesign
+            name="left"
+            size={headerIconSize}
+            color="white"
+            onPress={() => navigation.goBack()}
+          />
+        )}
+      />
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps={'handled'}
         showsVerticalScrollIndicator={false}
@@ -217,7 +219,6 @@ function RoomMake() {
                 },
                 inputIOS: {color: '#fff'},
                 inputAndroid: {color: '#fff'},
-                // inputIOSContainer:{backgroundColor:'black'}
               }}
             />
           </View>
