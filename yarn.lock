@@ -1655,11 +1655,7 @@
     prompts "^2.4.0"
     semver "^6.3.0"
 
-<<<<<<< HEAD
-"@react-native-community/datetimepicker@^6.7.5", "@react-native-community/datetimepicker@>=6.1.3":
-=======
 "@react-native-community/datetimepicker@^6.7.5", "@react-native-community/datetimepicker@>=6.1.3", "@react-native-community/datetimepicker@>=6.7.0":
->>>>>>> 80ff896c7b1d1ad49c87a66abae9488203142184
   version "6.7.5"
   resolved "https://registry.npmjs.org/@react-native-community/datetimepicker/-/datetimepicker-6.7.5.tgz"
   integrity sha512-E2Zh6mwvZ6CFEMKP++rdxxjJiB45fYPpdZhJwdZ2vUVwqovqu1cQRDLZmz4XrcHSyuacgR4WUnkYFf0F2nnNIg==
