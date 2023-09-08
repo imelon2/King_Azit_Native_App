@@ -12,7 +12,7 @@ import Config from 'react-native-config';
 
 type SignInScreenProps = NativeStackScreenProps< RootStackParamList , 'SignUpNickName' >;
 
-function SignUpNickName({navigation}: SignInScreenProps) {
+export function SignUpNickName({navigation}: SignInScreenProps) {
     const dispatch = useAppDispatch();
     const [nickName, setNickName] = useState('');
     const [error, setError] = useState(false);

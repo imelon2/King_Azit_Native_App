@@ -1,17 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../AppInner';
-import SignUpHome from './SignUpHome';
-import SignUpLogin from "./SignUpLogin";
-import SignUpPassWord from "./SignUpPassWord";
-import SignUpNickName from "./SignUpNickName";
-import SignUpCertification from './SignUpCertification';
-import SignUpFinal from './SignUpFinal';
-
-import SignUpName from "./SignUpName";
-import SignUpGender from './SignUpGender';
-import SignUpBirth from './SignUpBirth';
-
-
+import { RootStackParamList } from '@/../AppInner';
+import { SignUpHome, SignUpLogin, SignUpNickName, SignUpPassWord, SignUpCertification, SignUpFinal, SignUpName, SignUpGender, SignUpBirth } from './index';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 

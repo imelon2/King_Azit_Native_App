@@ -26,8 +26,8 @@ const heightScale = heightData;
 
 import Config from 'react-native-config';
 import axios, { AxiosError } from 'axios';
-import { useAppDispatch } from '../../store';
-import userSlice from '../../slices/user';
+import { useAppDispatch } from '@/store';
+import userSlice from '@/slices/user';
 import decodeJWT from '../../modules/decodeJWT';
 
 
