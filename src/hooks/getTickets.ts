@@ -1,5 +1,4 @@
 import axios, {AxiosError} from 'axios';
-import {useEffect} from 'react';
 import Config from 'react-native-config';
 import {useAppDispatch} from '../store';
 import { useSelector } from 'react-redux';

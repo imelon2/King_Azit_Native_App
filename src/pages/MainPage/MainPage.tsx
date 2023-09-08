@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import getTickets from '../../hooks/getTickets';
-import MainPageAdmin from './Compoents/MainPageAdmin';
+import MainPageAdmin from './Admin/MainPageAdmin';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../store/reducer';
 import MainPageUser from './User/MainPageUser';
@@ -16,7 +16,7 @@ function MainPage() {
   
   return (
     <>
-      {isAdmin && <MainPageAdmin />}
+      {!isAdmin && <MainPageAdmin />}
       {!isAdmin && (<MainPageUser />)}
     </>
   );

@@ -51,20 +51,32 @@ export const HeaderStyle = StyleSheet.create({
 });
 
 export const FontStyle = StyleSheet.create({
+  fs10: {
+    fontSize: heightData * 10,
+    color: 'white',
+  },
   fs12: {
-    fontSize: 12,
+    fontSize: heightData * 12,
     color: 'white',
   },
   fs14: {
-    fontSize: 14,
+    fontSize: heightData * 14,
     color: 'white',
   },
   fs16: {
-    fontSize: 16,
+    fontSize: heightData * 16,
+    color: 'white',
+  },
+  fs18: {
+    fontSize: heightData * 18,
+    color: 'white',
+  },
+  fs20: {
+    fontSize: heightData * 20,
     color: 'white',
   },
   fs22: {
-    fontSize: 22,
+    fontSize: heightData * 22,
     color: 'white',
   },
   fwBold: {
@@ -82,4 +94,7 @@ export const GlobalStyles = StyleSheet.create({
   container: {
     backgroundColor: '#000',
   },
+  flexCenter: {alignItems: 'center', justifyContent: 'center'},
 });
+
+export const headerIconSize = heightData * 26;
