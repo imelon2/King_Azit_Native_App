@@ -260,7 +260,6 @@ function AppInner() {
 
   // DeepLink Controller
   deepLinkController(isLoggedIn);
-
   return (
     <>
       {isLoggedIn ? (

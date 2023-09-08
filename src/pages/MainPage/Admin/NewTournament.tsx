@@ -3,168 +3,122 @@ import {
   View,
   StyleSheet,
   SafeAreaView,
-  TouchableOpacity,
-  Dimensions,
   TextInput,
-  ActivityIndicator,
-  Alert,
+  Pressable,
 } from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {HomeRootStackParamList} from '../../../../AppInner';
 import React, {useState, useCallback, useEffect} from 'react';
 import {
+  FontStyle,
   GlobalStyles,
   headerIconSize,
-  HeaderStyle,
   heightData,
-  StringUpperCase,
+  widthData,
 } from '../../../modules/globalStyles';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import RNPickerSelect from 'react-native-picker-select';
+import RNPickerSelect, {Item} from 'react-native-picker-select';
 import useSocket from '../../../hooks/useSocket';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../../store/reducer';
-import {TicketType} from '../../../modules/ticketsList';
-import {getGameListArr} from '../../../hooks/getGameList';
 import Header from '../../../components/Header';
-const heightScale = heightData;
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import {TimeFormat, DateFromat, convert12H} from '../../../modules/TimeFormat';
 
-type GameType = 'Main' | 'Nft' | 'Custom';
-type StatusType = 'playing' | 'waiting';
-type DurationType = '8' | '9' | null;
+type type = 'GameStartDate' | 'GameStartTime' | 'DeadlineDate' | 'DeadlineTime';
 
 function RoomMake() {
+  const initDate = 'YYY.DD.MM';
+  const initTime = '00:00 AM';
+
   const navigation = useNavigation<NavigationProp<HomeRootStackParamList>>();
-  const gameData: any = useSelector((state: RootState) => state.games);
   const {nickName} = useSelector((state: RootState) => state.user);
   const [socket] = useSocket();
-
+  const [title, setTitle] = useState<string>('');
+  const [ticket, setTicket] = useState<string>('');
   const [loading, setLoading] = useState(false);
+  const [isGameStartDateVisible, setIsGameStartDateVisible] = useState(false);
+  const [isGameStartTimeVisible, setIsGameStartTimeVisible] = useState(false);
+  const [isDeadlineDateVisible, setIsDeadlineDateVisible] = useState(false);
+  const [isDeadlineTimeVisible, setIsDeadlineTimeVisible] = useState(false);
 
-  const [table, setTable] = useState();
-  const [gameType, setGameType] = useState<GameType>('Main');
-  const [buyin, setBuyin] = useState<any>();
-  const [ticket, setTicket] = useState<TicketType>();
-  const [enteyLimit, setEntryLimit] = useState<string>();
-  const [blind, setBlind] = useState('Level 1: 100/200');
-  const [duration, setDuration] = useState<DurationType>();
-  const [status, setStatus] = useState<StatusType>('playing');
+  const [gameStart, setGameStart] = useState({
+    date: initDate,
+    time: initTime,
+  });
+  const [deadline, setDeadline] = useState({
+    date: initDate,
+    time: initTime,
+  });
 
-  const [table_Num, setTable_Num] = useState([1, 2, 3, 4]);
+  const TicketPickerItems: Item[] = [
+    {
+      key: 1,
+      label: '블랙티켓',
+      value: 'Black',
+    },
+    {
+      key: 2,
+      label: '레드티켓',
+      value: 'Red',
+    },
+    {
+      key: 3,
+      label: '골드 NFT',
+      value: 'Gold',
+    },
+  ];
 
-  const game_type: GameType[] = ['Main', 'Nft', 'Custom'];
-  const ticket_type: TicketType[] = ['black', 'red', 'gold'];
-  const Blind_Duration: DurationType[] = ['8', '9'];
-  const statusList: StatusType[] = ['playing', 'waiting'];
-  const canCreate =
-    !!table && !!gameType && !!ticket && !!buyin && !!enteyLimit;
-
-  const onChangeBuyin = useCallback((text: any) => {
-    if (text.trim() == 0) {
-      setBuyin('');
-      return;
-    }
-    setBuyin(text.trim());
+  const onChangeTitle = useCallback((text: string) => {
+    setTitle(text);
   }, []);
 
-  const onChangeEntryLimit = useCallback((text: any) => {
-    if (text.trim() >= 25) {
-      setEntryLimit('25');
-      return;
-    }
-    if (text.trim() == 0) {
-      setEntryLimit('');
-      return;
-    }
-    setEntryLimit(text.trim());
+  const onChangeTicket = useCallback((text: string) => {
+    setTicket(text);
   }, []);
 
-  const onChangeDuration = useCallback((text: any) => {
-    setDuration(text.trim());
-  }, []);
-
-  const onChnageGameType = useCallback((text: any) => {
-    setGameType(text.trim());
-  }, []);
-
-  useEffect(() => {
-    const createGameRoomError = (data: any) => {
-      Alert.alert('알림', `Table No. ${table}은 이미 사용중입니다.`);
-      setLoading(false);
-    };
-
-    const enterNewRoom = (gameId: string) => {
-      navigation.navigate('GamePage', {gameId});
-      setLoading(false);
-    };
-
-    if (socket) {
-      socket.on('newRoom', enterNewRoom);
-      socket.on('createGameRoomError', createGameRoomError);
-    }
-
-    return () => {
-      if (socket) {
-        socket.off('newRoom', enterNewRoom);
-        socket.off('createGameRoomError', createGameRoomError);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    const gameList = getGameListArr(gameData);
-    gameList.find(key => key.table_no);
-    const currTableNum = table_Num.filter(
-      key => !gameList.map(key => key.table_no).includes(key),
-    );
-    setTable_Num([...currTableNum]);
-  }, [gameData]);
-
-  useEffect(() => {
-    if (gameType == 'Main') {
-      setBuyin('1');
-      setTicket('black');
-      setDuration('8');
-    } else if (gameType == 'Nft') {
-      setBuyin('1');
-      setTicket('black');
-      setDuration('9');
-    } else {
-      setBuyin('');
-      setTicket('');
-      setDuration('8');
-    }
-  }, [gameType]);
-
-  const createRoom = () => {
-    if (!canCreate) return;
-    setLoading(true);
-
-    console.log('table :' + table);
-    console.log('dealer id :' + nickName);
-    console.log('game name :' + gameType);
-    console.log('entey Limit :' + (enteyLimit == ''));
-    console.log('ticket amount :' + buyin);
-    console.log('ticket type :' + ticket);
-    console.log('blind :' + blind);
-    console.log('ante :' + '0');
-    console.log('status :' + status);
-    console.log('duration :' + duration);
-
-    if (socket) {
-      socket.emit('createGameRoom', {
-        table_no: table,
-        game_name: gameType + ' Game',
-        entry_limit: enteyLimit,
-        ticket_amount: buyin,
-        ticket_type: ticket,
-        blind: blind,
-        ante: 0,
-        status: status,
-        duration: duration,
+  const handleConfirm = (type: type, date: any) => {
+    if (type == 'GameStartDate')
+      setGameStart(prev => {
+        return {...prev, date: DateFromat(date)};
       });
+    if (type == 'GameStartTime')
+      setGameStart(prev => {
+        return {...prev, time: TimeFormat(date)};
+      });
+    if (type == 'DeadlineDate')
+      setDeadline(prev => {
+        return {...prev, date: DateFromat(date)};
+      });
+    if (type == 'DeadlineTime')
+      setDeadline(prev => {
+        return {...prev, time: TimeFormat(date)};
+      });
+
+    hideDatePicker(type);
+  };
+
+  const showDatePicker = (type: type) => {
+    if (type == 'GameStartDate') return setIsGameStartDateVisible(true);
+    if (type == 'GameStartTime') return setIsGameStartTimeVisible(true);
+    if (type == 'DeadlineDate') {
+      if (gameStart.date != initDate && gameStart.time != initTime) {
+        return setIsDeadlineDateVisible(true);
+      }
     }
+    if (type == 'DeadlineTime') {
+      if (gameStart.date != initDate && gameStart.time != initTime) {
+        return setIsDeadlineTimeVisible(true);
+      }
+    }
+  };
+
+  const hideDatePicker = (type: type) => {
+    if (type == 'GameStartDate') return setIsGameStartDateVisible(false);
+    if (type == 'GameStartTime') return setIsGameStartTimeVisible(false);
+    if (type == 'DeadlineDate') return setIsDeadlineDateVisible(false);
+    if (type == 'DeadlineTime') return setIsDeadlineTimeVisible(false);
   };
 
   return (
@@ -173,7 +127,7 @@ function RoomMake() {
       <Header
         title="토너먼트 생성"
         leftIcon={() => (
-            <IconAntDesign
+          <IconAntDesign
             name="left"
             size={headerIconSize}
             color="white"
@@ -183,337 +137,235 @@ function RoomMake() {
       />
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps={'handled'}
-        showsVerticalScrollIndicator={false}
-        scrollEnabled={false}
         bounces={false}
-        style={{paddingHorizontal: 18 * heightScale}}>
-        {/* Table Selects */}
+        scrollEnabled={true}
+        style={{
+          paddingHorizontal: 20 * heightData,
+          height:'100%'
+        }}>
+        {/* 토너먼트 제목 */}
         <View>
-          <Text style={styles.mainText}>Table No</Text>
-          <View style={styles.tableSelect}>
-            <View style={styles.downIcon}>
-              <IconAntDesign
-                name="down"
-                size={heightScale * 25}
-                color="#F5FF82"
+          <Text style={[FontStyle.fs16, FontStyle.fwBold,{marginTop: 20 * widthData}]}>토너먼트 제목</Text>
+          <TextInput
+            onChangeText={onChangeTitle}
+            placeholderTextColor={'#929292'}
+            style={[styles.textInput, FontStyle.fs16]}
+            placeholder="닉네임 검색"
+            value={title}
+          />
+        </View>
+        {/* 토너먼트 날자 */}
+        <View style={{marginTop: widthData * 31}}>
+          <Text style={[FontStyle.fs16, FontStyle.fwBold]}>토너먼트 제목</Text>
+          <Text
+            style={[
+              FontStyle.fs16,
+              FontStyle.fwBold,
+              {marginTop: widthData * 18},
+            ]}>
+            게임시작
+          </Text>
+          {/* 게임시작 DATE */}
+          <Pressable
+            style={styles.textInput}
+            onPress={() => showDatePicker('GameStartDate')}>
+            <Text
+              style={[
+                FontStyle.fs16,
+                {color: gameStart.date == initDate ? '#929292' : '#fff'},
+              ]}>
+              {gameStart.date}
+            </Text>
+            <DateTimePickerModal
+              isVisible={isGameStartDateVisible}
+              mode="date"
+              // minimumDate={new Date()}
+              onConfirm={data => handleConfirm('GameStartDate', data)}
+              onCancel={() => hideDatePicker('GameStartDate')}
+            />
+          </Pressable>
+          {/* 게임시작 TIME */}
+          <Pressable
+            style={styles.textInput}
+            onPress={() => showDatePicker('GameStartTime')}>
+            <Text
+              style={[
+                FontStyle.fs16,
+                {color: gameStart.time == initTime ? '#929292' : '#fff'},
+              ]}>
+              {gameStart.time == initTime
+                ? initTime
+                : convert12H(gameStart.time)}
+            </Text>
+            <DateTimePickerModal
+              isVisible={isGameStartTimeVisible}
+              mode="time"
+              minimumDate={new Date()}
+              onConfirm={data => handleConfirm('GameStartTime', data)}
+              onCancel={() => hideDatePicker('GameStartTime')}
+            />
+          </Pressable>
+          <Text
+            style={[
+              FontStyle.fs16,
+              FontStyle.fwBold,
+              {marginTop: widthData * 18},
+            ]}>
+            레지마감
+          </Text>
+          {/* 레지마감 DATE */}
+          <Pressable
+            style={styles.textInput}
+            onPress={() => showDatePicker('DeadlineDate')}>
+            <Text
+              style={[
+                FontStyle.fs16,
+                {color: deadline.date == initDate ? '#929292' : '#fff'},
+              ]}>
+              {deadline.date}
+            </Text>
+            <DateTimePickerModal
+              isVisible={isDeadlineDateVisible}
+              mode="date"
+              minimumDate={new Date(gameStart.date)}
+              onConfirm={data => handleConfirm('DeadlineDate', data)}
+              onCancel={() => hideDatePicker('DeadlineDate')}
+            />
+          </Pressable>
+          {/* 레지마감 TIME */}
+          <Pressable
+            style={styles.textInput}
+            onPress={() => showDatePicker('DeadlineTime')}>
+            <Text
+              style={[
+                FontStyle.fs16,
+                {color: deadline.time == initTime ? '#929292' : '#fff'},
+              ]}>
+              {deadline.time == initTime ? initTime : convert12H(deadline.time)}
+            </Text>
+            <DateTimePickerModal
+              isVisible={isDeadlineTimeVisible}
+              mode="time"
+              minimumDate={new Date(gameStart.date + ' ' + gameStart.time)}
+              onConfirm={data => handleConfirm('DeadlineTime', data)}
+              onCancel={() => hideDatePicker('DeadlineTime')}
+            />
+          </Pressable>
+          <Text
+            style={[
+              FontStyle.fs16,
+              FontStyle.fwBold,
+              {marginTop: widthData * 18},
+            ]}>
+            Buy-In
+          </Text>
+          <View style={{flexDirection: 'row'}}>
+            {/* Buy In Ticket */}
+            <View style={styles.tableSelect}>
+              <View style={styles.downIcon}>
+                <IconAntDesign
+                  name="down"
+                  size={heightData * 26}
+                  color="#F5FF82"
+                />
+              </View>
+              <RNPickerSelect
+                onValueChange={() => console.log('hi')}
+                placeholder={{
+                  key: 1,
+                  label: '# Ticket',
+                  value: null,
+                  color: '#929292',
+                }}
+                items={TicketPickerItems}
+                style={{
+                  viewContainer: {
+                    justifyContent: 'center',
+                    paddingLeft: widthData * 10,
+                  },
+                  inputIOS: {color: '#fff', fontSize: heightData * 16},
+                  inputAndroid: {color: '#fff', fontSize: heightData * 16},
+                }}
               />
             </View>
-            <RNPickerSelect
-              onValueChange={value => setTable(value)}
-              placeholder={{
-                label: 'Select Table No',
-                inputLabel: 'Select Table No',
-              }}
-              items={table_Num.map(item => {
-                return {
-                  label: `Table No. ${item}`,
-                  inputLabel: `Table No. ${item}`,
-                  value: item,
-                };
-              })}
-              style={{
-                viewContainer: {
-                  justifyContent: 'center',
-                  paddingLeft: heightScale * 10,
-                  flex: 1,
-                },
-                inputIOS: {color: '#fff'},
-                inputAndroid: {color: '#fff'},
-              }}
-            />
-          </View>
-        </View>
-
-        {/* Game Type Titlt */}
-        <View>
-          <Text style={styles.mainText}>Game Type</Text>
-          {/* Game Type Contents */}
-          <View style={{flexDirection: 'row'}}>
-            {game_type.map(item => (
-              <TouchableOpacity
-                key={item}
-                onPress={() => onChnageGameType(item)}
-                style={[styles.touchBox, gameType == item && styles.touchBox2]}>
-                <Text
-                  style={[
-                    styles.tableSelectText2,
-                    gameType == item && styles.tableSelectText3,
-                  ]}>
-                  {item} Game
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </View>
-
-        {/* Buy In Title */}
-        <View>
-          <Text style={styles.mainText}>Buy-in</Text>
-          <View style={{flexDirection: 'row'}}>
-            {gameType == 'Main' || gameType == 'Nft' ? (
-              <View style={[styles.touchBox3]}>
-                <Text
-                  style={[styles.tableSelectText2, styles.tableSelectText3]}>
-                  {buyin} {ticket} Ticket
-                </Text>
-              </View>
-            ) : (
-              <>
-                <View>
-                  <TextInput
-                    style={styles.TextInput}
-                    placeholder="Enter"
-                    onChangeText={onChangeBuyin}
-                    value={buyin}
-                    keyboardType={'number-pad'}
-                    placeholderTextColor="#6F6F6F"
-                  />
-                </View>
-                <View style={styles.tableSelect2}>
-                  <View style={styles.downIcon}>
-                    <IconAntDesign
-                      name="down"
-                      size={heightScale * 25}
-                      color="#F5FF82"
-                    />
-                  </View>
-                  <RNPickerSelect
-                    onValueChange={value => setTicket(value)}
-                    placeholder={{
-                      label: 'Select Ticket',
-                      inputLabel: 'Select Ticket',
-                    }}
-                    items={ticket_type.map(item => {
-                      return {
-                        label: `${StringUpperCase(item)} Ticket`,
-                        inputLabel: `${StringUpperCase(item)} Ticket`,
-                        value: item,
-                      };
-                    })}
-                    style={{
-                      viewContainer: {
-                        justifyContent: 'center',
-                        paddingLeft: heightScale * 10,
-                        flex: 1,
-                      },
-                      inputIOS: {color: '#fff'},
-                      inputAndroid: {color: '#fff'},
-                    }}
-                  />
-                </View>
-              </>
-            )}
-          </View>
-        </View>
-
-        {/* Entry Title */}
-        <View>
-          <Text style={styles.mainText}>Entry</Text>
-          <View>
+            {/* 티켓 수량 */}
             <TextInput
-              style={styles.TextInput}
-              placeholder="Enter"
-              returnKeyType='done'
-              onChangeText={onChangeEntryLimit}
-              value={enteyLimit}
-              keyboardType={'number-pad'}
-              placeholderTextColor="#6F6F6F"
+              onChangeText={onChangeTicket}
+              placeholderTextColor={'#929292'}
+              keyboardType="number-pad"
+              style={[
+                styles.tableSelect,
+                FontStyle.fs16,
+                {marginLeft: widthData * 10, paddingLeft: widthData * 10},
+              ]}
+              placeholder="티켓 수량"
+              value={ticket}
             />
           </View>
-        </View>
-
-        {/* Blind Duration Title */}
-        <View>
-          <Text style={styles.mainText}>Blind Duration</Text>
-          <View style={{flexDirection: 'row'}}>
-            {gameType == 'Main' || gameType == 'Nft' ? (
-              <TouchableOpacity style={[styles.touchBox, styles.touchBox2]}>
-                <Text
-                  style={[styles.tableSelectText2, styles.tableSelectText3]}>
-                  {duration} mins
-                </Text>
-              </TouchableOpacity>
-            ) : (
-              <>
-                {Blind_Duration.map(item => (
-                  <TouchableOpacity
-                    key={item}
-                    style={[
-                      styles.touchBox,
-                      duration == item && styles.touchBox2,
-                    ]}
-                    onPress={() => onChangeDuration(item)}>
-                    <Text
-                      style={[
-                        styles.tableSelectText2,
-                        duration == item && styles.tableSelectText3,
-                      ]}>
-                      {item} mins
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </>
-            )}
+          <Text
+            style={[
+              FontStyle.fs16,
+              FontStyle.fwBold,
+              {marginTop: widthData * 18},
+            ]}>
+            Entry
+          </Text>
+          <TextInput
+            onChangeText={onChangeTicket}
+            placeholderTextColor={'#929292'}
+            keyboardType="number-pad"
+            style={[
+              styles.tableSelect,
+              FontStyle.fs16,
+              {paddingLeft: widthData * 10},
+            ]}
+            placeholder="입력"
+            value={ticket}
+          />
+          <Text
+            style={[
+              FontStyle.fs16,
+              FontStyle.fwBold,
+              {marginTop: widthData * 18},
+            ]}>
+            블라인드 설정
+          </Text>
+          <View style={{}}>
+            <Text style={FontStyle.fs18}>설정하기</Text>
           </View>
         </View>
-
-        {/* Status Title */}
-        {/* <View style={{flex: 1}}>
-            <Text style={styles.mainText}>Status</Text>
-            <View style={{flexDirection: 'row'}}>
-              {statusList.map(item => {
-                let _item;
-                if (item == 'playing') {
-                  _item = '진행중';
-                } else if (item == 'waiting') {
-                  _item = '대기중';
-                }
-                return (
-                  <TouchableOpacity
-                    key={item}
-                    onPress={() => setStatus(item)}
-                    style={[
-                      styles.touchBox,
-                      status == item && styles.touchBox2,
-                    ]}>
-                    <Text
-                      style={[
-                        styles.tableSelectText2,
-                        status == item && styles.tableSelectText3,
-                      ]}>
-                      {_item}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
-          </View> */}
       </KeyboardAwareScrollView>
-      {/* 방만들기 Button */}
-      <View
-        style={{
-          alignItems: 'center',
-          justifyContent: 'flex-end',
-          backgroundColor: 'black',
-        }}>
-        <TouchableOpacity
-          style={
-            canCreate
-              ? styles.buttonStyle
-              : [
-                  styles.buttonStyle,
-                  {backgroundColor: '#222', borderColor: '#000'},
-                ]
-          }
-          onPress={createRoom}>
-          <Text
-            style={
-              canCreate
-                ? styles.buttonTextStyle
-                : [styles.buttonTextStyle, {color: '#8A8A8A'}]
-            }>
-            {loading ? <ActivityIndicator /> : '방만들기'}{' '}
-          </Text>
-        </TouchableOpacity>
-      </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    height: '100%',
-    backgroundColor: 'black',
-  },
-  fontStyle: {fontSize: heightScale * 18, fontWeight: 'bold', color: 'white'},
-  mainText: {
-    fontSize: 18 * heightScale,
-    fontWeight: '600',
-    color: 'white',
-    marginTop: 25 * heightScale,
+  textInput: {
+    color: '#ffffff',
+    backgroundColor: '#222222',
+    width: widthData * 320,
+    height: heightData * 40,
+    borderWidth: 1,
+    borderColor: '#F5FF82',
+    paddingVertical: 11,
+    paddingLeft: 10,
+    borderRadius: 4,
+    marginTop: heightData * 12,
   },
   tableSelect: {
     backgroundColor: '#222',
-    width: 208 * heightScale,
-    height: 44 * heightScale,
+    width: 130 * widthData,
+    height: 40 * heightData,
     borderColor: '#F5FF82',
     borderWidth: 1,
     borderRadius: 4,
-    marginTop: 20 * heightScale,
+    marginTop: 20 * heightData,
     justifyContent: 'center',
-  },
-  tableSelectText2: {
-    lineHeight: 42 * heightScale,
-    color: 'white',
-    textAlign: 'center',
-    // fontWeight:'600',
-  },
-  tableSelectText3: {
-    color: 'black',
   },
   downIcon: {
     position: 'absolute',
     alignItems: 'center',
-    right: heightScale * 10,
-  },
-  touchBox: {
-    width: 110 * heightScale,
-    height: 44 * heightScale,
-    borderColor: '#F5FF82',
-    borderWidth: 1,
-    borderRadius: 4,
-    marginTop: 20 * heightScale,
-    marginRight: 20 * heightScale,
-    backgroundColor: '#222',
-  },
-  touchBox2: {
-    backgroundColor: '#F5FF82',
-  },
-  touchBox3: {
-    width: 128 * heightScale,
-    height: 44 * heightScale,
-    borderColor: '#F5FF82',
-    borderWidth: 1,
-    borderRadius: 4,
-    marginTop: 20 * heightScale,
-    backgroundColor: '#F5FF82',
-  },
-  TextInput: {
-    borderColor: '#f5ff82',
-    borderWidth: 1,
-    borderRadius: 6,
-    width: 128 * heightScale,
-    height: 44 * heightScale,
-    paddingLeft: 10 * heightScale,
-    marginTop: 20 * heightScale,
-    backgroundColor: '#222',
-    color: 'white',
-  },
-  tableSelect2: {
-    backgroundColor: '#222',
-    width: 154 * heightScale,
-    height: 44 * heightScale,
-    borderColor: '#F5FF82',
-    borderWidth: 1,
-    borderRadius: 4,
-    marginTop: 20 * heightScale,
-    marginLeft: 20 * heightScale,
-    justifyContent: 'center',
-  },
-  buttonStyle: {
-    backgroundColor: '#F5FF82',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 370 * heightScale,
-    height: 64 * heightScale,
-    borderColor: '#F5FF82',
-    borderWidth: 1,
-    borderRadius: 4,
-  },
-  buttonTextStyle: {
-    fontSize: 20 * heightScale,
-    fontWeight: '600',
-    textAlign: 'center',
+    right: widthData * 10,
   },
 });
 
