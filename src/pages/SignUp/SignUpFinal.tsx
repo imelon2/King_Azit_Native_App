@@ -17,7 +17,7 @@ const heightScale = heightData;
 
 type SignUpFinalScreenProps = NativeStackScreenProps<RootStackParamList,'SignUpFinal' >;
 
-function SignUpFinal({navigation}:SignUpFinalScreenProps) {
+export function SignUpFinal({navigation}:SignUpFinalScreenProps) {
   return (
     <>
       <SafeAreaView style={styles.container}>

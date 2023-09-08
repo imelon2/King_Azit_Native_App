@@ -1,6 +1,6 @@
 import { Text, View, TextInput, SafeAreaView, StyleSheet } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useCallback, useState , useRef } from 'react';
+import { useCallback, useState, useRef } from 'react';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { RootStackParamList } from '../../../AppInner';
 import { SignUpstyles } from '../../modules/SignUpstyles';
@@ -10,12 +10,12 @@ import { useAppDispatch } from "../../store"
 
 type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUpBirth'>;
 
-function SignUpBirth({ navigation }: SignInScreenProps) {
+export const SignUpBirth = ({ navigation }: SignInScreenProps) => {
     const dispatch = useAppDispatch();
     const [birthDate, setBirthDate] = useState('');
 
     const onChangeBirthDate = useCallback((text: any) => {
-      setBirthDate(text.trim());
+        setBirthDate(text.trim());
     }, []);
 
     const onClickNextButton = () => {
@@ -26,10 +26,10 @@ function SignUpBirth({ navigation }: SignInScreenProps) {
 
     return (
         <SafeAreaView style={SignUpstyles.container}>
-            <KeyboardAwareScrollView enableOnAndroid 
-        keyboardShouldPersistTaps={'handled'}
-        showsVerticalScrollIndicator={false}
-        scrollEnabled={false}>
+            <KeyboardAwareScrollView enableOnAndroid
+                keyboardShouldPersistTaps={'handled'}
+                showsVerticalScrollIndicator={false}
+                scrollEnabled={false}>
                 <View  >
                     <Icon
                         name="arrowleft"
@@ -62,13 +62,13 @@ function SignUpBirth({ navigation }: SignInScreenProps) {
                         />
                     </View>
                 </View>
-            <View style={{alignItems:'center'}} >
-                <Text
-                    style={birthDate ? [SignUpstyles.nextButton, SignUpstyles.nextButton2] : SignUpstyles.nextButton}
-                    onPress={onClickNextButton}>
-                    다음
-                </Text>
-            </View>
+                <View style={{ alignItems: 'center' }} >
+                    <Text
+                        style={birthDate ? [SignUpstyles.nextButton, SignUpstyles.nextButton2] : SignUpstyles.nextButton}
+                        onPress={onClickNextButton}>
+                        다음
+                    </Text>
+                </View>
             </KeyboardAwareScrollView>
 
         </SafeAreaView>

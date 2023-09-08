@@ -14,7 +14,7 @@ import Config from 'react-native-config';
 
 type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUpCertification'>;
 
-function SignUpCertification({ navigation }: SignInScreenProps) {
+export function SignUpCertification({ navigation }: SignInScreenProps) {
   const [phoneNum, setPhoneNum] = useState('');
   const [certNum, setCertNum] = useState('');
   const [certCheck, setCertCheck] = useState(false);

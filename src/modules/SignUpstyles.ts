@@ -1,9 +1,13 @@
-import { widthData, heightData } from './globalStyles'
-import { Dimensions, StyleSheet } from "react-native";
-const { width, height } = Dimensions.get('window');
+import {widthData, heightData} from './globalStyles';
+import {Dimensions, StyleSheet} from 'react-native';
+const {width, height} = Dimensions.get('window');
 const heightScale = heightData;
 
 export const SignUpstyles = StyleSheet.create({
+  center: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   container: {
     flex: 1,
     backgroundColor: '#000',
@@ -17,7 +21,6 @@ export const SignUpstyles = StyleSheet.create({
     position: 'absolute',
     borderBottomWidth: 2,
     borderBottomColor: '#F5FF82',
-    width: 110,
     top: 0,
     left: 0,
   },
@@ -47,15 +50,15 @@ export const SignUpstyles = StyleSheet.create({
     borderBottomColor: '#484848',
   },
   terms: {
-    fontSize: heightScale * 23,
-    marginLeft: 20,
-    marginTop: 20,
+    fontSize: heightScale * 21,
+    marginLeft: heightScale * 20,
+    marginTop: heightScale * 22,
     color: '#fff',
     marginBottom: heightScale * 54,
   },
   termsBox: {
     flexDirection: 'row',
-    marginTop: 17,
+    marginTop: 13 * heightScale,
     height: 30,
     lineHeight: 30,
   },
@@ -95,7 +98,7 @@ export const SignUpstyles = StyleSheet.create({
     width: '85%',
     paddingHorizontal: 10,
     paddingBottom: 3,
-    color: '#fff'
+    color: '#fff',
   },
   textInputContainer: {
     flexDirection: 'row',
@@ -134,5 +137,27 @@ export const SignUpstyles = StyleSheet.create({
   },
   marginLeft: {
     marginLeft: heightScale * 12,
-  }
+  },
+  bottomBar: {
+    width: '92%',
+    borderBottomWidth: 2,
+    borderBottomColor: '#D9D9D9',
+    marginLeft: '4%',
+    height: 0,
+  },
+  checkBox: {
+    marginLeft: 20,
+  },
+  agreeText: {
+    marginTop: 2,
+    marginLeft: 12,
+    color: '#fff',
+  },
+  check: {
+    marginRight: 15,
+    marginLeft: 25,
+  },
+  next: {
+    marginLeft: 10 * heightData,
+  },
 });

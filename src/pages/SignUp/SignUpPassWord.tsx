@@ -6,7 +6,7 @@ import { RootStackParamList } from '../../../AppInner';
 import { SignUpstyles } from '../../modules/SignUpstyles';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import IconOcticons from 'react-native-vector-icons/Octicons';
-import { heightData } from '../../modules/globalStyles';
+import { heightData } from '../../modules';
 import userSlice from "../../slices/user";
 import { useAppDispatch } from "../../store"
 
@@ -14,7 +14,7 @@ const heightScale = heightData;
 
 type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUpPassWord'>;
 
-function SignUpPassWord({ navigation }: SignInScreenProps) {
+export function SignUpPassWord({ navigation }: SignInScreenProps) {
   const dispatch = useAppDispatch();
   const [showPW, setShowPW] = useState(false);
   const [password, setPassword] = useState('');

@@ -13,7 +13,7 @@ import { useAppDispatch } from "../../store"
 
 type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUpName'>;
 
-function SignUpName({ navigation }: SignInScreenProps) {
+export function SignUpName({ navigation }: SignInScreenProps) {
     const dispatch = useAppDispatch();
     const [name, setName] = useState('');
 

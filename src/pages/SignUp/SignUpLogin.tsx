@@ -22,7 +22,7 @@ type SignInScreenProps = NativeStackScreenProps<
   'SignUpLogin'
 >;
 
-function SignUpLogin({navigation}: SignInScreenProps) {
+export function SignUpLogin({navigation}: SignInScreenProps) {
   const dispatch = useAppDispatch();
   const [email, setEmail] = useState('');
   const [error, setError] = useState(false);

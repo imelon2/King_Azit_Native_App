@@ -22,7 +22,7 @@ type SignInScreenProps = NativeStackScreenProps<
   'SignUpGender'
 >;
 
-function SignUpGender({navigation}: SignInScreenProps) {
+export function SignUpGender({navigation}: SignInScreenProps) {
   const dispatch = useAppDispatch();
   const [gender, setGender] = useState('');
   const onClickGenderButton = (text: any) => {
