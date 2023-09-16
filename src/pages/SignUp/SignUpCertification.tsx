@@ -1,83 +1,67 @@
-import { Text, View, TextInput, SafeAreaView, KeyboardAvoidingView, TouchableOpacity, StyleSheet } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useCallback, useState, useRef } from 'react';
-import Icon from 'react-native-vector-icons/AntDesign';
-import { RootStackParamList } from '../../../AppInner';
-import { SignUpstyles } from '../../modules/SignUpstyles';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import axios from 'axios';
-import { heightData } from '../../modules/globalStyles'
+import {Text, View, TextInput, SafeAreaView, KeyboardAvoidingView, TouchableOpacity, StyleSheet} from 'react-native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {useCallback, useState, useRef} from 'react';
+import {RootStackParamList} from '../../../AppInner';
+import {SignUpstyles} from '../../modules/SignUpstyles';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {heightData} from '../../modules/globalStyles';
 const heightScale = heightData;
-import { useSelector } from "react-redux";
-import { RootState } from "../../store/reducer";
-import Config from 'react-native-config';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../store/reducer';
+import {SignUpHeader} from './SignUpComponent';
+import {BottomButton} from '@/components/Button';
+import {useAppDispatch} from '@/store';
+import userSlice from '@/slices/user';
 
 type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUpCertification'>;
 
-export function SignUpCertification({ navigation }: SignInScreenProps) {
+export function SignUpCertification({navigation}: SignInScreenProps) {
+  const dispatch = useAppDispatch();
   const [phoneNum, setPhoneNum] = useState('');
-  const [certNum, setCertNum] = useState('');
-  const [certCheck, setCertCheck] = useState(false);
+  const [name, setName] = useState('');
 
   const phoneNumRef = useRef<TextInput | null>(null);
-  const user = useSelector((state: RootState) => state.user);
 
-  const onClickSiginUp = () => {
-    let data = {
-      memberId: user.email,
-      password: user.password,
-      name: user.name,
-      nickname: user.nickName,
-      phone: phoneNum,
-      birth: user.birth,
-      gender: user.gender,
-      fcmToken:user.phoneToken
-    }
-    axios.post(`${Config.API_URL}/join`, data)
-      .then(function (res) {
-        if (res.status == 201) {
-          navigation.navigate('SignUpFinal');
-        }
-      }).catch(function (error) {
-        console.log(error);
-      });
+  // const onClickCert = () => {
+  //   setCertCheck(true);
+  // };
+
+  const NextButton = () => {
+    dispatch(userSlice.actions.setPassWord({name: name, phoneNum: phoneNum}));
+    navigation.navigate('SignUpCertificationNum');
   };
-
-  const onClickCert = () => {
-    setCertCheck(true);
-  }
 
   const onChangePhoneNum = useCallback((text: any) => {
     setPhoneNum(text.trim());
   }, []);
 
-  const onChangeCertNum = useCallback((text: any) => {
-    setCertNum(text.trim());
+  const onChangeName = useCallback((text: any) => {
+    setName(text.trim());
   }, []);
 
   return (
     <SafeAreaView style={SignUpstyles.container}>
       <KeyboardAwareScrollView>
         <View>
-          <Icon
-            name="arrowleft"
-            style={SignUpstyles.leftIcon}
-            size={25}
-            color="#fff"
-            onPress={() => navigation.navigate('SignUpGender')}
-          />
-          <View style={SignUpstyles.topbar}>
-            <View style={[SignUpstyles.progress, SignUpstyles.progress8]}></View>
-          </View>
-          <View style={SignUpstyles.terms}>
-            <Text style={SignUpstyles.termstext}> 본인확인을 위해 </Text>
-            <Text style={SignUpstyles.termstext2}> 인증을 진행해주세요. </Text>
-          </View>
+          <SignUpHeader text={'본인확인을 위해 \n번호인증을 진행해주세요.'} bar={288} />
         </View>
 
         <View style={SignUpstyles.inputWrapper}>
+          <View style={SignUpstyles.textInputContainer}>
+            <View style={[SignUpstyles.textInputWrapper, SignUpstyles.textInputWrapper2]}>
+              <TextInput
+                style={SignUpstyles.textInput}
+                placeholder="실명 입력"
+                onChangeText={onChangeName}
+                value={name}
+                placeholderTextColor="#6F6F6F"
+                onSubmitEditing={() => phoneNumRef.current?.focus()}
+                returnKeyType="next"
+              />
+            </View>
+          </View>
 
-          <View style={SignUpstyles.textInputContainer} >
+          <View style={SignUpstyles.textInputContainer}>
             <View style={[SignUpstyles.textInputWrapper, SignUpstyles.textInputWrapper2]}>
               <TextInput
                 style={SignUpstyles.textInput}
@@ -86,43 +70,20 @@ export function SignUpCertification({ navigation }: SignInScreenProps) {
                 onChangeText={onChangePhoneNum}
                 value={phoneNum}
                 placeholderTextColor="#6F6F6F"
+                keyboardType="number-pad"
               />
             </View>
-            <TouchableOpacity style={SignUpstyles.textInputButton} onPress={onClickCert} >
-              <Text style={SignUpstyles.textInputButtonText} >인증 요청</Text>
-            </TouchableOpacity>
           </View>
-
-          {certCheck && (
-            <View style={SignUpstyles.textInputWrapper}>
-              <TextInput
-                style={SignUpstyles.textInput}
-                placeholder="인증번호를 적어주세요."
-                onChangeText={onChangeCertNum}
-                value={certNum}
-              />
-            </View>
-          )}
-
         </View>
-      <View style={{alignItems:'center'}}>
-        <Text
-          style={
-            certNum
-              ? [
-                SignUpstyles.nextButton,
-                SignUpstyles.nextButton2
-              ]
-              : [SignUpstyles.nextButton]
-          }
-          onPress={onClickSiginUp}>
-          가입신청
-        </Text>
-      </View>
+        <View style={SignUpstyles.center}>
+          <BottomButton
+            onPress={NextButton}
+            title="SNS 인증코드 받기"
+            backgroundColor={name && phoneNum ? '#F5FF82' : '#808080'}
+            color="#000"
+          />
+        </View>
       </KeyboardAwareScrollView>
-
-
-
     </SafeAreaView>
   );
 }

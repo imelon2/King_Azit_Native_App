@@ -56,7 +56,7 @@ export type RootStackParamList = {
   Main: undefined;
   Login: undefined;
   SignUp: undefined;
-  SignUpLogin: undefined;
+  SignUpId: undefined;
   SignUpHome: undefined;
   SignUpPassWord: undefined;
   SignUpNickName: undefined;
@@ -65,6 +65,7 @@ export type RootStackParamList = {
   SignUpBirth: undefined;
   SignUpCertification: undefined;
   SignUpFinal: undefined;
+  SignUpCertificationNum: undefined;
 };
 
 export type HomeRootStackParamList = {

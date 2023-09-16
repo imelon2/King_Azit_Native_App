@@ -100,15 +100,39 @@ export const SignUpstyles = StyleSheet.create({
     paddingBottom: 3,
     color: '#fff',
   },
+  textInputNumBox: {
+    width: 46 * heightScale,
+    height: 54 * heightScale,
+    borderRadius: 8 * heightScale,
+    borderColor: '#d9d9d9',
+    borderWidth: 2 * heightScale,
+    marginRight: 26 * heightScale,
+    marginLeft: 10 * heightScale,
+  },
+  textInputNum: {
+    flex: 1,
+    color: 'white',
+    fontSize: 24 * heightScale,
+    textAlign: 'center',
+  },
+
   textInputContainer: {
     flexDirection: 'row',
   },
+
   textInputWrapper: {
     marginTop: heightScale * 20,
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: 'gray',
+  },
+  numInputWrapper: {
+    marginTop: heightScale * 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    // borderBottomColor: 'gray',
   },
   textInputWrapper2: {
     flex: 3,

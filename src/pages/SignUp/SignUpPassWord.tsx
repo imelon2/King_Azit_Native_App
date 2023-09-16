@@ -1,20 +1,20 @@
-import { Text, View, TextInput, SafeAreaView, KeyboardAvoidingView, StyleSheet } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useCallback, useState, useRef } from 'react';
-import Icon from 'react-native-vector-icons/AntDesign';
-import { RootStackParamList } from '../../../AppInner';
-import { SignUpstyles } from '../../modules/SignUpstyles';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {Text, View, TextInput, SafeAreaView, KeyboardAvoidingView, StyleSheet} from 'react-native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {useState, useRef} from 'react';
+import {RootStackParamList} from 'AppInner';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import IconOcticons from 'react-native-vector-icons/Octicons';
-import { heightData } from '../../modules';
-import userSlice from "../../slices/user";
-import { useAppDispatch } from "../../store"
+import {heightData, SignUpstyles} from '@/modules';
+import userSlice from '@/slices/user';
+import {useAppDispatch} from '@/store';
+import {SignUpHeader} from './SignUpComponent';
+import {BottomButton} from '@/components/Button';
 
 const heightScale = heightData;
 
 type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUpPassWord'>;
 
-export function SignUpPassWord({ navigation }: SignInScreenProps) {
+export function SignUpPassWord({navigation}: SignInScreenProps) {
   const dispatch = useAppDispatch();
   const [showPW, setShowPW] = useState(false);
   const [password, setPassword] = useState('');
@@ -25,81 +25,63 @@ export function SignUpPassWord({ navigation }: SignInScreenProps) {
   const [errorText, setErrorText] = useState('');
   const passwordRef = useRef<TextInput | null>(null);
 
-  const onChangePassword = (text: any) => {
-    let password_ = text.trim();
+  /* 패스워드 저장 */
+  const onChangePassword = (text: string) => {
+    const password_ = text.trim();
     setPassword(password_);
-
-    var reg: RegExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/
-    if (reg.test(password_)) {
-      setPassWordOn(true)
-      if (passwordCheck == password_) {
-        setPassWordCheckOn(true)
-      } else {
-        setPassWordCheckOn(false)
-      }
-    } else {
-      setPassWordOn(false)
-    }
+    validityPassWord(password_);
   };
 
-  const onChangePasswordCheck = (text: any) => {
-    let passwordCheck_ = text.trim();
+  /* 패스워드 유효성 체크 */
+  const validityPassWord = (password_: string) => {
+    const reg: RegExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+
+    if (reg.test(password_) && password_.length >= 8 && password_.length <= 16) setPassWordOn(true);
+    else setPassWordOn(false);
+  };
+
+  /* 비밀번호 확인 저장  */
+  const onChangePasswordCheck = (text: string) => {
+    const passwordCheck_ = text.trim();
     setPasswordCheck(passwordCheck_);
 
-    if ( password == passwordCheck_ && passWordOn) {
-      setPassWordCheckOn(true);
-    } else {
-      setPassWordCheckOn(false)
-    }
+    if (password === passwordCheck_ && passWordOn) setPassWordCheckOn(true);
+    else setPassWordCheckOn(false);
   };
 
+  /* 다음페이지 버튼 */
   const onClickNextButton = () => {
-
     if (!password || !passwordCheck) {
       return;
     }
 
-    var reg: RegExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/
+    var reg: RegExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
     if (!reg.test(password)) {
-      setErrorText("문자 숫자 특수문자 포함 8자 이상으로 사용해주세요.");
+      setErrorText('문자 숫자 특수문자 포함 8자 이상으로 사용해주세요.');
       setError(true);
       return;
     }
 
     if (password !== passwordCheck) {
-      setErrorText("비밀번호가 일치하지 않습니다.");
+      setErrorText('비밀번호가 일치하지 않습니다. 다시 시도해주세요.');
       setError(true);
       return;
     }
 
-    dispatch(userSlice.actions.setPassWord({ password: password }),);
+    dispatch(userSlice.actions.setPassWord({password: password}));
     setError(false);
-    navigation.navigate('SignUpNickName');
+    navigation.navigate('SignUpCertification');
   };
-
 
   return (
     <SafeAreaView style={SignUpstyles.container}>
-      <KeyboardAwareScrollView enableOnAndroid 
+      <KeyboardAwareScrollView
+        enableOnAndroid
         keyboardShouldPersistTaps={'handled'}
         showsVerticalScrollIndicator={false}
-        scrollEnabled={false}
-        >
-        <View >
-          <Icon
-            name="arrowleft"
-            style={SignUpstyles.leftIcon}
-            size={25}
-            color="#fff"
-            onPress={() => navigation.navigate('SignUpLogin')}
-          />
-          <View style={SignUpstyles.topbar}>
-            <View style={[SignUpstyles.progress, SignUpstyles.progress3]}></View>
-          </View>
-          <View style={SignUpstyles.terms}>
-            <Text style={SignUpstyles.termstext}> 아지트에 사용할 </Text>
-            <Text style={SignUpstyles.termstext2}> 비밀번호를 입력해주세요. </Text>
-          </View>
+        scrollEnabled={false}>
+        <View>
+          <SignUpHeader text={'로그인에 사용할 \n비밀번호를 입력해주세요. \n (영문+숫자 조합 8~16자 이내)'} bar={216} />
         </View>
 
         <View style={SignUpstyles.inputWrapper}>
@@ -124,9 +106,9 @@ export function SignUpPassWord({ navigation }: SignInScreenProps) {
               }}
             />
             <IconOcticons
-              name='check'
+              name="check"
               size={heightScale * 18}
-              color={passWordOn ? "#F5FF82" : "#BCBCBC"}
+              color={passWordOn ? '#F5FF82' : '#BCBCBC'}
               style={SignUpstyles.marginLeft}
             />
           </View>
@@ -150,32 +132,25 @@ export function SignUpPassWord({ navigation }: SignInScreenProps) {
               }}
             />
             <IconOcticons
-              name='check'
+              name="check"
               size={heightScale * 18}
-              color={passWordCheckOn ? "#F5FF82" : "#BCBCBC"}
+              color={passWordCheckOn ? '#F5FF82' : '#BCBCBC'}
               style={SignUpstyles.marginLeft}
             />
           </View>
-          <View>
-            {error && (
-              <Text style={SignUpstyles.errorText}>
-                {errorText}
-              </Text>
-            )}
-          </View>
+          <View>{error && <Text style={SignUpstyles.errorText}>{errorText}</Text>}</View>
         </View>
-      <View style={{alignItems:'center'}}>
-        <Text
-          style={password && passwordCheck ? [SignUpstyles.nextButton, SignUpstyles.nextButton2]
-            : [SignUpstyles.nextButton]}
-          onPress={onClickNextButton}>
-          다음
-        </Text>
-      </View>
+        <View style={SignUpstyles.center}>
+          <BottomButton
+            onPress={onClickNextButton}
+            title="다음"
+            backgroundColor={password && passwordCheck ? '#F5FF82' : '#808080'}
+            color="#000"
+          />
+        </View>
       </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 }
-
 
 export default SignUpPassWord;
