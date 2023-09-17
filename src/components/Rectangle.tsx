@@ -1,11 +1,12 @@
 import React from 'react';
-import {ImageStyle, StyleProp, StyleSheet, View} from 'react-native';
+import {ImageStyle, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import {heightScale} from '../modules/MainStyles';
 
 const Rectangle: React.FC<{
   type: 'straight' | 'big';
   scale: number;
   color: string;
+  componentStyle?: StyleProp<ViewStyle>;
 }> = ({...props}) => {
   return (
     <>
@@ -18,6 +19,7 @@ const Rectangle: React.FC<{
               height: heightScale * props.scale,
               backgroundColor: props.color,
             },
+            props.componentStyle
           ]}></View>
       )}
       {props.type == 'straight' && (

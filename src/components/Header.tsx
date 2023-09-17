@@ -33,7 +33,7 @@ const HeaderStyle = StyleSheet.create({
     borderBottomColor: '#323232',
   },
   headerStyle: {
-    flex: 1,
+    flex: 3,
     height: heightData * 63,
     justifyContent: 'center',
     alignItems: 'center',

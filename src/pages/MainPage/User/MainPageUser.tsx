@@ -30,6 +30,7 @@ import {
 import UpperString from '../../../modules/UpperString';
 import Tournament, { TournamentInfoBoxDemo } from '../../../components/TournamentInfoBox';
 import TournamentInfoBox from '../../../components/TournamentInfoBox';
+import Banner from '@/components/Banner';
 
 function MainPageUser() {
   const navigation =
@@ -59,10 +60,6 @@ function MainPageUser() {
   let _offset = 50;
   let _width = width - (_gap + _offset) * 2;
 
-  const images = [
-    require('../../../assets/MainBanner.png'),
-    require('../../../assets/MainBanner.png'),
-  ];
 
   // MyTickets 네비게이터
   const onOpenMyTikets = (text: TicketType) => {
@@ -85,22 +82,7 @@ function MainPageUser() {
     <SafeAreaView style={[GlobalStyles.container, {flex: 1}]}>
       <ScrollView bounces={false}>
         {/* 배너 */}
-        <View style={BannerStyle.imgSlideBox}>
-          <Swiper
-            horizontal={true}
-            paginationStyle={{bottom: heightData * 5}}
-            activeDot={<View style={BannerStyle.activeDot} />}
-            dot={<View style={BannerStyle.dot} />}>
-            {images.map((uri, index) => (
-              <Image
-                key={index}
-                style={BannerStyle.imgSlideBox2}
-                source={uri}
-              />
-            ))}
-          </Swiper>
-        </View>
-
+        <Banner />
         {/* 보유 티켓 */}
         <View style={{marginTop: heightData * 60}}>
           <View style={styles.TextBox}>
@@ -184,9 +166,9 @@ function MainPageUser() {
               토너먼트
             </Text>
             {/* 토너먼트 Info Box todo : 파라미터 받을 예정 */}
-            {[1, 2, 3].map(() => {
+            {[1, 2, 3].map((_,i) => {
               return (
-                <View style={{marginBottom: heightData * 20}}>
+                <View key={i} style={{marginBottom: heightData * 20}}>
                   <TournamentInfoBox Info={TournamentInfoBoxDemo}/>
                 </View>
               );
@@ -197,38 +179,6 @@ function MainPageUser() {
     </SafeAreaView>
   );
 }
-
-const BannerStyle = StyleSheet.create({
-  imgSlideBox: {
-    height: heightData * 265,
-  },
-  imgSlideBox2: {
-    width: width,
-    height: heightData * 265,
-    resizeMode: 'cover',
-  },
-  activeDot: {
-    backgroundColor: '#484848',
-    width: widthData * 27,
-    height: heightData * 8,
-    borderRadius: 4,
-    marginLeft: 3,
-    marginRight: 3,
-    marginTop: 3,
-    marginBottom: 3,
-  },
-  dot: {
-    backgroundColor: '#484848',
-    opacity: 0.5,
-    width: widthData * 8,
-    height: heightData * 8,
-    borderRadius: 4,
-    marginLeft: 3,
-    marginRight: 3,
-    marginTop: 3,
-    marginBottom: 3,
-  },
-});
 
 const styles = StyleSheet.create({
   TextBox: {

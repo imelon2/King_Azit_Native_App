@@ -13,21 +13,14 @@ import {
   HomeRootStackParamList,
   MyPageRootStackParamList,
 } from '../../../../AppInner';
-import Swiper from 'react-native-swiper';
-import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import usePermissions from '../../../hooks/usePermissions';
 import {
   FontStyle,
   GlobalStyles,
   heightData,
-  width,
   widthData,
 } from '../../../modules/globalStyles';
-
-const images = [
-  require('../../../assets/MainBanner.png'),
-  require('../../../assets/MainBanner.png'),
-];
+import Banner from '@/components/Banner';
 
 function MainPageAdmin() {
   const navigation =
@@ -40,31 +33,7 @@ function MainPageAdmin() {
     <SafeAreaView style={[GlobalStyles.container]}>
       <ScrollView bounces={false}>
         {/* 배너 */}
-        <View style={GlobalStyles.flexCenter}>
-          <View style={BannerStyle.imgSlideBox}>
-            <Swiper
-              horizontal={true}
-              paginationStyle={{bottom: heightData * 5}}
-              activeDot={<View style={BannerStyle.activeDot} />}
-              dot={<View style={BannerStyle.dot} />}>
-              {images.map((uri, index) => (
-                <Image
-                  key={index}
-                  style={BannerStyle.imgSlideBox2}
-                  source={uri}
-                />
-              ))}
-            </Swiper>
-          </View>
-          <IconAntDesign
-            style={{position: 'absolute'}}
-            name="pluscircleo"
-            size={heightData * 30}
-            color="white"
-            onPress={() => navigation.navigate('SetBanner')}
-          />
-        </View>
-
+        <Banner />
         <View
           style={{
             marginTop: 20 * heightData,
@@ -201,38 +170,6 @@ const styles = StyleSheet.create({
   textPaddingTop: {
     paddingTop : heightData * 5
   }
-});
-
-const BannerStyle = StyleSheet.create({
-  imgSlideBox: {
-    height: heightData * 265,
-  },
-  imgSlideBox2: {
-    width: width,
-    height: heightData * 265,
-    resizeMode: 'cover',
-  },
-  activeDot: {
-    backgroundColor: '#484848',
-    width: widthData * 27,
-    height: heightData * 8,
-    borderRadius: 4,
-    marginLeft: 3,
-    marginRight: 3,
-    marginTop: 3,
-    marginBottom: 3,
-  },
-  dot: {
-    backgroundColor: '#484848',
-    opacity: 0.5,
-    width: widthData * 8,
-    height: heightData * 8,
-    borderRadius: 4,
-    marginLeft: 3,
-    marginRight: 3,
-    marginTop: 3,
-    marginBottom: 3,
-  },
 });
 
 export default MainPageAdmin;

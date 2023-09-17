@@ -44,6 +44,7 @@ function CreateRoom() {
     }
   });
 
+  
   const navigation =
     useNavigation<
       NavigationProp<MyPageRootStackParamList & HomeRootStackParamList>
@@ -133,7 +134,7 @@ function CreateRoom() {
               FontStyle.fwBold,
               {paddingBottom: heightData * 28},
             ]}>
-            {WEEK[today.getDay()]}요일 {MONTH[today.getMonth()]} 15
+            {WEEK[today.getDay()]}요일 {MONTH[today.getMonth()]} {today.getDate()}
           </Text>
         </View>
         <View style={GlobalStyles.flexCenter}>
