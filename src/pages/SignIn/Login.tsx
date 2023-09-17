@@ -1,43 +1,30 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {
-  Alert,
-  Dimensions,
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-  SafeAreaView,
-  Keyboard,
-  ActivityIndicator,
-} from 'react-native';
+import {Alert, Dimensions, Pressable, StyleSheet, Text, TextInput, View, SafeAreaView} from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import IconOcticons from 'react-native-vector-icons/Octicons';
 import IconSimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import IconSimpleAntDesign from 'react-native-vector-icons/AntDesign';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {widthData, heightData} from '../../modules/globalStyles';
-import { RootStackParamList } from '../../../AppInner';
-import {Shadow} from 'react-native-shadow-2';
+import {heightData} from '@/modules';
+import {RootStackParamList} from 'AppInner';
 const {width, height} = Dimensions.get('screen');
 const heightScale = heightData;
-
 import Config from 'react-native-config';
-import axios, { AxiosError } from 'axios';
-import { useAppDispatch } from '@/store';
+import axios, {AxiosError} from 'axios';
+import {useAppDispatch} from '@/store';
 import userSlice from '@/slices/user';
-import decodeJWT from '../../modules/decodeJWT';
-
+import decodeJWT from '@/modules/decodeJWT';
+import Header from '@/components/Header';
+import {BottomButton} from '@/components/Button';
 
 type LoginScreenProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
-function Login({navigation}:LoginScreenProps) {
+function Login({navigation}: LoginScreenProps) {
   const dispatch = useAppDispatch();
-  
+
   const [showPW, setShowPW] = useState(false);
-  const [checkLoginInfo,setCheckLoginInfo] = useState(true) // 가입정보가 맞으면 true, 가입정보가 틀리면 false
+  const [checkLoginInfo, setCheckLoginInfo] = useState(true); // 가입정보가 맞으면 true, 가입정보가 틀리면 false
   const [loading, setLoading] = useState(false);
 
   const [email, setEmail] = useState('');
@@ -45,7 +32,6 @@ function Login({navigation}:LoginScreenProps) {
 
   const emailRef = useRef<TextInput | null>(null);
   const passwordRef = useRef<TextInput | null>(null);
-
 
   const onChangeEmail = useCallback((text: any) => {
     setEmail(text.trim());
@@ -55,7 +41,7 @@ function Login({navigation}:LoginScreenProps) {
     setPassword(text.trim());
   }, []);
 
-  const loginBtn = useCallback(async() => {
+  const loginBtn = useCallback(async () => {
     try {
       if (!email) {
         return;
@@ -64,68 +50,70 @@ function Login({navigation}:LoginScreenProps) {
         return;
       }
       setLoading(true);
-      const loginResult = await axios.post(`${Config.API_URL}/login`,{
-        "memberId":email,
-        "password":password
-      })
 
-      const {access_token,refresh_token} = loginResult.data;
-      
-      const {sub,roles,nickname,uuid} = decodeJWT(access_token);
-      
+      const loginResult = await axios.post(`${Config.API_URL}/login`, {
+        memberId: email,
+        password: password,
+      });
+
+      const {access_token, refresh_token} = loginResult.data;
+      const {sub, roles, nickname, uuid} = decodeJWT(access_token);
+
       // 아직 승인되지 않은 유저
-      const isPermitted = roles.find((e:string) => e == 'ROLE_PERMITTED')
-      if(!isPermitted) {
+      const isPermitted = roles.find((e: string) => e == 'ROLE_PERMITTED');
+      if (!isPermitted) {
         return navigation.navigate('SignUpFinal');
       }
-
       dispatch(
         userSlice.actions.setUser({
           name: sub,
-          roles:roles,
-          nickName:nickname,
+          roles: roles,
+          nickName: nickname,
           access_token: access_token,
-          uuid:uuid
+          uuid: uuid,
         }),
       );
-      await EncryptedStorage.setItem(
-        'refreshToken',
-        refresh_token
-      );
+      await EncryptedStorage.setItem('refreshToken', refresh_token);
     } catch (error) {
-      if((error as AxiosError).response?.status === 401) {
+      if ((error as AxiosError).response?.status === 401) {
         // console.error((error as AxiosError).response?.status);
-        setCheckLoginInfo(false)
+        setCheckLoginInfo(false);
       } else {
-        Alert.alert("Error","죄송합니다. 잠시후에 다시 시도해주세요.")
+        Alert.alert('Error', '죄송합니다. 잠시후에 다시 시도해주세요.');
       }
     } finally {
       setLoading(false);
     }
-  }, [email, password,loading]);
+  }, [email, password, loading]);
 
   const isFillFrom = !!email && !!password;
   return (
     <SafeAreaView style={styles.container}>
-      <View style={[styles.headerStyle,{height:60}]}>
-        <IconSimpleAntDesign style={{width:heightScale * 32,height:heightScale * 32}} name="arrowleft"  size={heightScale * 32} color="#fff" onPress={() => navigation.goBack()} />
-      </View>
-      <KeyboardAwareScrollView enableOnAndroid 
+      <Header
+        title=""
+        leftIcon={() => (
+          <IconSimpleAntDesign
+            // style={{width: heightScale * 26, height: heightScale * 26}}
+            name="arrowleft"
+            size={heightScale * 26}
+            color="#fff"
+            onPress={() => navigation.goBack()}
+          />
+        )}
+      />
+
+      <KeyboardAwareScrollView
+        enableOnAndroid
         keyboardShouldPersistTaps={'handled'}
         showsVerticalScrollIndicator={false}
-        scrollEnabled={false}
-        >
+        scrollEnabled={false}>
         <View style={[styles.title, {height: (height / 29) * 3}]}>
           <Text style={styles.titleText}>Log In</Text>
         </View>
         <View style={[styles.contentInput, {height: (height / 29) * 6}]}>
           <View style={styles.inputWrapper}>
             <View style={styles.textInputWrapper}>
-              <IconOcticons
-                name="person"
-                size={heightScale * 25}
-                color="#fff"
-              />
+              <IconOcticons name="person" size={heightScale * 25} color="#fff" />
               <TextInput
                 style={styles.textInput}
                 ref={emailRef}
@@ -140,68 +128,81 @@ function Login({navigation}:LoginScreenProps) {
                 blurOnSubmit={false} // Submit Key클릭 시, Keyboard 유지
                 value={email}
               />
-              <View style={{flex:1,alignItems:'flex-end'}}>
-                <IconSimpleAntDesign 
-                  name='closecircleo'
+              <View style={{flex: 1, alignItems: 'flex-end'}}>
+                <IconSimpleAntDesign
+                  name="closecircleo"
                   size={heightScale * 20}
                   color="#fff"
-                  style={email ? {} :{display:'none'}}
+                  style={email ? {} : {display: 'none'}}
                   onPress={() => setEmail('')}
                   suppressHighlighting={true}
-                  />
+                />
               </View>
             </View>
             <View style={styles.textInputWrapper}>
-              <IconSimpleLineIcons
-                name="lock"
-                size={heightScale * 25}
-                color="#fff"
-              />
+              <IconSimpleLineIcons name="lock" size={heightScale * 25} color="#fff" />
               <TextInput
                 style={styles.textInput}
                 ref={passwordRef}
                 placeholder="비밀번호"
                 placeholderTextColor={'#6F6F6F'}
-                onChangeText={onChangePassword} 
+                onChangeText={onChangePassword}
                 onSubmitEditing={loginBtn} // Submit Key 클릭 시, 이벤트
                 blurOnSubmit={false}
                 secureTextEntry={!showPW ? true : false}
                 value={password}
               />
-              <View style={{flex:1,alignItems:'flex-end'}}>
-              <IconOcticons
-                name={showPW ? 'eye' : 'eye-closed'}
-                size={heightScale * 25}
-                color="#fff"
-                onPress={() => {
-                  setShowPW(!showPW);
-                }}
-                suppressHighlighting={true}
-              />
+              <View style={{flex: 1, alignItems: 'flex-end'}}>
+                <IconOcticons
+                  name={showPW ? 'eye' : 'eye-closed'}
+                  size={heightScale * 20}
+                  color="#fff"
+                  onPress={() => {
+                    setShowPW(!showPW);
+                  }}
+                  suppressHighlighting={true}
+                />
               </View>
             </View>
-            <View><Text style={checkLoginInfo ?{display:'none'} : {fontSize:heightScale * 14,padding:heightScale*5,color:'red'}}>아이디 또는 비밀번호를 다시 확인해주세요.</Text></View>
+            <View>
+              <Text
+                style={
+                  checkLoginInfo
+                    ? {display: 'none'}
+                    : {fontSize: heightScale * 14, padding: heightScale * 5, color: 'red'}
+                }>
+                아이디 또는 비밀번호를 다시 확인해주세요.
+              </Text>
+            </View>
           </View>
         </View>
-          <View style={{alignItems: 'center'}}>
-        <Shadow distance={isFillFrom ? 8 : 0} startColor={'#FCFF72'}>
-      <Pressable
-        style={isFillFrom ? [styles.loginButton,styles.onLiginButton] : styles.loginButton}
-        onPress={loginBtn}
-        disabled={!isFillFrom || loading}
-        >
-        {loading ? (<ActivityIndicator />) : (<Text style={isFillFrom ? [styles.textStyle,styles.onTextStyle] : styles.textStyle} >로그인</Text>)}
-      </Pressable>
-      </Shadow>
-      </View>
-      <View style={styles.findIDPW}>
-        <Pressable onPressIn={() => Alert.alert("구현예정","아이디 찾기 미구현")} style={{flex:1}}>
-        <Text style={{color:'#fff',textAlign: 'right'}}>아이디 찾기   |</Text>
-        </Pressable>
-        <Pressable onPress={() => Alert.alert("구현예정","비밀번호 찾기 미구현")} style={{flex:1}}>
-        <Text style={{color:'#fff'}}>   비밀번호 찾기</Text> 
-        </Pressable>
-      </View>
+        <View style={{alignItems: 'center'}}>
+          <BottomButton
+            onPress={loginBtn}
+            title="로그인"
+            backgroundColor={isFillFrom ? '#F5FF82' : '#808080'}
+            color="#000"
+          />
+        </View>
+        <View style={{flex: 1, alignItems: 'center'}}>
+          <View style={styles.findIDPW}>
+            <Pressable
+              onPressIn={() => Alert.alert('구현예정', '아이디 찾기 미구현')}
+              style={{flex: 1, flexDirection: 'row'}}>
+              <Text style={styles.subfont}>아이디 찾기</Text>
+              <Text style={[styles.subfont, {paddingLeft: 10 * heightScale}]}> |</Text>
+            </Pressable>
+            <Pressable
+              onPress={() => Alert.alert('구현예정', '비밀번호 찾기 미구현')}
+              style={{flex: 1, flexDirection: 'row'}}>
+              <Text style={styles.subfont}> 비밀번호 찾기</Text>
+              <Text style={[styles.subfont, {paddingLeft: 10 * heightScale}]}> |</Text>
+            </Pressable>
+            <Pressable onPress={() => Alert.alert('구현예정', '비밀번호 찾기 미구현')} style={{flex: 1}}>
+              <Text style={styles.subfont}> 회원가입</Text>
+            </Pressable>
+          </View>
+        </View>
       </KeyboardAwareScrollView>
     </SafeAreaView>
   );
@@ -216,20 +217,19 @@ const styles = StyleSheet.create({
   title: {
     justifyContent: 'center',
   },
-  contentInput: {
-  },
+  contentInput: {},
   headerStyle: {
     // backgroundColor:'orange',
-    justifyContent:'center',
-    paddingHorizontal:15,
-    borderBottomWidth:2,
-    borderBottomColor:'#484848'
+    justifyContent: 'center',
+    paddingHorizontal: 15,
+    borderBottomWidth: 2,
+    borderBottomColor: '#484848',
   },
   titleText: {
-    fontSize: heightScale * 26,
-    fontWeight:'400',
+    fontSize: heightScale * 22,
+    fontWeight: '400',
     paddingLeft: heightScale * 20,
-    color:'#B9B9B9'
+    color: '#B9B9B9',
   },
   inputWrapper: {
     paddingHorizontal: heightScale * 29,
@@ -240,16 +240,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: 'gray',
+    // paddingRight: 5 * heightScale,
   },
   textInput: {
     fontSize: heightScale * 16,
-    height:heightScale * 50,
+    height: heightScale * 50,
     width: '85%',
     paddingHorizontal: 10,
     paddingBottom: 5,
-    color:'#fff'
+    color: '#fff',
   },
-  findIDPW: {flexDirection: 'row', padding: heightScale*20,marginTop:heightScale*15},
+  findIDPW: {flex: 1, flexDirection: 'row', marginTop: heightScale * 20, width: 245 * heightScale},
   loginButton: {
     backgroundColor: '#D9D9D9',
     height: heightScale * 64,
@@ -259,7 +260,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   onLiginButton: {
-    backgroundColor:'#F5FF82'
+    backgroundColor: '#F5FF82',
   },
   textStyle: {
     color: 'black',
@@ -268,8 +269,14 @@ const styles = StyleSheet.create({
   },
   onTextStyle: {
     color: '#000',
-    fontSize: heightScale * 18
-  }
+    fontSize: heightScale * 18,
+  },
+  subfont: {
+    color: '#fff',
+    textAlign: 'center',
+    fontSize: 13 * heightScale,
+    fontWeight: '300',
+  },
 });
 
 export default Login;

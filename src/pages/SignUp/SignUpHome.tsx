@@ -7,20 +7,28 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import Icon2 from 'react-native-vector-icons/MaterialIcons';
 import {SignUpHeader} from './SignUpComponent/SignUpHeader';
 import {BottomButton} from '@/components/Button';
+import {ServiceModal, PrivacyModal, MarketingModal} from './SignUpComponent';
 
 type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUpHome'>;
 type checkLineProps = {
   check: boolean;
   setCheck: (check: boolean) => void;
   text: string;
+  setModalState: (boolean: boolean) => void;
 };
 
-const CheckLine = ({check, setCheck, text}: checkLineProps) => {
+const CheckLine = ({check, setCheck, text, setModalState}: checkLineProps) => {
   return (
     <Pressable style={SignUpstyles.termsBox} onPress={() => setCheck(!check)}>
       <Icon style={SignUpstyles.check} name="check" size={20} color={check ? '#F5FF82' : '#BCBCBC'} />
       <Text style={{color: '#fff'}}>{text}</Text>
-      <Icon2 style={SignUpstyles.next} name="navigate-next" size={20} color={'#BCBCBC'} />
+      <Icon2
+        style={SignUpstyles.next}
+        name="navigate-next"
+        size={20}
+        color={'#BCBCBC'}
+        onPress={() => setModalState(true)}
+      />
     </Pressable>
   );
 };
@@ -31,6 +39,9 @@ export const SignUpHome = ({navigation}: SignInScreenProps) => {
   const [check2, setCheck2] = useState(false);
   const [check3, setCheck3] = useState(false);
   const [nextPage, setNextPage] = useState(false);
+  const [modalState, setModalState] = useState(false);
+  const [modalState2, setModalState2] = useState(false);
+  const [modalState3, setModalState3] = useState(false);
 
   const onClickCheckAll = (checkAll: boolean) => {
     setCheck1(checkAll);
@@ -57,19 +68,38 @@ export const SignUpHome = ({navigation}: SignInScreenProps) => {
           <Text style={SignUpstyles.agreeText}>모두 동의</Text>
         </Pressable>
         <Text style={SignUpstyles.bottomBar}></Text>
-        <CheckLine check={check1} setCheck={setCheck1} text={'(필수) Kings’ Azit 서비스 이용약관'} />
-        <CheckLine check={check2} setCheck={setCheck2} text={'(필수) 개인정보 수집 및 이용 동의'} />
-        <CheckLine check={check3} setCheck={setCheck3} text={'(선택) 마케팅 정보 활용 동의'} />
+        <CheckLine
+          check={check1}
+          setCheck={setCheck1}
+          text={'(필수) Kings’ Azit 서비스 이용약관'}
+          setModalState={setModalState}
+        />
+        <CheckLine
+          check={check2}
+          setCheck={setCheck2}
+          text={'(필수) 개인정보 수집 및 이용 동의'}
+          setModalState={setModalState2}
+        />
+        <CheckLine
+          check={check3}
+          setCheck={setCheck3}
+          text={'(선택) 마케팅 정보 활용 동의'}
+          setModalState={setModalState3}
+        />
       </View>
 
       <View style={SignUpstyles.center}>
         <BottomButton
-          onPress={() => navigation.navigate('SignUpLogin')}
+          onPress={() => navigation.navigate('SignUpId')}
           title="다음"
           backgroundColor={nextPage ? '#F5FF82' : '#808080'}
           color="#000"
         />
       </View>
+
+      <ServiceModal modalState={modalState} setModalState={setModalState} setCheck={setCheck1} />
+      <PrivacyModal modalState={modalState2} setModalState={setModalState2} setCheck={setCheck2} />
+      <MarketingModal modalState={modalState3} setModalState={setModalState3} setCheck={setCheck3} />
     </SafeAreaView>
   );
 };

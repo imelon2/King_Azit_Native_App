@@ -1,98 +1,92 @@
-import { Text,View,TextInput,SafeAreaView,KeyboardAvoidingView , StyleSheet} from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useCallback, useState, useRef } from 'react';
-import Icon from 'react-native-vector-icons/AntDesign';
-import { RootStackParamList } from '../../../AppInner';
-import { SignUpstyles } from '../../modules/SignUpstyles';
+import {Text, View, TextInput, SafeAreaView, KeyboardAvoidingView, StyleSheet} from 'react-native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {useCallback, useState, useRef} from 'react';
+import {RootStackParamList} from 'AppInner';
+import {SignUpstyles} from '@/modules/SignUpstyles';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import userSlice from "../../slices/user";
-import { useAppDispatch } from "../../store"
-import axios from 'axios'
-import Config from 'react-native-config';
+import {SignUpHeader} from './SignUpComponent';
+import {BottomButton} from '@/components/Button';
+import {nickCheck, SignUp} from '@/api/SignUp/SignUpApi';
+import {RootState} from '@/store/reducer';
+import {useSelector} from 'react-redux';
 
-type SignInScreenProps = NativeStackScreenProps< RootStackParamList , 'SignUpNickName' >;
+type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUpNickName'>;
 
 export function SignUpNickName({navigation}: SignInScreenProps) {
-    const dispatch = useAppDispatch();
-    const [nickName, setNickName] = useState('');
-    const [error, setError] = useState(false);
-  
-    const onChangeNickName = useCallback((text: any) => {
-      setNickName(text.trim());
-    }, []);
+  const user = useSelector((state: RootState) => state.user);
+  const [nickName, setNickName] = useState('');
+  const [error, setError] = useState(false);
+  const [error2, setError2] = useState(false);
 
+  const onChangeNickName = useCallback((text: any) => {
+    setNickName(text.trim());
+  }, []);
 
+  const onClickNextButton = async () => {
+    if (!nickName) return;
+    if (nickName.length < 2 || nickName.length > 8) {
+      setError(true);
+      return;
+    }
+    const nicknameCheck: any = await nickCheck({nickname: nickName});
+    if (nicknameCheck === 200) signUpHandler();
+    else setError2(true);
+  };
 
-    const onClickNextButton = () => {
-        if(!nickName) return;
-        // if( 중복확인 )
-        dispatch(userSlice.actions.setNickname({nickName: nickName}));
-        axios.get(`${Config.API_URL}/nicknamecheck?nickname=${nickName}`)
-        .then(res => {
-             if (res.status == 200) {
-                navigation.navigate('SignUpName');
-             }
-            }
-        ).catch(e => {
-            console.log(e)
-            setError(true)
-        });
-       
+  const signUpHandler = async () => {
+    const data = {
+      memberId: user.email,
+      password: user.password,
+      name: user.name,
+      nickname: nickName,
+      phone: user.phone,
+      birth: user.birth,
+      gender: user.gender,
+      fcmToken: user.phoneToken,
     };
-  
-    return (
-      <SafeAreaView style={SignUpstyles.container}>
-        <KeyboardAwareScrollView enableOnAndroid 
+    // const signUpData: any = await SignUp(data);
+    // console.log(signUpData);
+    navigation.navigate('SignUpFinal');
+  };
+
+  return (
+    <SafeAreaView style={SignUpstyles.container}>
+      <KeyboardAwareScrollView
+        enableOnAndroid
         keyboardShouldPersistTaps={'handled'}
         showsVerticalScrollIndicator={false}
-        scrollEnabled={false}
-        >
-          <View>
-            <Icon
-              name="arrowleft"
-              style={SignUpstyles.leftIcon}
-              size={25}
-              color="#fff"
-              onPress={() => navigation.navigate('SignUpPassWord')}
-            />
-            <View style={SignUpstyles.topbar}>
-              <View style={[SignUpstyles.progress, SignUpstyles.progress4]}></View>
+        scrollEnabled={false}>
+        <View>
+          <SignUpHeader text={'사용할 닉네임을 정해주세요.'} bar={288} />
+        </View>
+        <View>
+          <View style={SignUpstyles.inputWrapper}>
+            <View style={SignUpstyles.textInputWrapper}>
+              <TextInput
+                style={SignUpstyles.textInput}
+                placeholder="닉네임 입력"
+                onChangeText={onChangeNickName}
+                value={nickName}
+                placeholderTextColor="#6F6F6F"
+              />
             </View>
-            <View style={SignUpstyles.terms}>
-              <Text style={SignUpstyles.termstext}> 아지트에 사용할 </Text>
-              <Text style={SignUpstyles.termstext2}> 닉네임을 정해주세요. </Text>
-            </View>
-  
-            <View style={SignUpstyles.inputWrapper}>
-              <View style={SignUpstyles.textInputWrapper}>
-                <TextInput
-                  style={SignUpstyles.textInput}
-                  placeholder="닉네임 입력"
-                  onChangeText={onChangeNickName}
-                  value={nickName}
-                  placeholderTextColor = "#6F6F6F"
-                />
-              </View>
-              <View>
-                {error && (
-                  <Text style={SignUpstyles.errorText}>
-                    비밀번호가 일치하지 않습니다.
-                  </Text>
-                )}
-              </View>
+            <View>
+              {error && <Text style={SignUpstyles.errorText}>사용할 수 없는 닉네임 입니다. 다시 입력해주세요.</Text>}
+              {error2 && <Text style={SignUpstyles.errorText}>중복된 닉네임 입니다.</Text>}
             </View>
           </View>
-        <View style={{alignItems:'center'}}>
-          <Text
-            style={ nickName ? [SignUpstyles.nextButton,SignUpstyles.nextButton2]: [SignUpstyles.nextButton] }
-            onPress={onClickNextButton}>
-            다음
-          </Text>
         </View>
-        </KeyboardAwareScrollView>
-  
-      </SafeAreaView>
-    );
-  }
+        <View style={SignUpstyles.center}>
+          <BottomButton
+            onPress={onClickNextButton}
+            title="다음"
+            backgroundColor={nickName ? '#F5FF82' : '#808080'}
+            color="#000"
+          />
+        </View>
+      </KeyboardAwareScrollView>
+    </SafeAreaView>
+  );
+}
 
-  export default SignUpNickName;
+export default SignUpNickName;

@@ -57,14 +57,12 @@ export type RootStackParamList = {
   Main: undefined;
   Login: undefined;
   SignUp: undefined;
-  SignUpLogin: undefined;
   SignUpHome: undefined;
+  SignUpId: undefined;
   SignUpPassWord: undefined;
   SignUpNickName: undefined;
-  SignUpGender: undefined;
-  SignUpName: undefined;
-  SignUpBirth: undefined;
   SignUpCertification: undefined;
+  SignUpCertificationNum: undefined;
   SignUpFinal: undefined;
 };
 
@@ -117,7 +115,6 @@ export type HomeRootStackParamList = {
   };
   Prize: undefined;
   SetBanner: undefined;
-  TournamentInfo:undefined;
 };
 
 export type MyPageRootStackParamList = {
@@ -154,7 +151,6 @@ function AppInner() {
   const isLoggedIn = useSelector(
     (state: RootState) => !!state.user.access_token,
   );
-  
 
   // 디바이스 토큰 설정 및 redex 저장
   // useEffect(() => {
@@ -256,7 +252,6 @@ function AppInner() {
           <HomeStack.Screen name="MonthCirculation" component={MonthCirculation} options={{animation: 'none'}} />
           <HomeStack.Screen name="TotalPublish" component={TotalPublish} options={{animation: 'none'}} />
           <HomeStack.Screen name="UserConsumption" component={UserConsumption} options={{animation: 'none'}} />
-          <HomeStack.Screen name="TournamentInfo" component={TournamentInfo} options={{animation: 'none'}} />
           <HomeStack.Screen
             name="UserConsumptionDetail"
             component={UserConsumptionDetail}
