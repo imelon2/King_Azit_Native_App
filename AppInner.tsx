@@ -115,6 +115,7 @@ export type HomeRootStackParamList = {
   };
   Prize: undefined;
   SetBanner: undefined;
+  TournamentInfo:undefined;
 };
 
 export type MyPageRootStackParamList = {
@@ -259,6 +260,7 @@ function AppInner() {
           />
           <HomeStack.Screen name="Prize" component={Prize} options={{animation: 'none'}} />
           <HomeStack.Screen name="SetBanner" component={SetBanner} options={{animation: 'none'}} />
+          <HomeStack.Screen name="TournamentInfo" component={TournamentInfo} options={{animation: 'none'}} />
           <HomeStack.Screen
             name="UserInformation"
             component={UserInformation}
