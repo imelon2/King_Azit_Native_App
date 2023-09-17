@@ -16,16 +16,27 @@ export function SignUpId({navigation}: SignInScreenProps) {
   const dispatch = useAppDispatch();
   const [id, setId] = useState('');
   const [error, setError] = useState(false);
+  const [error2, setError2] = useState(false);
   const onChangeId = useCallback((text: any) => {
     setId(text.trim());
   }, []);
 
   const onClickNextButton = async () => {
-    const idCheck2 = await idCheck('aa');
-    // if (!id) return;
-    navigation.navigate('SignUpPassWord');
-    // setError(true);
-    // dispatch(userSlice.actions.setPassWord({id: id}));
+    const regExp = /[!?@#$%^&*():;+-=~{}<>\_\[\]\|\\\"\'\,\.\/\`\₩]/g;
+    const regExp2 = /[ㄱ-ㅎㅏ-ㅣ가-힣]/g;
+    if (!id) return;
+    if (id.length < 4 || regExp.test(id) || regExp2.test(id)) {
+      setError(true);
+      return;
+    }
+
+    const idCheck2: any = await idCheck({memberId: id});
+    if (idCheck2 === 200) {
+      dispatch(userSlice.actions.setEmail({email: id}));
+      navigation.navigate('SignUpPassWord');
+    } else {
+      setError2(true);
+    }
   };
 
   return (
@@ -55,6 +66,12 @@ export function SignUpId({navigation}: SignInScreenProps) {
               <View>
                 <Text style={SignUpstyles.errorText}>올바른 아이디 형태가 아닙니다. 4자리 이상 영문으로</Text>
                 <Text style={SignUpstyles.errorText}>다시 시도해주세요.</Text>
+              </View>
+            )}
+
+            {error2 && (
+              <View>
+                <Text style={SignUpstyles.errorText}>중복된 아이디 입니다.</Text>
               </View>
             )}
           </View>

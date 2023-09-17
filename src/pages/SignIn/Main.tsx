@@ -1,9 +1,8 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React from 'react';
-import {Image, Pressable, StyleSheet, Text, View, SafeAreaView} from 'react-native';
-import {Shadow} from 'react-native-shadow-2';
+import {Image, StyleSheet, View, SafeAreaView} from 'react-native';
 import {RootStackParamList} from '../../../AppInner';
-import {widthData, heightData} from '../../modules/globalStyles';
+import {heightData} from '../../modules/globalStyles';
 import {BottomButton} from '@/components/Button';
 const heightScale = heightData;
 
@@ -14,7 +13,7 @@ function Main({navigation}: MainScreenProps) {
     <SafeAreaView style={styles.container}>
       <View style={{flex: 1.5}}></View>
       <View style={styles.headerStyle}>
-        <Image source={require('../../assets/MainLogo.png')} style={styles.mainLogo} />
+        <Image source={require('@/assets/MainLogo.png')} style={styles.mainLogo} />
       </View>
       <View style={{flex: 1}}></View>
       <View style={styles.bottonStyle}>
@@ -22,7 +21,7 @@ function Main({navigation}: MainScreenProps) {
           <BottomButton
             onPress={() => navigation.navigate('Login')}
             title="로그인"
-            backgroundColor={'#F5FF82'}
+            backgroundColor="#F5FF82"
             color="#000"
           />
         </View>

@@ -8,9 +8,6 @@ import {
   SignUpCertification,
   SignUpFinal,
   SignUpCertificationNum,
-  SignUpName,
-  SignUpGender,
-  SignUpBirth,
 } from './index';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -24,9 +21,6 @@ function SignUp() {
       <Stack.Screen name="SignUpCertification" component={SignUpCertification} options={{headerShown: false}} />
       <Stack.Screen name="SignUpNickName" component={SignUpNickName} options={{headerShown: false}} />
       <Stack.Screen name="SignUpCertificationNum" component={SignUpCertificationNum} options={{headerShown: false}} />
-      {/* <Stack.Screen name="SignUpName" component={SignUpName} options={{headerShown: false}} /> */}
-      {/* <Stack.Screen name="SignUpBirth" component={SignUpBirth} options={{headerShown: false}} /> */}
-      {/* <Stack.Screen name="SignUpGender" component={SignUpGender} options={{headerShown: false}} /> */}
       <Stack.Screen name="SignUpFinal" component={SignUpFinal} options={{headerShown: false}} />
     </Stack.Navigator>
   );

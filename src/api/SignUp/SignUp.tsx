@@ -1,7 +1,6 @@
 import axios from 'axios';
 import Config from 'react-native-config';
-
-const BASE_URL: any = Config.API_URL;
+const BASE_URL: any = 'http://43.200.171.141:8080/';
 
 const baseAPI = (url: string) => {
   return axios.create({

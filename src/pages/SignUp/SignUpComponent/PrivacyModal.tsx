@@ -43,8 +43,7 @@ export const PrivacyModal = ({modalState, setModalState, setCheck}: serviceModal
             ))}
 
             <Text style={[styles.containerText, {marginTop: 10 * heightData}]}>
-              {' '}
-              ※ 동의를 거부할 수 있으나 거부시 회원 가입이 불가능합니다.{' '}
+              ※ 동의를 거부할 수 있으나 거부시 회원 가입이 불가능합니다.
             </Text>
           </View>
 

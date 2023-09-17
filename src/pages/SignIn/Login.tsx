@@ -1,34 +1,20 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {
-  Alert,
-  Dimensions,
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-  SafeAreaView,
-  Keyboard,
-  ActivityIndicator,
-} from 'react-native';
+import {Alert, Dimensions, Pressable, StyleSheet, Text, TextInput, View, SafeAreaView} from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import IconOcticons from 'react-native-vector-icons/Octicons';
 import IconSimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import IconSimpleAntDesign from 'react-native-vector-icons/AntDesign';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {widthData, heightData} from '../../modules/globalStyles';
-import {RootStackParamList} from '../../../AppInner';
-import {Shadow} from 'react-native-shadow-2';
+import {heightData} from '@/modules';
+import {RootStackParamList} from 'AppInner';
 const {width, height} = Dimensions.get('screen');
 const heightScale = heightData;
-
 import Config from 'react-native-config';
 import axios, {AxiosError} from 'axios';
 import {useAppDispatch} from '@/store';
 import userSlice from '@/slices/user';
-import decodeJWT from '../../modules/decodeJWT';
+import decodeJWT from '@/modules/decodeJWT';
 import Header from '@/components/Header';
 import {BottomButton} from '@/components/Button';
 
@@ -64,13 +50,13 @@ function Login({navigation}: LoginScreenProps) {
         return;
       }
       setLoading(true);
+
       const loginResult = await axios.post(`${Config.API_URL}/login`, {
         memberId: email,
         password: password,
       });
 
       const {access_token, refresh_token} = loginResult.data;
-
       const {sub, roles, nickname, uuid} = decodeJWT(access_token);
 
       // 아직 승인되지 않은 유저
@@ -78,7 +64,6 @@ function Login({navigation}: LoginScreenProps) {
       if (!isPermitted) {
         return navigation.navigate('SignUpFinal');
       }
-
       dispatch(
         userSlice.actions.setUser({
           name: sub,
@@ -170,7 +155,7 @@ function Login({navigation}: LoginScreenProps) {
               <View style={{flex: 1, alignItems: 'flex-end'}}>
                 <IconOcticons
                   name={showPW ? 'eye' : 'eye-closed'}
-                  size={heightScale * 24}
+                  size={heightScale * 20}
                   color="#fff"
                   onPress={() => {
                     setShowPW(!showPW);
@@ -199,16 +184,24 @@ function Login({navigation}: LoginScreenProps) {
             color="#000"
           />
         </View>
-        <View style={styles.findIDPW}>
-          <Pressable onPressIn={() => Alert.alert('구현예정', '아이디 찾기 미구현')} style={{flex: 1}}>
-            <Text style={{color: '#fff', textAlign: 'right'}}>아이디 찾기 |</Text>
-          </Pressable>
-          <Pressable onPress={() => Alert.alert('구현예정', '비밀번호 찾기 미구현')} style={{flex: 1}}>
-            <Text style={{color: '#fff'}}> 비밀번호 찾기</Text>
-          </Pressable>
-          <Pressable onPress={() => Alert.alert('구현예정', '비밀번호 찾기 미구현')} style={{flex: 1}}>
-            <Text style={{color: '#fff'}}> 회원가입</Text>
-          </Pressable>
+        <View style={{flex: 1, alignItems: 'center'}}>
+          <View style={styles.findIDPW}>
+            <Pressable
+              onPressIn={() => Alert.alert('구현예정', '아이디 찾기 미구현')}
+              style={{flex: 1, flexDirection: 'row'}}>
+              <Text style={styles.subfont}>아이디 찾기</Text>
+              <Text style={[styles.subfont, {paddingLeft: 10 * heightScale}]}> |</Text>
+            </Pressable>
+            <Pressable
+              onPress={() => Alert.alert('구현예정', '비밀번호 찾기 미구현')}
+              style={{flex: 1, flexDirection: 'row'}}>
+              <Text style={styles.subfont}> 비밀번호 찾기</Text>
+              <Text style={[styles.subfont, {paddingLeft: 10 * heightScale}]}> |</Text>
+            </Pressable>
+            <Pressable onPress={() => Alert.alert('구현예정', '비밀번호 찾기 미구현')} style={{flex: 1}}>
+              <Text style={styles.subfont}> 회원가입</Text>
+            </Pressable>
+          </View>
         </View>
       </KeyboardAwareScrollView>
     </SafeAreaView>
@@ -247,6 +240,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: 'gray',
+    // paddingRight: 5 * heightScale,
   },
   textInput: {
     fontSize: heightScale * 16,
@@ -256,7 +250,7 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     color: '#fff',
   },
-  findIDPW: {flexDirection: 'row', padding: heightScale * 20, marginTop: heightScale * 15},
+  findIDPW: {flex: 1, flexDirection: 'row', marginTop: heightScale * 20, width: 245 * heightScale},
   loginButton: {
     backgroundColor: '#D9D9D9',
     height: heightScale * 64,
@@ -276,6 +270,12 @@ const styles = StyleSheet.create({
   onTextStyle: {
     color: '#000',
     fontSize: heightScale * 18,
+  },
+  subfont: {
+    color: '#fff',
+    textAlign: 'center',
+    fontSize: 13 * heightScale,
+    fontWeight: '300',
   },
 });
 

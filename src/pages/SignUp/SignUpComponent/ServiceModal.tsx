@@ -1,5 +1,5 @@
 import Modal from 'react-native-modal';
-import {Text, View, SafeAreaView, Pressable, StyleSheet, Dimensions, ScrollView} from 'react-native';
+import {Text, View, StyleSheet, Dimensions, ScrollView, Image} from 'react-native';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import {GlobalStyles, headerIconSize, heightData, widthData} from '@/modules/globalStyles';
 import {textarr, cancelTextarr} from './ModalText';
@@ -50,7 +50,11 @@ export const ServiceModal = ({modalState, setModalState, setCheck}: serviceModal
                 <Text style={styles.containerText}>{val.text}</Text>
               </Fragment>
             ))}
+
+            <Image style={styles.img} source={require(`@/assets/serviceImg.png`)} />
+            <Text style={styles.bottomText}>(시행일) 이 약관은 어플리케이션 개설일 부터 시행합니다.</Text>
           </View>
+
           <View style={{marginTop: 40 * heightData}}>
             <BottomButton onPress={onClickNext} title="다음" backgroundColor="#F5FF82" color="#000" />
           </View>
@@ -114,5 +118,16 @@ const styles = StyleSheet.create({
     fontSize: 12 * heightData,
     color: 'white',
     lineHeight: 22 * heightData,
+  },
+  img: {
+    width: 321 * heightData,
+    height: 197 * heightData,
+    resizeMode: 'contain',
+    marginTop: 20 * heightData,
+  },
+  bottomText: {
+    fontSize: 12 * heightData,
+    color: '#fff',
+    marginTop: 10 * heightData,
   },
 });

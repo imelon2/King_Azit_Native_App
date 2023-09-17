@@ -1,6 +1,6 @@
 import {SignUpstyles} from '@/modules';
 import {useCallback, useRef, useState} from 'react';
-import {Text, View, TextInput, SafeAreaView, StyleSheet} from 'react-native';
+import {View, TextInput, SafeAreaView, StyleSheet} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {SignUpHeader} from './SignUpComponent';
 import {BottomButton} from '@/components/Button';

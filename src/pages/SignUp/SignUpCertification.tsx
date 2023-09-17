@@ -1,13 +1,9 @@
-import {Text, View, TextInput, SafeAreaView, KeyboardAvoidingView, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, TextInput, SafeAreaView} from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useCallback, useState, useRef} from 'react';
-import {RootStackParamList} from '../../../AppInner';
-import {SignUpstyles} from '../../modules/SignUpstyles';
+import {RootStackParamList} from 'AppInner';
+import {SignUpstyles} from '@/modules/SignUpstyles';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {heightData} from '../../modules/globalStyles';
-const heightScale = heightData;
-import {useSelector} from 'react-redux';
-import {RootState} from '../../store/reducer';
 import {SignUpHeader} from './SignUpComponent';
 import {BottomButton} from '@/components/Button';
 import {useAppDispatch} from '@/store';
@@ -19,15 +15,11 @@ export function SignUpCertification({navigation}: SignInScreenProps) {
   const dispatch = useAppDispatch();
   const [phoneNum, setPhoneNum] = useState('');
   const [name, setName] = useState('');
-
   const phoneNumRef = useRef<TextInput | null>(null);
 
-  // const onClickCert = () => {
-  //   setCertCheck(true);
-  // };
-
   const NextButton = () => {
-    dispatch(userSlice.actions.setPassWord({name: name, phoneNum: phoneNum}));
+    dispatch(userSlice.actions.setName({name}));
+    dispatch(userSlice.actions.setPhone({phone: phoneNum}));
     navigation.navigate('SignUpCertificationNum');
   };
 

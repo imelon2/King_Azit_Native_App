@@ -56,16 +56,13 @@ export type RootStackParamList = {
   Main: undefined;
   Login: undefined;
   SignUp: undefined;
-  SignUpId: undefined;
   SignUpHome: undefined;
+  SignUpId: undefined;
   SignUpPassWord: undefined;
   SignUpNickName: undefined;
-  SignUpGender: undefined;
-  SignUpName: undefined;
-  SignUpBirth: undefined;
   SignUpCertification: undefined;
-  SignUpFinal: undefined;
   SignUpCertificationNum: undefined;
+  SignUpFinal: undefined;
 };
 
 export type HomeRootStackParamList = {
@@ -227,7 +224,7 @@ function AppInner() {
   deepLinkController(isLoggedIn);
   return (
     <>
-      {!isLoggedIn ? (
+      {isLoggedIn ? (
         <HomeStack.Navigator initialRouteName="Home" screenOptions={{headerShown: false}}>
           <HomeStack.Screen name="Home" component={TabNavigator} />
           <HomeStack.Screen name="SetNickNameScreen" component={SetNickNameScreen} options={{animation: 'none'}} />
@@ -249,7 +246,7 @@ function AppInner() {
           <HomeStack.Screen name="RoomMake" component={RoomMake} options={{animation: 'none'}} />
           <HomeStack.Screen name="CreateRoom" component={CreateRoom} options={{animation: 'none'}} />
           <HomeStack.Screen name="Forbidden" component={Forbidden} options={{animation: 'none'}} />
-          <HomeStack.Screen name="QRCodeScanner" component={QRCodeScanner} options={{animation: 'none'}} />
+          {/* <HomeStack.Screen name="QRCodeScanner" component={QRCodeScanner} options={{animation: 'none'}} /> */}
           <HomeStack.Screen name="CalculatePage" component={CalculatePage} options={{animation: 'none'}} />
           <HomeStack.Screen name="MonthCirculation" component={MonthCirculation} options={{animation: 'none'}} />
           <HomeStack.Screen name="TotalPublish" component={TotalPublish} options={{animation: 'none'}} />
@@ -260,7 +257,7 @@ function AppInner() {
             options={{animation: 'none'}}
           />
           <HomeStack.Screen name="Prize" component={Prize} options={{animation: 'none'}} />
-          <HomeStack.Screen name="SetBanner" component={SetBanner} options={{animation: 'none'}} />
+          {/* <HomeStack.Screen name="SetBanner" component={SetBanner} options={{animation: 'none'}} /> */}
           <HomeStack.Screen
             name="UserInformation"
             component={UserInformation}

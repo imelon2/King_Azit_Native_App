@@ -1,69 +1,53 @@
 import {Text, View, TextInput, SafeAreaView, KeyboardAvoidingView, StyleSheet} from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useCallback, useState, useRef} from 'react';
-import Icon from 'react-native-vector-icons/AntDesign';
-import {RootStackParamList} from '../../../AppInner';
-import {SignUpstyles} from '../../modules/SignUpstyles';
+import {RootStackParamList} from 'AppInner';
+import {SignUpstyles} from '@/modules/SignUpstyles';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import userSlice from '../../slices/user';
-import {useAppDispatch} from '../../store';
-import axios from 'axios';
-import Config from 'react-native-config';
 import {SignUpHeader} from './SignUpComponent';
 import {BottomButton} from '@/components/Button';
+import {nickCheck, SignUp} from '@/api/SignUp/SignUpApi';
+import {RootState} from '@/store/reducer';
+import {useSelector} from 'react-redux';
 
 type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUpNickName'>;
 
 export function SignUpNickName({navigation}: SignInScreenProps) {
-  const dispatch = useAppDispatch();
+  const user = useSelector((state: RootState) => state.user);
   const [nickName, setNickName] = useState('');
   const [error, setError] = useState(false);
+  const [error2, setError2] = useState(false);
 
   const onChangeNickName = useCallback((text: any) => {
     setNickName(text.trim());
   }, []);
 
-  const onClickNextButton = () => {
+  const onClickNextButton = async () => {
     if (!nickName) return;
-    // if( 중복확인 )
-    dispatch(userSlice.actions.setNickname({nickName: nickName}));
-    axios
-      .get(`${Config.API_URL}/nicknamecheck?nickname=${nickName}`)
-      .then(res => {
-        if (res.status == 200) {
-          navigation.navigate('SignUpName');
-        }
-      })
-      .catch(e => {
-        console.log(e);
-        setError(true);
-      });
+    if (nickName.length < 2 || nickName.length > 8) {
+      setError(true);
+      return;
+    }
+    const nicknameCheck: any = await nickCheck({nickname: nickName});
+    if (nicknameCheck === 200) signUpHandler();
+    else setError2(true);
   };
 
-  // const user = useSelector((state: RootState) => state.user);
-
-  // const onClickSiginUp = () => {
-  //   let data = {
-  //     memberId: user.email,
-  //     password: user.password,
-  //     name: user.name,
-  //     nickname: user.nickName,
-  //     phone: phoneNum,
-  //     birth: user.birth,
-  //     gender: user.gender,
-  //     fcmToken: user.phoneToken,
-  //   };
-  //   axios
-  //     .post(`${Config.API_URL}/join`, data)
-  //     .then(function (res) {
-  //       if (res.status == 201) {
-  //         navigation.navigate('SignUpFinal');
-  //       }
-  //     })
-  //     .catch(function (error) {
-  //       console.log(error);
-  //     });
-  // };
+  const signUpHandler = async () => {
+    const data = {
+      memberId: user.email,
+      password: user.password,
+      name: user.name,
+      nickname: nickName,
+      phone: user.phone,
+      birth: user.birth,
+      gender: user.gender,
+      fcmToken: user.phoneToken,
+    };
+    // const signUpData: any = await SignUp(data);
+    // console.log(signUpData);
+    navigation.navigate('SignUpFinal');
+  };
 
   return (
     <SafeAreaView style={SignUpstyles.container}>
@@ -88,12 +72,13 @@ export function SignUpNickName({navigation}: SignInScreenProps) {
             </View>
             <View>
               {error && <Text style={SignUpstyles.errorText}>사용할 수 없는 닉네임 입니다. 다시 입력해주세요.</Text>}
+              {error2 && <Text style={SignUpstyles.errorText}>중복된 닉네임 입니다.</Text>}
             </View>
           </View>
         </View>
         <View style={SignUpstyles.center}>
           <BottomButton
-            onPress={() => navigation.navigate('SignUpFinal')}
+            onPress={onClickNextButton}
             title="다음"
             backgroundColor={nickName ? '#F5FF82' : '#808080'}
             color="#000"
