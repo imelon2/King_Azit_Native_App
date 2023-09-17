@@ -1,5 +1,5 @@
 import React from 'react';
-import {Pressable, StyleSheet, Text, View} from 'react-native';
+import {Pressable, StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
 import {FontStyle, heightData, widthData} from '../modules/globalStyles';
 
 export const BottomButton: React.FC<{
@@ -17,6 +17,23 @@ export const BottomButton: React.FC<{
           {props.title}
         </Text>
       </View>
+    </Pressable>
+  );
+};
+
+export const BottomMaxButton: React.FC<{
+  title: string;
+  backgroundColor: string;
+  color: string;
+  onPress?: any;
+  leftIcon?: any;
+  componentStyle?:StyleProp<ViewStyle>;
+}> = ({...props}) => {
+  return (
+    <Pressable onPress={() => props.onPress()} style={[styles.container,{backgroundColor: props.backgroundColor,width:'100%',borderRadius:0},props.componentStyle]}>
+        <Text style={[FontStyle.fs16, FontStyle.fw600, {color: props.color}]}>
+          {props.title}
+        </Text>
     </Pressable>
   );
 };

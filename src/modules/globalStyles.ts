@@ -63,6 +63,10 @@ export const FontStyle = StyleSheet.create({
     fontSize: heightData * 14,
     color: 'white',
   },
+  fs15: {
+    fontSize: heightData * 15,
+    color: 'white',
+  },
   fs16: {
     fontSize: heightData * 16,
     color: 'white',

@@ -10,7 +10,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     black: 5,
     red: 0,
-    gold: 0
+    gold: 1
 }
 
 const ticketSlice = createSlice({
