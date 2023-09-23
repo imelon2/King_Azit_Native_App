@@ -1,30 +1,12 @@
 import {useNavigation, NavigationProp} from '@react-navigation/native';
 import React, {useCallback, useState} from 'react';
-import {
-  Pressable,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-import {
-  MyPageRootStackParamList,
-  HomeRootStackParamList,
-} from '../../../../AppInner';
+import {Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {MyPageRootStackParamList, HomeRootStackParamList} from '../../../../AppInner';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import {Calendar} from 'react-native-calendars';
-import {
-  FontStyle,
-  GlobalStyles,
-  headerIconSize,
-  heightData,
-  widthData,
-} from '../../../modules/globalStyles';
-import Header from '../../../components/Header';
-import TournamentInfoBox, {
-  TournamentInfoBoxDemo,
-} from '../../../components/TournamentInfoBox';
+import {FontStyle, GlobalStyles, headerIconSize, heightData, widthData} from '../../../modules/globalStyles';
+import {Header} from '../../../components/Header';
+import {TournamentInfoBoxDemo, TournamentInfoBox} from '@/components';
 import {MarkedDates} from 'react-native-calendars/src/types';
 import {getFormatDate, MONTH, WEEK} from '../../../modules/CallendarStyles';
 
@@ -41,31 +23,26 @@ function CreateRoom() {
       marked: true,
       selected: false,
       dots: [{color: '#5C5C5C'}, {color: '#F5FF82'}, {color: '#C9A978'}],
-    }
+    },
   });
 
-  
-  const navigation =
-    useNavigation<
-      NavigationProp<MyPageRootStackParamList & HomeRootStackParamList>
-    >();
+  const navigation = useNavigation<NavigationProp<MyPageRootStackParamList & HomeRootStackParamList>>();
 
   const onChangeDate = useCallback(
     (day: string) => {
-        setMarkedDates(prev => {
-          // selected 초기화
-          Object.keys(prev).map(key => (prev[key].selected = false));
+      setMarkedDates(prev => {
+        // selected 초기화
+        Object.keys(prev).map(key => (prev[key].selected = false));
 
-          if (!!markedDates[day]) {
-            // 이미 존재하는 day면, 해당 object의 selected = true
-            return {...prev, [day]: {...prev[day], selected: true}};
-          } else {
-            // 존재하는 않은 day면, 해당 object에 값 추가 후, selected = true
-            prev[day] = {selected: true};
-            return {...prev};
-          }
-        });
-
+        if (!!markedDates[day]) {
+          // 이미 존재하는 day면, 해당 object의 selected = true
+          return {...prev, [day]: {...prev[day], selected: true}};
+        } else {
+          // 존재하는 않은 day면, 해당 object에 값 추가 후, selected = true
+          prev[day] = {selected: true};
+          return {...prev};
+        }
+      });
     },
     [markedDates],
   );
@@ -76,12 +53,7 @@ function CreateRoom() {
       <Header
         title="토너먼트 생성"
         leftIcon={() => (
-          <AntDesignIcon
-            name="left"
-            size={headerIconSize}
-            color="white"
-            onPress={() => navigation.navigate('Home')}
-          />
+          <AntDesignIcon name="left" size={headerIconSize} color="white" onPress={() => navigation.navigate('Home')} />
         )}
       />
       <ScrollView bounces={false}>
@@ -105,35 +77,19 @@ function CreateRoom() {
         {/* 방 만들기 */}
         <View style={[styles.gameContainer, styles.headerMarginTop]}>
           {/* Header */}
-          <Text
-            style={[
-              FontStyle.fs18,
-              FontStyle.fwBold,
-              {paddingBottom: heightData * 28},
-            ]}>
-            토너먼트 생성
-          </Text>
+          <Text style={[FontStyle.fs18, FontStyle.fwBold, {paddingBottom: heightData * 28}]}>토너먼트 생성</Text>
           <View style={GlobalStyles.flexCenter}>
             <Pressable
               onPress={() => navigation.navigate('RoomMake')}
               style={[styles.createRoomBtnWrapper, GlobalStyles.flexCenter]}>
-              <AntDesignIcon
-                name="plus"
-                size={heightData * 32}
-                color="#F5FF82"
-              />
+              <AntDesignIcon name="plus" size={heightData * 32} color="#F5FF82" />
             </Pressable>
           </View>
         </View>
         {/* 요일/월/일 */}
         <View style={styles.headerMarginTop}>
           {/* Header */}
-          <Text
-            style={[
-              FontStyle.fs18,
-              FontStyle.fwBold,
-              {paddingBottom: heightData * 28},
-            ]}>
+          <Text style={[FontStyle.fs18, FontStyle.fwBold, {paddingBottom: heightData * 28}]}>
             {WEEK[today.getDay()]}요일 {MONTH[today.getMonth()]} {today.getDate()}
           </Text>
         </View>

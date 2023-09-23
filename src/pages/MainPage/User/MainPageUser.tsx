@@ -1,42 +1,16 @@
 import {useNavigation, NavigationProp} from '@react-navigation/native';
 import React from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  View,
-  Image,
-  Text,
-  FlatList,
-  Pressable,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
-import Swiper from 'react-native-swiper';
+import {SafeAreaView, ScrollView, View, Image, Text, FlatList, Pressable, StyleSheet} from 'react-native';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import {useSelector} from 'react-redux';
-import {
-  HomeRootStackParamList,
-  MyPageRootStackParamList,
-} from '../../../../AppInner';
-import {TicketType, img} from '../../../modules/ticketsList';
-import {RootState} from '../../../store/reducer';
-import {
-  FontStyle,
-  GlobalStyles,
-  heightData,
-  width,
-  widthData,
-} from '../../../modules/globalStyles';
-import UpperString from '../../../modules/UpperString';
-import Tournament, { TournamentInfoBoxDemo } from '../../../components/TournamentInfoBox';
-import TournamentInfoBox from '../../../components/TournamentInfoBox';
-import Banner from '@/components/Banner';
+import {HomeRootStackParamList, MyPageRootStackParamList} from 'AppInner';
+import {RootState} from '@/store/reducer';
+import {FontStyle, GlobalStyles, heightData, width, widthData, UpperString, TicketType, img} from '@/modules';
+import {TournamentInfoBoxDemo, TournamentInfoBox, Banner} from '@/components';
+import {UserStyle} from './UserStyle';
 
 function MainPageUser() {
-  const navigation =
-    useNavigation<
-      NavigationProp<HomeRootStackParamList & MyPageRootStackParamList>
-    >();
+  const navigation = useNavigation<NavigationProp<HomeRootStackParamList & MyPageRootStackParamList>>();
   const {black, red, gold} = useSelector((state: RootState) => state.ticket);
   const CARDS = [
     {
@@ -59,7 +33,6 @@ function MainPageUser() {
   let _gap = 16;
   let _offset = 50;
   let _width = width - (_gap + _offset) * 2;
-
 
   // MyTickets 네비게이터
   const onOpenMyTikets = (text: TicketType) => {
@@ -108,46 +81,19 @@ function MainPageUser() {
                 onPress={() => onOpenMyTikets(item.type)}
                 style={{justifyContent: 'center', alignItems: 'center'}}>
                 <Image
-                  style={{
-                    resizeMode: 'stretch',
-                    width: _width,
-                    height: heightData * 130,
-                    marginHorizontal: _gap / 2,
-                    borderWidth: 1,
-                    borderColor: '#A1A1A1',
-                    borderRadius: 4,
-                  }}
+                  style={[UserStyle.userTicketImg, {width: _width, marginHorizontal: _gap / 2}]}
                   source={item.image}
                 />
                 <View style={{position: 'absolute', alignItems: 'center'}}>
-                  <Text
-                    style={{
-                      color: 'white',
-                      letterSpacing: 2,
-                      fontSize: heightData * 12,
-                      fontWeight: '500',
-                    }}>
-                    {UpperString(item.type)} Ticket
-                  </Text>
-                  <Text
-                    style={{
-                      color: 'white',
-                      fontSize: heightData * 9,
-                      fontWeight: 'bold',
-                    }}>
-                    보유 : {item.count}
-                  </Text>
+                  <Text style={UserStyle.userTicketText}>{UpperString(item.type)} Ticket</Text>
+                  <Text style={UserStyle.userTicketTextSub}>보유 : {item.count}</Text>
                 </View>
                 <View
                   style={{
                     position: 'absolute',
                     right: heightData * (_gap / 2 + 10),
                   }}>
-                  <IconAntDesign
-                    name="right"
-                    size={heightData * 18}
-                    color="white"
-                  />
+                  <IconAntDesign name="right" size={heightData * 18} color="white" />
                 </View>
               </Pressable>
             )}
@@ -157,19 +103,12 @@ function MainPageUser() {
         {/* 토너먼트 */}
         <View style={{marginTop: heightData * 60}}>
           <View style={styles.TextBox}>
-            <Text
-              style={[
-                FontStyle.fs22,
-                FontStyle.fwBold,
-                {marginBottom: heightData * 32},
-              ]}>
-              토너먼트
-            </Text>
+            <Text style={[FontStyle.fs22, FontStyle.fwBold, {marginBottom: heightData * 32}]}>토너먼트</Text>
             {/* 토너먼트 Info Box todo : 파라미터 받을 예정 */}
-            {[1, 2, 3].map((_,i) => {
+            {[1, 2, 3].map((_, i) => {
               return (
                 <View key={i} style={{marginBottom: heightData * 20}}>
-                  <TournamentInfoBox Info={TournamentInfoBoxDemo}/>
+                  <TournamentInfoBox Info={TournamentInfoBoxDemo} />
                 </View>
               );
             })}

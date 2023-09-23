@@ -21,8 +21,8 @@ export const nickCheck = async (params: any) => {
 
 export const SignUp = async (params: any) => {
   try {
-    const aa = await signUpApi.post('join', params);
-    console.log(aa);
+    const {status} = await signUpApi.post('join', params);
+    return status;
   } catch (error) {
     console.error(error);
   }

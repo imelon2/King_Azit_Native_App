@@ -115,7 +115,7 @@ export type HomeRootStackParamList = {
   };
   Prize: undefined;
   SetBanner: undefined;
-  TournamentInfo:undefined;
+  TournamentInfo: undefined;
 };
 
 export type MyPageRootStackParamList = {
@@ -149,9 +149,7 @@ function TabNavigator() {
 
 function AppInner() {
   const dispatch = useAppDispatch();
-  const isLoggedIn = useSelector(
-    (state: RootState) => !!state.user.access_token,
-  );
+  const isLoggedIn = useSelector((state: RootState) => !!state.user.access_token);
 
   // 디바이스 토큰 설정 및 redex 저장
   // useEffect(() => {
@@ -248,7 +246,7 @@ function AppInner() {
           <HomeStack.Screen name="RoomMake" component={RoomMake} options={{animation: 'none'}} />
           <HomeStack.Screen name="CreateRoom" component={CreateRoom} options={{animation: 'none'}} />
           <HomeStack.Screen name="Forbidden" component={Forbidden} options={{animation: 'none'}} />
-          <HomeStack.Screen name="QRCodeScanner" component={QRCodeScanner} options={{animation: 'none'}} />
+          {/* <HomeStack.Screen name="QRCodeScanner" component={QRCodeScanner} options={{animation: 'none'}} /> */}
           <HomeStack.Screen name="CalculatePage" component={CalculatePage} options={{animation: 'none'}} />
           <HomeStack.Screen name="MonthCirculation" component={MonthCirculation} options={{animation: 'none'}} />
           <HomeStack.Screen name="TotalPublish" component={TotalPublish} options={{animation: 'none'}} />
@@ -259,7 +257,7 @@ function AppInner() {
             options={{animation: 'none'}}
           />
           <HomeStack.Screen name="Prize" component={Prize} options={{animation: 'none'}} />
-          <HomeStack.Screen name="SetBanner" component={SetBanner} options={{animation: 'none'}} />
+          {/* <HomeStack.Screen name="SetBanner" component={SetBanner} options={{animation: 'none'}} /> */}
           <HomeStack.Screen name="TournamentInfo" component={TournamentInfo} options={{animation: 'none'}} />
           <HomeStack.Screen
             name="UserInformation"

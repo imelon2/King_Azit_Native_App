@@ -1,4 +1,4 @@
-import Header from '@/components/Header';
+import {Header} from '@/components/Header';
 import {FontStyle, GlobalStyles, headerIconSize, heightData, widthData} from '@/modules';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
 import {HomeRootStackParamList} from 'AppInner';
@@ -52,7 +52,7 @@ function TournamentInfo() {
   }, []);
 
   return (
-    <SafeAreaView style={[GlobalStyles.container, {flex:1}]}>
+    <SafeAreaView style={[GlobalStyles.container, {flex: 1}]}>
       {/* header */}
       <Header
         title="[NFT Holder Main Event]"
@@ -66,7 +66,7 @@ function TournamentInfo() {
       {currentTitle == '상세정보' ? <DetailInfo /> : <></>}
       {currentTitle == '프라이즈' ? <Prize prizeInfo={prizeInfo!} /> : <></>}
       {currentTitle == '블라인드' ? <Blind blindInfo={blindInfo!} /> : <></>}
-      {currentTitle == '참가자 현황' ? <Participant  /> : <></>}
+      {currentTitle == '참가자 현황' ? <Participant /> : <></>}
       <View>
         <BottomMaxButton
           title="참여하기"
@@ -213,7 +213,7 @@ const Blind = ({...props}: {blindInfo: IBlindInfo[]}) => {
               <Text style={[FontStyle.fs14, FontStyle.fw600, {flex: 3, textAlign: 'center'}]}>{data.blinds}</Text>
               <Text style={[FontStyle.fs14, FontStyle.fw600, {flex: 1, textAlign: 'center'}]}>{data.ante}</Text>
             </View>
-            {((i + 1) % 5) == 0 ? (
+            {(i + 1) % 5 == 0 ? (
               <View style={[BlindStyle.headerStyle, {backgroundColor: 'transparent'}, GlobalStyles.flexCenter]}>
                 <Text style={[FontStyle.fs14, FontStyle.fw600, {flex: 1, textAlign: 'center'}]}>BREAK</Text>
               </View>
@@ -229,11 +229,11 @@ const Blind = ({...props}: {blindInfo: IBlindInfo[]}) => {
 
 const Participant = () => {
   return (
-    <View style={{flex:1}}>
+    <View style={{flex: 1}}>
       <Text style={FontStyle.fs16}>Participant</Text>
     </View>
-  )
-}
+  );
+};
 
 const TournamentHeaderStyles = StyleSheet.create({
   headerContainer: {

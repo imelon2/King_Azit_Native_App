@@ -1,27 +1,19 @@
 import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {heightData, widthData} from '../modules/globalStyles';
 
-const Header: React.FC<{
+export const Header: React.FC<{
   title: string;
   rightIcon?: any;
   leftIcon?: any;
 }> = ({...props}) => {
   return (
     <View style={HeaderStyle.headerContainer}>
-      <View style={HeaderStyle.headerLeftIcon}>
-        {props.leftIcon ? props.leftIcon() : null}
-      </View>
+      <View style={HeaderStyle.headerLeftIcon}>{props.leftIcon ? props.leftIcon() : null}</View>
       <View style={HeaderStyle.headerStyle}>
         <Text style={HeaderStyle.headerFontStyle}>{props.title}</Text>
       </View>
-      <View style={HeaderStyle.headerRightIcon}>
-        {props.rightIcon ? props.rightIcon() : null}
-      </View>
+      <View style={HeaderStyle.headerRightIcon}>{props.rightIcon ? props.rightIcon() : null}</View>
     </View>
   );
 };
@@ -57,5 +49,3 @@ const HeaderStyle = StyleSheet.create({
     right: widthData * 20,
   },
 });
-
-export default Header;

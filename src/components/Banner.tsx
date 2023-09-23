@@ -7,14 +7,11 @@ import {HomeRootStackParamList, MyPageRootStackParamList} from 'AppInner';
 import {RootState} from '@/store/reducer';
 import {useSelector} from 'react-redux';
 
-const Banner = () => {
+export const Banner = () => {
   const {roles} = useSelector((state: RootState) => state.user);
   const isAdmin = roles.find((e: string) => e == 'ROLE_ADMIN');
 
-  const images = [
-    require('../assets/MainBanner.png'), 
-    require('../assets/MainBanner.png')
-    ];
+  const images = [require('../assets/MainBanner.png'), require('../assets/MainBanner.png')];
   const navigation = useNavigation<NavigationProp<HomeRootStackParamList & MyPageRootStackParamList>>();
 
   return (
@@ -76,5 +73,3 @@ const BannerStyle = StyleSheet.create({
     marginBottom: 3,
   },
 });
-
-export default Banner;

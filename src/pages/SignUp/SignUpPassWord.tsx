@@ -1,6 +1,6 @@
 import {Text, View, TextInput, SafeAreaView, KeyboardAvoidingView, StyleSheet} from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {useState, useRef} from 'react';
+import {useState, useRef, useEffect} from 'react';
 import {RootStackParamList} from 'AppInner';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import IconOcticons from 'react-native-vector-icons/Octicons';
@@ -44,9 +44,6 @@ export function SignUpPassWord({navigation}: SignInScreenProps) {
   const onChangePasswordCheck = (text: string) => {
     const passwordCheck_ = text.trim();
     setPasswordCheck(passwordCheck_);
-
-    if (password === passwordCheck_ && passWordOn) setPassWordCheckOn(true);
-    else setPassWordCheckOn(false);
   };
 
   /* 다음페이지 버튼 */
@@ -72,6 +69,11 @@ export function SignUpPassWord({navigation}: SignInScreenProps) {
     setError(false);
     navigation.navigate('SignUpCertification');
   };
+
+  useEffect(() => {
+    if (password === passwordCheck && passWordOn) setPassWordCheckOn(true);
+    else setPassWordCheckOn(false);
+  }, [password, passwordCheck]);
 
   return (
     <SafeAreaView style={SignUpstyles.container}>
