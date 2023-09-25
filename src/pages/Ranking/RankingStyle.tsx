@@ -5,8 +5,7 @@ const heightScale = heightData;
 export const styles = StyleSheet.create({
   container: {
     height: '100%',
-    backgroundColor: '#121212',
-    // paddingBottom: heightScale * 40
+    backgroundColor: 'rgba(18, 18, 18, 1)',
   },
   fontStyle: {fontSize: heightScale * 18, fontWeight: 'bold', color: 'white'},
   headerStyle: {
@@ -23,22 +22,23 @@ export const styles = StyleSheet.create({
   },
   bannerBoxPostion: {
     position: 'absolute',
-    width: 390 * heightScale,
-    height: 94 * heightScale,
-    borderRadius: 10,
-    marginTop: 15 * heightScale,
+    width: 320 * heightScale,
+    height: 65 * heightScale,
+    borderRadius: 6 * heightScale,
+    marginTop: 20 * heightScale,
   },
   bannerText: {
     color: 'white',
-    fontSize: 16 * heightScale,
+    fontSize: 13 * heightScale,
     textAlign: 'center',
-    fontWeight: '800',
+    fontWeight: '700',
   },
   bannerText2: {
     color: 'white',
-    fontSize: 14 * heightScale,
+    fontSize: 12 * heightScale,
     textAlign: 'center',
-    marginTop: 3 * heightScale,
+    marginTop: 5 * heightScale,
+    fontWeight: '400',
   },
   scoreIcon: {
     position: 'absolute',
@@ -59,23 +59,23 @@ export const styles = StyleSheet.create({
   },
   monthText: {
     color: 'white',
-    marginLeft: 10 * heightScale,
-    fontSize: 20 * heightScale,
+    marginLeft: 22 * heightScale,
+    fontSize: 17 * heightScale,
   },
   monthText2: {
     color: '#797979',
-    marginLeft: 10 * heightScale,
-    fontSize: 20 * heightScale,
+    marginLeft: 22 * heightScale,
+    fontSize: 17 * heightScale,
   },
   weekText: {
     color: 'white',
     marginLeft: 35 * heightScale,
-    fontSize: 20 * heightScale,
+    fontSize: 17 * heightScale,
   },
   weekText2: {
     color: '#797979',
     marginLeft: 35 * heightScale,
-    fontSize: 20 * heightScale,
+    fontSize: 17 * heightScale,
   },
   calendarStyle: {
     position: 'absolute',
@@ -111,7 +111,7 @@ export const styles = StyleSheet.create({
   },
   lineText: {
     color: 'white',
-    fontSize: 18 * heightScale,
+    fontSize: 14 * heightScale,
     lineHeight: 50 * heightScale,
     marginLeft: 3 * heightScale,
     textAlign: 'center',
@@ -120,7 +120,7 @@ export const styles = StyleSheet.create({
     color: 'black',
   },
   lineRankingImg: {
-    width: 20 * heightScale,
+    width: 51 * heightScale,
     height: '100%',
   },
   userIcon: {
@@ -147,10 +147,12 @@ export const styles = StyleSheet.create({
     paddingBottom: 10 * heightScale,
   },
   playerImg: {
-    width: 112 * heightScale,
-    height: 112 * heightScale,
+    width: 77 * heightScale,
+    height: 77 * heightScale,
     marginTop: 12 * heightScale,
     borderRadius: 60,
+    borderColor: '#background: rgba(245, 255, 130, 1)',
+    borderWidth: 2 * heightScale,
   },
   playerRound: {
     position: 'absolute',
@@ -166,11 +168,13 @@ export const styles = StyleSheet.create({
   },
 
   playerImg2: {
-    width: 74 * heightScale,
-    height: 74 * heightScale,
-    marginTop: 13 * heightScale,
+    width: 58 * heightScale,
+    height: 58 * heightScale,
+    marginTop: 15 * heightScale,
     resizeMode: 'contain',
     borderRadius: 50,
+    borderColor: '#background: rgba(245, 255, 130, 1)',
+    borderWidth: 2 * heightScale,
   },
   playerRound2: {
     position: 'absolute',
@@ -191,15 +195,52 @@ export const styles = StyleSheet.create({
     width: 128 * heightScale,
     height: 128 * heightScale,
   },
-
-  nameWing1: {
-    right: 10 * heightScale,
-    width: 20 * heightScale,
-    height: 49 * heightScale,
+  pointContainer: {
+    alignItems: 'center',
+    paddingVertical: 10 * heightScale,
+    flexDirection: 'row',
   },
-  nameWing2: {
-    left: 10 * heightScale,
-    width: 20 * heightScale,
-    height: 49 * heightScale,
+  pointContainer_side: {
+    marginTop: 59 * heightData,
+    width: 113 * heightScale,
+    height: 154 * heightScale,
+    alignItems: 'center',
+    position: 'relative',
+  },
+  pointContainer_img: {
+    position: 'absolute',
+    width: 113 * heightScale,
+    height: 154 * heightScale,
+  },
+  pointContainer_text: {
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 13 * heightScale,
+    fontWeight: '500',
+    marginTop: 2 * heightScale,
+  },
+  pointContainer_text1: {
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 15 * heightScale,
+    fontWeight: '500',
+  },
+  pointContainer_textBox: {
+    flex: 1,
+    marginTop: 16 * heightScale,
+    alignItems: 'center',
+  },
+  pointContainer_center: {
+    alignItems: 'center',
+    marginTop: heightScale * 5,
+  },
+  pointContainer_img_center: {
+    position: 'absolute',
+    width: 133 * heightScale,
+    height: 197 * heightScale,
+    resizeMode: 'contain',
+  },
+  textcolor: {
+    color: 'background: rgba(245, 255, 130, 1)',
   },
 });

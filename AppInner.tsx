@@ -246,7 +246,7 @@ function AppInner() {
           <HomeStack.Screen name="RoomMake" component={RoomMake} options={{animation: 'none'}} />
           <HomeStack.Screen name="CreateRoom" component={CreateRoom} options={{animation: 'none'}} />
           <HomeStack.Screen name="Forbidden" component={Forbidden} options={{animation: 'none'}} />
-          {/* <HomeStack.Screen name="QRCodeScanner" component={QRCodeScanner} options={{animation: 'none'}} /> */}
+          <HomeStack.Screen name="QRCodeScanner" component={QRCodeScanner} options={{animation: 'none'}} />
           <HomeStack.Screen name="CalculatePage" component={CalculatePage} options={{animation: 'none'}} />
           <HomeStack.Screen name="MonthCirculation" component={MonthCirculation} options={{animation: 'none'}} />
           <HomeStack.Screen name="TotalPublish" component={TotalPublish} options={{animation: 'none'}} />
@@ -257,7 +257,7 @@ function AppInner() {
             options={{animation: 'none'}}
           />
           <HomeStack.Screen name="Prize" component={Prize} options={{animation: 'none'}} />
-          {/* <HomeStack.Screen name="SetBanner" component={SetBanner} options={{animation: 'none'}} /> */}
+          <HomeStack.Screen name="SetBanner" component={SetBanner} options={{animation: 'none'}} />
           <HomeStack.Screen name="TournamentInfo" component={TournamentInfo} options={{animation: 'none'}} />
           <HomeStack.Screen
             name="UserInformation"
