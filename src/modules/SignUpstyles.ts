@@ -1,3 +1,4 @@
+import {color} from 'react-native-reanimated';
 import {widthData, heightData} from './globalStyles';
 import {Dimensions, StyleSheet} from 'react-native';
 const {width, height} = Dimensions.get('window');
@@ -183,5 +184,16 @@ export const SignUpstyles = StyleSheet.create({
   },
   next: {
     marginLeft: 10 * heightData,
+  },
+  numResend: {
+    fontSize: 12,
+    fontWeight: '400',
+    lineHeight: 14 * heightScale,
+    color: '#fff',
+    marginLeft: 10 * heightScale,
+    borderBottomColor: '#D9D9D9',
+    borderBottomWidth: 1,
+    width: 100 * heightScale,
+    marginTop: 23 * heightScale,
   },
 });

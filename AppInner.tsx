@@ -115,7 +115,7 @@ export type HomeRootStackParamList = {
   };
   Prize: undefined;
   SetBanner: undefined;
-  TournamentInfo:undefined;
+  TournamentInfo: undefined;
 };
 
 export type MyPageRootStackParamList = {
@@ -149,9 +149,7 @@ function TabNavigator() {
 
 function AppInner() {
   const dispatch = useAppDispatch();
-  const isLoggedIn = useSelector(
-    (state: RootState) => !!state.user.access_token,
-  );
+  const isLoggedIn = useSelector((state: RootState) => !!state.user.access_token);
 
   // 디바이스 토큰 설정 및 redex 저장
   // useEffect(() => {

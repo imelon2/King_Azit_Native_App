@@ -32,7 +32,7 @@ export const TournamentInfoBoxDemo: ITournamentInfo = {
   },
 };
 
-const TournamentInfoBox: React.FC<{
+export const TournamentInfoBox: React.FC<{
   Info: ITournamentInfo;
 }> = ({Info}) => {
   const navigation = useNavigation<NavigationProp<HomeRootStackParamList & MyPageRootStackParamList>>();
@@ -101,4 +101,3 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-export default TournamentInfoBox;

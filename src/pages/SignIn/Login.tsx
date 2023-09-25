@@ -15,7 +15,7 @@ import axios, {AxiosError} from 'axios';
 import {useAppDispatch} from '@/store';
 import userSlice from '@/slices/user';
 import decodeJWT from '@/modules/decodeJWT';
-import Header from '@/components/Header';
+import {Header} from '@/components/Header';
 import {BottomButton} from '@/components/Button';
 
 type LoginScreenProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
@@ -62,7 +62,7 @@ function Login({navigation}: LoginScreenProps) {
       // 아직 승인되지 않은 유저
       const isPermitted = roles.find((e: string) => e == 'ROLE_PERMITTED');
       if (!isPermitted) {
-        return navigation.navigate('SignUpFinal');
+        // return navigation.navigate('SignUpFinal');
       }
       dispatch(
         userSlice.actions.setUser({

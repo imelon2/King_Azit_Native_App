@@ -1,11 +1,13 @@
-import {SignUpstyles} from '@/modules';
+import {SignUpstyles, heightData} from '@/modules';
 import {useCallback, useRef, useState} from 'react';
-import {View, TextInput, SafeAreaView, StyleSheet} from 'react-native';
+import {View, TextInput, SafeAreaView, StyleSheet, Alert} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {SignUpHeader} from './SignUpComponent';
 import {BottomButton} from '@/components/Button';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from 'AppInner';
+import {Text} from 'react-native';
+import {Pressable} from 'react-native';
 
 type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUpCertificationNum'>;
 
@@ -48,7 +50,13 @@ export const SignUpCertificationNum = ({navigation}: SignInScreenProps) => {
         <View style={SignUpstyles.inputWrapper}>
           <View style={SignUpstyles.numInputWrapper}>
             <View style={SignUpstyles.textInputNumBox}>
-              <TextInput style={SignUpstyles.textInputNum} maxLength={1} value={num} onChangeText={onChangeNum} />
+              <TextInput
+                style={SignUpstyles.textInputNum}
+                maxLength={1}
+                value={num}
+                onChangeText={onChangeNum}
+                inputMode="numeric"
+              />
             </View>
             <View style={SignUpstyles.textInputNumBox}>
               <TextInput
@@ -57,6 +65,7 @@ export const SignUpCertificationNum = ({navigation}: SignInScreenProps) => {
                 ref={refNum1}
                 value={num1}
                 onChangeText={onChangeNum1}
+                inputMode="numeric"
               />
             </View>
             <View style={SignUpstyles.textInputNumBox}>
@@ -66,6 +75,7 @@ export const SignUpCertificationNum = ({navigation}: SignInScreenProps) => {
                 ref={refNum2}
                 value={num2}
                 onChangeText={onChangeNum2}
+                inputMode="numeric"
               />
             </View>
             <View style={SignUpstyles.textInputNumBox}>
@@ -75,9 +85,15 @@ export const SignUpCertificationNum = ({navigation}: SignInScreenProps) => {
                 ref={refNum3}
                 value={num3}
                 onChangeText={onChangeNum3}
+                inputMode="numeric"
               />
             </View>
           </View>
+          <Pressable
+            onPress={() => Alert.alert('구현예정', '인증번호 다시 보내기')}
+            style={{marginBottom: 15 * heightData}}>
+            <Text style={SignUpstyles.numResend}>인증번호 다시 보내기</Text>
+          </Pressable>
         </View>
         <View style={SignUpstyles.center}>
           <BottomButton

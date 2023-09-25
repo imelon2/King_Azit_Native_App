@@ -22,7 +22,7 @@ export function SignUpId({navigation}: SignInScreenProps) {
   }, []);
 
   const onClickNextButton = async () => {
-    const regExp = /[!?@#$%^&*():;+-=~{}<>\_\[\]\|\\\"\'\,\.\/\`\₩]/g;
+    const regExp = /[`~!@#$%^&*|\\\'\";:\/?]/gi;
     const regExp2 = /[ㄱ-ㅎㅏ-ㅣ가-힣]/g;
     if (!id) return;
     if (id.length < 4 || regExp.test(id) || regExp2.test(id)) {
@@ -34,6 +34,7 @@ export function SignUpId({navigation}: SignInScreenProps) {
     if (idCheck2 === 200) {
       dispatch(userSlice.actions.setEmail({email: id}));
       navigation.navigate('SignUpPassWord');
+      setError(false);
     } else {
       setError2(true);
     }

@@ -40,13 +40,14 @@ export function SignUpNickName({navigation}: SignInScreenProps) {
       name: user.name,
       nickname: nickName,
       phone: user.phone,
-      birth: user.birth,
-      gender: user.gender,
-      fcmToken: user.phoneToken,
+      birth: '',
+      gender: '',
+      fcmToken: '',
     };
-    // const signUpData: any = await SignUp(data);
-    // console.log(signUpData);
-    navigation.navigate('SignUpFinal');
+    const signUpData: any = await SignUp(data);
+    if (signUpData === '201') {
+      navigation.navigate('SignUpFinal');
+    }
   };
 
   return (
