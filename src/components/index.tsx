@@ -1,6 +1,5 @@
 export * from './Banner';
 export * from './Button';
-export * from './DismissKeyboardView';
 export * from './Header';
 export * from './ProfileImg';
 export * from './QrCode';

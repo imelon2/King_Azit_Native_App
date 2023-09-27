@@ -8,7 +8,7 @@ import {FontStyle, GlobalStyles, headerIconSize, heightData, widthData} from '..
 import {Header} from '../../../components/Header';
 import {TournamentInfoBoxDemo, TournamentInfoBox} from '@/components';
 import {MarkedDates} from 'react-native-calendars/src/types';
-import {getFormatDate, MONTH, WEEK} from '../../../modules/CallendarStyles';
+import {getFormatDate, MONTH, WEEK} from '../../../modules/Callendar';
 
 function CreateRoom() {
   const today = new Date();
@@ -80,7 +80,7 @@ function CreateRoom() {
           <Text style={[FontStyle.fs18, FontStyle.fwBold, {paddingBottom: heightData * 28}]}>토너먼트 생성</Text>
           <View style={GlobalStyles.flexCenter}>
             <Pressable
-              onPress={() => navigation.navigate('RoomMake')}
+              onPress={() => navigation.navigate('NewTournament')}
               style={[styles.createRoomBtnWrapper, GlobalStyles.flexCenter]}>
               <AntDesignIcon name="plus" size={heightData * 32} color="#F5FF82" />
             </Pressable>

@@ -17,7 +17,6 @@ import MainPage from './src/pages/MainPage/MainPage';
 import MyPage from './src/pages/MyPage/MyPage';
 import SetNickNameScreen from './src/pages/MyPage/SetNickNameScreen';
 import MyTicket from './src/pages/MyPage/MyTicket';
-import GamePage from './src/pages/MainPage/GamePage';
 import TabBar from './src/components/TabBar';
 import Ranking from './src/pages/Ranking/Ranking';
 import Game from './src/pages/Game/Game';
@@ -26,7 +25,6 @@ import MyRanking from './src/pages/MyPage/MyRanking';
 import MyRankingScore from './src/pages/MyPage/MyPageCompoents/MyRankingScore';
 import interceptors from './src/hooks/interceptors';
 import TicketsHistorys from './src/pages/MyPage/TicketsHistorys';
-import RoomMake from './src/pages/MainPage/Admin/NewTournament';
 import TicketPay from './src/pages/Admin/TicketPay';
 import TicketCharge from './src/pages/Admin/TicketCharge';
 import MemberManagePage from './src/pages/Admin/MemberManagePage';
@@ -51,6 +49,7 @@ import SetBanner from './src/pages/Admin/SetBanner';
 import UserInformation, {UserInformationType} from './src/pages/Admin/UserInformation';
 import CalendarPage from './src/pages/Calendar/CalendarPage';
 import TournamentInfo from '@/pages/MainPage/TournamentInfo';
+import NewTournament from '@/pages/MainPage/Admin/AdminComponent/CreateTournamentComponent/NewTournament';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -71,7 +70,7 @@ export type HomeRootStackParamList = {
   GamePage: {
     gameId: string;
   };
-  RoomMake: undefined;
+  NewTournament: undefined;
   MyTickets: {
     card: TicketType;
     count: number;
@@ -168,7 +167,7 @@ function AppInner() {
   //   }
   //   getToken();
   // }, []);
-
+  
   // Refresh Access & Refresh Token
   useEffect(() => {
     const getToken = async () => {
@@ -242,8 +241,7 @@ function AppInner() {
           <HomeStack.Screen name="MemberManagePage" component={MemberManagePage} options={{animation: 'none'}} />
           <HomeStack.Screen name="UserDetail" component={UserDetail} options={{animation: 'slide_from_left'}} />
           <HomeStack.Screen name="TicketsResult" component={TicketsResult} options={{animation: 'none'}} />
-          <HomeStack.Screen name="GamePage" component={GamePage} options={{animation: 'none'}} />
-          <HomeStack.Screen name="RoomMake" component={RoomMake} options={{animation: 'none'}} />
+          <HomeStack.Screen name="NewTournament" component={NewTournament} options={{animation: 'none'}} />
           <HomeStack.Screen name="CreateRoom" component={CreateRoom} options={{animation: 'none'}} />
           <HomeStack.Screen name="Forbidden" component={Forbidden} options={{animation: 'none'}} />
           <HomeStack.Screen name="QRCodeScanner" component={QRCodeScanner} options={{animation: 'none'}} />

@@ -14,7 +14,7 @@ import ProfileImg from '../../components/ProfileImg';
 import {HeaderStyle, heightData, img} from '@/modules';
 import {RootState} from '@/store/reducer';
 import SearchId from '../Admin/SearchId';
-import GiftTicketCountBox from './Compoents/GiftTicketCountBox';
+import GiftTicketCountBox from './Component/GiftTicketCountBox';
 import {Header} from '@/components';
 
 const heightScale = heightData;

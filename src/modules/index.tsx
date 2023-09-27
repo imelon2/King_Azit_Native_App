@@ -7,3 +7,4 @@ export * from './UpperString';
 export * from './decodeJWT';
 export * from './globalStyles';
 export * from './ticketsList';
+export * from './NumberFormat';
