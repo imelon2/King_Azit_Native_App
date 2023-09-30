@@ -1,4 +1,5 @@
-import {SignUpstyles, heightData} from '@/modules';
+import {heightData} from '@/modules';
+import {SignUpstyles} from './SignUpstyles';
 import {useCallback, useRef, useState} from 'react';
 import {View, TextInput, SafeAreaView, StyleSheet, Alert} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';

@@ -1,5 +1,4 @@
-import {color} from 'react-native-reanimated';
-import {widthData, heightData} from './globalStyles';
+import {widthData, heightData} from '@/modules';
 import {Dimensions, StyleSheet} from 'react-native';
 const {width, height} = Dimensions.get('window');
 const heightScale = heightData;
@@ -20,34 +19,13 @@ export const SignUpstyles = StyleSheet.create({
   },
   progress: {
     position: 'absolute',
-    borderBottomWidth: 2,
+    borderBottomWidth: 2 * widthData,
     borderBottomColor: '#F5FF82',
     top: 0,
     left: 0,
   },
-  progress2: {
-    width: heightScale * 100,
-  },
-  progress3: {
-    width: heightScale * 140,
-  },
-  progress4: {
-    width: heightScale * 180,
-  },
-  progress5: {
-    width: heightScale * 220,
-  },
-  progress6: {
-    width: heightScale * 260,
-  },
-  progress7: {
-    width: heightScale * 300,
-  },
-  progress8: {
-    width: heightScale * 340,
-  },
   topbar: {
-    borderBottomWidth: 2,
+    borderBottomWidth: 2 * widthData,
     borderBottomColor: '#484848',
   },
   terms: {
@@ -102,7 +80,7 @@ export const SignUpstyles = StyleSheet.create({
     color: '#fff',
   },
   textInputNumBox: {
-    width: 46 * heightScale,
+    width: 46 * widthData,
     height: 54 * heightScale,
     borderRadius: 8 * heightScale,
     borderColor: '#d9d9d9',
@@ -138,30 +116,17 @@ export const SignUpstyles = StyleSheet.create({
   textInputWrapper2: {
     flex: 3,
   },
-  textInputButton: {
-    flex: 1,
-    height: heightScale * 50,
-    lineHeight: heightScale * 50,
-    backgroundColor: '#7C7C7C',
-    borderRadius: 6,
-    marginTop: 10,
-  },
-  textInputButtonText: {
-    color: '#fff',
-    textAlign: 'center',
-    lineHeight: heightScale * 50,
-  },
   errorText: {
     color: 'red',
     marginLeft: 9,
     marginTop: 4,
   },
   inputWrapper: {
-    paddingHorizontal: heightScale * 29,
+    paddingHorizontal: widthData * 29,
     paddingBottom: heightScale * 37,
   },
   marginLeft: {
-    marginLeft: heightScale * 12,
+    marginLeft: widthData * 12,
   },
   bottomBar: {
     width: '92%',
@@ -183,7 +148,7 @@ export const SignUpstyles = StyleSheet.create({
     marginLeft: 25,
   },
   next: {
-    marginLeft: 10 * heightData,
+    marginLeft: 10 * widthData,
   },
   numResend: {
     fontSize: 12,
@@ -193,7 +158,7 @@ export const SignUpstyles = StyleSheet.create({
     marginLeft: 10 * heightScale,
     borderBottomColor: '#D9D9D9',
     borderBottomWidth: 1,
-    width: 100 * heightScale,
+    width: 100 * widthData,
     marginTop: 23 * heightScale,
   },
 });

@@ -2,7 +2,7 @@ import {View, TextInput, SafeAreaView} from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useCallback, useState, useRef} from 'react';
 import {RootStackParamList} from 'AppInner';
-import {SignUpstyles} from '@/modules/SignUpstyles';
+import {SignUpstyles} from './SignUpstyles';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {SignUpHeader} from './SignUpComponent';
 import {BottomButton} from '@/components/Button';

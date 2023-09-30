@@ -1,15 +1,8 @@
-import {
-  Text,
-  View,
-  TextInput,
-  SafeAreaView,
-  ActivityIndicator,
-  Pressable,
-} from 'react-native';
+import {Text, View, TextInput, SafeAreaView, ActivityIndicator, Pressable} from 'react-native';
 import React, {useCallback, useState, useRef} from 'react';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {MyPageRootStackParamList, RootStackParamList} from '../../../AppInner';
-import {SignUpstyles} from '../../modules/SignUpstyles';
+import {SignUpstyles} from '../SignUp/SignUpstyles';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import userSlice from '../../slices/user';
 import {useAppDispatch} from '../../store';
@@ -25,9 +18,7 @@ function SetNickNameScreen() {
   const [loading, setLoading] = useState(false);
   const [nickName, setNickName] = useState('');
   const [error, setError] = useState(false);
-  const access_token = useSelector(
-    (state: RootState) => state.user.access_token,
-  );
+  const access_token = useSelector((state: RootState) => state.user.access_token);
   const onChangeNickName = useCallback((text: any) => {
     setNickName(text.trim());
   }, []);
@@ -71,10 +62,7 @@ function SetNickNameScreen() {
           />
           <View style={SignUpstyles.topbar}></View>
           <View style={SignUpstyles.terms}>
-            <Text style={SignUpstyles.termstext}>
-              {' '}
-              닉네임을 다시 정해주세요.{' '}
-            </Text>
+            <Text style={SignUpstyles.termstext}> 닉네임을 다시 정해주세요. </Text>
           </View>
 
           <View style={SignUpstyles.inputWrapper}>
@@ -87,27 +75,17 @@ function SetNickNameScreen() {
                 placeholderTextColor="#6F6F6F"
               />
             </View>
-            <View>
-              {error && (
-                <Text style={SignUpstyles.errorText}>
-                  사용하실 수 없는 닉네임입니다.
-                </Text>
-              )}
-            </View>
+            <View>{error && <Text style={SignUpstyles.errorText}>사용하실 수 없는 닉네임입니다.</Text>}</View>
           </View>
         </View>
       </KeyboardAwareScrollView>
 
-      <View style={{alignItems:'center'}}>
+      <View style={{alignItems: 'center'}}>
         <Text
-          style={
-            nickName
-              ? [SignUpstyles.nextButton, SignUpstyles.nextButton2]
-              : [SignUpstyles.nextButton]
-          }
-          onPress={onClickChangeNickName} disabled={!!!nickName || loading}
-          >
-          {loading ? <ActivityIndicator color={'black'}/> : '바꾸기'}
+          style={nickName ? [SignUpstyles.nextButton, SignUpstyles.nextButton2] : [SignUpstyles.nextButton]}
+          onPress={onClickChangeNickName}
+          disabled={!!!nickName || loading}>
+          {loading ? <ActivityIndicator color={'black'} /> : '바꾸기'}
         </Text>
       </View>
     </SafeAreaView>
