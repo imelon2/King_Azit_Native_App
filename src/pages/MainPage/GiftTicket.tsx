@@ -11,11 +11,12 @@ import axios from 'axios';
 import {useSelector} from 'react-redux';
 import {HomeRootStackParamList} from 'AppInner';
 import ProfileImg from '../../components/ProfileImg';
-import {HeaderStyle, heightData, img} from '@/modules';
+import {HeaderStyle, heightData} from '@/modules';
 import {RootState} from '@/store/reducer';
 import SearchId from '../Admin/SearchId';
 import GiftTicketCountBox from './Component/GiftTicketCountBox';
 import {Header} from '@/components';
+import { Ticket_Img } from '@/config/tickets';
 
 const heightScale = heightData;
 const {width} = Dimensions.get('window');
@@ -147,19 +148,19 @@ const GiftTicket = () => {
           <View style={styles.container1}>
             <Text style={styles.fontStyle2}>티켓 종류</Text>
             <TicketBox
-              img={img['basic'].BlackCardImg}
+              img={Ticket_Img['basic'].BlackCardImg}
               text={`블랙 티켓 (보유 : ${maxBlack})`}
               GiftTicket={<GiftTicketCountBox ticket={black} max={maxBlack} setTicket={setBlack} />}
               onClick={onClickBlack}
             />
             <TicketBox
-              img={img['basic'].RedCardImg}
+              img={Ticket_Img['basic'].RedCardImg}
               text={`레드 티켓 (보유 : ${maxRed})`}
               GiftTicket={<GiftTicketCountBox ticket={red} max={maxRed} setTicket={setRed} />}
               onClick={onClickRed}
             />
             <TicketBox
-              img={img['basic'].GoldCardImg}
+              img={Ticket_Img['basic'].GoldCardImg}
               text={`골드 티켓 (보유 : ${maxGold})`}
               GiftTicket={<GiftTicketCountBox ticket={gold} max={maxGold} setTicket={setGold} />}
               onClick={onClickGold}
@@ -173,7 +174,7 @@ const GiftTicket = () => {
           {blackState && (
             <View style={styles.shopBox}>
               <View style={{flex: 1, alignItems: 'center', flexDirection: 'row'}}>
-                <Image style={styles.ticketImg2} source={img['basic'].BlackCardImg} />
+                <Image style={styles.ticketImg2} source={Ticket_Img['basic'].BlackCardImg} />
                 <Text style={styles.fontStyle5}>Black Ticket</Text>
               </View>
               <View style={{flex: 1, alignItems: 'center', flexDirection: 'row', paddingLeft: 110 * heightScale}}>
@@ -191,7 +192,7 @@ const GiftTicket = () => {
           {redState && (
             <View style={styles.shopBox}>
               <View style={{flex: 1, alignItems: 'center', flexDirection: 'row'}}>
-                <Image style={styles.ticketImg2} source={img['basic'].RedCardImg} />
+                <Image style={styles.ticketImg2} source={Ticket_Img['basic'].RedCardImg} />
                 <Text style={styles.fontStyle5}>Red Ticket</Text>
               </View>
               <View style={{flex: 1, alignItems: 'center', flexDirection: 'row', paddingLeft: 110 * heightScale}}>
@@ -209,7 +210,7 @@ const GiftTicket = () => {
           {goldState && (
             <View style={styles.shopBox}>
               <View style={{flex: 1, alignItems: 'center', flexDirection: 'row'}}>
-                <Image style={styles.ticketImg2} source={img['basic'].GoldCardImg} />
+                <Image style={styles.ticketImg2} source={Ticket_Img['basic'].GoldCardImg} />
                 <Text style={styles.fontStyle5}>Gold Ticket</Text>
               </View>
               <View style={{flex: 1, alignItems: 'center', flexDirection: 'row', paddingLeft: 110 * heightScale}}>

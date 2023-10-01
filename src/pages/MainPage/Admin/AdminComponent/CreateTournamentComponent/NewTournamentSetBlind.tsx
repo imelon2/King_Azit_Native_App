@@ -1,47 +1,77 @@
-
 import {FontStyle, GlobalStyles, headerIconSize, heightData, widthData} from '@/modules/globalStyles';
-import {Alert, Pressable, Text, TextInput, View} from 'react-native';
+import {Pressable, Text, TextInput, View} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
-import RNPickerSelect from 'react-native-picker-select';
+import RNPickerSelect, {Item} from 'react-native-picker-select';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import IconFeather from 'react-native-vector-icons/Feather';
 import {styles} from '../../AdminStyles/NewTournamentStyles';
 import {BottomMaxButton} from '@/components/Button';
-import { IBlind, IBlindTitle, INIT_BLIND } from '@/config/blind';
-import { checkBlind } from '@/modules/BlindBookmarks';
+import {IBlindBookmarks, IBlindTitle, NEW_INIT_BLIND} from '@/config/blind';
+import {CUSTOM, checkBlind, getBlindBookmarks, mergeBlindBookmarks} from '@/modules/BlindBookmarks';
 import BlindStructure from './BlindStructure';
-import { Header } from '@/components/Header';
-
+import {Header} from '@/components/Header';
+import {useCallback, useEffect, useState} from 'react';
+import {PopupWrapper} from '@/components';
+import {Popup_SetBookmark} from './Popup_SetBookmark';
 
 const NewTournamentSetBlind = ({...props}) => {
   const BlindTitle: IBlindTitle[] = ['SB', 'BB', 'Ante'];
-  const {onChangeTitle, onChangeBlindBookmarks, setIsAntes,setBlind, setBlindTime} = props;
-  const {blindBookmarksPickerItems,selectedBookmark, blind, isAntes, blindTime} = props;
+  const {
+    getBookmarks,
+    onChangeTitle,
+    onChangeBlindBookmarks,
+    setIsAntes,
+    setBlind,
+    setBlindTime,
+  } = props;
 
+  const {blindBookmarksPickerItems, selectedBookmark, blind, isAntes, blindTime} = props;
+  const [showPopup, setShowPopup] = useState(false);
   const onChangeBlindTime = (time: any) => {
     if (time == '0') return;
     setBlindTime(time);
   };
 
-  const onChangeBlind = (data:string,index:number,key:IBlindTitle) => {
+  const onChangeBlind = (data: string, index: number, key: IBlindTitle) => {
     if (data.length == 2 && data[0] == '0') return;
-    let prev = [...blind]
+    
+    let prev = [...blind];
     prev[index][key] = data;
     setBlind(prev);
-  }
+
+    // Caching Custom Data
+    if(!selectedBookmark) CUSTOM[index][key]=data
+  };
 
   const addBlindStruct = () => {
-    setBlind((prev:any) => {
-      return [...prev,INIT_BLIND()]
-    })
-  }
-
-  const removeBlindStruct = (index:number) => {
     let prev = [...blind]
-    if(prev.length == 1) return; // 무조건 한줄은 있어야함
-    prev.splice(index,1)
-    setBlind(prev)
-  }
+    prev.push(NEW_INIT_BLIND());
+    setBlind(prev);
+
+     // Caching Custom Data
+    if(!selectedBookmark) CUSTOM.push(NEW_INIT_BLIND())
+  };
+
+  const removeBlindStruct = (index: number) => {
+    let prev = [...blind];
+    if (prev.length == 1) return; // 무조건 한줄은 있어야함
+    prev.splice(index, 1);
+    setBlind(prev);
+
+     // Caching Custom Data
+    if(!selectedBookmark) CUSTOM.splice(index,1)
+  };
+
+  const saveBookmark = async (title: string) => {
+    let newBookmark: IBlindBookmarks = {
+      [title]: {
+        time: blindTime,
+        structs: blind,
+      },
+    };
+    await mergeBlindBookmarks(newBookmark);
+    console.log('Success Save Bookmark');
+  };
 
   return (
     <>
@@ -52,12 +82,7 @@ const NewTournamentSetBlind = ({...props}) => {
           <IconAntDesign name="close" size={headerIconSize} color="white" onPress={() => onChangeTitle('상세정보')} />
         )}
         rightIcon={() => (
-          <IconFeather
-            name="bookmark"
-            size={headerIconSize}
-            color="white"
-            onPress={() => Alert.alert('Todo', '블라인드 저장 기능 구현 예정')}
-          />
+          <IconFeather name="bookmark" size={headerIconSize} color="white" onPress={() => setShowPopup(true)} />
         )}
       />
       <KeyboardAwareScrollView
@@ -77,10 +102,14 @@ const NewTournamentSetBlind = ({...props}) => {
               checkBlind(blind[0]) ? styles.textInputOn : styles.textInputOff,
             ]}>
             <View style={styles.downIcon}>
-              <IconAntDesign name="down" size={heightData * 22} color={checkBlind(blind[0]) ? '#F5FF82' : '#77777777'} />
+              <IconAntDesign
+                name="down"
+                size={heightData * 22}
+                color={checkBlind(blind[0]) ? '#F5FF82' : '#77777777'}
+              />
             </View>
             <RNPickerSelect
-              disabled={blindBookmarksPickerItems.length == 0}
+              onOpen={getBookmarks}
               onValueChange={onChangeBlindBookmarks}
               value={selectedBookmark}
               placeholder={{
@@ -95,7 +124,7 @@ const NewTournamentSetBlind = ({...props}) => {
                   justifyContent: 'center',
                   paddingLeft: widthData * 10,
                 },
-                placeholder: {fontWeight: '300',color:'#fff',fontSize:16},
+                placeholder: {fontWeight: '300', color: '#fff', fontSize: 16},
                 inputIOS: {color: '#fff', fontSize: heightData * 16},
                 inputAndroid: {color: '#fff', fontSize: heightData * 16},
               }}
@@ -129,7 +158,7 @@ const NewTournamentSetBlind = ({...props}) => {
             </Pressable>
           </View>
           {/* Blind 길이 고정값 */}
-          <Text style={[FontStyle.fs16, FontStyle.fwBold, {marginTop: widthData * 24}]}>Blind 길이 고정값</Text>
+          <Text style={[FontStyle.fs16, FontStyle.fwBold, {marginTop: widthData * 24}]}>Blind 길이 고정값 (Min.)</Text>
           <TextInput
             onChangeText={onChangeBlindTime}
             keyboardType="number-pad"
@@ -153,7 +182,14 @@ const NewTournamentSetBlind = ({...props}) => {
             ))}
           </View>
           {blind.map((_blind: any, i: number) => (
-            <BlindStructure key={i} index={i} blind={_blind} onChangeBlind={onChangeBlind} removeBlindStruct={removeBlindStruct} isAntes={isAntes}/>
+            <BlindStructure
+              key={i}
+              index={i}
+              blind={_blind}
+              onChangeBlind={onChangeBlind}
+              removeBlindStruct={removeBlindStruct}
+              isAntes={isAntes}
+            />
           ))}
           <Pressable onPress={addBlindStruct} style={styles.blindAddLevelBtn}>
             <Text style={FontStyle.fs18}>Level 추가</Text>
@@ -171,6 +207,11 @@ const NewTournamentSetBlind = ({...props}) => {
           />
         </View>
       </KeyboardAwareScrollView>
+      {showPopup ? (
+        <PopupWrapper PopupComponent={<Popup_SetBookmark setShowPopup={setShowPopup} saveBookmark={saveBookmark} />} />
+      ) : (
+        <></>
+      )}
     </>
   );
 };

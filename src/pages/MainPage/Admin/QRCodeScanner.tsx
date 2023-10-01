@@ -1,10 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import {
-  AppRegistry,
   StyleSheet,
   Text,
-  TouchableOpacity,
   Linking,
   Pressable
 } from 'react-native';

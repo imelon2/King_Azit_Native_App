@@ -3,7 +3,7 @@ export * from './Linking';
 export * from './MainStyles';
 export * from './SignUpstyles';
 export * from './TimeFormat';
-export * from './UpperString';
+export * from './String';
 export * from './decodeJWT';
 export * from './globalStyles';
 export * from './ticketsList';

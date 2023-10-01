@@ -1,6 +1,6 @@
 import {Text, View, Image, Pressable, SafeAreaView, ScrollView} from 'react-native';
 import {useState, useEffect} from 'react';
-import {FontStyle, GlobalStyles, headerIconSize, heightData, widthData, img, UpperString} from '@/modules';
+import {FontStyle, GlobalStyles, UpperString, headerIconSize, heightData, widthData} from '@/modules';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import {BottomButton, QrCode, Header} from '@/components';
@@ -14,6 +14,7 @@ import Config from 'react-native-config';
 import Video from 'react-native-video';
 import UpdownIcon from 'react-native-vector-icons/MaterialIcons';
 import LinearGradient from 'react-native-linear-gradient';
+import { Ticket_Img } from '@/config/tickets';
 
 type MyTicketsScreenProps = NativeStackScreenProps<HomeRootStackParamList, 'MyTickets'>;
 
@@ -74,7 +75,7 @@ const MyTickets = ({route, navigation}: MyTicketsScreenProps) => {
           </View>
           <Image
             style={UserStyle.ticketImg}
-            source={card == 'black' ? img['basic'].BlackCardImg : img['basic'].RedCardImg}
+            source={card == 'black' ? Ticket_Img['basic'].BlackCardImg : Ticket_Img['basic'].RedCardImg}
           />
 
           {/* QR 이미지(축소) */}

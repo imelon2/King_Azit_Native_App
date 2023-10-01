@@ -1,16 +1,18 @@
 import {SafeAreaView} from 'react-native';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {NavigationProp, useFocusEffect, useNavigation} from '@react-navigation/native';
 import {HomeRootStackParamList} from '../../../../../../AppInner';
 import React, {useState, useCallback, useEffect} from 'react';
 import {GlobalStyles} from '../../../../../modules/globalStyles';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../../../../store/reducer';
-import {TicketType} from '@/modules/ticketsList';
 import {Item} from 'react-native-picker-select';
 import NewTournamentSetBlind from './NewTournamentSetBlind';
-import NewTournamentSetInfo from './NewTournamentSetInfo'
-import { IBlind, INIT_BLIND, INIT_DATE, INIT_TIME } from '@/config/blind';
-import { getBlindBookmarks } from '@/modules/BlindBookmarks';
+import NewTournamentSetInfo from './NewTournamentSetInfo';
+import {IBlind, IGrade, INIT_DATE, INIT_TIME, NEW_INIT_GRADE} from '@/config/blind';
+import {CUSTOM, RESET_CUSTOM, checkBlind, getBlindBookmarks} from '@/modules/BlindBookmarks';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import NewTournamentSetPrize from './NewTournamentSetPrize';
+import { TicketType } from '@/config/tickets';
 
 type IHeaderTitle = '상세정보' | 'Prize' | '블라인드';
 
@@ -18,16 +20,8 @@ function NewTournament() {
   const navigation = useNavigation<NavigationProp<HomeRootStackParamList>>();
   const {nickName} = useSelector((state: RootState) => state.user);
   const [loading, setLoading] = useState(false);
+  const [currentTitle, setCurrentTitle] = useState<IHeaderTitle>('상세정보');
   const [title, setTitle] = useState<string>('');
-  const [place, setPlace] = useState<string>('');
-  const [ticket, setTicket] = useState<{type: TicketType; count: any}>({
-    type: '',
-    count: '',
-  });
-  const [detail, setDetail] = useState('');
-  const [entry, setEntry] = useState('');
-  const [prize, setPrize] = useState('');
-  const [entryCondition, setEntryCondition] = useState<boolean>(false);
   const [gameStart, setGameStart] = useState({
     date: INIT_DATE,
     time: INIT_TIME,
@@ -36,47 +30,104 @@ function NewTournament() {
     date: INIT_DATE,
     time: INIT_TIME,
   });
+  const [place, setPlace] = useState<string>('');
+  const [entryCondition, setEntryCondition] = useState<boolean>(false);
+  const [ticket, setTicket] = useState<{type: TicketType; count: any}>({
+    type: '',
+    count: '',
+  });
+  const [detail, setDetail] = useState('');
+  const [entry, setEntry] = useState('');
+  const [prize, setPrize] = useState('');
   const [blindBookmarksPickerItems, setBlindBookmarksPickerItems] = useState<Item[]>([]);
-  const [selectedBookmark,setSelectedBookmark] = useState('');
-  const [blind, setBlind] = useState<IBlind[]>([INIT_BLIND()]);
-  const [blindTime, setBlindTime] = useState();
+  const [selectedBookmark, setSelectedBookmark] = useState('');
+  const [blind, setBlind] = useState<IBlind[]>(CUSTOM);
+  const [blindTime, setBlindTime] = useState<string>();
+  /**
+   * @todo 게임 생성 시, isAntes = false면 Ante 전부 0
+   */
   const [isAntes, setIsAntes] = useState<boolean>(true);
-  const [currentTitle, setCurrentTitle] = useState<IHeaderTitle>('상세정보');
-  
-  useEffect(() => {
-    getBlindBookmarks().then((_blindBookmarks) => {
-      //  Local에 Bookmark가 없으면 중단
-      if(!_blindBookmarks) return;
-      const blindBookmarks: Item[] = Object.keys(_blindBookmarks).map((val, i) => {
-        return {
-          key: i,
-          label: val,
-          value: val,
-        };
-      });
-      setBlindBookmarksPickerItems(blindBookmarks);
-    });
+  const [grade,setGrade] = useState<IGrade[]>([NEW_INIT_GRADE()]);
 
+  useEffect(() => {
+    // LOCAL STORAGE 리셋 함수
+    const REMOVE = async () => {
+      await AsyncStorage.removeItem('blindBookmarks');
+    };
+    // checkInputNull();
+    // REMOVE();
+
+    // 페이지 나갈 시, CUSTOM DATA 초기화
+    return (() => {
+      RESET_CUSTOM();
+    })
   }, []);
 
+
+  const checkInputNull = () => {
+    const is =
+      !!title && // 타이틀 제목
+      (!!gameStart.date && gameStart.date != INIT_DATE) && // 게임시작(일)
+      (!!gameStart.time && gameStart.time != INIT_DATE)&& // 게임시작(시간)
+      (!!deadline.date && deadline.date != INIT_DATE) &&  // 레지마감(일)
+      (!!deadline.time && deadline.time != INIT_DATE) && // 레지마감(시간)
+      !!place && //토너먼트 위치
+      // entryCondition && // 참여조건
+      (!!ticket.type && !!ticket.count) && // Buy-In
+      !!detail && // 세부 정보
+      // entry && // 엔트리
+      !!prize && // 토너먼트 프라이즈
+      !!blindTime // 블라인드 길이
+      blind.every((value) => checkBlind(value))
+      ;
+    console.log("is",is); 
+  }; 
+
+  /**
+   * @description 페이지 변환시 발생하는 이벤트
+   */
   const onChangeTitle = (title: IHeaderTitle) => {
     setCurrentTitle(title);
   };
-  
 
-  const onChangeBlindBookmarks = useCallback(async (data:any) => {
-    
-    setSelectedBookmark(data)
-    if(!data) return setBlind([INIT_BLIND()]);
+  /**
+   * @description Picker의 Title이 변경될 때 발생하는 이벤트
+   */
+  const onChangeBlindBookmarks = useCallback((async (data: any) => {
+    // 선택된 Picker Title로 변경
+    setSelectedBookmark(data);
+    // 선택된 Picker Title이 "CUSTOM"인 경우, 빈 Blind Object로 변경
+    if (!data) {
+      setBlind(CUSTOM);
+      setBlindTime('');
+      return;
+    }
+  
     const _blindBookmarks = await getBlindBookmarks();
-    let _blind = _blindBookmarks[data];
-    setBlind(_blind);
-  },[])
+    const {time, structs} = _blindBookmarks![data];
+    setBlindTime(time);
+    setBlind(structs);
+  }),[])
 
+  /**
+   * @title Picker가 활성화될때 발생하는 이벤트
+   * @description Local에 Bookmark된 Blind의 Title BlindBookmarksPickerItems에 저장
+   */
+  const getBookmarks = async () => {
+    const _blindBookmarks = await getBlindBookmarks();
+    if (!_blindBookmarks) return;
+    const blindBookmarks: Item[] = Object.keys(_blindBookmarks).map((val, i) => {
+      return {
+        key: i,
+        label: val,
+        value: val,
+      };
+    });
+    setBlindBookmarksPickerItems(blindBookmarks);
+  };
 
-  
   return (
-    <SafeAreaView style={[GlobalStyles.container, {flex: 1}]}>
+    <SafeAreaView style={[GlobalStyles.container, {width: '100%', height: '100%'}]}>
       {currentTitle == '상세정보' ? (
         <NewTournamentSetInfo
           onChangeTitle={onChangeTitle}
@@ -90,6 +141,9 @@ function NewTournament() {
           setPrize={setPrize}
           setDetail={setDetail}
           onChangeBlindBookmarks={onChangeBlindBookmarks}
+          setBlindBookmarksPickerItems={setBlindBookmarksPickerItems}
+          getBookmarks={getBookmarks}
+          checkInputNull={checkInputNull}
           blindBookmarksPickerItems={blindBookmarksPickerItems}
           selectedBookmark={selectedBookmark}
           gameStart={gameStart}
@@ -113,6 +167,8 @@ function NewTournament() {
           setIsAntes={setIsAntes}
           setBlindTime={setBlindTime}
           onChangeBlindBookmarks={onChangeBlindBookmarks}
+          setBlindBookmarksPickerItems={setBlindBookmarksPickerItems}
+          getBookmarks={getBookmarks}
           blindBookmarksPickerItems={blindBookmarksPickerItems}
           selectedBookmark={selectedBookmark}
           blind={blind}
@@ -122,6 +178,11 @@ function NewTournament() {
       ) : (
         <></>
       )}
+      {currentTitle == 'Prize' ? <NewTournamentSetPrize 
+      onChangeTitle={onChangeTitle}
+      setGrade={setGrade}
+      grade={grade}
+      /> : <></>}
     </SafeAreaView>
   );
 }

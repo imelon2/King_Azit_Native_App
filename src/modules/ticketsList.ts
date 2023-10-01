@@ -1,5 +1,6 @@
 import {useSelector} from 'react-redux';
 import {RootState} from '../store/reducer';
+import { TicketImgType, TicketType, Ticket_Img } from '@/config/tickets';
 
 export type ticketsListType = {
     key?:number,
@@ -7,40 +8,23 @@ export type ticketsListType = {
     image:any,
     count:number
 }
-export type TicketType = 'black' | 'red' | 'gold' | "";
-export type TicketTypeKR = '블랙티켓' | '레드티켓' | '골드티켓';
-type EventType = "basic" | "width";
 
-export const img = {
-  basic:{
-    RedCardImg : require('../assets/RedCard.png'),
-    BlackCardImg : require('../assets/BlackCard.png'),
-    GoldCardImg : require('../assets/KingsDaoCard.png')
-  },
-  width:{
-    RedCardImg : require('../assets/RedCard_Width.png'),
-    BlackCardImg : require('../assets/BlackCard_Width.png'),
-    GoldCardImg : require('../assets/GoldCard_Width.png')
-   }
-}
-
-
-const ticketsList = (_type:EventType) => {
+const ticketsList = (_type:TicketImgType):ticketsListType[] => {
   const {red, black, gold} = useSelector((state: RootState) => state.ticket);
-  const Cards = [
+  const Cards:ticketsListType[] = [
     {
       type: 'black',
-      image: img[_type].BlackCardImg,
+      image: Ticket_Img[_type].BlackCardImg,
       count: black,
     },
     {
       type: 'red',
-      image: img[_type].RedCardImg,
+      image: Ticket_Img[_type].RedCardImg,
       count: red,
     },
     {
       type: 'gold',
-      image: img[_type].GoldCardImg,
+      image: Ticket_Img[_type].GoldCardImg,
       count: gold,
     },
   ];

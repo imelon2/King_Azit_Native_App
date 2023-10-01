@@ -9,7 +9,7 @@ import {
   TimeFormat,
   inputNumberFormat,
 } from '@/modules';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Text, View, TextInput, Pressable, Alert} from 'react-native';
 import RNPickerSelect, {Item} from 'react-native-picker-select';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
@@ -24,13 +24,13 @@ import IconIonicons from 'react-native-vector-icons/Ionicons';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
 import IconMaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { styles } from '../../AdminStyles/NewTournamentStyles';
-import { INIT_DATE, INIT_TIME } from '@/config/blind';
-import { checkBlind } from '@/modules/BlindBookmarks';
+import { IBlindBookmarks, INIT_DATE, INIT_TIME, TicketPickerItems } from '@/config/blind';
+import { checkBlind, getBlindBookmarks } from '@/modules/BlindBookmarks';
 
 type type = 'GameStartDate' | 'GameStartTime' | 'DeadlineDate' | 'DeadlineTime';
 
 const NewTournamentSetInfo = ({...props}) => {
-  const {onChangeTitle,onChangeBlindBookmarks ,setGameStart, setDeadline, setTitle, setTicket, setPlace, setEntryCondition, setEntry, setDetail, setPrize} =
+  const {checkInputNull,getBookmarks,onChangeTitle,onChangeBlindBookmarks ,setGameStart, setDeadline, setTitle, setTicket, setPlace, setEntryCondition, setEntry, setDetail, setPrize, setBlindBookmarksPickerItems} =
     props;
   const {gameStart, deadline, title, ticket, place, entryCondition, entry, detail, prize, blind,blindBookmarksPickerItems,selectedBookmark } = props;
 
@@ -39,24 +39,6 @@ const NewTournamentSetInfo = ({...props}) => {
   const [isGameStartTimeVisible, setIsGameStartTimeVisible] = useState(false);
   const [isDeadlineDateVisible, setIsDeadlineDateVisible] = useState(false);
   const [isDeadlineTimeVisible, setIsDeadlineTimeVisible] = useState(false);
-  
-  const TicketPickerItems: Item[] = [
-    {
-      key: 1,
-      label: '블랙티켓',
-      value: 'black',
-    },
-    {
-      key: 2,
-      label: '레드티켓',
-      value: 'red',
-    },
-    {
-      key: 3,
-      label: '골드 NFT',
-      value: 'gold',
-    },
-  ];
 
   const handleConfirm = (type: type, date: any) => {
     if (type == 'GameStartDate')
@@ -388,7 +370,7 @@ const NewTournamentSetInfo = ({...props}) => {
                 <IconAntDesign name="down" size={heightData * 22} color={checkBlind(blind[0]) ? '#F5FF82' : '#77777777'} />
               </View>
               <RNPickerSelect
-                disabled={blindBookmarksPickerItems.length == 0}
+                onOpen={getBookmarks}
                 onValueChange={onChangeBlindBookmarks}
                 value={selectedBookmark}
                 placeholder={{
@@ -420,7 +402,7 @@ const NewTournamentSetInfo = ({...props}) => {
             backgroundColor="#F5FF82"
             color="#000"
             componentStyle={{position: 'absolute', bottom: 0}}
-            onPress={() => Alert.alert('Todo : ',"Prize Page로 넘어가기 + 다 입력됬는지 검사")}
+            onPress={() => {onChangeTitle('Prize')}}
           />
         </View>
       </KeyboardAwareScrollView>

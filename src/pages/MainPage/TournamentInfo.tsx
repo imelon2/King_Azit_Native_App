@@ -7,7 +7,7 @@ import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import IconFeather from 'react-native-vector-icons/Feather';
 import IconMaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconIonicons from 'react-native-vector-icons/Ionicons';
-import {View, Text, SafeAreaView, StyleSheet, Pressable, ScrollView, Image} from 'react-native';
+import {View, Text, SafeAreaView, StyleSheet, Pressable, ScrollView, Image, Modal, FlatList, Alert} from 'react-native';
 import {useSelector} from 'react-redux';
 import {RootState} from '@/store/reducer';
 import Rectangle from '@/components/Rectangle';
@@ -15,6 +15,10 @@ import {BottomButton, BottomMaxButton} from '@/components/Button';
 import Swiper from 'react-native-swiper';
 import ProfileImg from '@/components/ProfileImg';
 import Config from 'react-native-config';
+import ticketsList from '@/modules/ticketsList';
+import {Shadow} from 'react-native-shadow-2';
+import {ConvertTicketTypeENtoKR} from '@/modules/String';
+// import Modal from 'react-native-modal';
 
 type IHeaderTitle = '상세정보' | '프라이즈' | '블라인드' | '참가자 현황';
 type IPrizeInfo = {
@@ -40,7 +44,7 @@ function TournamentInfo() {
   const [prizeInfo, setPrizeInfo] = useState<IPrizeInfo[]>();
   const [blindInfo, setBlindInfo] = useState<IBlindInfo[]>();
   const [profiles, setProfiles] = useState<IProfileInfo[][]>();
-
+  const [onEnterModal, setOnEnterModal] = useState(true);
   useEffect(() => {
     const demoPrizeInfo: IPrizeInfo[] = new Array(15).fill(1).map((_, i) => {
       return {
@@ -70,6 +74,16 @@ function TournamentInfo() {
     setProfiles(demoProfiles);
   }, []);
 
+  let _gap = heightData * 40;
+  let _offset = heightData * 60;
+  let _width = width - (_gap + _offset) * 2;
+  // const CARDS = ticketsList('basic').filter(keys => keys.type == 'red' || keys.type == 'black');
+  const CARDS = ticketsList('basic').filter(keys => keys.type == 'gold');
+  const [price, setPrice] = useState<number>(0);
+  const onNFTGuide = () => {
+    navigation.navigate('MyTickets', {card: 'gold', count:0 })
+    setOnEnterModal(false)
+  }
   return (
     <SafeAreaView style={[GlobalStyles.container, {flex: 1}]}>
       {/* header */}
@@ -87,12 +101,104 @@ function TournamentInfo() {
       {currentTitle == '블라인드' ? <Blind blindInfo={blindInfo!} /> : <></>}
       {currentTitle == '참가자 현황' ? <Participant profiles={profiles!} /> : <></>}
       <View>
-        <BottomMaxButton title="참여하기" color="#000" backgroundColor="#F5FF82" />
+        <BottomMaxButton
+          title="참여하기"
+          color="#000"
+          backgroundColor="#F5FF82"
+          onPress={() => setOnEnterModal(true)}
+        />
       </View>
+      <Modal transparent visible={onEnterModal} animationType={'slide'}>
+        <View style={{flex: 1, justifyContent: 'flex-end'}}>
+          <View style={{height: 614 * heightData, backgroundColor: '#353535'}}>
+            <View style={{alignItems: 'flex-end'}}>
+              <IconAntDesign
+                name="close"
+                size={headerIconSize}
+                color="white"
+                style={{paddingHorizontal: 20 * heightData, paddingVertical: 20 * heightData}}
+                onPress={() => setOnEnterModal(false)}
+              />
+            </View>
+            {/* 티켓 스크롤 */}
+            <View>
+              <FlatList
+                horizontal
+                pagingEnabled
+                showsHorizontalScrollIndicator={false}
+                automaticallyAdjustContentInsets={false}
+                snapToInterval={_width + _gap}
+                snapToAlignment="start"
+                decelerationRate="fast"
+                bounces={false}
+                style={{marginBottom:9 * heightData}}
+                // keyExtractor={item => item.key}
+                data={CARDS}
+                // viewabilityConfigCallbackPairs={
+                //   viewabilityConfigCallbackPairs.current
+                // }
+                contentContainerStyle={{
+                  paddingHorizontal: _offset + _gap / 2,
+                }}
+                renderItem={item => (
+                  <View style={{marginHorizontal: _gap / 2, paddingVertical: heightData * 5}}>
+                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                      <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: heightData * 10}}>
+                        <Text style={[FontStyle.fs15, FontStyle.fw600]}>
+                          {ConvertTicketTypeENtoKR(item.item.type)} 티켓
+                        </Text>
+                        <Text style={FontStyle.fs12}> | 보유 15 개</Text>
+                      </View>
+                      <Shadow distance={6} startColor={'#616161'} endColor={'rgba(61, 61, 61, 0.6)'}>
+                        <Image
+                          style={{
+                            resizeMode: 'cover',
+                            width: _width,
+                            height: heightData * 240,
+                            borderWidth: 1,
+                            borderColor: '#A1A1A1',
+                            borderRadius: 7,
+                          }}
+                          source={item.item.image}
+                        />
+                      </Shadow>
+                    </View>
+                  </View>
+                )}
+              />
+            </View>
+            <View style={{alignItems:'center',marginTop:9 * heightData}}>
+              <Text style={[FontStyle.fs14,{paddingVertical:1}]}>Kings Azit` NFT 소지자만</Text>
+              <Text style={[FontStyle.fs14,{paddingVertical:1}]}>참여할 수 있는 토너먼트 입니다.</Text>
+              <Text onPress={() => onNFTGuide()} style={[FontStyle.fs14,{paddingVertical:1,color:'#F5FF82'}]}>NFT 획득 가이드 {'>'}</Text>
+            </View>
+            {/* 소모 티켓 수량 */}
+            <View style={{alignItems: 'center',marginTop: heightData * 8}}>
+              <View style={[modalStyle.useTextWrapper, GlobalStyles.flexCenter]}>
+                <Text style={FontStyle.fs12}>소모 : {price}장</Text>
+              </View>
+            </View>
+
+            {/* 버튼 & 티켓 부족 경고문 */}
+            <View style={{flex: 1, alignItems: 'center', justifyContent: 'flex-end', marginBottom: 56 * heightData}}>
+              <Text style={{fontSize:14,fontWeight:"400", color:'red',marginBottom:14 * heightData}}>* 보유티켓이 부족합니다. 티켓 충전 후 시도해주세요.</Text>
+              <BottomButton title="참여하기" backgroundColor="#808080" color="#000" onPress={() => Alert.alert('Todo:','게임 참여 기능 구현')}/>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
-
+const modalStyle = StyleSheet.create({
+  useTextWrapper: {
+    width: 80 * widthData,
+    height: 25 * heightData,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#F5FF82',
+  },
+});
 const TournamentHeader = ({...props}) => {
   const {setCurrentTitle, currentTitle} = props;
   const HeaderTitle: IHeaderTitle[] = ['상세정보', '프라이즈', '블라인드', '참가자 현황'];
@@ -222,8 +328,8 @@ const Blind = ({...props}: {blindInfo: IBlindInfo[]}) => {
         </View>
         {blindInfo.map((data, i) => {
           return (
-            <>
-              <View key={i} style={[BlindStyle.headerStyle, {backgroundColor: 'transparent'}, GlobalStyles.flexCenter]}>
+            <View key={i}>
+              <View style={[BlindStyle.headerStyle, {backgroundColor: 'transparent'}, GlobalStyles.flexCenter]}>
                 <Text style={[FontStyle.fs14, FontStyle.fw600, {flex: 1, textAlign: 'center'}]}>{data.level}</Text>
                 <Text style={[FontStyle.fs14, FontStyle.fw600, {flex: 3, textAlign: 'center'}]}>{data.blinds}</Text>
                 <Text style={[FontStyle.fs14, FontStyle.fw600, {flex: 1, textAlign: 'center'}]}>{data.ante}</Text>
@@ -235,7 +341,7 @@ const Blind = ({...props}: {blindInfo: IBlindInfo[]}) => {
               ) : (
                 <></>
               )}
-            </>
+            </View>
           );
         })}
       </View>
@@ -278,11 +384,7 @@ const Participant = ({...props}: {profiles: IProfileInfo[][]}) => {
   }> = ({space = 0}) => {
     return (
       <View style={[GlobalStyles.flexCenter, {marginHorizontal: space}]}>
-        <View
-          style={[
-            GlobalStyles.flexCenter,
-            ParticipantStyle.dealerStyle,
-          ]}>
+        <View style={[GlobalStyles.flexCenter, ParticipantStyle.dealerStyle]}>
           <Text style={{color: '#C9BEA2', fontSize: 8, fontWeight: 'bold'}}>DEALER</Text>
         </View>
       </View>
@@ -438,7 +540,7 @@ const ParticipantStyle = StyleSheet.create({
     backgroundColor: '#35312A',
     borderWidth: 1,
     borderColor: '#C9BEA2',
-  }
+  },
 });
 
 const BannerStyle = StyleSheet.create({

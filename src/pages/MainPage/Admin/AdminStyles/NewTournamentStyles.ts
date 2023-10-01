@@ -26,7 +26,7 @@ export const styles = StyleSheet.create({
     tableSelect: {
       flex: 1,
       backgroundColor: '#222',
-      height: 40 * heightData,
+      height: 46 * heightData,
       borderWidth: 1,
       borderRadius: 4,
       marginTop: 20 * heightData,

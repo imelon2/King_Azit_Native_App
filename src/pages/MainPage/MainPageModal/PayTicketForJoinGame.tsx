@@ -8,7 +8,7 @@ import {
   FlatList,
   TextInput,
 } from 'react-native';
-import {heightData, StringUpperCase} from '../../../modules/globalStyles';
+import {heightData} from '../../../modules/globalStyles';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import ticketsList from '../../../modules/ticketsList';
@@ -24,15 +24,12 @@ const {width, height} = Dimensions.get('window');
 const heightScale = heightData;
 
 interface propsType {
-  setModalStatus(id: boolean): void;
-  item: roomType;
-  selectSeatNum:number;
-  setIsGuest({ is, isFixed }:{ is: boolean, isFixed: boolean }): void;
-  isGuest:{is:boolean,isFixed:boolean};
+
 }
 
-function PayTicketForJoinGame(props: propsType) {
-  const [socket, disconnect] = useSocket();
+function PayTicketForJoinGame({...props}) {
+  const {item} = props;
+  // const [socket, disconnect] = useSocket();
   // 현재 유저 보유 티켓 가져오기
   const [refreshTickets] = getTickets();
   const CARDS = ticketsList('basic').filter(
@@ -42,98 +39,44 @@ function PayTicketForJoinGame(props: propsType) {
   const [change, setChange] = useState<number>(5);
   const [price, setPrice] = useState<number>(0);
   const [isEnoughCard, setIsEnoughCard] = useState<boolean>(false);
-  const {isGuest,setIsGuest} = props;
+
 
   
   let _gap = heightScale * 55;
   let _offset = heightScale * 60;
   let _width = width - (_gap + _offset) * 2;
 
-  // Socket Msg
-  useEffect(() => {
-    refreshTickets();
-
-    const callback = (data: any) => {
-      if(socket && data.type === 'enterGameRoom') {
-        Alert.alert("안내",data.msg + "다른 자리를 선택헤주세요.")
-      }
-      console.log(data);
-      
-    };
-    const seatError = (data: any) => {
-      if(data == "엔트리 꽉참") {
-        Alert.alert("안내","현재 게임 방의 Entry가 꽉찼습니다.")
-      } else if(data == "이미 사용중인 자리입니다.") {
-        Alert.alert("안내","이미 사용중인 자리입니다. 다른 자리를 선택헤주세요.")
-      } else if (data.type == "티켓 부족") {
-        Alert.alert("안내","티켓이 부족합니다.")
-      } else {console.log(data);}
-      
-      console.log(data);
-    };
-
-    const userEnterRoom = (data: any) => {
-      console.log('userEnterRoom : ' + data);
-    };
-
-    if (socket) {
-      socket.on('error', callback);
-      socket.on('seatError', seatError);
-      socket.on('getMessage', userEnterRoom);
-    }
-
-    return () => {
-      if (socket) {
-        socket.off('error', callback);
-        socket.off('seatError', seatError);
-        socket.off('getMessage', userEnterRoom);
-      }
-    };
-  }, []);
 
 
   const onClickCheckBox = () => {
-    if(isGuest.isFixed) return;
-    setIsGuest({is: !isGuest.is,isFixed: false})
   };
 
   // GameId & Ticket 소모 필요
   const joinButton = () => {
-    if (!isEnoughCard) {
-      return;
-    }
-    console.log(props.item.game_id);
-    console.log(props.selectSeatNum);
-    console.log(props.isGuest.is);
-    
-    if (socket) {
-      socket.emit('seat', {gameId:props.item.game_id,chair:props.selectSeatNum,isGuest:props.isGuest.is});
-      // props.setModalStatus(false);
-    }
   };
 
   // Flatlist Focus된 page index 리턴
   const onViewableItemsChanged = ({viewableItems}: any) => {
     // 현재 Focus된 page index 전달
     let price: any;
-    if (props.item.ticket_type === 'black') {
+    if (item.ticket_type === 'black') {
       if (viewableItems[0]?.item.type === 'red') {
-        price = props.item.ticket_amount * 5;
+        price = item.ticket_amount * 5;
         setChange(5);
       }
       if (viewableItems[0]?.item.type === 'black') {
-        price = props.item.ticket_amount;
+        price = item.ticket_amount;
         setChange(5);
       }
     }
-    if (props.item.ticket_type === 'red') {
+    if (item.ticket_type === 'red') {
       if (viewableItems[0]?.item.type === 'red') {
-        price = props.item.ticket_amount;
+        price = item.ticket_amount;
         setChange(5);
       }
       if (viewableItems[0]?.item.type === 'black') {
-        price = Math.ceil(props.item.ticket_amount / 5);
-        setChange(5 - (props.item.ticket_amount % 5));
+        price = Math.ceil(item.ticket_amount / 5);
+        setChange(5 - (item.ticket_amount % 5));
       }
     }
     setPrice(price);
@@ -176,7 +119,6 @@ function PayTicketForJoinGame(props: propsType) {
       {/* Close Icon */}
       <View style={{alignItems: 'flex-end'}}>
         <IconAntDesign
-          onPress={() => props.setModalStatus(false)}
           name="close"
           size={heightScale*30}
           color="#fff"
@@ -194,7 +136,7 @@ function PayTicketForJoinGame(props: propsType) {
           snapToAlignment="start"
           decelerationRate="fast"
           bounces={false}
-          keyExtractor={item => item.key?.toString()}
+          // keyExtractor={item => item.key?.toString()}
           data={CARDS}
           viewabilityConfigCallbackPairs={
             viewabilityConfigCallbackPairs.current
@@ -207,7 +149,7 @@ function PayTicketForJoinGame(props: propsType) {
             <View style={{marginHorizontal: _gap / 2,paddingVertical:heightScale*5}}>
               <View style={{justifyContent: 'center', alignItems: 'center'}}>
                 <View style={{flexDirection: 'row',marginBottom:heightScale*5}}>
-                  <Text style={styles.cardText}>{StringUpperCase(item.item.type)} Tickets</Text>
+                  {/* <Text style={styles.cardText}>{StringUpperCase(item.item.type)} Tickets</Text> */}
                   <Text style={styles.cardText2}> | 보유 {item.item.count} 개</Text>
                 </View>
                 <Shadow distance={6} startColor={'#616161'} endColor={'rgba(61, 61, 61, 0.6)'}>
@@ -243,9 +185,8 @@ function PayTicketForJoinGame(props: propsType) {
           <IconAntDesign
             name="checksquare"
             size={22}
-            color={isGuest.is ? '#F5FF82' : '#848484'}
           />
-          <Text style={[styles.checkText,{color:isGuest.is ? '#F5FF82' : '#848484'}]}>For Guest Player</Text>
+          <Text style={[styles.checkText,{color: true ? '#F5FF82' : '#848484'}]}>For Guest Player</Text>
         </TouchableOpacity>
 
         <View style={styles.useTextWrapper}>
@@ -265,7 +206,7 @@ function PayTicketForJoinGame(props: propsType) {
           activeOpacity={1}
           style={isEnoughCard ? styles.gujoinButton2 : styles.gujoinButton}>
           <Text style={[styles.gujoinButtonText]}>
-            {isGuest.is && "Guest"} 참가하기
+            {true && "Guest"} 참가하기
           </Text>
         </TouchableOpacity>
       </View>
@@ -280,9 +221,9 @@ const styles = StyleSheet.create({
     borderTopRightRadius: heightScale * 30,
     borderTopLeftRadius: heightScale * 30,
     width: width,
-    position: 'absolute',
-    bottom: -20,
-    left: -20,
+    // position: 'absolute',
+    // bottom: -20,
+    // left: -20,
   },
   closeButton: {
     marginTop: heightScale * 15,
