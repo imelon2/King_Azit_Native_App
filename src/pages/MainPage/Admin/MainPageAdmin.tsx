@@ -20,7 +20,7 @@ import {
   heightData,
   widthData,
 } from '../../../modules/globalStyles';
-import Banner from '@/components/Banner';
+import {Banner} from '@/components/Banner';
 
 function MainPageAdmin() {
   const navigation =

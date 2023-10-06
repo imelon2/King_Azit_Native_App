@@ -16,9 +16,6 @@ export const widthData: number = Number(
   (Dimensions.get('screen').width * (1 / basicDimensions.width)).toFixed(2),
 );
 
-export const StringUpperCase = (_string: string) => {
-  return _string.charAt(0).toUpperCase() + _string.slice(1);
-};
 
 export const HeaderStyle = StyleSheet.create({
   container: {

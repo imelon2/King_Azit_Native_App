@@ -10,11 +10,11 @@ import {
   View,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {HeaderStyle} from '../../modules/globalStyles';
-import {heightScale} from '../../modules/MainStyles';
+import {HeaderStyle} from '../../../modules/globalStyles';
+import {heightScale} from '../../../modules/MainStyles';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
-import {HomeRootStackParamList} from '../../../AppInner';
+import {HomeRootStackParamList} from '../../../../AppInner';
 import DraggableFlatList, {
   ScaleDecorator,
   RenderItemParams,

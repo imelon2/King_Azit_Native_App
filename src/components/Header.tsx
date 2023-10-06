@@ -9,11 +9,15 @@ export const Header: React.FC<{
 }> = ({...props}) => {
   return (
     <View style={HeaderStyle.headerContainer}>
-      <View style={HeaderStyle.headerLeftIcon}>{props.leftIcon ? props.leftIcon() : null}</View>
+      <View style={HeaderStyle.headerLeftIcon}>
+        {props.leftIcon ? <props.leftIcon /> : null}
+      </View>
       <View style={HeaderStyle.headerStyle}>
         <Text style={HeaderStyle.headerFontStyle}>{props.title}</Text>
       </View>
-      <View style={HeaderStyle.headerRightIcon}>{props.rightIcon ? props.rightIcon() : null}</View>
+      <View style={HeaderStyle.headerRightIcon}>
+        {props.rightIcon ? <props.rightIcon/> : null}
+      </View>
     </View>
   );
 };

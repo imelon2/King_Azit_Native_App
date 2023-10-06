@@ -127,7 +127,7 @@ function TicketCharge() {
                             <View style={{ flex: 1, justifyContent: 'center' }} >
                                 <Image
                                     style={styles.ticketImg}
-                                    source={require(`../../assets/BlackCard.png`)} />
+                                    source={require(`../../assets/BlackTicket.png`)} />
                             </View>
                             <View style={{ flex: 3, paddingHorizontal: 13 * heightScale, justifyContent: 'center' }} >
                                 <View style={{ height: 76 * heightScale }}>

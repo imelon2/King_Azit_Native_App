@@ -17,7 +17,6 @@ import MainPage from './src/pages/MainPage/MainPage';
 import MyPage from './src/pages/MyPage/MyPage';
 import SetNickNameScreen from './src/pages/MyPage/SetNickNameScreen';
 import MyTicket from './src/pages/MyPage/MyTicket';
-import GamePage from './src/pages/MainPage/GamePage';
 import TabBar from './src/components/TabBar';
 import Ranking from './src/pages/Ranking/Ranking';
 import Game from './src/pages/Game/Game';
@@ -26,7 +25,6 @@ import MyRanking from './src/pages/MyPage/MyRanking';
 import MyRankingScore from './src/pages/MyPage/MyPageCompoents/MyRankingScore';
 import interceptors from './src/hooks/interceptors';
 import TicketsHistorys from './src/pages/MyPage/TicketsHistorys';
-import RoomMake from './src/pages/MainPage/Admin/NewTournament';
 import TicketPay from './src/pages/Admin/TicketPay';
 import TicketCharge from './src/pages/Admin/TicketCharge';
 import MemberManagePage from './src/pages/Admin/MemberManagePage';
@@ -37,20 +35,20 @@ import TicketsResult, {ticketsResultType} from './src/pages/Admin/TicketsResult'
 import {deepLinkController} from './src/modules/Linking';
 import Forbidden from './src/pages/Admin/Forbidden';
 import AdminTicketsHistory from './src/pages/Admin/AdminTicketsHistory';
-import QRCodeScanner from './src/pages/Admin/Components/QRCodeScanner';
+import QRCodeScanner from './src/pages/MainPage/Admin/QRCodeScanner';
 import CreateRoom from './src/pages/MainPage/Admin/CreateTournament';
 import CalculatePage from './src/pages/Calculate/CalculatePage';
 import MonthCirculation from './src/pages/Calculate/components/MonthCirculation';
 import TotalPublish from './src/pages/Calculate/components/TotalPublish';
 import UserConsumption from './src/pages/Calculate/components/UserConsumption';
 import UserConsumptionDetail from './src/pages/Calculate/components/UserConsumptionDetail';
-import {TicketType} from './src/modules/ticketsList';
 import GiftTicket from './src/pages/MainPage/GiftTicket';
-import Prize from './src/pages/Admin/Prize';
-import SetBanner from './src/pages/Admin/SetBanner';
+import SetBanner from './src/pages/MainPage/Admin/SetBanner';
 import UserInformation, {UserInformationType} from './src/pages/Admin/UserInformation';
 import CalendarPage from './src/pages/Calendar/CalendarPage';
 import TournamentInfo from '@/pages/MainPage/TournamentInfo';
+import NewTournament from '@/pages/MainPage/Admin/AdminComponent/CreateTournamentComponent/NewTournament';
+import { TicketType } from '@/config/tickets';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -71,7 +69,7 @@ export type HomeRootStackParamList = {
   GamePage: {
     gameId: string;
   };
-  RoomMake: undefined;
+  NewTournament: undefined;
   MyTickets: {
     card: TicketType;
     count: number;
@@ -113,7 +111,6 @@ export type HomeRootStackParamList = {
   UserConsumptionDetail: {
     month: number;
   };
-  Prize: undefined;
   SetBanner: undefined;
   TournamentInfo: undefined;
 };
@@ -168,7 +165,7 @@ function AppInner() {
   //   }
   //   getToken();
   // }, []);
-
+  
   // Refresh Access & Refresh Token
   useEffect(() => {
     const getToken = async () => {
@@ -242,8 +239,7 @@ function AppInner() {
           <HomeStack.Screen name="MemberManagePage" component={MemberManagePage} options={{animation: 'none'}} />
           <HomeStack.Screen name="UserDetail" component={UserDetail} options={{animation: 'slide_from_left'}} />
           <HomeStack.Screen name="TicketsResult" component={TicketsResult} options={{animation: 'none'}} />
-          <HomeStack.Screen name="GamePage" component={GamePage} options={{animation: 'none'}} />
-          <HomeStack.Screen name="RoomMake" component={RoomMake} options={{animation: 'none'}} />
+          <HomeStack.Screen name="NewTournament" component={NewTournament} options={{animation: 'none'}} />
           <HomeStack.Screen name="CreateRoom" component={CreateRoom} options={{animation: 'none'}} />
           <HomeStack.Screen name="Forbidden" component={Forbidden} options={{animation: 'none'}} />
           <HomeStack.Screen name="QRCodeScanner" component={QRCodeScanner} options={{animation: 'none'}} />
@@ -256,7 +252,6 @@ function AppInner() {
             component={UserConsumptionDetail}
             options={{animation: 'none'}}
           />
-          <HomeStack.Screen name="Prize" component={Prize} options={{animation: 'none'}} />
           <HomeStack.Screen name="SetBanner" component={SetBanner} options={{animation: 'none'}} />
           <HomeStack.Screen name="TournamentInfo" component={TournamentInfo} options={{animation: 'none'}} />
           <HomeStack.Screen
