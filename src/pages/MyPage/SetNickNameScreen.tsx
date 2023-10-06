@@ -1,16 +1,18 @@
-import {Text, View, TextInput, SafeAreaView, ActivityIndicator, Pressable} from 'react-native';
-import React, {useCallback, useState, useRef} from 'react';
-import Icon from 'react-native-vector-icons/AntDesign';
-import {MyPageRootStackParamList, RootStackParamList} from '../../../AppInner';
+import {Text, View, TextInput, SafeAreaView} from 'react-native';
+import React, {useCallback, useState} from 'react';
+import IconAntDesign from 'react-native-vector-icons/AntDesign';
+import {MyPageRootStackParamList} from 'AppInner';
 import {SignUpstyles} from '../SignUp/SignUpstyles';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import userSlice from '../../slices/user';
-import {useAppDispatch} from '../../store';
+import userSlice from '@/slices/user';
+import {useAppDispatch} from '@/store';
 import axios, {AxiosError} from 'axios';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import Config from 'react-native-config';
 import {useSelector} from 'react-redux';
-import {RootState} from '../../store/reducer';
+import {RootState} from '@/store/reducer';
+import {BottomButton, Header} from '@/components';
+import {heightData} from '@/modules';
 
 function SetNickNameScreen() {
   const dispatch = useAppDispatch();
@@ -53,23 +55,28 @@ function SetNickNameScreen() {
     <SafeAreaView style={SignUpstyles.container}>
       <KeyboardAwareScrollView>
         <View>
-          <Icon
-            name="arrowleft"
-            style={SignUpstyles.leftIcon}
-            size={25}
-            color="#fff"
-            onPress={() => navigation.goBack()}
+          <Header
+            title=""
+            leftIcon={() => (
+              <IconAntDesign
+                name="left"
+                style={SignUpstyles.leftIcon}
+                size={25}
+                color="#fff"
+                onPress={() => navigation.goBack()}
+              />
+            )}
           />
           <View style={SignUpstyles.topbar}></View>
           <View style={SignUpstyles.terms}>
-            <Text style={SignUpstyles.termstext}> 닉네임을 다시 정해주세요. </Text>
+            <Text style={SignUpstyles.termstext}> 닉네임 변경 </Text>
           </View>
 
           <View style={SignUpstyles.inputWrapper}>
             <View style={SignUpstyles.textInputWrapper}>
               <TextInput
                 style={SignUpstyles.textInput}
-                placeholder="닉네임 입력"
+                placeholder="새 닉네임 입력"
                 onChangeText={onChangeNickName}
                 value={nickName}
                 placeholderTextColor="#6F6F6F"
@@ -80,13 +87,13 @@ function SetNickNameScreen() {
         </View>
       </KeyboardAwareScrollView>
 
-      <View style={{alignItems: 'center'}}>
-        <Text
-          style={nickName ? [SignUpstyles.nextButton, SignUpstyles.nextButton2] : [SignUpstyles.nextButton]}
+      <View style={{alignItems: 'center', justifyContent: 'flex-end', paddingBottom: 20 * heightData}}>
+        <BottomButton
           onPress={onClickChangeNickName}
-          disabled={!!!nickName || loading}>
-          {loading ? <ActivityIndicator color={'black'} /> : '바꾸기'}
-        </Text>
+          title="로그인"
+          backgroundColor={nickName ? '#F5FF82' : '#808080'}
+          color="#000"
+        />
       </View>
     </SafeAreaView>
   );

@@ -64,8 +64,8 @@ export const SignUpstyles = StyleSheet.create({
     opacity: 0,
   },
   termstext: {
-    fontSize: heightScale * 26,
-    color: '#fff',
+    fontSize: heightScale * 20,
+    color: '#B9B9B9',
   },
   termstext2: {
     fontSize: heightScale * 26,
@@ -73,7 +73,7 @@ export const SignUpstyles = StyleSheet.create({
     marginTop: 4,
   },
   textInput: {
-    fontSize: heightScale * 18,
+    fontSize: heightScale * 14,
     width: '85%',
     paddingHorizontal: 10,
     paddingBottom: 3,
