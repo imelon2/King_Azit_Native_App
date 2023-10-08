@@ -202,7 +202,6 @@ const NewTournamentSetBlind = ({...props}) => {
             title="확인"
             backgroundColor="#F5FF82"
             color="#000"
-            componentStyle={{position: 'absolute', bottom: 0}}
             onPress={() => onChangeTitle('상세정보')}
           />
         </View>

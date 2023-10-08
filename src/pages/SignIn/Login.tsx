@@ -120,6 +120,7 @@ function Login({navigation}: LoginScreenProps) {
                 placeholder="아이디"
                 placeholderTextColor={'#6F6F6F'}
                 onChangeText={onChangeEmail}
+                autoCapitalize='none'
                 importantForAutofill="yes" // 자동완성 불러오기
                 autoComplete="email" // 자동완성 허용
                 keyboardType="email-address" // 키보드 타입 변경

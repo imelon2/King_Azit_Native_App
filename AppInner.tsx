@@ -49,6 +49,7 @@ import CalendarPage from './src/pages/Calendar/CalendarPage';
 import TournamentInfo from '@/pages/MainPage/TournamentInfo';
 import NewTournament from '@/pages/MainPage/Admin/AdminComponent/CreateTournamentComponent/NewTournament';
 import { TicketType } from '@/config/tickets';
+import GameRoomTable from '@/pages/MainPage/GameRoomTable';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -66,7 +67,7 @@ export type RootStackParamList = {
 
 export type HomeRootStackParamList = {
   Home: undefined; // Tab Navigator
-  GamePage: {
+  GameRoomTable: {
     gameId: string;
   };
   NewTournament: undefined;
@@ -240,7 +241,7 @@ function AppInner() {
           <HomeStack.Screen name="UserDetail" component={UserDetail} options={{animation: 'slide_from_left'}} />
           <HomeStack.Screen name="TicketsResult" component={TicketsResult} options={{animation: 'none'}} />
           <HomeStack.Screen name="NewTournament" component={NewTournament} options={{animation: 'none'}} />
-          <HomeStack.Screen name="CreateRoom" component={CreateRoom} options={{animation: 'none'}} />
+          <HomeStack.Screen name="CreateRoom" component={CreateRoom} options={{animation: 'slide_from_left'}} />
           <HomeStack.Screen name="Forbidden" component={Forbidden} options={{animation: 'none'}} />
           <HomeStack.Screen name="QRCodeScanner" component={QRCodeScanner} options={{animation: 'none'}} />
           <HomeStack.Screen name="CalculatePage" component={CalculatePage} options={{animation: 'none'}} />
@@ -259,6 +260,7 @@ function AppInner() {
             component={UserInformation}
             options={{animation: 'slide_from_right'}}
           />
+          <HomeStack.Screen name="GameRoomTable" component={GameRoomTable} options={{animation: 'slide_from_left'}} />
         </HomeStack.Navigator>
       ) : (
         <Stack.Navigator

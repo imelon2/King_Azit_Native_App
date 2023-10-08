@@ -8,6 +8,7 @@ import {TicketType} from '@/config/tickets';
 import GradeStructure from './GradeStructure';
 import {BottomMaxButton} from '@/components/Button';
 import {useCallback} from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const NewTournamentSetPrize = ({...props}) => {
   const {onChangeTitle, setGrade} = props;
@@ -34,7 +35,7 @@ const NewTournamentSetPrize = ({...props}) => {
   };
 
   return (
-    <View style={{flex: 1}}>
+    <>
       {/* header */}
       <Header
         title="Prize"
@@ -45,8 +46,9 @@ const NewTournamentSetPrize = ({...props}) => {
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps={'handled'}
         bounces={false}
+        showsVerticalScrollIndicator={false}
         style={{flex: 1}}
-        contentContainerStyle={grade.length == 1 ? {flex: 1} : {}}>
+        >
         {/* 승점 부여 인원 */}
         <View style={style.grandeLengthWrapper}>
           <Text style={FontStyle.fs15}>승점 부여 인원</Text>
@@ -67,7 +69,7 @@ const NewTournamentSetPrize = ({...props}) => {
             removeGradeStruct={removeGradeStruct}
           />
         ))}
-        <View style={{flex: 1, justifyContent: 'flex-end'}}>
+        <View style={{flex: 1}}>
           <BottomMaxButton
             title="확인"
             backgroundColor="#F5FF82"
@@ -77,7 +79,7 @@ const NewTournamentSetPrize = ({...props}) => {
         </View>
       </KeyboardAwareScrollView>
       {/* 다음 버튼 */}
-    </View>
+    </>
   );
 };
 

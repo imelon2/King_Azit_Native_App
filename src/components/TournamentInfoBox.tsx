@@ -1,9 +1,9 @@
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {FontStyle, heightData, widthData} from '../modules/globalStyles';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
-import {TicketTypeKR} from '../modules/ticketsList';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
 import {HomeRootStackParamList, MyPageRootStackParamList} from 'AppInner';
+import { TicketTypeKR } from '@/config/tickets';
 
 // 토너먼트 박스 관련 데이터
 type ITournamentInfo = {

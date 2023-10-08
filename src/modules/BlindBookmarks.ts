@@ -1,4 +1,4 @@
-import {IBlind, IBlindBookmarks, IBlindTitle} from '@/config/blind';
+import {IBlind, IBlindBookmarks, IBlindTitle, IGrade, IGradeTitle} from '@/config/blind';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // 더미데이터
@@ -51,7 +51,6 @@ export const mergeBlindBookmarks = async (newBlind : IBlindBookmarks) => {
 
 }
 /**
- * 
  * @param blind 블라인드(SB/BB/Ante)
  * @description 블라인드 구조의 SB/BB/Ante가 모두 입력되었는지 검사 기능
  * @returns SB/BB/Ante가 모두 입력되었경우 true, 아닌 경우 false
@@ -59,3 +58,12 @@ export const mergeBlindBookmarks = async (newBlind : IBlindBookmarks) => {
 export const checkBlind = (blind:IBlind) => {
   return Object.keys(blind).every((val) => blind[val as IBlindTitle]);
 };
+
+/**
+ * @param grade 등수(Ticket Type/count/point)
+ * @description 등수 구조의 Ticket Type/count/point가 모두 입력되었는지 검사 기능
+ * @returns Ticket Type/count/point가 모두 입력되었경우 true, 아닌 경우 false
+ */
+export const checkGrade = (grade:IGrade) => {
+  return Object.keys(grade).every((val) => grade[val as IGradeTitle])
+}

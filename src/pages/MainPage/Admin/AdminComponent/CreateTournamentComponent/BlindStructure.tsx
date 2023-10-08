@@ -27,7 +27,7 @@ const BlindStructure = ({...props}) => {
           style={[
             FontStyle.fs16,
             blind.BB ? styles.textInputOn : styles.textInputOff,
-            blind.SB ? styles.textFontOn : styles.textFontOff,
+            blind.BB ? styles.textFontOn : styles.textFontOff,
             styles.blindStructTitle,
             styles.blindStructTextinput,
           ]}

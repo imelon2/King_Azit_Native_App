@@ -9,10 +9,10 @@ import {Item} from 'react-native-picker-select';
 import NewTournamentSetBlind from './NewTournamentSetBlind';
 import NewTournamentSetInfo from './NewTournamentSetInfo';
 import {IBlind, IGrade, INIT_DATE, INIT_TIME, NEW_INIT_GRADE} from '@/config/blind';
-import {CUSTOM, RESET_CUSTOM, checkBlind, getBlindBookmarks} from '@/modules/BlindBookmarks';
+import {CUSTOM, RESET_CUSTOM, checkBlind, checkGrade, getBlindBookmarks} from '@/modules/BlindBookmarks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NewTournamentSetPrize from './NewTournamentSetPrize';
-import { TicketType } from '@/config/tickets';
+import {TicketType} from '@/config/tickets';
 
 type IHeaderTitle = '상세정보' | 'Prize' | '블라인드';
 
@@ -47,7 +47,7 @@ function NewTournament() {
    * @todo 게임 생성 시, isAntes = false면 Ante 전부 0
    */
   const [isAntes, setIsAntes] = useState<boolean>(true);
-  const [grade,setGrade] = useState<IGrade[]>([NEW_INIT_GRADE()]);
+  const [grade, setGrade] = useState<IGrade[]>([NEW_INIT_GRADE()]);
 
   useEffect(() => {
     // LOCAL STORAGE 리셋 함수
@@ -58,32 +58,52 @@ function NewTournament() {
     // REMOVE();
 
     // 페이지 나갈 시, CUSTOM DATA 초기화
-    return (() => {
+    return () => {
       RESET_CUSTOM();
-    })
+    };
   }, []);
-
-
-  const checkInputNull = () => {
-    const is =
-      !!title && // 타이틀 제목
-      (!!gameStart.date && gameStart.date != INIT_DATE) && // 게임시작(일)
-      (!!gameStart.time && gameStart.time != INIT_DATE)&& // 게임시작(시간)
-      (!!deadline.date && deadline.date != INIT_DATE) &&  // 레지마감(일)
-      (!!deadline.time && deadline.time != INIT_DATE) && // 레지마감(시간)
-      !!place && //토너먼트 위치
-      // entryCondition && // 참여조건
-      (!!ticket.type && !!ticket.count) && // Buy-In
-      !!detail && // 세부 정보
-      // entry && // 엔트리
-      !!prize && // 토너먼트 프라이즈
-      !!blindTime // 블라인드 길이
-      blind.every((value) => checkBlind(value))
-      ;
-    console.log("is",is); 
-  }; 
-
+  
   /**
+   * @description 페이지 변환시 발생하는 이벤트
+   */
+  const checkInputNull = (tag:"Blind" | "Prize") => {
+    if(tag === 'Blind') {
+      const is =
+        !!title && // 타이틀 제목
+        !!gameStart.date &&
+        gameStart.date != INIT_DATE && // 게임시작(일)
+        !!gameStart.time &&
+        gameStart.time != INIT_DATE && // 게임시작(시간)
+        !!deadline.date &&
+        deadline.date != INIT_DATE && // 레지마감(일)
+        !!deadline.time &&
+        deadline.time != INIT_DATE && // 레지마감(시간)
+        !!place && //토너먼트 위치
+        // entryCondition && // 참여조건
+        !!ticket.type &&
+        !!ticket.count && // Buy-In
+        !!detail && // 세부 정보
+        // entry && // 엔트리
+        !!prize && // 토너먼트 프라이즈
+        !!blindTime && // 블라인드 길이
+        blind.every(value => {
+          return checkBlind(value);
+        });
+      return is;
+    }
+    if(tag === 'Prize') {
+      return grade.every(value => {
+        return checkGrade(value);
+      });
+    }
+  };
+  
+  const createRoom = () => {
+
+  }
+  
+  /**
+   * @title Set Info/Blind/Prize UI 전환 기능
    * @description 페이지 변환시 발생하는 이벤트
    */
   const onChangeTitle = (title: IHeaderTitle) => {
@@ -93,7 +113,7 @@ function NewTournament() {
   /**
    * @description Picker의 Title이 변경될 때 발생하는 이벤트
    */
-  const onChangeBlindBookmarks = useCallback((async (data: any) => {
+  const onChangeBlindBookmarks = useCallback(async (data: any) => {
     // 선택된 Picker Title로 변경
     setSelectedBookmark(data);
     // 선택된 Picker Title이 "CUSTOM"인 경우, 빈 Blind Object로 변경
@@ -102,12 +122,12 @@ function NewTournament() {
       setBlindTime('');
       return;
     }
-  
+
     const _blindBookmarks = await getBlindBookmarks();
     const {time, structs} = _blindBookmarks![data];
     setBlindTime(time);
     setBlind(structs);
-  }),[])
+  }, []);
 
   /**
    * @title Picker가 활성화될때 발생하는 이벤트
@@ -127,7 +147,7 @@ function NewTournament() {
   };
 
   return (
-    <SafeAreaView style={[GlobalStyles.container, {width: '100%', height: '100%'}]}>
+    <SafeAreaView style={[GlobalStyles.container, {flex:1}]}>
       {currentTitle == '상세정보' ? (
         <NewTournamentSetInfo
           onChangeTitle={onChangeTitle}
@@ -178,11 +198,11 @@ function NewTournament() {
       ) : (
         <></>
       )}
-      {currentTitle == 'Prize' ? <NewTournamentSetPrize 
-      onChangeTitle={onChangeTitle}
-      setGrade={setGrade}
-      grade={grade}
-      /> : <></>}
+      {currentTitle == 'Prize' ? (
+        <NewTournamentSetPrize onChangeTitle={onChangeTitle} setGrade={setGrade} grade={grade} />
+      ) : (
+        <></>
+      )}
     </SafeAreaView>
   );
 }
