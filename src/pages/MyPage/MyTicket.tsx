@@ -3,10 +3,10 @@ import {ActivityIndicator, SafeAreaView, FlatList, Image, StyleSheet, Text, View
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import MyTicketCarousel from './MyPageCompoents/MyTicketCarousel';
 import TicketHistoryView from './MyPageCompoents/TicketHistoryView';
-import {Shadow} from 'react-native-shadow-2';
-import {heightData, img, ticketsListType, widthData} from '@/modules';
+import {heightData, ticketsListType, widthData} from '@/modules';
 import {HomeRootStackParamList, MyPageRootStackParamList} from 'AppInner';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {Ticket_Img} from '@/config';
 import axios from 'axios';
 import Config from 'react-native-config';
 import {useSelector} from 'react-redux';
@@ -39,17 +39,17 @@ function MyTicket(): JSX.Element {
   const [CARDS, setCARDS] = useState<ticketsListType[]>([
     {
       type: 'black',
-      image: img['basic'].BlackCardImg,
+      image: Ticket_Img['basic'].BlackCardImg,
       count: black,
     },
     {
       type: 'red',
-      image: img['basic'].RedCardImg,
+      image: Ticket_Img['basic'].RedCardImg,
       count: red,
     },
     {
       type: 'gold',
-      image: img['basic'].GoldCardImg,
+      image: Ticket_Img['basic'].GoldCardImg,
       count: gold,
     },
   ]);
