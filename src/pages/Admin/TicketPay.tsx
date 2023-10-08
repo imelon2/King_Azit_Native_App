@@ -33,6 +33,10 @@ type AdminScreenProps = NativeStackScreenProps<
   'TicketPay'
 >;
 
+/**
+ * @description Admin QR 인증 후, 사용자 티켓 소모 페이지
+ * @deprecated : 현지 기획에서 빠진 내용
+ */
 function TicketPay({route}: AdminScreenProps) {
   const {access_token} = useSelector((state: RootState) => state.user);
   const [loading,setLoading ] = useState(false);
@@ -45,6 +49,8 @@ function TicketPay({route}: AdminScreenProps) {
   const {uuid,memberId,type,max} = route.params;
   const state = !!count && !isOver;
 
+  console.log('TicketPay');
+  
 
   const navigation =
     useNavigation<

@@ -3,57 +3,53 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // 더미데이터
 const list: IBlindBookmarks = {
-  bookmarkTitle1: [
-    {
-      SB: '100',
-      BB: '200',
-      Ante: '0',
-    },
-    {
-      SB: '200',
-      BB: '400',
-      Ante: '0',
-    },
-    {
-      SB: '200',
-      BB: '400',
-      Ante: '0',
-    },
-    {
-      SB: '200',
-      BB: '400',
-      Ante: '0',
-    },
-    {
-      SB: '200',
-      BB: '400',
-      Ante: '0',
-    },
-    {
-      SB: '200',
-      BB: '400',
-      Ante: '0',
-    },
-  ],
-  bookmarkTitle2: [
-    {
-      SB: '100',
-      BB: '200',
-      Ante: '0',
-    },
-  ],
+  bookmarkTitle2: {
+    time:"1",
+    structs:[
+      {
+        SB: '100',
+        BB: '200',
+        Ante: '0',
+      },
+    ]
+  }
 };
 
+export let CUSTOM:IBlind[] =[{
+  "SB":"",
+  "BB":"",
+  "Ante":""
+}]
+
+export const RESET_CUSTOM = () => {
+  CUSTOM = [{
+    "SB":"",
+    "BB":"",
+    "Ante":""
+  }]
+}
 /**
  * @description Local에 저장된 Blind Bookmarks 읽기(READ) 함수
  * @returns Local에 저장된 Blind Bookmarks
  */
 export const getBlindBookmarks = async () => {
-  const data: IBlindBookmarks | null =
-    ((await AsyncStorage.getItem('blindBookmarks')) as unknown as IBlindBookmarks) || list
+  let data : IBlindBookmarks|null;
+  const _data: string | null = await AsyncStorage.getItem('blindBookmarks');
+  if(_data) {
+    data = JSON.parse(_data);
+  } else {
+    data = null;
+  }
   return data;
 };
 
+/**
+ * @description Local에 저장된 Blind Bookmarks 추가 및 업데이트(Update & Merge) 함수
+ */
+export const mergeBlindBookmarks = async (newBlind : IBlindBookmarks) => {
+  await AsyncStorage.mergeItem('blindBookmarks',JSON.stringify(newBlind))
+
+}
 /**
  * 
  * @param blind 블라인드(SB/BB/Ante)

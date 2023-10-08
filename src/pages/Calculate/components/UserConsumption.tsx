@@ -145,7 +145,7 @@ function UserConsumption() {
           {ticketData.map((val: any, key: any) => (
             <View key={key} style={styles.ticketBox}>
               <View style={{flex: 1}}>
-                <Image source={require('../../../assets/black_ticket.png')} />
+                {/* <Image source={require('../../../assets/black_ticket.png')} /> */}
               </View>
               <View style={{flex: 2.5}}>
                 <Text style={[styles.fontStyle2, {marginTop: 7 * heightScale}]}>{val.name}</Text>

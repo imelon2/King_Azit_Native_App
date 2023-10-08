@@ -35,21 +35,20 @@ import TicketsResult, {ticketsResultType} from './src/pages/Admin/TicketsResult'
 import {deepLinkController} from './src/modules/Linking';
 import Forbidden from './src/pages/Admin/Forbidden';
 import AdminTicketsHistory from './src/pages/Admin/AdminTicketsHistory';
-import QRCodeScanner from './src/pages/Admin/Components/QRCodeScanner';
+import QRCodeScanner from './src/pages/MainPage/Admin/QRCodeScanner';
 import CreateRoom from './src/pages/MainPage/Admin/CreateTournament';
 import CalculatePage from './src/pages/Calculate/CalculatePage';
 import MonthCirculation from './src/pages/Calculate/components/MonthCirculation';
 import TotalPublish from './src/pages/Calculate/components/TotalPublish';
 import UserConsumption from './src/pages/Calculate/components/UserConsumption';
 import UserConsumptionDetail from './src/pages/Calculate/components/UserConsumptionDetail';
-import {TicketType} from './src/modules/ticketsList';
 import GiftTicket from './src/pages/MainPage/GiftTicket';
-import Prize from './src/pages/Admin/Prize';
-import SetBanner from './src/pages/Admin/SetBanner';
+import SetBanner from './src/pages/MainPage/Admin/SetBanner';
 import UserInformation, {UserInformationType} from './src/pages/Admin/UserInformation';
 import CalendarPage from './src/pages/Calendar/CalendarPage';
 import TournamentInfo from '@/pages/MainPage/TournamentInfo';
 import NewTournament from '@/pages/MainPage/Admin/AdminComponent/CreateTournamentComponent/NewTournament';
+import { TicketType } from '@/config/tickets';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -112,7 +111,6 @@ export type HomeRootStackParamList = {
   UserConsumptionDetail: {
     month: number;
   };
-  Prize: undefined;
   SetBanner: undefined;
   TournamentInfo: undefined;
 };
@@ -254,7 +252,6 @@ function AppInner() {
             component={UserConsumptionDetail}
             options={{animation: 'none'}}
           />
-          <HomeStack.Screen name="Prize" component={Prize} options={{animation: 'none'}} />
           <HomeStack.Screen name="SetBanner" component={SetBanner} options={{animation: 'none'}} />
           <HomeStack.Screen name="TournamentInfo" component={TournamentInfo} options={{animation: 'none'}} />
           <HomeStack.Screen

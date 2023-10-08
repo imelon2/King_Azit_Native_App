@@ -5,9 +5,10 @@ import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import {useSelector} from 'react-redux';
 import {HomeRootStackParamList, MyPageRootStackParamList} from 'AppInner';
 import {RootState} from '@/store/reducer';
-import {FontStyle, GlobalStyles, heightData, width, widthData, UpperString, TicketType, img} from '@/modules';
+import {FontStyle, GlobalStyles, heightData, width, widthData, UpperString} from '@/modules';
 import {TournamentInfoBoxDemo, TournamentInfoBox, Banner} from '@/components';
 import {UserStyle} from './UserStyle';
+import { TicketType, Ticket_Img } from '@/config/tickets';
 
 function MainPageUser() {
   const navigation = useNavigation<NavigationProp<HomeRootStackParamList & MyPageRootStackParamList>>();
@@ -15,17 +16,17 @@ function MainPageUser() {
   const CARDS = [
     {
       type: 'black',
-      image: img.width.BlackCardImg,
+      image: Ticket_Img.width.BlackCardImg,
       count: black,
     },
     {
       type: 'red',
-      image: img.width.RedCardImg,
+      image: Ticket_Img.width.RedCardImg,
       count: red,
     },
     {
       type: 'gold',
-      image: img.width.GoldCardImg,
+      image: Ticket_Img.width.GoldCardImg,
       count: gold,
     },
   ];

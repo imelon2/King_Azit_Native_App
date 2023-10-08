@@ -6,3 +6,4 @@ export * from './QrCode';
 export * from './Rectangle';
 export * from './TabBar';
 export * from './TournamentInfoBox';
+export * from './PopupWrapper';
