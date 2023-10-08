@@ -1,10 +1,9 @@
-import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {Alert, Dimensions, Image, Pressable, StyleSheet, Text, TextInput, View, SafeAreaView} from 'react-native';
-import {RootStackParamList} from '../../../AppInner';
-import {widthData, heightData} from '../../modules/globalStyles';
+import {RootStackParamList} from 'AppInner';
+import {widthData, heightData} from '@/modules';
 import {BottomButton} from '@/components/Button';
-import {SignUpstyles} from '@/modules';
+import {SignUpstyles} from './SignUpstyles';
 const heightScale = heightData;
 
 type SignUpFinalScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUpFinal'>;
@@ -15,7 +14,7 @@ export function SignUpFinal({navigation}: SignUpFinalScreenProps) {
       <SafeAreaView style={styles.container}>
         <View style={{flex: 1}}></View>
         <View style={styles.headerStyle}>
-          <Image source={require('../../assets/MainLogo.png')} style={styles.mainLogo} />
+          <Image source={require('@/assets/MainLogo.png')} style={styles.mainLogo} />
         </View>
         <View style={styles.contentStyle}>
           <Text style={styles.titleTextStyle}>회원가입이 완료 되었습니다.</Text>

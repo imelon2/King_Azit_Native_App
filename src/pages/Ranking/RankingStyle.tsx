@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {heightData} from '@/modules';
+import {heightData, widthData} from '@/modules';
 const heightScale = heightData;
 
 export const styles = StyleSheet.create({
@@ -22,7 +22,7 @@ export const styles = StyleSheet.create({
   },
   bannerBoxPostion: {
     position: 'absolute',
-    width: 320 * heightScale,
+    width: 320 * widthData,
     height: 65 * heightScale,
     borderRadius: 6 * heightScale,
     marginTop: 20 * heightScale,
@@ -87,7 +87,7 @@ export const styles = StyleSheet.create({
     fontSize: 14 * heightScale,
   },
   rankingBox: {
-    width: 389 * heightScale,
+    width: 389 * widthData,
     height: '100%',
     marginTop: heightScale * 10,
   },
@@ -120,22 +120,22 @@ export const styles = StyleSheet.create({
     color: 'black',
   },
   lineRankingImg: {
-    width: 51 * heightScale,
+    width: 51 * widthData,
     height: '100%',
   },
   userIcon: {
     height: heightScale * 30,
-    width: heightScale * 30,
+    width: widthData * 30,
     borderRadius: 100,
     // marginLeft: heightScale * 20,
     marginTop: (heightScale * (50 - 30)) / 2,
     // resizeMode: 'center',
   },
   RankingTextBox: {
-    width: 25 * heightScale,
+    width: 25 * widthData,
   },
   imgBox: {
-    width: 25 * heightScale,
+    width: 25 * widthData,
     alignItems: 'center',
     marginLeft: 20 * heightScale,
   },
@@ -147,7 +147,7 @@ export const styles = StyleSheet.create({
     paddingBottom: 10 * heightScale,
   },
   playerImg: {
-    width: 77 * heightScale,
+    width: 77 * widthData,
     height: 77 * heightScale,
     marginTop: 12 * heightScale,
     borderRadius: 60,
@@ -157,18 +157,18 @@ export const styles = StyleSheet.create({
   playerRound: {
     position: 'absolute',
     marginTop: 33 * heightScale,
-    width: 128 * heightScale,
+    width: 128 * widthData,
     height: 128 * heightScale,
   },
   playerCrown: {
     marginTop: 6 * heightScale,
-    width: 29 * heightScale,
+    width: 29 * widthData,
     height: 23 * heightScale,
     resizeMode: 'contain',
   },
 
   playerImg2: {
-    width: 58 * heightScale,
+    width: 58 * widthData,
     height: 58 * heightScale,
     marginTop: 15 * heightScale,
     resizeMode: 'contain',
@@ -179,12 +179,12 @@ export const styles = StyleSheet.create({
   playerRound2: {
     position: 'absolute',
     marginTop: 20 * heightScale,
-    width: 90 * heightScale,
+    width: 90 * widthData,
     height: 90 * heightScale,
     resizeMode: 'contain',
   },
   playerCrown2: {
-    width: 18 * heightScale,
+    width: 18 * widthData,
     height: 14 * heightScale,
   },
 
@@ -192,7 +192,7 @@ export const styles = StyleSheet.create({
     position: 'absolute',
     top: 1,
     left: 1,
-    width: 128 * heightScale,
+    width: 128 * widthData,
     height: 128 * heightScale,
   },
   pointContainer: {
@@ -202,14 +202,14 @@ export const styles = StyleSheet.create({
   },
   pointContainer_side: {
     marginTop: 59 * heightData,
-    width: 113 * heightScale,
+    width: 113 * widthData,
     height: 154 * heightScale,
     alignItems: 'center',
     position: 'relative',
   },
   pointContainer_img: {
     position: 'absolute',
-    width: 113 * heightScale,
+    width: 113 * widthData,
     height: 154 * heightScale,
   },
   pointContainer_text: {
@@ -236,7 +236,7 @@ export const styles = StyleSheet.create({
   },
   pointContainer_img_center: {
     position: 'absolute',
-    width: 133 * heightScale,
+    width: 133 * widthData,
     height: 197 * heightScale,
     resizeMode: 'contain',
   },

@@ -1,7 +1,6 @@
 export * from './BinaryToBase64';
 export * from './Linking';
 export * from './MainStyles';
-export * from './SignUpstyles';
 export * from './TimeFormat';
 export * from './String';
 export * from './decodeJWT';

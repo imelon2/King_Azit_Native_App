@@ -1,46 +1,31 @@
 import React, {useEffect, useState} from 'react';
-import {
-  ActivityIndicator,
-  SafeAreaView,
-  FlatList,
-  Image,
-  StyleSheet,
-  Text,
-  View,
-  Pressable,
-} from 'react-native';
+import {ActivityIndicator, SafeAreaView, FlatList, Image, StyleSheet, Text, View, Pressable} from 'react-native';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import MyTicketCarousel from './MyPageCompoents/MyTicketCarousel';
 import TicketHistoryView from './MyPageCompoents/TicketHistoryView';
 import {Shadow} from 'react-native-shadow-2';
-import {heightData} from '../../modules/globalStyles';
-import {
-  HomeRootStackParamList,
-  MyPageRootStackParamList,
-} from '../../../AppInner';
+import {heightData, img, ticketsListType, widthData} from '@/modules';
+import {HomeRootStackParamList, MyPageRootStackParamList} from 'AppInner';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import ticketsList, {img, ticketsListType} from '../../modules/ticketsList';
 import axios from 'axios';
 import Config from 'react-native-config';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store/reducer';
+import {useSelector} from 'react-redux';
+import {RootState} from '@/store/reducer';
+import {Header} from '@/components';
 
 const heightScale = heightData;
 
 export type ticketHistory = {
-  amount:number;
-  date:string;
-  summary:string;
-  type:string;
-}
+  amount: number;
+  date: string;
+  summary: string;
+  type: string;
+};
 
 function MyTicket(): JSX.Element {
-  const navigation =
-    useNavigation<
-      NavigationProp<MyPageRootStackParamList & HomeRootStackParamList>
-    >();
-    const {red, black, gold} = useSelector((state: RootState) => state.ticket);
-    const {access_token} = useSelector((state: RootState) => state.user);
+  const navigation = useNavigation<NavigationProp<MyPageRootStackParamList & HomeRootStackParamList>>();
+  const {red, black, gold} = useSelector((state: RootState) => state.ticket);
+  const {access_token} = useSelector((state: RootState) => state.user);
   const [loading, setLoading] = useState(false);
   const [cache, setCache] = useState();
 
@@ -72,77 +57,64 @@ function MyTicket(): JSX.Element {
   useEffect(() => {
     const getTicketsUseHistory = async () => {
       try {
-        setLoading(true)
-          const getTicketsUseHistory = await axios.get(
-              `${Config.API_URL}/member/ticket/history/use`,
-              {
-                  headers: {
-                      authorization: `Bearer ${access_token}`,
-                  },
-              },
-          );
-          setLISTS(getTicketsUseHistory.data)
+        setLoading(true);
+        const getTicketsUseHistory = await axios.get(`${Config.API_URL}/member/ticket/history/use`, {
+          headers: {
+            authorization: `Bearer ${access_token}`,
+          },
+        });
+        setLISTS(getTicketsUseHistory.data);
       } catch (error) {
-          console.error(error);
+        console.error(error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-  };
-  getTicketsUseHistory();
-  },[cache])
-
+    };
+    getTicketsUseHistory();
+  }, [cache]);
 
   return (
     <SafeAreaView style={styles.container}>
-      <View>
-        <View style={styles.headerStyle}>
-          <Text style={styles.fontStyle}>마이 티켓</Text>
-        </View>
-        <IconAntDesign
-          name="left"
-          size={heightScale * 28}
-          color="white"
-          style={{
-            position: 'absolute',
-            marginTop: (heightScale * (61 - 28)) / 2,
-            marginLeft: heightScale * 15,
-          }}
-          onPress={() => navigation.goBack()}
-        />
-      </View>
+      <Header
+        title="마이 티켓"
+        leftIcon={() => (
+          <IconAntDesign
+            name="left"
+            size={heightScale * 28}
+            color="white"
+            style={styles.headerLeftIcon}
+            onPress={() => navigation.goBack()}
+          />
+        )}
+      />
+
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
-        <Image
-          style={styles.cardButtonStyle}
-          source={require('../../assets/CardButton.png')}
-        />
+        <Image style={styles.cardButtonStyle} source={require('@/assets/CardButton.png')} />
+        <Image style={styles.lightImg} source={require('@/assets/light.png')} />
       </View>
       {/* 티켓 Carousel */}
-      <View style={{marginTop: heightScale * 45}}>
+      <View style={{marginTop: heightScale * 32}}>
         <MyTicketCarousel
           setSelectCard={setSelectCard}
           CARDS={CARDS}
-          width={heightScale*200}
-          height={heightScale*296}
-          gap={heightScale*40}
+          width={widthData * 154}
+          height={heightScale * 227}
+          gap={widthData * 30}
         />
       </View>
       {/* 티켓 보유 개수 */}
       <View style={{alignItems: 'center'}}>
-        <Text style={styles.ticketInfoStyle}>
-          보유 개수: {selectCard.count}장
-        </Text>
+        <Text style={styles.ticketInfoStyle}>보유 개수: {selectCard.count}장</Text>
       </View>
       {/* 선물하기 버튼 */}
       <View style={styles.giftWrapperStyle}>
-        <Shadow
-          distance={5}
-          startColor={"#FCFF72"}>
-          <Pressable
-            style={styles.giftButtonStyle}
-            onPress={() => {navigation.navigate('GiftTicket')}}>
-            <Text style={styles.giftFontStyle}>선물하기</Text>
-          </Pressable>
-        </Shadow>
+        <Pressable
+          style={styles.giftButtonStyle}
+          onPress={() => {
+            navigation.navigate('GiftTicket');
+          }}>
+          <Text style={styles.giftFontStyle}>선물하기</Text>
+        </Pressable>
       </View>
       {/* 구매/결제 내역 contents */}
       <View style={{paddingHorizontal: heightScale * 24, flex: 1}}>
@@ -150,27 +122,25 @@ function MyTicket(): JSX.Element {
         <View style={{flexDirection: 'row'}}>
           <Text style={[styles.fontStyle, styles.contentsStyle]}>사용내역</Text>
           <View style={{alignItems: 'flex-end', flex: 1}}>
-            <Pressable
-              style={styles.allViewWrapper}
-              onPress={() => navigation.navigate('TicketsHistorys')}>
+            <Pressable style={styles.allViewWrapper} onPress={() => navigation.navigate('TicketsHistorys')}>
               <Text style={styles.allViewTextStyle}>더보기 </Text>
-              <IconAntDesign
-                name="right"
-                size={heightScale * 14}
-                color="white"
-              />
+              <IconAntDesign name="right" size={heightScale * 14} color="white" />
             </Pressable>
           </View>
         </View>
         {/* 구매/결제 내역 리스트 */}
         {LISTS.length == 0 ? (
-          <View style={{justifyContent:'center',alignItems:'center',marginTop:30}}>
-            {loading ? <ActivityIndicator /> :<Text style={{fontSize:16,color:'#929292',fontWeight:'100'}}>티켓 없습니다.</Text>}
+          <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 20 * heightScale}}>
+            {loading ? (
+              <ActivityIndicator />
+            ) : (
+              <Text style={{fontSize: 16, color: '#929292', fontWeight: '100'}}>티켓 없습니다.</Text>
+            )}
           </View>
         ) : (
           <FlatList
             data={LISTS}
-            keyExtractor={(_,index) => String(index)}
+            keyExtractor={(_, index) => String(index)}
             bounces={false}
             renderItem={({item}) => <TicketHistoryView data={item} />}
           />
@@ -184,7 +154,12 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: 'black',
   },
-  fontStyle: {fontSize: heightScale * 18, fontWeight: 'bold', color: 'white'},
+  headerLeftIcon: {
+    position: 'absolute',
+    marginTop: (heightData * (61 - 28)) / 2,
+    marginLeft: heightData * 15,
+  },
+  fontStyle: {fontSize: heightScale * 15, fontWeight: 'bold', color: 'white'},
   headerStyle: {
     height: heightScale * 61,
     justifyContent: 'center',
@@ -194,41 +169,50 @@ const styles = StyleSheet.create({
   },
   cardButtonStyle: {
     resizeMode: 'contain',
-    width: heightScale * 279,
-    height: heightScale * 104,
-    top: heightScale * 260,
+    width: heightScale * 210,
+    height: widthData * 40,
+    top: heightScale * 245,
+    position: 'absolute',
+  },
+  lightImg: {
+    resizeMode: 'contain',
+    width: heightScale * 800,
+    height: widthData * 160,
+    top: heightScale * 190,
     position: 'absolute',
   },
   ticketInfoStyle: {
     paddingHorizontal: heightScale * 10,
-    marginVertical: heightScale * 34.5,
-    backgroundColor: 'black',
-    fontSize: heightScale * 14,
-    fontWeight: 'bold',
+    marginVertical: heightScale * 16,
+    // backgroundColor: 'black',
+    fontSize: heightScale * 13,
+    // fontWeight: 'bold',
     color: 'white',
   },
   giftWrapperStyle: {
     alignItems: 'center',
-    paddingBottom: heightScale * 20,
-    borderBottomWidth: heightScale * 5,
+    paddingBottom: heightScale * 50,
+    borderBottomWidth: heightScale * 3,
     borderBottomColor: '#404040',
+    marginTop: 35 * heightScale,
+    // marginBottom: 50 * heightScale,
   },
   giftButtonStyle: {
     alignItems: 'center',
     justifyContent: 'center',
-    height: heightScale * 46 - 5,
-    width: heightScale * 200 - 5,
+    height: widthData * 40,
+    width: heightScale * 170,
     backgroundColor: '#F5FF82',
-    borderRadius: 30,
+    borderRadius: 20,
   },
   giftFontStyle: {
-    fontSize: heightScale * 17,
-    fontWeight: 'bold',
+    fontSize: heightScale * 15,
+    fontWeight: '500',
     color: 'black',
   },
   contentsStyle: {
-    paddingRight: heightScale * 35,
-    paddingVertical: heightScale * 22,
+    paddingRight: heightScale * 19,
+    paddingTop: heightScale * 17,
   },
   allViewWrapper: {
     flexDirection: 'row',
@@ -236,7 +220,7 @@ const styles = StyleSheet.create({
     paddingVertical: heightScale * 22,
   },
   allViewTextStyle: {
-    fontSize: heightScale * 14,
+    fontSize: heightScale * 13,
     fontWeight: 'normal',
     color: 'white',
   },

@@ -41,7 +41,7 @@ export const UserStyle = StyleSheet.create({
     justifyContent: 'center',
   },
   ticketNameBox: {
-    width: 120 * heightData,
+    width: 120 * widthData,
     height: 26 * heightData,
     borderWidth: 1,
     borderRadius: 12 * heightData,
@@ -85,11 +85,11 @@ export const UserStyle = StyleSheet.create({
   subFont: {
     color: '#fff',
     fontSize: 13 * heightData,
-    width: 297 * heightData,
+    width: 297 * widthData,
     marginTop: 15 * heightData,
   },
   benefitImg: {
-    width: 308 * heightData,
+    width: 308 * widthData,
     height: 101 * heightData,
     marginTop: 20 * heightData,
   },

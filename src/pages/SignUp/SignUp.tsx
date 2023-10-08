@@ -1,5 +1,5 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {RootStackParamList} from '@/../AppInner';
+import {RootStackParamList} from 'AppInner';
 import {
   SignUpHome,
   SignUpId,

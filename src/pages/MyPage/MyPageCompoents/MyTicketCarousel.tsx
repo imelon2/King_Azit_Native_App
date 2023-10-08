@@ -1,7 +1,7 @@
 import React, {memo, useCallback, useRef} from 'react';
 import {Animated, Dimensions, StyleSheet, View} from 'react-native';
 const {width} = Dimensions.get('screen');
-import {heightData} from '../../../modules/globalStyles';
+import {heightData} from '@/modules';
 const heightScale = heightData;
 
 const MyTicketCarousel = ({...props}) => {
@@ -14,8 +14,8 @@ const MyTicketCarousel = ({...props}) => {
 
   const styles = StyleSheet.create({
     cardStyle: {
-      width: heightScale * props.width,
-      height: heightScale * props.height,
+      width: props.width,
+      height: props.height,
       marginHorizontal: props.gap / 2,
       borderWidth: 1,
       borderColor: '#A1A1A1',
@@ -31,9 +31,7 @@ const MyTicketCarousel = ({...props}) => {
   const viewabilityConfig = {
     itemVisiblePercentThreshold: 50, // View에 80% 이상 노출될 경우 실행
   };
-  const viewabilityConfigCallbackPairs = useRef([
-    {viewabilityConfig, onViewableItemsChanged},
-  ]);
+  const viewabilityConfigCallbackPairs = useRef([{viewabilityConfig, onViewableItemsChanged}]);
 
   const getItemLayout = (data: any, index: any) => ({
     length: offsetX,
@@ -54,8 +52,7 @@ const MyTicketCarousel = ({...props}) => {
         decelerationRate="fast"
         snapToInterval={heightScale * props.width + props.gap}
         contentContainerStyle={{
-          paddingHorizontal:
-            (width - heightScale * props.width - props.gap) / 2,
+          paddingHorizontal: (width - heightScale * props.width - props.gap) / 2,
         }}
         onScroll={Animated.event(
           [
@@ -70,7 +67,7 @@ const MyTicketCarousel = ({...props}) => {
         viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
         // initialScrollIndex={1}
         getItemLayout={getItemLayout}
-        keyExtractor={(_,index) => String(index)}
+        keyExtractor={(_, index) => String(index)}
         renderItem={useCallback(({item, index}: {item: any; index: any}) => {
           const inputRange = [
             (index - 1) * offsetX, // next slide
@@ -84,7 +81,7 @@ const MyTicketCarousel = ({...props}) => {
           return (
             <Animated.View
               style={{
-                height: heightScale * props.height,
+                height: props.height,
                 transform: [{scale}],
               }}>
               <Animated.Image source={item.image} style={styles.cardStyle} />
