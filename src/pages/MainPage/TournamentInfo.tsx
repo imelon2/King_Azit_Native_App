@@ -103,5 +103,4 @@ function TournamentInfo() {
     </SafeAreaView>
   );
 }
-
 export default TournamentInfo;

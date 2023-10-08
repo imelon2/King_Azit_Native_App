@@ -1,6 +1,6 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Alert, Dimensions, Pressable, StyleSheet, Text, TextInput, View, SafeAreaView} from 'react-native';
+import {Alert, Dimensions, Pressable, Text, TextInput, View, SafeAreaView} from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import IconOcticons from 'react-native-vector-icons/Octicons';
 import IconSimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
@@ -17,6 +17,7 @@ import userSlice from '@/slices/user';
 import decodeJWT from '@/modules/decodeJWT';
 import {Header} from '@/components/Header';
 import {BottomButton} from '@/components/Button';
+import {SigninStyles} from './SigninStyles';
 
 type LoginScreenProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
@@ -88,7 +89,7 @@ function Login({navigation}: LoginScreenProps) {
 
   const isFillFrom = !!email && !!password;
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={SigninStyles.container}>
       <Header
         title=""
         leftIcon={() => (
@@ -107,15 +108,15 @@ function Login({navigation}: LoginScreenProps) {
         keyboardShouldPersistTaps={'handled'}
         showsVerticalScrollIndicator={false}
         scrollEnabled={false}>
-        <View style={[styles.title, {height: (height / 29) * 3}]}>
-          <Text style={styles.titleText}>Log In</Text>
+        <View style={[SigninStyles.title, {height: (height / 29) * 3}]}>
+          <Text style={SigninStyles.titleText}>Log In</Text>
         </View>
-        <View style={[styles.contentInput, {height: (height / 29) * 6}]}>
-          <View style={styles.inputWrapper}>
-            <View style={styles.textInputWrapper}>
+        <View style={[SigninStyles.contentInput, {height: (height / 29) * 6}]}>
+          <View style={SigninStyles.inputWrapper}>
+            <View style={SigninStyles.textInputWrapper}>
               <IconOcticons name="person" size={heightScale * 25} color="#fff" />
               <TextInput
-                style={styles.textInput}
+                style={SigninStyles.textInput}
                 ref={emailRef}
                 placeholder="아이디"
                 placeholderTextColor={'#6F6F6F'}
@@ -140,10 +141,10 @@ function Login({navigation}: LoginScreenProps) {
                 />
               </View>
             </View>
-            <View style={styles.textInputWrapper}>
+            <View style={SigninStyles.textInputWrapper}>
               <IconSimpleLineIcons name="lock" size={heightScale * 25} color="#fff" />
               <TextInput
-                style={styles.textInput}
+                style={SigninStyles.textInput}
                 ref={passwordRef}
                 placeholder="비밀번호"
                 placeholderTextColor={'#6F6F6F'}
@@ -186,21 +187,21 @@ function Login({navigation}: LoginScreenProps) {
           />
         </View>
         <View style={{flex: 1, alignItems: 'center'}}>
-          <View style={styles.findIDPW}>
+          <View style={SigninStyles.findIDPW}>
             <Pressable
               onPressIn={() => Alert.alert('구현예정', '아이디 찾기 미구현')}
               style={{flex: 1, flexDirection: 'row'}}>
-              <Text style={styles.subfont}>아이디 찾기</Text>
-              <Text style={[styles.subfont, {paddingLeft: 10 * heightScale}]}> |</Text>
+              <Text style={SigninStyles.subfont}>아이디 찾기</Text>
+              <Text style={[SigninStyles.subfont, {paddingLeft: 10 * heightScale}]}> |</Text>
             </Pressable>
             <Pressable
               onPress={() => Alert.alert('구현예정', '비밀번호 찾기 미구현')}
               style={{flex: 1, flexDirection: 'row'}}>
-              <Text style={styles.subfont}> 비밀번호 찾기</Text>
-              <Text style={[styles.subfont, {paddingLeft: 10 * heightScale}]}> |</Text>
+              <Text style={SigninStyles.subfont}> 비밀번호 찾기</Text>
+              <Text style={[SigninStyles.subfont, {paddingLeft: 10 * heightScale}]}> |</Text>
             </Pressable>
             <Pressable onPress={() => Alert.alert('구현예정', '비밀번호 찾기 미구현')} style={{flex: 1}}>
-              <Text style={styles.subfont}> 회원가입</Text>
+              <Text style={SigninStyles.subfont}> 회원가입</Text>
             </Pressable>
           </View>
         </View>
@@ -208,76 +209,5 @@ function Login({navigation}: LoginScreenProps) {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#000',
-    // backgroundColor: '#fff',
-    flex: 1,
-  },
-  title: {
-    justifyContent: 'center',
-  },
-  contentInput: {},
-  headerStyle: {
-    // backgroundColor:'orange',
-    justifyContent: 'center',
-    paddingHorizontal: 15,
-    borderBottomWidth: 2,
-    borderBottomColor: '#484848',
-  },
-  titleText: {
-    fontSize: heightScale * 22,
-    fontWeight: '400',
-    paddingLeft: heightScale * 20,
-    color: '#B9B9B9',
-  },
-  inputWrapper: {
-    paddingHorizontal: heightScale * 29,
-  },
-  textInputWrapper: {
-    marginTop: heightScale * 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: 'gray',
-    // paddingRight: 5 * heightScale,
-  },
-  textInput: {
-    fontSize: heightScale * 16,
-    height: heightScale * 50,
-    width: '85%',
-    paddingHorizontal: 10,
-    paddingBottom: 5,
-    color: '#fff',
-  },
-  findIDPW: {flex: 1, flexDirection: 'row', marginTop: heightScale * 20, width: 245 * heightScale},
-  loginButton: {
-    backgroundColor: '#D9D9D9',
-    height: heightScale * 64,
-    width: heightScale * 380,
-    borderRadius: heightScale * 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  onLiginButton: {
-    backgroundColor: '#F5FF82',
-  },
-  textStyle: {
-    color: 'black',
-    fontSize: heightScale * 18,
-    fontWeight: 'bold',
-  },
-  onTextStyle: {
-    color: '#000',
-    fontSize: heightScale * 18,
-  },
-  subfont: {
-    color: '#fff',
-    textAlign: 'center',
-    fontSize: 13 * heightScale,
-    fontWeight: '300',
-  },
-});
 
 export default Login;

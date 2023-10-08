@@ -1,8 +1,9 @@
 import {Text, View, SafeAreaView, Pressable} from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useState, useEffect} from 'react';
-import {RootStackParamList} from '@/../AppInner';
-import {SignUpstyles, heightData} from '@/modules';
+import {RootStackParamList} from 'AppInner';
+import {heightData} from '@/modules';
+import {SignUpstyles} from './SignUpstyles';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Icon2 from 'react-native-vector-icons/MaterialIcons';
 import {SignUpHeader} from './SignUpComponent/SignUpHeader';

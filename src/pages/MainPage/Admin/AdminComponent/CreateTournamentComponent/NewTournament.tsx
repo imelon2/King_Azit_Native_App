@@ -122,7 +122,6 @@ function NewTournament() {
       setBlindTime('');
       return;
     }
-
     const _blindBookmarks = await getBlindBookmarks();
     const {time, structs} = _blindBookmarks![data];
     setBlindTime(time);
