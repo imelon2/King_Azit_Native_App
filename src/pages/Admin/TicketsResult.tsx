@@ -1,17 +1,13 @@
-import {CommonActions} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useEffect} from 'react';
 import {Image, StyleSheet, Text, View, Pressable} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {HomeRootStackParamList} from '../../../AppInner';
-import {heightData} from '../../modules/globalStyles';
-import {TicketType} from '../../modules/ticketsList';
+import {HomeRootStackParamList} from 'AppInner';
+import {heightData, widthData} from '@/modules';
+import {TicketType} from '@/config';
 const heightScale = heightData;
 
-type TicketsResultScreenProps = NativeStackScreenProps<
-  HomeRootStackParamList,
-  'TicketsResult'
->;
+type TicketsResultScreenProps = NativeStackScreenProps<HomeRootStackParamList, 'TicketsResult'>;
 export type ticketsResultType = 'pay' | 'charge' | 'gift';
 
 function TicketsResult({route, navigation}: TicketsResultScreenProps) {
@@ -46,9 +42,7 @@ function TicketsResult({route, navigation}: TicketsResultScreenProps) {
     if (type === 'pay') {
       return (
         <>
-          <Text style={[styles.fontStyle, {marginBottom: heightScale * 40}]}>
-            {name}님의
-          </Text>
+          <Text style={[styles.fontStyle, {marginBottom: heightScale * 40}]}>{name}님의</Text>
           {tickets.map((data, i) => (
             <Text key={i} style={styles.fontStyle}>
               [{ticketsType(data.type)} {data.counts}장]
@@ -60,9 +54,7 @@ function TicketsResult({route, navigation}: TicketsResultScreenProps) {
     } else if (type === 'charge') {
       return (
         <>
-          <Text style={[styles.fontStyle, {marginBottom: heightScale * 40}]}>
-            {name}님에게
-          </Text>
+          <Text style={[styles.fontStyle, {marginBottom: heightScale * 40}]}>{name}님에게</Text>
           {tickets.map((data, i) => (
             <Text key={i} style={styles.fontStyle}>
               [{ticketsType(data.type)} {data.counts}장]
@@ -74,37 +66,26 @@ function TicketsResult({route, navigation}: TicketsResultScreenProps) {
     } else if (type === 'gift') {
       return (
         <>
-          <Text style={[styles.fontStyle, {marginBottom: heightScale * 40}]}>
-            {name}님에게
-          </Text>
+          <Text style={[styles.fontStyle, {marginBottom: heightScale * 40}]}>{name}님에게</Text>
           {tickets.map((data, i) => (
-            <Text key={i} style={styles.fontStyle}>
+            <Text key={i} style={styles.fontStyle2}>
               [{ticketsType(data.type)} {data.counts}장]
             </Text>
           ))}
-          <Text style={styles.fontStyle}>선물 하였습니다.</Text>
+          <Text style={styles.fontStyle2}>선물 하였습니다.</Text>
         </>
       );
     }
   };
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{alignItems: 'center'}}>
-        <Image
-          style={{
-            width: heightScale * 335,
-            height: heightScale * 250,
-            marginTop: heightScale * 122,
-          }}
-          source={require('../../assets/OpenCards.png')}
-        />
+      <View style={{alignItems: 'center', marginTop: heightScale * 330}}>
+        <Text style={[styles.fontStyle, {marginBottom: heightScale * 12}]}>선물하기 완료!</Text>
+        {resultText()}
       </View>
-      <View style={{alignItems: 'center'}}>{resultText()}</View>
       {/* Button */}
       <View style={styles.buttonWrapper}>
-        <Pressable
-          style={styles.buttonStyle}
-          onPress={() => navigation.navigate('Home')}>
+        <Pressable style={styles.buttonStyle} onPress={() => navigation.navigate('Home')}>
           <Text style={styles.buttonText}>확인</Text>
         </Pressable>
       </View>
@@ -116,18 +97,21 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: 'black',
   },
-  fontStyle: {fontSize: heightScale * 24, fontWeight: 'bold', color: 'white'},
+  fontStyle: {fontSize: heightScale * 22, fontWeight: 'bold', color: 'white'},
+  fontStyle2: {
+    fontSize: heightScale * 20,
+    color: 'white',
+  },
   buttonWrapper: {
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    marginBottom: heightScale * 38,
   },
   buttonStyle: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: heightScale * 390,
-    height: heightScale * 64,
+    width: widthData * 360,
+    height: heightScale * 70,
     backgroundColor: '#F5FF82',
     borderRadius: 4,
   },

@@ -11,12 +11,12 @@ import axios from 'axios';
 import {useSelector} from 'react-redux';
 import {HomeRootStackParamList} from 'AppInner';
 import ProfileImg from '../../components/ProfileImg';
-import {HeaderStyle, heightData} from '@/modules';
+import {HeaderStyle, heightData, widthData} from '@/modules';
 import {RootState} from '@/store/reducer';
 import SearchId from '../Admin/SearchId';
 import GiftTicketCountBox from './Component/GiftTicketCountBox';
 import {Header} from '@/components';
-import { Ticket_Img } from '@/config/tickets';
+import {Ticket_Img} from '@/config/tickets';
 
 const heightScale = heightData;
 const {width} = Dimensions.get('window');
@@ -260,23 +260,29 @@ const GiftTicket = () => {
       <Modal isVisible={ModalStatus} style={{alignItems: 'center', justifyContent: 'center'}}>
         <View style={styles.popUpComponent}>
           <View style={{flex: 1.5}}>
-            <Text style={[styles.fontStyle4, {paddingBottom: heightScale * 15, marginTop: 8 * heightScale}]}>
+            <Text style={[styles.fontStyle4, {marginTop: 18 * heightScale, textAlign: 'center'}]}>
               {userInfo.nickname}님에게
             </Text>
-            <Text style={[{}, styles.fontStyle4]}>
+            <Text style={[styles.fontStyle8, {textAlign: 'center'}]}>
               {blackState && `[Black Ticket ${black}장]`} {'\n'}
               {redState && `[Red Ticket ${red}장]`}
               {goldState && `[Gold Ticket ${gold}장]`}
               {'\n'}을 선물 하시겠습니까?
             </Text>
           </View>
-          <View style={{flex: 1, alignItems: 'flex-end', flexDirection: 'row', paddingHorizontal: 24 * heightScale}}>
-            <TouchableOpacity onPress={() => setModalStatus(false)} activeOpacity={1} style={styles.buttonStyle4}>
-              <Text style={styles.fontStyle6}>아니요</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => addtickets()} activeOpacity={1} style={styles.buttonStyle5}>
-              <Text style={styles.fontStyle7}>네</Text>
-            </TouchableOpacity>
+          <View
+            style={{
+              flex: 1,
+              alignItems: 'flex-end',
+              flexDirection: 'row',
+              width: 280 * widthData,
+            }}>
+            <Pressable onPress={() => setModalStatus(false)} style={styles.buttonStyle4}>
+              <Text style={styles.fontStyle6}>취소</Text>
+            </Pressable>
+            <Pressable onPress={() => addtickets()} style={styles.buttonStyle5}>
+              <Text style={styles.fontStyle7}>선물</Text>
+            </Pressable>
           </View>
         </View>
       </Modal>
@@ -326,12 +332,16 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   fontStyle6: {
-    fontSize: heightScale * 20,
+    fontSize: heightScale * 15,
     color: 'white',
   },
   fontStyle7: {
-    fontSize: heightScale * 20,
+    fontSize: heightScale * 15,
     color: 'black',
+  },
+  fontStyle8: {
+    fontSize: heightScale * 16,
+    color: 'white',
   },
   userIconImg: {
     marginLeft: heightScale * 10,
@@ -413,28 +423,29 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FF82',
   },
   buttonStyle4: {
-    width: 145 * heightScale,
-    height: 60 * heightScale,
+    width: 126 * heightScale,
+    height: 50 * heightScale,
     borderRadius: 6,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#8A8A8A',
-    marginRight: 33 * heightScale,
+    marginRight: 28 * heightScale,
+    borderColor: '#F5FF82',
+    borderWidth: 1,
   },
   buttonStyle5: {
-    width: 145 * heightScale,
-    height: 60 * heightScale,
+    width: 126 * heightScale,
+    height: 50 * heightScale,
     borderRadius: 6,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#f5ff82',
+    marginRight: 28 * heightScale,
+    backgroundColor: '#F5FF82',
   },
   popUpComponent: {
-    width: heightScale * 360,
-    height: heightScale * 250,
-    padding: heightScale * 24,
+    width: heightScale * 320,
+    height: widthData * 236,
+    padding: heightScale * 20,
     backgroundColor: '#353535',
-    // top: heightScale * 210,
     borderRadius: 20,
     alignItems: 'center',
   },
