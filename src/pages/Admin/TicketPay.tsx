@@ -14,24 +14,18 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {
-  HomeRootStackParamList,
-  MyPageRootStackParamList,
-} from '../../../AppInner';
+import {HomeRootStackParamList, MyPageRootStackParamList} from '../../../AppInner';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import {heightData} from '../../modules/globalStyles';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
 import {useHeaderHeight} from '@react-navigation/elements';
-import { img } from '../../modules/ticketsList';
+import {img} from '../../modules/ticketsList';
 import axios from 'axios';
 import Config from 'react-native-config';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store/reducer';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../store/reducer';
 const heightScale = heightData;
-type AdminScreenProps = NativeStackScreenProps<
-  HomeRootStackParamList,
-  'TicketPay'
->;
+type AdminScreenProps = NativeStackScreenProps<HomeRootStackParamList, 'TicketPay'>;
 
 /**
  * @description Admin QR 인증 후, 사용자 티켓 소모 페이지
@@ -39,36 +33,32 @@ type AdminScreenProps = NativeStackScreenProps<
  */
 function TicketPay({route}: AdminScreenProps) {
   const {access_token} = useSelector((state: RootState) => state.user);
-  const [loading,setLoading ] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [isOver, setIsOver] = useState(false);
-  const [count, setCount] = useState("");
+  const [count, setCount] = useState('');
   const [ticketName, setTicketName] = useState('');
   const [ticketImgUrl, setTicketImgUrl] = useState<any>();
   const [popUpState, setPopUpState] = useState(false);
   const headerHeight = useHeaderHeight();
-  const {uuid,memberId,type,max} = route.params;
+  const {uuid, memberId, type, max} = route.params;
   const state = !!count && !isOver;
 
   console.log('TicketPay');
-  
 
-  const navigation =
-    useNavigation<
-      NavigationProp<MyPageRootStackParamList & HomeRootStackParamList>
-    >();
+  const navigation = useNavigation<NavigationProp<MyPageRootStackParamList & HomeRootStackParamList>>();
 
   useEffect(() => {
     if (type == 'black') {
-      setTicketName('블랙티켓')
-      setTicketImgUrl(img['basic'].BlackCardImg)
+      setTicketName('블랙티켓');
+      setTicketImgUrl(img['basic'].BlackCardImg);
     } else if (type == 'red') {
-      setTicketName('레드티켓')
-      setTicketImgUrl(img['basic'].RedCardImg)
+      setTicketName('레드티켓');
+      setTicketImgUrl(img['basic'].RedCardImg);
     } else if (type == 'gold') {
-      setTicketName('골드티켓')
-      setTicketImgUrl(img['basic'].GoldCardImg)
+      setTicketName('골드티켓');
+      setTicketImgUrl(img['basic'].GoldCardImg);
     }
-  },[])
+  }, []);
 
   const onChange = useCallback((text: any) => {
     if (text > max) {
@@ -79,28 +69,32 @@ function TicketPay({route}: AdminScreenProps) {
     setCount(text.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1'));
   }, []);
 
-  const useTickets = useCallback(async() => {
+  const useTickets = useCallback(async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       await axios.put(
         `${Config.API_URL}/admin/usetickets`,
         {
-            "uuid": uuid,
-            "type": type,
-            "amount": count,
-            "usage":"qr"
-          },
+          uuid: uuid,
+          type: type,
+          amount: count,
+          usage: 'qr',
+        },
         {
           headers: {
             Authorization: `Bearer ${access_token}`,
           },
         },
       );
-      navigation.navigate('TicketsResult',{name:memberId,type:'pay',tickets:[{type:type,counts:Number(count)}]})
+      navigation.navigate('TicketsResult', {
+        name: memberId,
+        type: 'pay',
+        tickets: [{type: type, counts: Number(count)}],
+      });
     } catch (error) {
       Alert.alert('Error', '내부 문제로 티켓 충전이 취소됬습니다.\n' + error);
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   }, [state]);
 
@@ -111,7 +105,6 @@ function TicketPay({route}: AdminScreenProps) {
     Keyboard.dismiss();
     setPopUpState(true);
   }, [state]);
-
 
   return (
     <SafeAreaView style={styles.container}>
@@ -138,12 +131,8 @@ function TicketPay({route}: AdminScreenProps) {
         keyboardVerticalOffset={headerHeight}>
         {/* info content */}
         <View style={{flexDirection: 'row', marginTop: heightScale * 50}}>
-          <Image
-            style={styles.ticketBox}
-            source={ticketImgUrl}
-          />
-          <View
-            style={{marginTop: heightScale * 35, marginLeft: heightScale * 32}}>
+          <Image style={styles.ticketBox} source={ticketImgUrl} />
+          <View style={{marginTop: heightScale * 35, marginLeft: heightScale * 32}}>
             <Text style={styles.fontStyle2}>{memberId}님의</Text>
             <Text style={styles.fontStyle2}>{ticketName}을 차감합니다.</Text>
           </View>
@@ -170,12 +159,7 @@ function TicketPay({route}: AdminScreenProps) {
               <Text style={[styles.fontStyle3]}>장</Text>
             </View>
             <View style={{alignItems: 'flex-end'}}>
-              <Text
-                style={
-                  isOver
-                    ? [styles.fontStyle4, {color: 'red'}]
-                    : styles.fontStyle4
-                }>
+              <Text style={isOver ? [styles.fontStyle4, {color: 'red'}] : styles.fontStyle4}>
                 현재 보유중인 티켓 : {max}
               </Text>
             </View>
@@ -184,18 +168,9 @@ function TicketPay({route}: AdminScreenProps) {
         {/* Button */}
         <View style={styles.buttonWrapper}>
           <Pressable
-            style={
-              state
-                ? [styles.buttonStyle, {backgroundColor: '#F5FF82'}]
-                : styles.buttonStyle
-            }
+            style={state ? [styles.buttonStyle, {backgroundColor: '#F5FF82'}] : styles.buttonStyle}
             onPress={onPopUp}>
-            <Text
-              style={
-                state ? [styles.buttonText, {color: '#000'}] : styles.buttonText
-              }>
-              차감하기
-            </Text>
+            <Text style={state ? [styles.buttonText, {color: '#000'}] : styles.buttonText}>차감하기</Text>
           </Pressable>
         </View>
       </KeyboardAvoidingView>
@@ -203,15 +178,9 @@ function TicketPay({route}: AdminScreenProps) {
       {popUpState ? (
         <View style={styles.popUpContainer}>
           <View style={styles.popUpComponent}>
-            <Text
-              style={[styles.fontStyle3, {paddingBottom: heightScale * 22}]}>
-              한나피쉬님의
-            </Text>
-            <Text style={styles.fontStyle3}>
-              {count}장의 블랙티켓을 차감하시겠습니까?
-            </Text>
-            <View
-              style={{flexDirection: 'row', flex: 1, alignItems: 'flex-end'}}>
+            <Text style={[styles.fontStyle3, {paddingBottom: heightScale * 22}]}>한나피쉬님의</Text>
+            <Text style={styles.fontStyle3}>{count}장의 블랙티켓을 차감하시겠습니까?</Text>
+            <View style={{flexDirection: 'row', flex: 1, alignItems: 'flex-end'}}>
               <Pressable
                 onPress={() => setPopUpState(false)}
                 style={[
@@ -221,9 +190,7 @@ function TicketPay({route}: AdminScreenProps) {
                     marginRight: heightScale * 30,
                   },
                 ]}>
-                <Text style={{color: '#fff', fontSize: heightScale * 20}}>
-                  아니오
-                </Text>
+                <Text style={{color: '#fff', fontSize: heightScale * 20}}>아니오</Text>
               </Pressable>
               <Pressable
                 style={[
@@ -233,16 +200,15 @@ function TicketPay({route}: AdminScreenProps) {
                   },
                 ]}
                 onPress={useTickets}
-                disabled={loading}
-                >
-                  {loading ? <ActivityIndicator /> : <Text style={{color: '#000', fontSize: heightScale * 20}}>
-                  네
-                </Text>}
+                disabled={loading}>
+                {loading ? <ActivityIndicator /> : <Text style={{color: '#000', fontSize: heightScale * 20}}>네</Text>}
               </Pressable>
             </View>
           </View>
         </View>
-      ) : (<></>)}
+      ) : (
+        <></>
+      )}
     </SafeAreaView>
   );
 }

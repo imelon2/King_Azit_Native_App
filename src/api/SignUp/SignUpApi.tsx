@@ -39,7 +39,9 @@ export const RequestVerify = async (params: any) => {
 
 export const Verify = async (params: any) => {
   try {
+    // console.log(params);
     const {status} = await signUpApi.post('verify', params);
+    // console.log(status);
     return status;
   } catch (error) {
     console.error(error);

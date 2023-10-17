@@ -50,7 +50,7 @@ const GiftTicket = () => {
   const [ModalStatus, setModalStatus] = useState(false);
   const [SearchModalStatus, setSearchModalStatus] = useState(false);
   const [userInfo, setUserInfo] = useState({
-    nickname: '닉네임 검색 ',
+    nickname: '',
     uuid: '',
   });
   const [black, setBlack] = useState(0);
@@ -136,10 +136,14 @@ const GiftTicket = () => {
               ) : (
                 <></>
               )}
-              <Text style={styles.textInput}>{userInfo.nickname}</Text>
-              <View style={{alignItems: 'flex-end', flex: 1}}>
-                <IconIonicons name="search" color={'#fff'} size={heightScale * 24} />
+              <View>
+                <IconIonicons name="search" color={'#929292'} size={heightScale * 24} />
               </View>
+              {userInfo.nickname.length !== 0 ? (
+                <Text style={styles.textInput}>{userInfo.nickname}</Text>
+              ) : (
+                <Text style={styles.textInput2}>닉네임 검색</Text>
+              )}
             </Pressable>
           </View>
         </View>
@@ -298,8 +302,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#121212',
   },
   container1: {
-    paddingHorizontal: 24 * heightScale,
-    paddingTop: 25 * heightScale,
+    paddingHorizontal: 20 * heightScale,
+    paddingTop: 23 * heightScale,
   },
   fontStyle: {fontSize: heightScale * 18, fontWeight: 'bold', color: 'white'},
   fontStyle3: {
@@ -352,18 +356,21 @@ const styles = StyleSheet.create({
   giftModalTextInput: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: heightScale * 379,
-    height: heightScale * 45,
-    paddingHorizontal: 8 * heightScale,
-    backgroundColor: '#121212',
-    borderBottomColor: '#3D3D3D',
-    borderBottomWidth: 1,
+    width: widthData * 320,
+    height: heightScale * 40,
+    paddingLeft: 14 * widthData,
+    backgroundColor: '#353535',
+    borderRadius: 4,
   },
   textInput: {
     color: '#fff',
-    fontWeight: 'bold',
     fontSize: heightScale * 16,
-    marginLeft: 8 * heightScale,
+    marginLeft: 14 * heightScale,
+  },
+  textInput2: {
+    color: '#929292',
+    fontSize: heightScale * 16,
+    marginLeft: 14 * heightScale,
   },
   ticketBox: {
     width: 320 * heightScale,

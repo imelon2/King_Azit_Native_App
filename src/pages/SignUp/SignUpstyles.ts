@@ -155,10 +155,10 @@ export const SignUpstyles = StyleSheet.create({
     fontWeight: '400',
     lineHeight: 14 * heightScale,
     color: '#fff',
-    marginLeft: 10 * heightScale,
+    // marginLeft: 10 * heightScale,
     borderBottomColor: '#D9D9D9',
     borderBottomWidth: 1,
-    width: 100 * widthData,
-    marginTop: 23 * heightScale,
+    // width: 100 * widthData,
+    // marginTop: 23 * heightScale,
   },
 });
