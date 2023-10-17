@@ -27,3 +27,23 @@ export const SignUp = async (params: any) => {
     console.error(error);
   }
 };
+
+export const RequestVerify = async (params: any) => {
+  try {
+    const {status} = await signUpApi.post('requestVerify', params);
+    return status;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const Verify = async (params: any) => {
+  try {
+    // console.log(params);
+    const {status} = await signUpApi.post('verify', params);
+    // console.log(status);
+    return status;
+  } catch (error) {
+    console.error(error);
+  }
+};

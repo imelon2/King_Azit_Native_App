@@ -68,7 +68,7 @@ export const SignUpHome = ({navigation}: SignInScreenProps) => {
           <Icon style={SignUpstyles.checkBox} name="checksquareo" size={22} color={checkAll ? '#F5FF82' : '#848484'} />
           <Text style={SignUpstyles.agreeText}>모두 동의</Text>
         </Pressable>
-        <Text style={SignUpstyles.bottomBar}></Text>
+        <View style={SignUpstyles.bottomBar}></View>
         <CheckLine
           check={check1}
           setCheck={setCheck1}
