@@ -68,7 +68,7 @@ export type RootStackParamList = {
 export type HomeRootStackParamList = {
   Home: undefined; // Tab Navigator
   GameRoomTable: {
-    gameId: string;
+    roomId: string;
   };
   NewTournament: undefined;
   MyTickets: {
@@ -113,7 +113,9 @@ export type HomeRootStackParamList = {
     month: number;
   };
   SetBanner: undefined;
-  TournamentInfo: undefined;
+  TournamentInfo: {
+    roomId: string;
+  }
 };
 
 export type MyPageRootStackParamList = {
@@ -254,7 +256,7 @@ function AppInner() {
             options={{animation: 'none'}}
           />
           <HomeStack.Screen name="SetBanner" component={SetBanner} options={{animation: 'none'}} />
-          <HomeStack.Screen name="TournamentInfo" component={TournamentInfo} options={{animation: 'none'}} />
+          <HomeStack.Screen name="TournamentInfo" component={TournamentInfo} options={{animation: 'slide_from_left'}} />
           <HomeStack.Screen
             name="UserInformation"
             component={UserInformation}

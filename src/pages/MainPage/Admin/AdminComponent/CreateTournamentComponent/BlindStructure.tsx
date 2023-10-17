@@ -51,7 +51,7 @@ const BlindStructure = ({...props}) => {
           placeholderTextColor={'#929292'}
           value={blind.Ante}
           onChangeText={(data) => onChangeBlind(data,index,'Ante')}
-          placeholder="100"
+          placeholder="-"
         />
         <IconFeather
           name="trash-2"

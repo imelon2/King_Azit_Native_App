@@ -42,7 +42,7 @@ function UserDetail({ route }: UserDetailScreenProps) {
 
             <View style={{ flex: 1 }} >
                 <Pressable style={styles.myInfoStyle} onPress={() => setModalStatus(true)}>
-                        <ProfileImg style={styles.userIcon} source={Config.IMG_URL! + uuid} />
+                        <ProfileImg style={styles.userIcon} uuid={uuid} />
                     <View style={styles.infoWrapper}>
                         <Text style={[styles.fontStyle, { fontWeight: 'normal', fontSize: heightScale * 18 },]}>
                             {nickname}

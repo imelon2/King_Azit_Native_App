@@ -7,6 +7,7 @@ import { TicketTypeKR } from '@/config/tickets';
 
 // 토너먼트 박스 관련 데이터
 type ITournamentInfo = {
+  roomId:string;
   date: string;
   title: string;
   startDate: string;
@@ -22,6 +23,7 @@ type ITournamentInfo = {
  * 나중에 API 연동 시, 데이터 연동
  */
 export const TournamentInfoBoxDemo: ITournamentInfo = {
+  roomId:'room:1234',
   date: '2023. 05. 21(일)',
   title: 'NFT Holder Main Event',
   startDate: '2022.05.21 (일) 19:00',
@@ -63,7 +65,7 @@ export const TournamentInfoBox: React.FC<{
         </View>
         {/* 상세버튼 */}
         <Pressable
-          onPress={() => navigation.navigate('TournamentInfo')}
+          onPress={() => navigation.navigate('TournamentInfo',{roomId:Info.roomId})}
           style={[styles.buttonContainer, {marginTop: heightData * 24}]}>
           <Text style={[FontStyle.fs12, {color: '#000'}]}>상세</Text>
           <AntDesignIcon name="right" size={heightData * 12} color="#000" />

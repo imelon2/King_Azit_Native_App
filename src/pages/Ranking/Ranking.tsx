@@ -84,8 +84,8 @@ const Ranking = () => {
       <View style={[{flex: 2.8}, styles.pointContainer]}>
         <View style={[{flex: 1}, styles.pointContainer_side]}>
           <Image style={styles.pointContainer_img} source={require('@/assets/Figure_bg.png')} />
-          {status == 'week' && <ProfileImg style={styles.playerImg2} source={Config.IMG_URL! + weekData[1]?.uuid} />}
-          {status == 'month' && <ProfileImg style={styles.playerImg2} source={Config.IMG_URL! + monthData[1]?.uuid} />}
+          {status == 'week' && <ProfileImg style={styles.playerImg2} uuid={weekData[1]?.uuid as string} />}
+          {status == 'month' && <ProfileImg style={styles.playerImg2} uuid={monthData[1]?.uuid as string} />}
           <View style={styles.pointContainer_textBox}>
             <Text style={styles.pointContainer_text1}>
               {status == 'week' && weekData[1]?.nickname}
@@ -99,8 +99,8 @@ const Ranking = () => {
         </View>
         <View style={[{flex: 1}, styles.pointContainer_center]}>
           <Image style={styles.pointContainer_img_center} source={require('@/assets/Figure_bg.png')} />
-          {status == 'week' && <ProfileImg style={styles.playerImg} source={Config.IMG_URL! + weekData[0]?.uuid} />}
-          {status == 'month' && <ProfileImg style={styles.playerImg} source={Config.IMG_URL! + monthData[0]?.uuid} />}
+          {status == 'week' && <ProfileImg style={styles.playerImg} uuid={weekData[0]?.uuid as string} />}
+          {status == 'month' && <ProfileImg style={styles.playerImg} uuid={monthData[0]?.uuid as string} />}
           <View style={styles.pointContainer_textBox}>
             <View>
               <Text style={[styles.pointContainer_text1, styles.textcolor]}>
@@ -116,8 +116,8 @@ const Ranking = () => {
         </View>
         <View style={[{flex: 1}, styles.pointContainer_side]}>
           <Image style={styles.pointContainer_img} source={require('@/assets/Figure_bg.png')} />
-          {status == 'week' && <ProfileImg style={styles.playerImg2} source={Config.IMG_URL! + weekData[2]?.uuid} />}
-          {status == 'month' && <ProfileImg style={styles.playerImg2} source={Config.IMG_URL! + monthData[2]?.uuid} />}
+          {status == 'week' && <ProfileImg style={styles.playerImg2} uuid={weekData[2]?.uuid as string } />}
+          {status == 'month' && <ProfileImg style={styles.playerImg2} uuid={monthData[2]?.uuid as string} />}
           <View style={styles.pointContainer_textBox}>
             <Text style={styles.pointContainer_text1}>
               {status == 'week' && weekData[2]?.nickname}

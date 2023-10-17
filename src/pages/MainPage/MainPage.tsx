@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import getTickets from '../../hooks/getTickets';
 import MainPageAdmin from './Admin/MainPageAdmin';
 import {useSelector} from 'react-redux';

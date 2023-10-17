@@ -9,10 +9,11 @@ import {Item} from 'react-native-picker-select';
 import NewTournamentSetBlind from './NewTournamentSetBlind';
 import NewTournamentSetInfo from './NewTournamentSetInfo';
 import {IBlind, IGrade, INIT_DATE, INIT_TIME, NEW_INIT_GRADE} from '@/config/blind';
-import {CUSTOM, RESET_CUSTOM, checkBlind, checkGrade, getBlindBookmarks} from '@/modules/BlindBookmarks';
+import {CUSTOM, RESET_CUSTOM, checkBlind, checkGrade, getBlindBookmarks, setAntesZero} from '@/modules/BlindBookmarks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NewTournamentSetPrize from './NewTournamentSetPrize';
 import {TicketType} from '@/config/tickets';
+import { ITournament } from '@/config';
 
 type IHeaderTitle = '상세정보' | 'Prize' | '블라인드';
 
@@ -43,31 +44,28 @@ function NewTournament() {
   const [selectedBookmark, setSelectedBookmark] = useState('');
   const [blind, setBlind] = useState<IBlind[]>(CUSTOM);
   const [blindTime, setBlindTime] = useState<string>();
-  /**
-   * @todo 게임 생성 시, isAntes = false면 Ante 전부 0
-   */
   const [isAntes, setIsAntes] = useState<boolean>(true);
-  const [grade, setGrade] = useState<IGrade[]>([NEW_INIT_GRADE()]);
+  const [grades, setGrades] = useState<IGrade[]>([NEW_INIT_GRADE()]);
 
   useEffect(() => {
     // LOCAL STORAGE 리셋 함수
     const REMOVE = async () => {
       await AsyncStorage.removeItem('blindBookmarks');
     };
-    // checkInputNull();
-    // REMOVE();
+    REMOVE();
 
     // 페이지 나갈 시, CUSTOM DATA 초기화
     return () => {
       RESET_CUSTOM();
     };
   }, []);
-  
+
+
   /**
-   * @description 페이지 변환시 발생하는 이벤트
+   * @description Blind 필수 Input 데이터 검사 함수
    */
-  const checkInputNull = (tag:"Blind" | "Prize") => {
-    if(tag === 'Blind') {
+  const checkInputNull = (tag: 'Blind' | 'Prize') => {
+    if (tag === 'Blind') {
       const is =
         !!title && // 타이틀 제목
         !!gameStart.date &&
@@ -91,17 +89,38 @@ function NewTournament() {
         });
       return is;
     }
-    if(tag === 'Prize') {
-      return grade.every(value => {
+    if (tag === 'Prize') {
+      return grades.every(value => {
         return checkGrade(value);
       });
     }
   };
-  
-  const createRoom = () => {
 
-  }
-  
+  /**
+   * @notice 게임생성 시, isAntes = false면 Ante 전부 0
+   */
+  const createRoom = () => {
+    let newTournamentData : ITournament = {
+      title,
+      gameStartDate:gameStart.date,
+      gameStartTime:gameStart.time,
+      deadlineDate:deadline.date,
+      deadlineTime:deadline.time,
+      place,
+      entryCondition,
+      ticketType:ticket.type,
+      ticketCount:ticket.count,
+      detail,
+      entry,
+      prize,
+      blindTime: blindTime as string,
+      blind: isAntes ? blind :setAntesZero(blind),
+      grades
+    } 
+
+      console.log(JSON.stringify(newTournamentData,null,4));
+  };
+
   /**
    * @title Set Info/Blind/Prize UI 전환 기능
    * @description 페이지 변환시 발생하는 이벤트
@@ -146,7 +165,7 @@ function NewTournament() {
   };
 
   return (
-    <SafeAreaView style={[GlobalStyles.container, {flex:1}]}>
+    <SafeAreaView style={[GlobalStyles.container, {flex: 1}]}>
       {currentTitle == '상세정보' ? (
         <NewTournamentSetInfo
           onChangeTitle={onChangeTitle}
@@ -198,7 +217,13 @@ function NewTournament() {
         <></>
       )}
       {currentTitle == 'Prize' ? (
-        <NewTournamentSetPrize onChangeTitle={onChangeTitle} setGrade={setGrade} grade={grade} />
+        <NewTournamentSetPrize
+          onChangeTitle={onChangeTitle}
+          setGrades={setGrades}
+          checkInputNull={checkInputNull}
+          createRoom={createRoom}
+          grades={grades}
+        />
       ) : (
         <></>
       )}

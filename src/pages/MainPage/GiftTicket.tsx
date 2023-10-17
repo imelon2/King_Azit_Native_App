@@ -132,7 +132,7 @@ const GiftTicket = () => {
             <Text style={styles.fontStyle2}>티켓 선물 유저</Text>
             <Pressable onPress={() => setSearchModalStatus(true)} style={styles.giftModalTextInput}>
               {userInfo.uuid ? (
-                <ProfileImg style={styles.userIconImg} source={Config.IMG_URL! + userInfo.uuid} />
+                <ProfileImg style={styles.userIconImg} uuid={userInfo.uuid} />
               ) : (
                 <></>
               )}

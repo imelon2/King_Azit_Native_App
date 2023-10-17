@@ -2,13 +2,14 @@ import ProfileImg from '@/components/ProfileImg';
 import Rectangle from '@/components/Rectangle';
 import {IProfileInfo} from '@/config/tournament';
 import {GlobalStyles, heightData, widthData, FontStyle, width} from '@/modules';
+import { useCallback } from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
-import Config from 'react-native-config';
 import Swiper from 'react-native-swiper';
 
 type IProps = {
   profiles: IProfileInfo[][];
 };
+
 export const TournamentInfoParticipant = (props: IProps) => {
   const TableNumber: React.FC<{number: number}> = ({number}) => {
     return (
@@ -24,21 +25,17 @@ export const TournamentInfoParticipant = (props: IProps) => {
     );
   };
 
-  const UserIcon: React.FC<{
-    uuid: string;
-    nickName: string;
-    space?: number;
-  }> = ({uuid, nickName, space = 0}) => {
+  const UserIcon = useCallback(({uuid = "", nickName = "", space = 0}) => {
     return (
       <View style={[GlobalStyles.flexCenter, {marginHorizontal: space}]}>
-        <ProfileImg style={ParticipantStyle.playerImg} source={Config.IMG_URL! + uuid} />
+        <ProfileImg style={ParticipantStyle.playerImg} uuid={uuid}/>
         <View style={ParticipantStyle.userNicknameStyle}>
           <Text style={[FontStyle.fs12, FontStyle.fwBold, {color: '#000'}]}>{nickName}</Text>
         </View>
       </View>
     );
-  };
-
+  },[props.profiles])
+ 
   const Dealer: React.FC<{
     space?: number;
   }> = ({space = 0}) => {
@@ -65,30 +62,30 @@ export const TournamentInfoParticipant = (props: IProps) => {
               <TableNumber number={index + 1} />
               {/* 1열 자리 (Seat number : 2) */}
               <View style={[{top: heightData * 36}, ParticipantStyle.profileWrapper]}>
-                <UserIcon uuid={data[2].uuid} nickName={data[2].nickName} />
+                <UserIcon uuid={data[2]?.uuid} nickName={data[2]?.nickName} />
               </View>
               <View style={[{top: heightData * 10}, ParticipantStyle.profileWrapper]}>
-                <UserIcon uuid={data[3].uuid} nickName={data[3].nickName} space={widthData * 70} />
-                <UserIcon uuid={data[1].uuid} nickName={data[1].nickName} space={widthData * 70} />
+                <UserIcon uuid={data[3]?.uuid} nickName={data[3]?.nickName} space={widthData * 70} />
+                <UserIcon uuid={data[1]?.uuid} nickName={data[1]?.nickName} space={widthData * 70} />
               </View>
               <View style={[{top: heightData * 40}, ParticipantStyle.profileWrapper]}>
-                <UserIcon uuid={data[4].uuid} nickName={data[4].nickName} space={widthData * 90} />
-                <UserIcon uuid={data[0].uuid} nickName={data[0].nickName} space={widthData * 90} />
+                <UserIcon uuid={data[4]?.uuid} nickName={data[4]?.nickName} space={widthData * 90} />
+                <UserIcon uuid={data[0]?.uuid} nickName={data[0]?.nickName} space={widthData * 90} />
               </View>
               <View style={[{top: heightData * 80}, ParticipantStyle.profileWrapper]}>
-                <UserIcon uuid={data[5].uuid} nickName={data[5].nickName} space={widthData * 105} />
+                <UserIcon uuid={data[5]?.uuid} nickName={data[5]?.nickName} space={widthData * 105} />
                 <Dealer space={widthData * 105} />
               </View>
               <View style={[{top: heightData * 120}, ParticipantStyle.profileWrapper]}>
-                <UserIcon uuid={data[6].uuid} nickName={data[6].nickName} space={widthData * 100} />
-                <UserIcon uuid={data[10].uuid} nickName={data[10].nickName} space={widthData * 100} />
+                <UserIcon uuid={data[6]?.uuid} nickName={data[6]?.nickName} space={widthData * 100} />
+                <UserIcon uuid={data[10]?.uuid} nickName={data[10]?.nickName} space={widthData * 100} />
               </View>
               <View style={[{top: heightData * 160}, ParticipantStyle.profileWrapper]}>
-                <UserIcon uuid={data[7].uuid} nickName={data[7].nickName} space={widthData * 90} />
-                <UserIcon uuid={data[9].uuid} nickName={data[9].nickName} space={widthData * 90} />
+                <UserIcon uuid={data[7]?.uuid} nickName={data[7]?.nickName} space={widthData * 90} />
+                <UserIcon uuid={data[9]?.uuid} nickName={data[9]?.nickName} space={widthData * 90} />
               </View>
               <View style={[{top: heightData * 150}, ParticipantStyle.profileWrapper]}>
-                <UserIcon uuid={data[8].uuid} nickName={data[8].nickName} />
+                <UserIcon uuid={data[8]?.uuid} nickName={data[8]?.nickName} />
               </View>
             </View>
           </View>

@@ -24,8 +24,8 @@ import IconIonicons from 'react-native-vector-icons/Ionicons';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
 import IconMaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {styles} from '../../AdminStyles/NewTournamentStyles';
-import {IBlindBookmarks, INIT_DATE, INIT_TIME, TicketPickerItems} from '@/config/blind';
-import {checkBlind, getBlindBookmarks} from '@/modules/BlindBookmarks';
+import { INIT_DATE, INIT_TIME, TicketPickerItems} from '@/config/blind';
+import {checkBlind} from '@/modules/BlindBookmarks';
 
 type type = 'GameStartDate' | 'GameStartTime' | 'DeadlineDate' | 'DeadlineTime';
 

@@ -1,3 +1,10 @@
+
+export const WEEK = new Array('일', '월', '화', '수', '목', '금', '토');
+
+export const MONTH = new Array("January", "February", "March", "April", "May", "June",
+"July", "August", "September", "October", "November", "December"
+);
+
 // new Date() -> HH.MM
 export const TimeFormat = (data: any) => {
   if(data == "" || data == undefined || data == null) return "";
@@ -24,7 +31,7 @@ export const TimeAMPMFromat = (data: any) => {
 };
 
 // new Date() -> YY-MM-DD
-export const DateFromat = (data: any) => {
+export const DateFromat = (data?: any) => {
   if(data == "" || data == undefined || data == null) return "";
   const TIME_ZONE = 9 * 60 * 60 * 1000; // 9시간
   const d = new Date(data);
@@ -55,4 +62,12 @@ export function convert12H(a:any) {
 	var res = ('0' + cvHour).slice(-2) + time.slice(-3) + " " + str;  
 	// return
 	return res;
+}
+
+/**
+ * @param date yyyy-mm-dd OR type Date
+ */
+export function dayOfWeekKR(date:string | Date) {
+  const dayOfWeek = new Date(date).getDay(); 
+  return WEEK[dayOfWeek];
 }

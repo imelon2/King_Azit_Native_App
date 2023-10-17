@@ -1,37 +1,36 @@
 import {Header} from '@/components/Header';
-import {FontStyle, GlobalStyles, headerIconSize, heightData, widthData} from '@/modules';
-import {View, Text, StyleSheet, Alert, ScrollView} from 'react-native';
+import {FontStyle, headerIconSize, heightData, widthData} from '@/modules';
+import {View, Text, StyleSheet, Alert} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import {IGradeTitle, NEW_INIT_GRADE} from '@/config/blind';
 import {TicketType} from '@/config/tickets';
 import GradeStructure from './GradeStructure';
 import {BottomMaxButton} from '@/components/Button';
-import {useCallback} from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
+
 
 const NewTournamentSetPrize = ({...props}) => {
-  const {onChangeTitle, setGrade} = props;
-  const {grade} = props;
+  const {onChangeTitle, setGrades, checkInputNull,createRoom} = props;
+  const {grades} = props;
 
   const onChangeGrade = (data: string | TicketType, index: number, key: IGradeTitle) => {
     if (data == '0') return;
-    let prev = [...grade];
+    let prev = [...grades];
     prev[index][key] = data;
-    setGrade(prev);
+    setGrades(prev);
   };
 
   const addGradeStruct = () => {
-    let prev = [...grade];
+    let prev = [...grades];
     prev.push(NEW_INIT_GRADE());
-    setGrade(prev);
+    setGrades(prev);
   };
 
   const removeGradeStruct = (index: number) => {
-    let prev = [...grade];
+    let prev = [...grades];
     if (prev.length == 1) return; // 무조건 한줄은 있어야함
     prev.splice(index, 1);
-    setGrade(prev);
+    setGrades(prev);
   };
 
   return (
@@ -54,13 +53,13 @@ const NewTournamentSetPrize = ({...props}) => {
           <Text style={FontStyle.fs15}>승점 부여 인원</Text>
           <View style={{flexDirection: 'row', alignItems: 'center', marginTop: heightData * 12}}>
             <View style={style.grandeLengthStyle}>
-              <Text style={FontStyle.fs15}>{grade.length}</Text>
+              <Text style={FontStyle.fs15}>{grades.length}</Text>
             </View>
             <IconAntDesign name="pluscircleo" size={32} color="#F5FF82" onPress={addGradeStruct} />
           </View>
         </View>
         {/* 등수 리스트 */}
-        {grade.map((_grade: any, i: number) => (
+        {grades.map((_grade: any, i: number) => (
           <GradeStructure
             key={i}
             index={i}
@@ -72,9 +71,9 @@ const NewTournamentSetPrize = ({...props}) => {
         <View style={{flex: 1}}>
           <BottomMaxButton
             title="확인"
-            backgroundColor="#F5FF82"
+            backgroundColor={checkInputNull("Prize") ? '#F5FF82' : '#808080'}
             color="#000"
-            onPress={() => Alert.alert('Todo:', '방 생성 API 연동')}
+            onPress={() => createRoom()}
           />
         </View>
       </KeyboardAwareScrollView>

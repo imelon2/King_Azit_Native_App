@@ -1,34 +1,95 @@
 import {Header} from '@/components/Header';
 import ProfileImg from '@/components/ProfileImg';
 import Rectangle from '@/components/Rectangle';
-import {IBlindInfo, IProfileInfo} from '@/config/tournament';
+import {IBlindInfo, IProfileInfo, ITournamentLive, ITournamentRoomState} from '@/config/tournament';
+import useSocket, {
+  callRoomInfo,
+  callRoomTableInfo,
+  filterLiveTablePlayers,
+  getLiveTableInfos,
+  getLiveTablePlayers,
+  getLiveTableTimer,
+} from '@/hooks/useSocket';
 import {FontStyle, GlobalStyles, headerIconSize, heightData, width, widthData} from '@/modules/globalStyles';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {HomeRootStackParamList} from 'AppInner';
-import {Text, View, StyleSheet, Image, Dimensions} from 'react-native';
-import Config from 'react-native-config';
+import {useCallback, useEffect, useState} from 'react';
+import {Text, View, StyleSheet, Image, Pressable, Alert} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
+import {GameRoomTableLiveBlind} from './Component/GameRoomTableComponent/GameRoomTableLiveBlind';
 
 type ScreenProps = NativeStackScreenProps<HomeRootStackParamList, 'GameRoomTable'>;
 
-// 더미 데이터
-const _demoProfiles: IProfileInfo[] = new Array(11).fill(1).map((_, i) => {
-  return {
-    uuid: 'c121308f-579d-446d-876d-0f652f39ace4',
-    nickName: '유저' + i,
-  };
-});
-const demoProfiles: IProfileInfo[][] = [_demoProfiles, _demoProfiles];
-
 function GameRoomTable({route}: ScreenProps) {
   const navigation = useNavigation<NavigationProp<HomeRootStackParamList>>();
+  const {socket} = useSocket();
+  const {roomId} = route.params;
+  const [profiles, setProfiles] = useState<IProfileInfo[][]>([]); // [LIVE] Players
+  const [tableBlindInfo, setTableBlindInfo] = useState<Omit<ITournamentLive, 'players'>>({
+    gameState: 'wait',
+    blindLevel: 0,
+    currentBlind: {
+      BB: '111',
+      SB: '111',
+      Ante: '111',
+    },
+    nextBlind: {
+      BB: '222',
+      SB: '222',
+      Ante: '222',
+    },
+  }); 
+  // [LIVE] Blind Info
+  const [runningTime, setRunningTime] = useState('00:00');
+
+  useEffect(() => {
+    const demo_players = new Array(25).fill(1).map((_,i) => {
+      return  {
+        uuid:"c121308f-579d-446d-876d-0f652f39ace4",
+        nickName:"user"+i
+      }
+    })
+    setProfiles(filterLiveTablePlayers(demo_players));
+  },[])
+  
+  // [LIVE] emit.EnterRoom -> on.gameId
+  // useEffect(() => {
+  //   /**
+  //    * @Title [LIVE]Get Players Info
+  //    * @description [Socket] 새로운 참가자 입장 시, Re-Render
+  //    */
+  //   const getRoomPlayersOn = getLiveTablePlayers(roomId, (_playerInfo: IProfileInfo[] = []) => {
+  //     const players = filterLiveTablePlayers(_playerInfo);
+  //     setProfiles(players);
+  //   });
+
+  //   const getLiveTableInfosOn = getLiveTableInfos(roomId, (_tableBlindInfo: Omit<ITournamentLive, 'players'>) => {
+  //     setTableBlindInfo(_tableBlindInfo);
+  //   });
+
+  //   const getLiveTableTimerOn = getLiveTableTimer(roomId, (_runningTimer: string = '00:00') => {
+  //     setRunningTime(_runningTimer);
+  //   });
+
+  //   /**
+  //    * @Title Trigger for socket.on.roomId
+  //    */
+  //   callRoomInfo({roomId});
+  //   callRoomTableInfo({roomId});
+
+  //   return () => {
+  //     getRoomPlayersOn!.off();
+  //     getLiveTableTimerOn!.off();
+  //     getLiveTableInfosOn!.off();
+  //   };
+  // }, []);
 
   const TableNumber: React.FC<{number: number}> = ({number}) => {
     return (
-      <View style={[GlobalStyles.flexCenter, {top: heightData * 16, flexDirection: 'row'}]}>
+      <View style={[GlobalStyles.flexCenter, {marginTop: heightData * 16, flexDirection: 'row'}]}>
         <Rectangle type="big" scale={5} color="#C9BEA2" />
         <View style={{width: widthData * 25, height: 2, backgroundColor: '#C9BEA2'}} />
         <Text style={[FontStyle.fs16, FontStyle.fwBold, {color: '#C9BEA2', paddingHorizontal: widthData * 11}]}>
@@ -40,20 +101,21 @@ function GameRoomTable({route}: ScreenProps) {
     );
   };
 
-  const UserIcon: React.FC<{
-    uuid: string;
-    nickName: string;
-    space?: number;
-  }> = ({uuid, nickName, space = 0}) => {
-    return (
-      <View style={[GlobalStyles.flexCenter, {marginHorizontal: space}]}>
-        <ProfileImg style={ParticipantStyle.playerImg} source={Config.IMG_URL! + uuid} />
-        <View style={ParticipantStyle.userNicknameStyle}>
-          <Text style={[FontStyle.fs12, FontStyle.fwBold, {color: '#000'}]}>{nickName}</Text>
-        </View>
-      </View>
-    );
-  };
+  const UserIcon = useCallback(
+    ({uuid = '', nickName = '', space = 0}) => {
+      return (
+        <Pressable
+          onPress={() => Alert.alert('TODO', 'Sit-OUT 구현 예정')}
+          style={[GlobalStyles.flexCenter, {marginHorizontal: space}]}>
+          <ProfileImg style={ParticipantStyle.playerImg} uuid={uuid} />
+          <View style={ParticipantStyle.userNicknameStyle}>
+            <Text style={[FontStyle.fs12, FontStyle.fwBold, {color: '#000'}]}>{nickName}</Text>
+          </View>
+        </Pressable>
+      );
+    },
+    [profiles],
+  );
 
   const Dealer: React.FC<{
     space?: number;
@@ -67,68 +129,60 @@ function GameRoomTable({route}: ScreenProps) {
     );
   };
 
-  const BlindInfo: React.FC<{
-    blindInfo: IBlindInfo;
-  }> = ({blindInfo}) => {
-    const {level,ante,blinds} = blindInfo;
-    return (
-      <View style={{backgroundColor:'red'}}>
-        <Text>Blinds : Level {level}</Text>
-        <Text>{blinds} Ante: {ante}</Text>
-      </View>
-    );
-  };
-
   return (
     <SafeAreaView edges={['top']} style={[GlobalStyles.container, {flex: 1}]}>
       {/* header */}
       <Header
-        title={'GAME ROOM ID: ' + route.params.gameId}
+        title={'게임'}
         leftIcon={() => (
           <IconAntDesign name="left" size={headerIconSize} color="white" onPress={() => navigation.goBack()} />
         )}
       />
-      <Swiper
-        loop={false}
-        horizontal={true}
-        activeDot={<View style={BannerStyle.activeDot} />}
-        dot={<View style={BannerStyle.dot} />}>
-        {demoProfiles.map((data, index) => (
-          <View key={index} style={{flex: 1}}>
-            <Image source={require('../../assets/table_wide.png')} style={ParticipantStyle.tableStyle} />
-            <BlindInfo blindInfo={{level:2,ante:0,blinds:'200/400'}}/>
-            <View style={{position: 'absolute', width: '100%'}}>
-              <TableNumber number={index + 1} />
-              <View style={[{top: heightData * 60}, ParticipantStyle.profileWrapper]}>
-                <UserIcon uuid={data[2].uuid} nickName={data[2].nickName} />
+      <View style={{flex: 1}}>
+        <Swiper
+          loop={false}
+          horizontal={true}
+          activeDot={<View style={BannerStyle.activeDot} />}
+          dot={<View style={BannerStyle.dot} />}>
+          {profiles.map((data, index) => (
+            <View key={index} style={{flex: 1}}>
+              <Image source={require('../../assets/table_wide.png')} style={ParticipantStyle.tableStyle} />
+              <View  style={{position: 'absolute',width: '100%'}}>
+                <TableNumber number={index + 1} />
+                <View style={[{top: heightData * 50}, ParticipantStyle.profileWrapper]}>
+                  <UserIcon uuid={data[2]?.uuid} nickName={data[2]?.nickName} />
+                </View>
+                <View style={[{top: heightData * 20}, ParticipantStyle.profileWrapper]}>
+                  <UserIcon uuid={data[3]?.uuid} nickName={data[3]?.nickName} space={widthData * 70} />
+                  <UserIcon uuid={data[1]?.uuid} nickName={data[1]?.nickName} space={widthData * 70} />
+                </View>
+                <View style={[{top: heightData * 45}, ParticipantStyle.profileWrapper]}>
+                  <UserIcon uuid={data[4]?.uuid} nickName={data[4]?.nickName} space={widthData * 90} />
+                  <UserIcon uuid={data[0]?.uuid} nickName={data[0]?.nickName} space={widthData * 90} />
+                </View>
+                <View style={[{top: heightData * 70}, ParticipantStyle.profileWrapper]}>
+                  <UserIcon uuid={data[5]?.uuid} nickName={data[5]?.nickName} space={widthData * 100} />
+                  <Dealer space={widthData * 100} />
+                </View>
+                <View style={[{top: heightData * 95}, ParticipantStyle.profileWrapper]}>
+                  <UserIcon uuid={data[6]?.uuid} nickName={data[6]?.nickName} space={widthData * 90} />
+                  <UserIcon uuid={data[10]?.uuid} nickName={data[10]?.nickName} space={widthData * 90} />
+                </View>
+                <View style={[{top: heightData * 125}, ParticipantStyle.profileWrapper]}>
+                  <UserIcon uuid={data[7]?.uuid} nickName={data[7]?.nickName} space={widthData * 70} />
+                  <UserIcon uuid={data[9]?.uuid} nickName={data[9]?.nickName} space={widthData * 70} />
+                </View>
+                <View style={[{top: heightData * 115}, ParticipantStyle.profileWrapper]}>
+                  <UserIcon uuid={data[8]?.uuid} nickName={data[8]?.nickName} />
+                </View>
               </View>
-              <View style={[{top: heightData * 30}, ParticipantStyle.profileWrapper]}>
-                <UserIcon uuid={data[3].uuid} nickName={data[3].nickName} space={widthData * 70} />
-                <UserIcon uuid={data[1].uuid} nickName={data[1].nickName} space={widthData * 70} />
-              </View>
-              <View style={[{top: heightData * 55}, ParticipantStyle.profileWrapper]}>
-                <UserIcon uuid={data[4].uuid} nickName={data[4].nickName} space={widthData * 90} />
-                <UserIcon uuid={data[0].uuid} nickName={data[0].nickName} space={widthData * 90} />
-              </View>
-              <View style={[{top: heightData * 85}, ParticipantStyle.profileWrapper]}>
-                <UserIcon uuid={data[5].uuid} nickName={data[5].nickName} space={widthData * 100} />
-                <Dealer space={widthData * 100} />
-              </View>
-              <View style={[{top: heightData * 115}, ParticipantStyle.profileWrapper]}>
-                <UserIcon uuid={data[6].uuid} nickName={data[6].nickName} space={widthData * 90} />
-                <UserIcon uuid={data[10].uuid} nickName={data[10].nickName} space={widthData * 90} />
-              </View>
-              <View style={[{top: heightData * 140}, ParticipantStyle.profileWrapper]}>
-                <UserIcon uuid={data[7].uuid} nickName={data[7].nickName} space={widthData * 70} />
-                <UserIcon uuid={data[9].uuid} nickName={data[9].nickName} space={widthData * 70} />
-              </View>
-              <View style={[{top: heightData * 125}, ParticipantStyle.profileWrapper]}>
-                <UserIcon uuid={data[8].uuid} nickName={data[8].nickName} />
+              <View pointerEvents="box-none" style={[{...StyleSheet.absoluteFillObject,flex:1}, GlobalStyles.flexCenter]}>
+                <GameRoomTableLiveBlind roomId={roomId} tableBlindInfo={tableBlindInfo} timer={runningTime} />
               </View>
             </View>
-          </View>
-        ))}
-      </Swiper>
+          ))}
+        </Swiper>
+      </View>
     </SafeAreaView>
   );
 }

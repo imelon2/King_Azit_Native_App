@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Text,
   View,
-  Image,
   SafeAreaView,
   StyleSheet,
   Pressable,
@@ -21,6 +20,7 @@ import {
   widthData,
 } from '../../../modules/globalStyles';
 import {Banner} from '@/components/Banner';
+import { tournamentTest } from '@/api/Tournament/TournamentApi';
 
 function MainPageAdmin() {
   const navigation =

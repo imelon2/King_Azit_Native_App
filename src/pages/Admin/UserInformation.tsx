@@ -12,7 +12,6 @@ import {
 import {HeaderStyle, heightData} from '../../modules/globalStyles';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import {userInfoType} from './MemberManagement';
-import TimeFormat from '../../modules/TimeFormat';
 import {useCallback, useState} from 'react';
 import axios from 'axios';
 import Config from 'react-native-config';
@@ -23,6 +22,7 @@ import {HomeRootStackParamList} from '../../../AppInner';
 import {heightScale} from '../../modules/MainStyles';
 import ProfileImg from '../../components/ProfileImg';
 import Rectangle from '../../components/Rectangle';
+import { DateFromat } from '@/modules';
 
 // interface propsType {
 //   setModalStatus(id: boolean): void;
@@ -198,7 +198,7 @@ function UserInformation({route, navigation}: UserInformationScreenProps) {
               height: heightScale * 90,
               borderRadius: heightScale * 90,
             }}
-            source={Config.IMG_URL! + uuid}
+            uuid={uuid}
           />
         </View>
         <View>
@@ -302,7 +302,7 @@ function UserInformation({route, navigation}: UserInformationScreenProps) {
               marginTop: 8 * heightScale,
             }}>
             <Rectangle type='straight' scale={7} color={'#F5FF82'}/>
-            <Text style={styles.fontStyle6}>{TimeFormat(registerDate)}</Text>
+            <Text style={styles.fontStyle6}>{DateFromat(registerDate)}</Text>
           </View>
         </View>
 

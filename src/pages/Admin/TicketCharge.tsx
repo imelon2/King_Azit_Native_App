@@ -108,7 +108,7 @@ function TicketCharge() {
                     <View style={styles.container1} >
                         <Text style={styles.fontStyle2} >티켓 충전 유저</Text>
                         <Pressable onPress={() => setSearchModalStatus(true)} style={styles.giftModalTextInput}>
-                            {userInfo.uuid ?<ProfileImg style={styles.userIconImg} source={Config.IMG_URL!+userInfo.uuid}/>: <></>}
+                            {userInfo.uuid ?<ProfileImg style={styles.userIconImg} uuid={userInfo.uuid}/>: <></>}
                             <Text style={styles.textInput}>{userInfo.nickname}</Text>
                             <View style={{alignItems:'flex-end',flex:1}}>
                             <IconIonicons

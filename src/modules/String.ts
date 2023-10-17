@@ -13,7 +13,8 @@ export const ConvertTicketTypeENtoKR = (type:TicketType) => {
     }
 }
 
-export const UpperString = (data: string) => {
+export const UpperString = (data?: string) => {
+    if (!data) return;
     return data.charAt(0).toUpperCase() + data.slice(1);
   };
   

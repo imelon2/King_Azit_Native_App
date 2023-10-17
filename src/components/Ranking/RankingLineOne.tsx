@@ -2,7 +2,6 @@ import {styles} from '@/pages/Ranking/RankingStyle';
 import {Text, View} from 'react-native';
 import ProfileImg from '@/components/ProfileImg';
 import {heightData} from '@/modules/globalStyles';
-import Config from 'react-native-config';
 
 export const RankingLineOne = ({nickName, v}: any) => {
   return (
@@ -13,7 +12,7 @@ export const RankingLineOne = ({nickName, v}: any) => {
         <Text style={[styles.lineText, nickName == v.nickname && styles.lineText2]}>{v.ranking}</Text>
       </View>
       <View style={styles.imgBox}>
-        <ProfileImg style={styles.userIcon} source={Config.IMG_URL! + v.uuid} />
+        <ProfileImg style={styles.userIcon} uuid={v.uuid} />
       </View>
       <View style={{marginLeft: 20 * heightData}}>
         <Text style={[styles.lineText, nickName == v.nickname && styles.lineText2]}>{v.nickname}</Text>

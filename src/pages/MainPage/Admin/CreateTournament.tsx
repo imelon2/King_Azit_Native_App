@@ -8,13 +8,14 @@ import {FontStyle, GlobalStyles, headerIconSize, heightData, widthData} from '..
 import {Header} from '../../../components/Header';
 import {TournamentInfoBoxDemo, TournamentInfoBox} from '@/components';
 import {MarkedDates} from 'react-native-calendars/src/types';
-import {getFormatDate, MONTH, WEEK} from '../../../modules/Callendar';
+import { DateFromat, MONTH, WEEK } from '@/modules/TimeFormat';
+
 
 function CreateRoom() {
   const today = new Date();
-  const [current, setCurrent] = useState(getFormatDate());
+  const [current, setCurrent] = useState(DateFromat());
   const [markedDates, setMarkedDates] = useState<MarkedDates>({
-    [getFormatDate()]: {
+    [DateFromat()]: {
       marked: true,
       selected: true,
       dots: [{color: '#5C5C5C'}],

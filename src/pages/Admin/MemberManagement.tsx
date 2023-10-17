@@ -21,9 +21,9 @@ import axios, {AxiosError} from 'axios';
 import Config from 'react-native-config';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../store/reducer';
-import TimeFormat from '../../modules/TimeFormat';
 import ProfileImg from '../../components/ProfileImg';
 import { UserInformationType } from './UserInformation';
+import { DateFromat } from '@/modules';
 const {width, height} = Dimensions.get('window');
 const heightScale = heightData;
 
@@ -278,7 +278,7 @@ function MemberManagement({route, navigation}: AdminScreenProps) {
                       alignItems: 'center',
                       justifyContent: 'center',
                     }}>
-                    <ProfileImg style={styles.playerIcon} source={Config.IMG_URL! + item.uuid} />
+                    <ProfileImg style={styles.playerIcon} uuid={item.uuid} />
                   </View>
                   <View
                     style={{
@@ -290,7 +290,7 @@ function MemberManagement({route, navigation}: AdminScreenProps) {
                       {renderText(item?.nickname,items.index)}
                     </View>
                     <Text style={styles.fontStyle3}> 
-                      신청일: {TimeFormat(item?.registerDate)}
+                      신청일: {DateFromat(item?.registerDate)}
                     </Text>
                   </View>
                   <View style={{justifyContent: 'center'}}>

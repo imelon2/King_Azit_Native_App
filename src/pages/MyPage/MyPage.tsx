@@ -110,7 +110,7 @@ function MyPage() {
             <ProfileImg
               cache={cache}
               style={styles.userIcon}
-              source={Config.IMG_URL + uuid}
+              uuid={uuid}
             />
           </Pressable>
           {/* info */}
